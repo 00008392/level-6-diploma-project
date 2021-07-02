@@ -55,7 +55,7 @@ namespace Account.Domain.Logic.Validation
 
         private async Task<bool> IsUnique(string email, CancellationToken token)
         {
-            var userWithEmail = (await _repository.GetItemsAsync(u => u.Email == email)).FirstOrDefault();
+            var userWithEmail = (await _repository.GetFilteredAsync(u => u.Email == email)).FirstOrDefault();
             if (userWithEmail == null)
             {
                 return true;

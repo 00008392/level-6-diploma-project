@@ -7,9 +7,14 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Core
 {
-    public interface IRepository<T> where T: BaseEntity
+   public interface IRepository<T> where T: BaseEntity
     {
         Task CreateAsync(T entity);
-        Task<List<T>> GetItemsAsync(Expression<Func<T, bool>> filter);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(T entity);
+        Task<T> GetByIdAsync(long id);
+        Task<ICollection<T>> GetAllAsync();
+        Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> filter);
+        bool IfExists(long id);
     }
 }

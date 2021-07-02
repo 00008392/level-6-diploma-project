@@ -19,7 +19,7 @@ namespace Account.Domain.Logic.Services
         }
         public async Task<LoggedUserDTO> LoginUserAsync(UserLoginDTO login)
         {
-            var userWithEmail = (await _repository.GetItemsAsync(u => u.Email.ToLower() == login.Email.ToLower())).FirstOrDefault();
+            var userWithEmail = (await _repository.GetFilteredAsync(u => u.Email.ToLower() == login.Email.ToLower())).FirstOrDefault();
             if (userWithEmail != null)
             {
                 if (_pwdService.VerifyPassword(login.Password, userWithEmail.PasswordHash, userWithEmail.PasswordSalt))
