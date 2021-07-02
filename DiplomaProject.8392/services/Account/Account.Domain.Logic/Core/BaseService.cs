@@ -1,13 +1,13 @@
-﻿using Account.Domain.Entities;
-using Account.Domain.Core;
+﻿using Account.Domain.Core;
+using Account.Domain.Entities;
+using Account.Domain.Logic.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Account.Domain.Logic.Interfaces;
 
-namespace Account.Domain.Logic.Core.Services
+namespace Account.Domain.Logic.Core
 {
     public abstract class BaseService
     {

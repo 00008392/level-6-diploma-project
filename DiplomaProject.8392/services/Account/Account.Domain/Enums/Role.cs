@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Account.Domain.Core
+namespace Account.Domain.Enums
 {
-   public abstract class BaseEntity
+   public enum Role
     {
-        public long Id { get; set; }
+        Admin,
+        User
     }
 }

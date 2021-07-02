@@ -1,23 +1,23 @@
-﻿using Account.Domain.Logic.Interfaces;
-using Account.Domain.Logic.DTOs;
+﻿using Account.Domain.Core;
 using Account.Domain.Entities;
-using Account.Domain.Core;
-using Account.Domain.Logic.Core.Services;
+using Account.Domain.Logic.Core;
+using Account.Domain.Logic.DTOs;
+using Account.Domain.Logic.Helpers;
+using Account.Domain.Logic.Interfaces;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FluentValidation;
-using System.Security.Cryptography;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace Account.Domain.Logic.Services
 {
     public class RegistrationService : BaseService, IRegistrationService
     {
         private readonly AbstractValidator<UserRegistrationDTO> _validator;
-        public RegistrationService(IRepository<User> repository, AbstractValidator<UserRegistrationDTO> validator, IPasswordHandlingService pwdService) : base(repository, pwdService)
+        public RegistrationService(IRepository<User> repository, AbstractValidator<UserRegistrationDTO> validator, IPasswordHandlingService pwdService) 
+            : base(repository, pwdService)
         {
             _validator = validator;
         }

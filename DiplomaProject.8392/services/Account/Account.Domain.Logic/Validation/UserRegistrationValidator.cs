@@ -1,6 +1,6 @@
-﻿using Account.Domain.Logic.DTOs;
+﻿using Account.Domain.Core;
 using Account.Domain.Entities;
-using Account.Domain.Core;
+using Account.Domain.Logic.DTOs;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Validation
 {
-   public class UserRegistrationValidator: AbstractValidator<UserRegistrationDTO>
+    public class UserRegistrationValidator : AbstractValidator<UserRegistrationDTO>
     {
         private readonly IRepository<User> _repository;
         public UserRegistrationValidator(IRepository<User> repository)
@@ -40,7 +40,7 @@ namespace Account.Domain.Logic.Validation
 
         private bool ContainsUpperCase(string password)
         {
-            return password.Any(c => char.IsUpper(c));    
+            return password.Any(c => char.IsUpper(c));
         }
 
         private bool ContainsLowercase(string password)
@@ -55,8 +55,8 @@ namespace Account.Domain.Logic.Validation
 
         private async Task<bool> IsUnique(string email, CancellationToken token)
         {
-            var userWithEmail = (await _repository.GetItemsAsync(u=>u.Email==email)).FirstOrDefault();
-            if(userWithEmail==null)
+            var userWithEmail = (await _repository.GetItemsAsync(u => u.Email == email)).FirstOrDefault();
+            if (userWithEmail == null)
             {
                 return true;
             }

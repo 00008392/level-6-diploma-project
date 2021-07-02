@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Account.Domain.Logic.Interfaces
+namespace Account.Domain.Logic.Helpers
 {
     public interface IPasswordHandlingService
     {

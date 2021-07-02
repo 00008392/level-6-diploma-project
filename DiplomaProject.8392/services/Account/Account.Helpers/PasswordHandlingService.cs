@@ -1,4 +1,4 @@
-﻿using Account.Domain.Logic.Interfaces;
+﻿using Account.Domain.Logic.Helpers;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Account.Services
+namespace Account.Helpers
 {
     public class PasswordHandlingService : IPasswordHandlingService
     {
@@ -35,7 +35,7 @@ namespace Account.Services
                 provider.GetNonZeroBytes(saltBytes);
             }
 
-           return Convert.ToBase64String(saltBytes);
+            return Convert.ToBase64String(saltBytes);
 
         }
         private string HashPassword(byte[] saltBytes, string password)
