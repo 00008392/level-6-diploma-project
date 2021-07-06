@@ -1,5 +1,6 @@
 ﻿using Account.Domain.Core;
 using Account.Domain.Entities;
+using Account.Domain.Enums;
 using Account.Domain.Logic.Core;
 using Account.Domain.Logic.DTOs;
 using Account.Domain.Logic.Helpers;
@@ -27,10 +28,11 @@ namespace Account.Domain.Logic.Services
                     return new LoggedUserDTO
                     {
                         Id = userWithEmail.Id,
-                        Role = userWithEmail.Role,
+                        Role = (int)userWithEmail.Role,
                         Email = userWithEmail.Email
                     };
                 }
+                
                 return null;
             }
 

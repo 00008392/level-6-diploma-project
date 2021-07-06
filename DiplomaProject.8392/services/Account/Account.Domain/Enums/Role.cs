@@ -11,4 +11,5 @@ namespace Account.Domain.Enums
         Admin,
         User
     }
+    
 }

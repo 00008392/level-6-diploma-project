@@ -11,6 +11,6 @@ namespace Account.Domain.Logic.DTOs
     {
         public long Id { get; set; }
         public string Email { get; set; }
-        public Role Role { get; set; }
+        public int Role { get; set; }
     }
 }

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "Account.API";
+
+package login;
+
+
+service Login {
+
+  rpc GetLoggedUser (LoginRequest) returns (LoginReply);
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginReply {
+  int64 id = 1;
+  string email = 2;
+  int32 role = 3;
+}
