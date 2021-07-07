@@ -36,7 +36,9 @@ namespace Account.API.Services
                 return loginReply;
 
             }
-            return null;
+            return new LoginReply {
+                Email = "error"
+            };
         }
            
     }

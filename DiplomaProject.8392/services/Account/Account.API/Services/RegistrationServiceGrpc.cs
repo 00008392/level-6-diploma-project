@@ -1,4 +1,4 @@
-﻿using Account.API.Protos;
+﻿
 using Account.Domain.Logic.DTOs;
 using Account.Domain.Enums;
 using Account.Domain.Logic.Interfaces;
@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 
 namespace Account.API.Services
 {
@@ -20,28 +21,33 @@ namespace Account.API.Services
 
         public override async Task<RegistrationReply> RegisterUser(RegistrationRequest request, ServerCallContext context)
         {
-           try
-            {
+
+          
                 var userDTO = new UserRegistrationDTO
                 {
                     Email = request.Email,
                     Password = request.Password,
                     Role = (Domain.Enums.Role)request.Role
                 };
-                await _service.RegisterUserAsync(userDTO);
-                return new RegistrationReply
-                {
-                    IsSuccess = true
-                };
-            }
-            catch(Exception ex)
+            try
             {
-                return new RegistrationReply
-                {
-                    IsSuccess = false,
-                    Message = ex.Message
-                };
+                await _service.RegisterUserAsync(userDTO);
+                return new RegistrationReply();
             }
+            catch(ValidationException ex)
+            {
+                var metadata = new Metadata();
+                var errorList = ex.Errors.ToList();
+                foreach(var item in errorList)
+                {
+                    metadata.Add(item.PropertyName, item.ErrorMessage);
+                }
+                throw new RpcException(new Status(StatusCode.Internal, "Validation error"), metadata);
+                
+            }
+           
+            
+          
         }
     }
 }

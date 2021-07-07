@@ -24,20 +24,28 @@ namespace Account.Domain.Logic.Services
         //can return exception
         public async Task RegisterUserAsync(UserRegistrationDTO userDTO)
         {
-            await _validator.ValidateAndThrowAsync(userDTO);
-            string hashedPassword = _pwdService.CreatePasswordHash(userDTO.Password);
-            string salt = _pwdService.GetSalt();
-
-
-            var user = new User
+           var result = await _validator.ValidateAsync(userDTO);
+            if(result.IsValid)
             {
-                Email = userDTO.Email,
-                RegistrationDate = DateTime.Now,
-                Role = userDTO.Role,
-                PasswordHash = hashedPassword,
-                PasswordSalt = salt
-            };
-            await _repository.CreateAsync(user);
+                string salt = _pwdService.GetSalt();
+                string hashedPassword = _pwdService.HashPassword(Convert.FromBase64String(salt) ,userDTO.Password);
+
+
+
+                var user = new User
+                {
+                    Email = userDTO.Email,
+                    RegistrationDate = DateTime.Now,
+                    Role = userDTO.Role,
+                    PasswordHash = hashedPassword,
+                    PasswordSalt = salt
+                };
+                await _repository.CreateAsync(user);
+            } else
+            {
+                throw new ValidationException(result.Errors);
+            }
+
         }
     }
 }

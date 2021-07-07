@@ -13,6 +13,10 @@ namespace Account.DAL.EF.Repositories
     public class GenericRepository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly AccountDbContext _context;
+        public GenericRepository(AccountDbContext context)
+        {
+            _context = context;
+        }
         private DbSet<T> _dbSet => _context.Set<T>();
         public async Task CreateAsync(T entity)
         {
@@ -38,7 +42,8 @@ namespace Account.DAL.EF.Repositories
 
         public async Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> filter)
         {
-            return await _dbSet.Where(filter).ToListAsync();
+            var list = await _dbSet.Where(filter).ToListAsync();
+            return list;
         }
 
         public bool IfExists(long id)

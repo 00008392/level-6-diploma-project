@@ -8,7 +8,7 @@ namespace Account.Domain.Logic.Helpers
 {
     public interface IPasswordHandlingService
     {
-        string CreatePasswordHash(string password);
+        string HashPassword(byte[] saltBytes, string password);
         bool VerifyPassword(string password, string hash, string salt);
         string GetSalt();
     }

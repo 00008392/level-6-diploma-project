@@ -1,6 +1,7 @@
 syntax = "proto3";
 
-option csharp_namespace = "Account.API.Protos";
+option csharp_namespace = "Account.API";
+package registration;
 
 
 service Registration {
@@ -15,7 +16,5 @@ message RegistrationRequest {
 }
 
 message RegistrationReply {
-  bool isSuccess = 1;
-  string message = 2;
 }
 

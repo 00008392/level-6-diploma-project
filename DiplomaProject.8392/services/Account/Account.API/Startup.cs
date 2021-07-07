@@ -59,7 +59,8 @@ namespace Account.API
 
             app.UseEndpoints((Action<Microsoft.AspNetCore.Routing.IEndpointRouteBuilder>)(endpoints =>
             {
-              //  GrpcEndpointRouteBuilderExtensions.MapGrpcService<Login>(endpoints);
+                GrpcEndpointRouteBuilderExtensions.MapGrpcService<LoginServiceGrpc>(endpoints);
+                GrpcEndpointRouteBuilderExtensions.MapGrpcService<RegistrationServiceGrpc>(endpoints);
 
                 endpoints.MapGet("/", async context =>
                 {

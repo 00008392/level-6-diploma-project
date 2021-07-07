@@ -11,12 +11,6 @@ namespace Account.Helpers
 {
     public class PasswordHandlingService : IPasswordHandlingService
     {
-        public string CreatePasswordHash(string password)
-        {
-            byte[] saltBytes = Convert.FromBase64String(GetSalt());
-            return HashPassword(saltBytes, password);
-
-        }
 
         public bool VerifyPassword(string password, string hash, string salt)
         {
@@ -38,7 +32,7 @@ namespace Account.Helpers
             return Convert.ToBase64String(saltBytes);
 
         }
-        private string HashPassword(byte[] saltBytes, string password)
+        public string HashPassword(byte[] saltBytes, string password)
         {
             return Convert.ToBase64String(KeyDerivation.Pbkdf2(
             password: password,
