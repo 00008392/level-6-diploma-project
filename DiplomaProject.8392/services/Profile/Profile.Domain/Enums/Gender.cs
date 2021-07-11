@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Account.Domain.Enums
+namespace Profile.Domain.Enums
 {
-   public enum Role
+   public enum Gender
     {
-       User,
-       Admin
+        Male,
+        Female
     }
-    
 }
