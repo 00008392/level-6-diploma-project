@@ -24,10 +24,12 @@ namespace Profile.Domain.Logic.Validation
                 .EmailAddress().WithMessage("Invalid email")
                 .MustAsync(IsUnique).WithMessage("This email already exists");
             RuleFor(u => u.DateOfBirth)
-                .NotEmpty()
-                .NotNull()
+                .NotEmpty().WithMessage("Date of birth cannot be empty")
+                .NotNull().WithMessage("Date of birth cannot be empty")
                 .Must(IsAdult);
-
+            RuleFor(u=>u.Gender)
+                .NotEmpty().WithMessage("Date of birth cannot be empty")
+                .NotNull().WithMessage("Gender cannot be empty");
             
         }
 

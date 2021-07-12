@@ -12,5 +12,6 @@ namespace Profile.Domain.Entities
         public string Name { get; set; }
         public int CountryId { get; set; }
         public Country Country { get; set; }
+        public ICollection<User> Users { get; set; }
     }
 }

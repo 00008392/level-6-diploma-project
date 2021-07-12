@@ -12,9 +12,9 @@ namespace Profile.Domain.Core
         Task CreateAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
-        Task<T> GetByIdAsync(long id);
-        Task<ICollection<T>> GetAllAsync();
-        Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> filter);
+        Task<T> GetByIdAsync(long id, params Expression<Func<T, object>>[] includes);
+        Task<ICollection<T>> GetAllAsync(params Expression<Func<T, object>> [] includes);
+        Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes);
         bool IfExists(long id);
     }
 }
