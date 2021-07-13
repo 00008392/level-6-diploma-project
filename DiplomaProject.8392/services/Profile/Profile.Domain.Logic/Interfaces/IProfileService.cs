@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Profile.Domain.Logic.Interfaces
 {
-    interface IProfileService
+    public interface IProfileService
     {
         Task UpdateProfile(UpdateProfileDTO profile);
         Task DeleteProfile(long id);
-        Task ChangePassword(ChangePasswordDTO password);
+   
     }
 }

@@ -26,7 +26,7 @@ namespace Profile.Domain.Logic.Validation
             RuleFor(u => u.DateOfBirth)
                 .NotEmpty().WithMessage("Date of birth cannot be empty")
                 .NotNull().WithMessage("Date of birth cannot be empty")
-                .Must(IsAdult);
+                .Must(IsAdult).WithMessage("You should be older than 18");
             RuleFor(u=>u.Gender)
                 .NotEmpty().WithMessage("Date of birth cannot be empty")
                 .NotNull().WithMessage("Gender cannot be empty");

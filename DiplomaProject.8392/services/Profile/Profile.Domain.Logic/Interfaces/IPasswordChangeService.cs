@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Profile.Domain.Logic.Interfaces
 {
-    public interface IProfileInfoService
+   public interface IPasswordChangeService
     {
-        Task<ProfileInfoDTO> GetProfileInfo(long id);
+        Task ChangePassword(ChangePasswordDTO password);
     }
 }
