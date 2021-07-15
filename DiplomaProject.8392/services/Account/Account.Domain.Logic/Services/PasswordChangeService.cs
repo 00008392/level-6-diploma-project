@@ -1,16 +1,16 @@
-﻿using FluentValidation;
-using Profile.Domain.Core;
-using Profile.Domain.Entities;
-using Profile.Domain.Logic.DTOs;
-using Profile.Domain.Logic.Helpers;
-using Profile.Domain.Logic.Interfaces;
+﻿using Account.Domain.Core;
+using Account.Domain.Entities;
+using Account.Domain.Logic.Contracts;
+using Account.Domain.Logic.DTOs;
+using Account.PasswordHandling;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Profile.Domain.Logic.Services
+namespace Account.Domain.Logic.Services
 {
     public class PasswordChangeService : IPasswordChangeService
     {

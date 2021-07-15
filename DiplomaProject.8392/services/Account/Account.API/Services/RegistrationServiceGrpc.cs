@@ -1,7 +1,7 @@
 ﻿
 using Account.Domain.Logic.DTOs;
 using Account.Domain.Enums;
-using Account.Domain.Logic.Interfaces;
+using Account.Domain.Logic.Contracts;
 using Grpc.Core;
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,6 @@ namespace Account.API.Services
         public override async Task<RegistrationReply> RegisterUser(RegistrationRequest request, ServerCallContext context)
         {
 
-          
                 var userDTO = new UserRegistrationDTO
                 {
                     Email = request.Email,
@@ -46,7 +45,6 @@ namespace Account.API.Services
                 
             }
            
-            
           
         }
     }

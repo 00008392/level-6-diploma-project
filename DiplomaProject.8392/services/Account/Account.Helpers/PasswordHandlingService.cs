@@ -1,4 +1,4 @@
-﻿using Account.Domain.Logic.Helpers;
+﻿
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Account.Helpers
+
+namespace Account.PasswordHandling
 {
     public class PasswordHandlingService : IPasswordHandlingService
     {

@@ -1,7 +1,7 @@
 ﻿using Profile.Domain.Core;
 using Profile.Domain.Entities;
 using Profile.Domain.Logic.DTOs;
-using Profile.Domain.Logic.Interfaces;
+using Profile.Domain.Logic.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +27,7 @@ namespace Profile.Domain.Logic.Services
                 LastName = user.LastName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                DateOfBirth = user.DateOfBirth,
+                DateOfBirth = (DateTime)user.DateOfBirth,
                 RegistrationDate = user.RegistrationDate,
                 Gender = user.Gender,
                 Address = user.Address,

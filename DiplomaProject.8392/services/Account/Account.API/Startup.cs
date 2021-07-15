@@ -3,11 +3,10 @@ using Account.DAL.EF.Data;
 using Account.DAL.EF.Repositories;
 using Account.Domain.Core;
 using Account.Domain.Logic.DTOs;
-using Account.Domain.Logic.Helpers;
-using Account.Domain.Logic.Interfaces;
+using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.Services;
 using Account.Domain.Logic.Validation;
-using Account.Helpers;
+using Account.PasswordHandling;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -42,6 +41,7 @@ namespace Account.API
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>) );
             services.AddScoped(typeof(ILoginService), typeof(LoginService));
             services.AddScoped(typeof(IRegistrationService), typeof(RegistrationService));
+            services.AddScoped(typeof(IPasswordChangeService), typeof(PasswordChangeService));
             services.AddScoped(typeof(IPasswordHandlingService), typeof(PasswordHandlingService));
             services.AddDbContext<AccountDbContext>(options =>
          options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
@@ -61,6 +61,7 @@ namespace Account.API
             {
                 GrpcEndpointRouteBuilderExtensions.MapGrpcService<LoginServiceGrpc>(endpoints);
                 GrpcEndpointRouteBuilderExtensions.MapGrpcService<RegistrationServiceGrpc>(endpoints);
+                GrpcEndpointRouteBuilderExtensions.MapGrpcService<PasswordChangeServiceGrpc>(endpoints);
 
                 endpoints.MapGet("/", async context =>
                 {

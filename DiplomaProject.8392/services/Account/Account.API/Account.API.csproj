@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Protos\passwordChange.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Protobuf Include="Protos\login.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\passwordChange.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\registration.proto" GrpcServices="Server" />
   </ItemGroup>
 
@@ -24,7 +29,7 @@
     <ProjectReference Include="..\Account.DAL\Account.DAL.EF\Account.DAL.EF.csproj" />
     <ProjectReference Include="..\Account.Domain.Logic\Account.Domain.Logic.csproj" />
     <ProjectReference Include="..\Account.Domain\Account.Domain.csproj" />
-    <ProjectReference Include="..\Account.Helpers\Account.Helpers.csproj" />
+    <ProjectReference Include="..\Account.Helpers\Account.PasswordHandling.csproj" />
   </ItemGroup>
 
 </Project>

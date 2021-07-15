@@ -18,7 +18,7 @@ namespace Profile.Domain.Logic.DTOs
         public DateTime DateOfBirth { get; set; }
         public Gender Gender { get; set; }
         public string Address { get; set; }
-        public int CityId { get; set; }
+        public long CityId { get; set; }
         public string UserInfo { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Profile.Domain.Logic.Interfaces
+namespace Profile.Domain.Logic.Contracts
 {
     public interface IProfileService
     {

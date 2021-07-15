@@ -1,6 +1,6 @@
 ﻿using Account.Domain.Core;
 using Account.Domain.Entities;
-using Account.Domain.Logic.Helpers;
+using Account.PasswordHandling;
 using System;
 using System.Collections.Generic;
 using System.Linq;

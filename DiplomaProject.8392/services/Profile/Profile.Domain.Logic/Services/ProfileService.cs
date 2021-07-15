@@ -2,8 +2,7 @@
 using Profile.Domain.Core;
 using Profile.Domain.Entities;
 using Profile.Domain.Logic.DTOs;
-using Profile.Domain.Logic.Helpers;
-using Profile.Domain.Logic.Interfaces;
+using Profile.Domain.Logic.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

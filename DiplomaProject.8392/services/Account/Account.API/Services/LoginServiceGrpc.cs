@@ -1,6 +1,6 @@
 ﻿using Account.Domain.Enums;
 using Account.Domain.Logic.DTOs;
-using Account.Domain.Logic.Interfaces;
+using Account.Domain.Logic.Contracts;
 using Grpc.Core;
 using System;
 using System.Collections.Generic;

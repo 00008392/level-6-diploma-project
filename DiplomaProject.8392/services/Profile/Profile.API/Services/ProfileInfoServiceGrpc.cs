@@ -1,5 +1,6 @@
-﻿using Grpc.Core;
-using Profile.Domain.Logic.Interfaces;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
+using Profile.Domain.Logic.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,35 @@ namespace Profile.API.Services
             _service = service;
         }
 
-        public override Task<ProfileInfoResponse> GetProfileInfo(ProfileInfoRequest request, ServerCallContext context)
+        public override async Task<ProfileInfoResponse> GetProfileInfo(ProfileInfoRequest request, ServerCallContext context)
         {
-            return Task.FromResult(new ProfileInfoResponse()
-           );
+            var user = await _service.GetProfileInfo(request.Id);
+            if(user==null)
+            {
+                return new ProfileInfoResponse();
+            }
+            var response = new ProfileInfoResponse
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                DateOfBirth = Timestamp.FromDateTime(user.DateOfBirth),
+                RegistrationDate = Timestamp.FromDateTime(user.RegistrationDate),
+                Gender = (int)user.Gender,
+                Address = user.Address,
+                City = new City
+                {
+                    Id = user.City.Id,
+                    Name = user.City.Name
+                },
+                UserInfo = user.UserInfo,
+                ProfilePhoto = Google.Protobuf.ByteString.CopyFrom(user.ProfilePhoto),
+                MimeType = user.MimeType
+            };
+
+            return response;
         }
       
     }

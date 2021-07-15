@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.DTOs
 {
-    public class UserLoginDTO: PasswordBaseDTO
+    public class ChangePasswordDTO: PasswordBaseDTO
     {
-        public string Email { get; set; }
+        public long Id { get; set; }
     }
 }

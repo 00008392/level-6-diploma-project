@@ -1,5 +1,7 @@
-﻿using Grpc.Core;
-using Profile.Domain.Logic.Interfaces;
+﻿using FluentValidation;
+using Grpc.Core;
+using Profile.Domain.Logic.DTOs;
+using Profile.Domain.Logic.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +17,42 @@ namespace Profile.API.Services
             _service = service;
         }
 
-        public override Task<UpdateReply> UpdateProfile(UpdateRequest request, ServerCallContext context)
+        public override async Task<UpdateReply> UpdateProfile(UpdateRequest request, ServerCallContext context)
         {
-            return Task.FromResult(new UpdateReply()
-           );
+            var updateDTO = new UpdateProfileDTO
+            {
+                Id = request.Id,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+                DateOfBirth = request.DateOfBirth.ToDateTime(),
+                Gender = (Domain.Enums.Gender)request.Gender,
+                Address = request.Address,
+                CityId = request.CityId,
+                UserInfo = request.UserInfo
+            };
+            try
+            {
+                await _service.UpdateProfile(updateDTO);
+                return new UpdateReply();
+            }
+            catch(ValidationException ex)
+            {
+                var metadata = new Metadata();
+                var errorList = ex.Errors.ToList();
+                foreach (var item in errorList)
+                {
+                    metadata.Add(item.PropertyName, item.ErrorMessage);
+                }
+                throw new RpcException(new Status(StatusCode.Internal, "Validation error"), metadata);
+            }
+        
         }
-        public override Task<DeleteReply> DeleteProfile(DeleteRequest request, ServerCallContext context)
+        public override async Task<DeleteReply> DeleteProfile(DeleteRequest request, ServerCallContext context)
         {
-            return Task.FromResult(new DeleteReply()
-           );
+           await _service.DeleteProfile(request.Id);
+            return new DeleteReply();
         }
     }
 }

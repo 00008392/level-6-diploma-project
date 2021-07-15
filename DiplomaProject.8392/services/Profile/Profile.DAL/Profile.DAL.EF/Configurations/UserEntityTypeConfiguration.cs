@@ -20,8 +20,6 @@ namespace Profile.DAL.EF.Configurations
             builder.Property(u => u.DateOfBirth).IsRequired(false);
             builder.HasOne(u => u.City).WithMany(c => c.Users).HasForeignKey(u => u.CityId);
             builder.Property(u => u.ProfilePhoto).IsRequired(false);
-            builder.Property(u => u.PasswordSalt).IsRequired(true);
-            builder.Property(u => u.PasswordHash).IsRequired(true);
         }
     }
 }

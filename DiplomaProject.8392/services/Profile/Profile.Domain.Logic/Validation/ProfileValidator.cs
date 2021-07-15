@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace Profile.Domain.Logic.Validation
 {
-    class ProfileValidator: AbstractValidator<UpdateProfileDTO>
+   public class ProfileValidator: AbstractValidator<UpdateProfileDTO>
     {
         private readonly IRepository<User> _repository;
         public ProfileValidator(IRepository<User> repository)

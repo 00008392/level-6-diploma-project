@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Account.DAL\Account.DAL.EF\Account.DAL.EF.csproj" />
     <ProjectReference Include="..\Account.Domain\Account.Domain.csproj" />
+    <ProjectReference Include="..\Account.Helpers\Account.PasswordHandling.csproj" />
   </ItemGroup>
 
 </Project>

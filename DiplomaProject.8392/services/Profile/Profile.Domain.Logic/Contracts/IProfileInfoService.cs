@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Profile.Domain.Logic.Interfaces
+namespace Profile.Domain.Logic.Contracts
 {
-   public interface IPasswordChangeService
+    public interface IProfileInfoService
     {
-        Task ChangePassword(ChangePasswordDTO password);
+        Task<ProfileInfoDTO> GetProfileInfo(long id);
     }
 }
