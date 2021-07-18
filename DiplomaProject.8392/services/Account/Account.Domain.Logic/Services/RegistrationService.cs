@@ -21,7 +21,6 @@ namespace Account.Domain.Logic.Services
         {
             _validator = validator;
         }
-        //can return exception
         public async Task RegisterUserAsync(UserRegistrationDTO userDTO)
         {
            var result = await _validator.ValidateAsync(userDTO);

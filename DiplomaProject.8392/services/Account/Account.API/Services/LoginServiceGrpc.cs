@@ -1,6 +1,5 @@
-﻿using Account.Domain.Enums;
+﻿using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.DTOs;
-using Account.Domain.Logic.Contracts;
 using Grpc.Core;
 using System;
 using System.Collections.Generic;
@@ -25,7 +24,7 @@ namespace Account.API.Services
                 Password = request.Password
             };
             var loggedUser = await _service.LoginUserAsync(loginDTO);
-            if(loggedUser!=null)
+            if (loggedUser != null)
             {
                 var loginReply = new LoginReply
                 {
@@ -36,11 +35,10 @@ namespace Account.API.Services
                 return loginReply;
 
             }
-            return new LoginReply {
-                Email = "error"
+            return new LoginReply
+            {
+               NoUser = true
             };
         }
-           
     }
 }
-

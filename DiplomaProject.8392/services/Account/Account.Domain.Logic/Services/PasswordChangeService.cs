@@ -1,6 +1,7 @@
 ﻿using Account.Domain.Core;
 using Account.Domain.Entities;
 using Account.Domain.Logic.Contracts;
+using Account.Domain.Logic.Core;
 using Account.Domain.Logic.DTOs;
 using Account.PasswordHandling;
 using FluentValidation;
@@ -12,20 +13,16 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Services
 {
-    public class PasswordChangeService : IPasswordChangeService
+    public class PasswordChangeService : BaseService, IPasswordChangeService
     {
-        private readonly IRepository<User> _repository;
         private readonly AbstractValidator<ChangePasswordDTO> _passwordValidator;
-        private readonly IPasswordHandlingService _pwdService;
         public PasswordChangeService(IRepository<User> repository,
            AbstractValidator<ChangePasswordDTO> passwordValidator,
-           IPasswordHandlingService pwdService)
+           IPasswordHandlingService pwdService):base(repository, pwdService)
         {
-            _repository = repository;
             _passwordValidator = passwordValidator;
-            _pwdService = pwdService;
         }
-        public async Task ChangePassword(ChangePasswordDTO password)
+        public async Task ChangePasswordAsync(ChangePasswordDTO password)
         {
             var user = await _repository.GetByIdAsync(password.Id);
             if (user == null)
@@ -36,8 +33,8 @@ namespace Account.Domain.Logic.Services
             var result = await _passwordValidator.ValidateAsync(password);
             if (result.IsValid)
             {
-                string salt = _pwdService.GetSalt();
-                string hashedPassword = _pwdService.HashPassword(Convert.FromBase64String(salt), password.Password);
+                var salt = _pwdService.GetSalt();
+                var hashedPassword = _pwdService.HashPassword(Convert.FromBase64String(salt), password.Password);
                 user.PasswordSalt = salt;
                 user.PasswordHash = hashedPassword;
                 await _repository.UpdateAsync(user);

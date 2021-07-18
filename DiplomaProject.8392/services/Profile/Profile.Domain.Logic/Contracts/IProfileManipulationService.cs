@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace Profile.Domain.Logic.Contracts
 {
-    public interface IProfileService
+    public interface IProfileManipulationService
     {
         Task UpdateProfile(UpdateProfileDTO profile);
         Task DeleteProfile(long id);
+        bool ProfileExists(long id);
    
     }
 }

@@ -7,13 +7,18 @@ option csharp_namespace = "Profile.API";
 package profile;
 
 
-service Profile {
+service ProfileManipulation {
 
-  rpc UpdateProfile (UpdateRequest) returns (UpdateReply);
-  rpc DeleteProfile (DeleteRequest) returns (DeleteReply);
+  rpc UpdateProfile (UpdateRequest) returns (Response);
+  rpc DeleteProfile (DeleteRequest) returns (Response);
 }
 
 
+service ProfileInfo {
+
+  rpc GetProfileInfo (ProfileInfoRequest) returns (ProfileInfoResponse);
+
+}
 message UpdateRequest {
   int64 id = 1;
   string firstName = 2;
@@ -26,15 +31,40 @@ message UpdateRequest {
   int64 cityId = 9;
   string userInfo = 10;
 }
-
-
-message UpdateReply {
-}
-
 message DeleteRequest {
   int64 id = 1;
 }
+message Error {
+	string propertyName = 1;
+	string message = 2;
+}
+message Response {
+	bool IsSuccess = 1;
+	repeated Error errors = 2;
+	string message = 3;
+}
 
+message ProfileInfoRequest {
+	int64 id = 1;
+}
 
-message DeleteReply {
+message ProfileInfoResponse {
+    int64 id = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string Email = 4;
+    string phoneNumber = 5;
+    google.protobuf.Timestamp DateOfBirth = 6;
+    google.protobuf.Timestamp RegistrationDate = 7;
+    int32 gender = 8;
+    string address = 9;
+    City city = 10;
+    string userInfo = 11;
+    bytes profilePhoto = 12;
+    string mimeType = 13;
+}
+
+message City {
+    int64 id = 1;
+    string Name = 2;
 }

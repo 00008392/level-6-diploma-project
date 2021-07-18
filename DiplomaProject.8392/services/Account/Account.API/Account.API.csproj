@@ -1,19 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Protos\passwordChange.proto" />
+    <Protobuf Include="Protos\account.proto" GrpcServices="Server" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Protobuf Include="Protos\login.proto" GrpcServices="Server" />
-    <Protobuf Include="Protos\passwordChange.proto" GrpcServices="Server" />
-    <Protobuf Include="Protos\registration.proto" GrpcServices="Server" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.2.3" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />
@@ -29,7 +22,6 @@
     <ProjectReference Include="..\Account.DAL\Account.DAL.EF\Account.DAL.EF.csproj" />
     <ProjectReference Include="..\Account.Domain.Logic\Account.Domain.Logic.csproj" />
     <ProjectReference Include="..\Account.Domain\Account.Domain.csproj" />
-    <ProjectReference Include="..\Account.Helpers\Account.PasswordHandling.csproj" />
   </ItemGroup>
 
 </Project>

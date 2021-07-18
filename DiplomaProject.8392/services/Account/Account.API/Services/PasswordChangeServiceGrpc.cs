@@ -1,4 +1,5 @@
-﻿using Account.Domain.Logic.Contracts;
+﻿using Account.API.ExceptionHandling;
+using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.DTOs;
 using FluentValidation;
 using Grpc.Core;
@@ -17,7 +18,7 @@ namespace Account.API.Services
             _service = service;
         }
 
-        public override async Task<ChangePasswordResponse> ChangePassword(ChangePasswordRequest request, ServerCallContext context)
+        public override async Task<Response> ChangePassword(ChangePasswordRequest request, ServerCallContext context)
         {
             var passwordDTO = new ChangePasswordDTO
             {
@@ -26,21 +27,21 @@ namespace Account.API.Services
             };
             try
             {
-                await _service.ChangePassword(passwordDTO);
-                return new ChangePasswordResponse();
+                await _service.ChangePasswordAsync(passwordDTO);
+                return new Response
+                {
+                    IsSuccess = true
+                };
             }
             catch (ValidationException ex)
             {
-                var metadata = new Metadata();
-                var errorList = ex.Errors.ToList();
-                foreach (var item in errorList)
-                {
-                    metadata.Add(item.PropertyName, item.ErrorMessage);
-                }
-                throw new RpcException(new Status(StatusCode.Internal, "Validation error"), metadata);
+                
+                return ExceptionHandler.HandleValidationException(ex);
             }
-
-
+            catch(Exception ex)
+            {
+                return ExceptionHandler.HandleException(ex);
+            }
         }
     }
 }

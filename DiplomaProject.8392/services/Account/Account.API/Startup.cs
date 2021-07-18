@@ -1,4 +1,4 @@
-﻿using Account.API.Services;
+﻿
 using Account.DAL.EF.Data;
 using Account.DAL.EF.Repositories;
 using Account.Domain.Core;
@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Account.API.Services;
 
 namespace Account.API
 {

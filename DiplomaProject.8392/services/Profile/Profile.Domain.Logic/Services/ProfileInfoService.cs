@@ -20,23 +20,28 @@ namespace Profile.Domain.Logic.Services
         public async Task<ProfileInfoDTO> GetProfileInfo(long id)
         {
             var user = await _repository.GetByIdAsync(id);
-            var profileDTO = new ProfileInfoDTO
+            if(user!=null)
             {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                DateOfBirth = (DateTime)user.DateOfBirth,
-                RegistrationDate = user.RegistrationDate,
-                Gender = user.Gender,
-                Address = user.Address,
-                City = user.City,
-                UserInfo = user.UserInfo,
-                ProfilePhoto = user.ProfilePhoto,
-                MimeType = user.MimeType
-            };
-            return profileDTO;
+                var profileDTO = new ProfileInfoDTO
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    DateOfBirth = (DateTime)user.DateOfBirth,
+                    RegistrationDate = user.RegistrationDate,
+                    Gender = user.Gender,
+                    Address = user.Address,
+                    City = user.City,
+                    UserInfo = user.UserInfo,
+                    ProfilePhoto = user.ProfilePhoto,
+                    MimeType = user.MimeType
+                };
+                return profileDTO;
+            }
+
+            return null;
         }
     }
 }

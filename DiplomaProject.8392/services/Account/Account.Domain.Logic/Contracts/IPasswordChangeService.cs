@@ -9,6 +9,6 @@ namespace Account.Domain.Logic.Contracts
 {
     public interface IPasswordChangeService
     {
-        Task ChangePassword(ChangePasswordDTO password);
+        Task ChangePasswordAsync(ChangePasswordDTO password);
     }
 }
