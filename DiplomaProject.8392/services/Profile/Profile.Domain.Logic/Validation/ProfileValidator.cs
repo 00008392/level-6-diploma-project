@@ -21,29 +21,22 @@ namespace Profile.Domain.Logic.Validation
                 .NotEmpty().WithMessage("First name cannot be empty");
             RuleFor(u => u.Email)
                 .NotEmpty().WithMessage("Email cannot be empty")
-                .EmailAddress().WithMessage("Invalid email")
-                .MustAsync(IsUnique).WithMessage("This email already exists");
+                .EmailAddress().WithMessage("Invalid email");
             RuleFor(u => u.DateOfBirth)
-                .NotEmpty().WithMessage("Date of birth cannot be empty")
                 .NotNull().WithMessage("Date of birth cannot be empty")
                 .Must(IsAdult).WithMessage("You should be older than 18");
             RuleFor(u=>u.Gender)
-                .NotEmpty().WithMessage("Gender cannot be empty")
                 .NotNull().WithMessage("Gender cannot be empty");
         }
 
-        private async Task<bool> IsUnique(string email, CancellationToken token)
+       
+        private bool IsAdult(DateTime? dateOfBirth)
         {
-            var userWithEmail = (await _repository.GetFilteredAsync(u => u.Email == email)).FirstOrDefault();
-            if (userWithEmail == null)
+            if(dateOfBirth == null)
             {
-                return true;
+                return false;
             }
-            return false;
-        }
-        private bool IsAdult(DateTime dateOfBirth)
-        {
-            if (dateOfBirth.AddYears(18) > DateTime.Now)
+            if (((DateTime)dateOfBirth).AddYears(18) > DateTime.Now)
             {
                 return false;
             }

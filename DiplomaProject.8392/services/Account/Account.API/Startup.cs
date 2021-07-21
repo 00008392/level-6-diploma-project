@@ -38,6 +38,7 @@ namespace Account.API
         {
             services.AddGrpc();
             services.AddFluentValidation();
+            services.AddScoped<AbstractValidator<PasswordBaseDTO>, PasswordBaseValidator>();
             services.AddScoped<AbstractValidator<UserRegistrationDTO>, UserRegistrationValidator>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>) );
             services.AddScoped(typeof(ILoginService), typeof(LoginService));

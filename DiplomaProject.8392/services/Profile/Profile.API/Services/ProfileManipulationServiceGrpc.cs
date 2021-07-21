@@ -29,7 +29,7 @@ namespace Profile.API.Services
                 LastName = request.LastName,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
-                DateOfBirth = request.DateOfBirth.ToDateTime(),
+                DateOfBirth = request.DateOfBirth==null? null: request.DateOfBirth.ToDateTime(),
                 Gender = (Domain.Enums.Gender)request.Gender,
                 Address = request.Address,
                 CityId = request.CityId,

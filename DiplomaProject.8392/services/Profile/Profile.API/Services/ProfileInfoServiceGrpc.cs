@@ -30,7 +30,7 @@ namespace Profile.API.Services
                 LastName = user.LastName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                DateOfBirth = Timestamp.FromDateTime(user.DateOfBirth),
+                DateOfBirth = Timestamp.FromDateTime((DateTime)user.DateOfBirth),
                 RegistrationDate = Timestamp.FromDateTime(user.RegistrationDate),
                 Gender = (int)user.Gender,
                 Address = user.Address,

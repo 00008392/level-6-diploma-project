@@ -3,6 +3,7 @@ using Account.Domain.Entities;
 using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.Core;
 using Account.Domain.Logic.DTOs;
+using Account.Domain.Logic.Exceptions;
 using Account.PasswordHandling;
 using FluentValidation;
 using System;
@@ -15,9 +16,9 @@ namespace Account.Domain.Logic.Services
 {
     public class PasswordChangeService : BaseService, IPasswordChangeService
     {
-        private readonly AbstractValidator<ChangePasswordDTO> _passwordValidator;
+        private readonly AbstractValidator<PasswordBaseDTO> _passwordValidator;
         public PasswordChangeService(IRepository<User> repository,
-           AbstractValidator<ChangePasswordDTO> passwordValidator,
+           AbstractValidator<PasswordBaseDTO> passwordValidator,
            IPasswordHandlingService pwdService):base(repository, pwdService)
         {
             _passwordValidator = passwordValidator;
@@ -27,7 +28,7 @@ namespace Account.Domain.Logic.Services
             var user = await _repository.GetByIdAsync(password.Id);
             if (user == null)
             {
-                throw new Exception("User does not exist");
+                throw new AccountNotFoundException(password.Id);
 
             }
             var result = await _passwordValidator.ValidateAsync(password);
@@ -38,8 +39,11 @@ namespace Account.Domain.Logic.Services
                 user.PasswordSalt = salt;
                 user.PasswordHash = hashedPassword;
                 await _repository.UpdateAsync(user);
+            } else
+            {
+                throw new ValidationException(result.Errors);
             }
-            throw new ValidationException(result.Errors);
+
         }
     }
 }

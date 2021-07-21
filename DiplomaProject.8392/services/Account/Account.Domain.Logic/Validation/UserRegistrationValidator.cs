@@ -14,9 +14,11 @@ namespace Account.Domain.Logic.Validation
     public class UserRegistrationValidator : AbstractValidator<UserRegistrationDTO>
     {
         private readonly IRepository<User> _repository;
-        public UserRegistrationValidator(IRepository<User> repository, 
-            AbstractValidator<ChangePasswordDTO> passwordValidator)
+        public UserRegistrationValidator(IRepository<User> repository,
+            AbstractValidator<PasswordBaseDTO> pwdValidator
+            )
         {
+            Include(pwdValidator);
             _repository = repository;
             RuleFor(u => u.Email)
                 .NotEmpty().WithMessage("Email is empty")

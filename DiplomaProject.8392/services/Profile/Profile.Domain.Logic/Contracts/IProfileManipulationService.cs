@@ -11,7 +11,6 @@ namespace Profile.Domain.Logic.Contracts
     {
         Task UpdateProfile(UpdateProfileDTO profile);
         Task DeleteProfile(long id);
-        bool ProfileExists(long id);
    
     }
 }

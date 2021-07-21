@@ -29,7 +29,7 @@ namespace Profile.Domain.Logic.Services
                     LastName = user.LastName,
                     Email = user.Email,
                     PhoneNumber = user.PhoneNumber,
-                    DateOfBirth = (DateTime)user.DateOfBirth,
+                    DateOfBirth = user.DateOfBirth,
                     RegistrationDate = user.RegistrationDate,
                     Gender = user.Gender,
                     Address = user.Address,
