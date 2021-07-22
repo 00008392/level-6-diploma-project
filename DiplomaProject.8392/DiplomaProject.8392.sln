@@ -33,6 +33,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Account.Utilities", "Accoun
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Account.PasswordHandling", "services\Account\Account.Utilities\Account.PasswordHandling\Account.PasswordHandling.csproj", "{1CCC75CD-463B-4BA5-AEAF-349E5E39DFFA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Post", "Post", "{0BCA365D-B509-4FF2-BEE4-78DA69D0956A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Post.Domain", "services\Post\Post.Domain\Post.Domain.csproj", "{E3772A00-E8E5-41B2-ADA8-BFDE2E130437}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,10 @@ Global
 		{1CCC75CD-463B-4BA5-AEAF-349E5E39DFFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CCC75CD-463B-4BA5-AEAF-349E5E39DFFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CCC75CD-463B-4BA5-AEAF-349E5E39DFFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3772A00-E8E5-41B2-ADA8-BFDE2E130437}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3772A00-E8E5-41B2-ADA8-BFDE2E130437}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3772A00-E8E5-41B2-ADA8-BFDE2E130437}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3772A00-E8E5-41B2-ADA8-BFDE2E130437}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +102,8 @@ Global
 		{B1135900-0D1C-4321-AB78-FD84D2012E26} = {529DF898-3802-47DE-80A2-26374EE82E27}
 		{FF956AA7-581B-479B-84A9-7DDCD321FCEC} = {BDA8673C-0A18-4A04-BB7E-23C42CE72B59}
 		{1CCC75CD-463B-4BA5-AEAF-349E5E39DFFA} = {FF956AA7-581B-479B-84A9-7DDCD321FCEC}
+		{0BCA365D-B509-4FF2-BEE4-78DA69D0956A} = {2B3013CF-128F-4CC9-8AD5-7E9A5F62981A}
+		{E3772A00-E8E5-41B2-ADA8-BFDE2E130437} = {0BCA365D-B509-4FF2-BEE4-78DA69D0956A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E5F12852-0C37-489B-8CB9-48ADED5F8F8C}
