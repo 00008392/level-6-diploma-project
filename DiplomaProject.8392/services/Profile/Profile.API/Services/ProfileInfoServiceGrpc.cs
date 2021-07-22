@@ -21,7 +21,9 @@ namespace Profile.API.Services
             var user = await _service.GetProfileInfo(request.Id);
             if(user==null)
             {
-                return new ProfileInfoResponse();
+                return new ProfileInfoResponse {
+                    NoUser = true
+                };
             }
             var response = new ProfileInfoResponse
             {
@@ -30,8 +32,8 @@ namespace Profile.API.Services
                 LastName = user.LastName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                DateOfBirth = Timestamp.FromDateTime((DateTime)user.DateOfBirth),
-                RegistrationDate = Timestamp.FromDateTime(user.RegistrationDate),
+                DateOfBirth = user.DateOfBirth==null? null: Timestamp.FromDateTime(DateTime.SpecifyKind((DateTime)user.DateOfBirth, DateTimeKind.Utc)),
+                RegistrationDate = Timestamp.FromDateTime(DateTime.SpecifyKind(user.RegistrationDate, DateTimeKind.Utc)),
                 Gender = (int)user.Gender,
                 Address = user.Address,
                 City = new City
@@ -40,7 +42,7 @@ namespace Profile.API.Services
                     Name = user.City.Name
                 },
                 UserInfo = user.UserInfo,
-                ProfilePhoto = Google.Protobuf.ByteString.CopyFrom(user.ProfilePhoto),
+                ProfilePhoto = user.ProfilePhoto==null? null: Google.Protobuf.ByteString.CopyFrom(user.ProfilePhoto),
                 MimeType = user.MimeType
             };
 

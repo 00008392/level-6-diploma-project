@@ -19,7 +19,7 @@ namespace Profile.Domain.Logic.Services
         }
         public async Task<ProfileInfoDTO> GetProfileInfo(long id)
         {
-            var user = await _repository.GetByIdAsync(id);
+            var user = await _repository.GetByIdAsync(id, u=>u.City);
             if(user!=null)
             {
                 var profileDTO = new ProfileInfoDTO

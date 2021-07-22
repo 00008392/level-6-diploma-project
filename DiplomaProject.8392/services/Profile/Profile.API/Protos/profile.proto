@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 option csharp_namespace = "Profile.API";
 
@@ -50,21 +51,22 @@ message ProfileInfoRequest {
 
 message ProfileInfoResponse {
     int64 id = 1;
-    string firstName = 2;
-    string lastName = 3;
-    string Email = 4;
-    string phoneNumber = 5;
+   google.protobuf.StringValue firstName = 2;
+   google.protobuf.StringValue lastName = 3;
+    google.protobuf.StringValue Email = 4;
+    google.protobuf.StringValue phoneNumber = 5;
     google.protobuf.Timestamp DateOfBirth = 6;
     google.protobuf.Timestamp RegistrationDate = 7;
-    int32 gender = 8;
-    string address = 9;
+    google.protobuf.Int32Value gender = 8;
+    google.protobuf.StringValue address = 9;
     City city = 10;
-    string userInfo = 11;
-    bytes profilePhoto = 12;
-    string mimeType = 13;
+    google.protobuf.StringValue userInfo = 11;
+    google.protobuf.BytesValue profilePhoto = 12;
+    google.protobuf.StringValue mimeType = 13;
+    bool NoUser = 14;
 }
 
 message City {
-    int64 id = 1;
-    string Name = 2;
+    google.protobuf.Int64Value id = 1;
+    google.protobuf.StringValue Name = 2;
 }
