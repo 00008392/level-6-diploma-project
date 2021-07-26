@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Entities
 {
-    public class AccommodationSpecificity: AccommodationBase
+    public class AccommodationSpecificity: ItemAccommodationBase
     {
-        public long SpecificityId { get; set; }
         public Specificity Specificity { get; set; }
-        public string OtherSpecificity { get; set; }
     }
 }

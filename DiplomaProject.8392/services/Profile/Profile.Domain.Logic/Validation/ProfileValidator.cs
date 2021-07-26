@@ -13,10 +13,8 @@ namespace Profile.Domain.Logic.Validation
 {
    public class ProfileValidator: AbstractValidator<UpdateProfileDTO>
     {
-        private readonly IRepository<User> _repository;
-        public ProfileValidator(IRepository<User> repository)
+        public ProfileValidator()
         {
-            _repository = repository;
             RuleFor(u => u.FirstName)
                 .NotEmpty().WithMessage("First name cannot be empty");
             RuleFor(u => u.Email)

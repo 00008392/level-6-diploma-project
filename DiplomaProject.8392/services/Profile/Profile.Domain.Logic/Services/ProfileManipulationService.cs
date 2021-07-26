@@ -39,7 +39,8 @@ namespace Profile.Domain.Logic.Services
 
         public async Task UpdateProfile(UpdateProfileDTO profile)
         {
-            if (!_userRepository.IfExists(profile.Id))
+            var user = await _userRepository.GetByIdAsync(profile.Id);
+            if (user == null)
             {
                 throw new ProfileNotFoundException(profile.Id);
             }
@@ -53,30 +54,26 @@ namespace Profile.Domain.Logic.Services
             {
                 throw new ValidationException(result.Errors);
             }
-
-            var user = new User
+            if (profile.CityId != null)
             {
-                Id = profile.Id,
-                FirstName = profile.FirstName,
-                LastName = profile.LastName,
-                Email = profile.Email,
-                PhoneNumber = profile.PhoneNumber,
-                DateOfBirth = profile.DateOfBirth,
-                Gender = profile.Gender,
-                Address = profile.Address,
-                CityId = profile.CityId,
-                UserInfo = profile.UserInfo
-            };
-              if(user.CityId!=null)
-            {
-                if(!_cityRepository.IfExists((long)user.CityId))
+                if (!_cityRepository.IfExists((long)profile.CityId))
                 {
                     throw new ForeignKeyViolationException("city");
                 }
             }
-                await _userRepository.UpdateAsync(user);
 
-          
+            user.FirstName = profile.FirstName;
+            user.LastName = profile.LastName;
+            user.Email = profile.Email;
+            user.PhoneNumber = profile.PhoneNumber;
+            user.DateOfBirth = profile.DateOfBirth;
+            user.Gender = profile.Gender;
+            user.Address = profile.Address;
+            user.CityId = profile.CityId;
+            user.UserInfo = profile.UserInfo;
+             
+            await _userRepository.UpdateAsync(user);
+
         }
     }
 }

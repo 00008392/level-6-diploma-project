@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Entities
 {
-    public class Facility: BaseEntity
+    public class Facility: ItemBase
     {
-        public string Name { get; set; }
         public ICollection<AccommodationFacility> AccommodationFacilities { get; set; }
     }
 }

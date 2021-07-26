@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Entities
 {
-    public class Rule: BaseEntity
+    public class Rule: ItemBase
     {
-        public string Name { get; set; }
         public ICollection<AccommodationRule> AccommodationRules { get; set; }
     }
 }

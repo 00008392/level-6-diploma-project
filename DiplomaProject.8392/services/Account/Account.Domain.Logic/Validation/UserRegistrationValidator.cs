@@ -13,31 +13,19 @@ namespace Account.Domain.Logic.Validation
 {
     public class UserRegistrationValidator : AbstractValidator<UserRegistrationDTO>
     {
-        private readonly IRepository<User> _repository;
-        public UserRegistrationValidator(IRepository<User> repository,
+        public UserRegistrationValidator(
             AbstractValidator<PasswordBaseDTO> pwdValidator
             )
         {
             Include(pwdValidator);
-            _repository = repository;
             RuleFor(u => u.Email)
                 .NotEmpty().WithMessage("Email is empty")
-                .EmailAddress().WithMessage("Invalid email")
-                .MustAsync(IsUnique).WithMessage("This email already exists");
+                .EmailAddress().WithMessage("Invalid email");
            
             RuleFor(u => u.Role)
                 .NotNull();
 
         }
 
-        private async Task<bool> IsUnique(string email, CancellationToken token)
-        {
-            var userWithEmail = (await _repository.GetFilteredAsync(u => u.Email == email)).FirstOrDefault();
-            if (userWithEmail == null)
-            {
-                return true;
-            }
-            return false;
-        }
     }
 }

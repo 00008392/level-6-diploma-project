@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Account.Domain.Logic.Exceptions;
 
 namespace Account.Domain.Logic.Services
 {
@@ -26,6 +27,11 @@ namespace Account.Domain.Logic.Services
            var result = await _validator.ValidateAsync(userDTO);
             if(result.IsValid)
             {
+                var userWithEmail = (await _repository.GetFilteredAsync(u => u.Email == userDTO.Email)).FirstOrDefault();
+                if (userWithEmail != null)
+                {
+                    throw new UniqueConstraintViolationException(nameof(userDTO.Email), userDTO.Email);
+                }
                 string salt = _pwdService.GetSalt();
                 string hashedPassword = _pwdService.HashPassword(Convert.FromBase64String(salt) ,userDTO.Password);
                 var user = new User
