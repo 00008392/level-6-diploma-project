@@ -4,6 +4,7 @@ using Post.Domain.Entities;
 using Post.Domain.Logic.Contracts;
 using Post.Domain.Logic.Core;
 using Post.Domain.Logic.DTOs;
+using Post.Domain.Logic.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,11 +40,11 @@ namespace Post.Domain.Logic.Services
             }
             if(!_accommodationRepository.IfExists(itemDTO.AccommodationId))
             {
-                throw new Exception("Accommodation does not exist");
+                throw new ForeignKeyViolationException("Accommodation");
             }
             if(!_itemRepository.IfExists(itemDTO.ItemId))
             {
-                throw new Exception("Item does not exist");
+                throw new ForeignKeyViolationException("Item");
             }
             var item = new E
             {
@@ -59,7 +60,7 @@ namespace Post.Domain.Logic.Services
             var item = await _repository.GetByIdAsync(id);
             if(item==null)
             {
-                throw new Exception("Item does not exist");
+                throw new NotFoundException(id, "Item");
             }
            await _repository.DeleteAsync(item);
         }

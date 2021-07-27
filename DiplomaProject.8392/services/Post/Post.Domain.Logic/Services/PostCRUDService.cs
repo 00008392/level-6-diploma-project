@@ -4,6 +4,7 @@ using Post.Domain.Entities;
 using Post.Domain.Logic.Contracts;
 using Post.Domain.Logic.Core;
 using Post.Domain.Logic.DTOs;
+using Post.Domain.Logic.Exceptions;
 using Post.Domain.Logic.Validation;
 using System;
 using System.Collections.Generic;
@@ -41,13 +42,13 @@ namespace Post.Domain.Logic.Services
                 var categoryExists = _categoryRepository.IfExists((long)item.CategoryId);
                 if (!categoryExists)
                 {
-                    throw new Exception("Invalid category");
+                    throw new ForeignKeyViolationException("Category");
                 }
             }
             var ownerExists = _ownerRepository.IfExists(item.OwnerId);
             if (!ownerExists)
             {
-                throw new Exception("Invalid owner");
+                throw new ForeignKeyViolationException("Owner");
             }
             var accommodation = new Accommodation
             {
@@ -79,7 +80,7 @@ namespace Post.Domain.Logic.Services
             var accommodation = await _repository.GetByIdAsync(id);
             if(accommodation == null)
             {
-                throw new Exception("Accommodation does not exist");
+                throw new NotFoundException(id, "Accommodation");
             }
             await _repository.DeleteAsync(accommodation);
         }
@@ -131,7 +132,7 @@ namespace Post.Domain.Logic.Services
             var accommodation = await _repository.GetByIdAsync(item.Id);
             if(accommodation==null)
             {
-                throw new Exception("Accommodation does not exist");
+                throw new NotFoundException(item.Id, "Accommodation");
             } 
             var validationResult = await _validator.ValidateAsync(item);
             if (!validationResult.IsValid)
@@ -143,12 +144,12 @@ namespace Post.Domain.Logic.Services
                 var categoryExists = _categoryRepository.IfExists((long)item.CategoryId);
                 if (!categoryExists)
                 {
-                    throw new Exception("Invalid category");
+                    throw new ForeignKeyViolationException("Category");
                 }
             } 
             if (item.OwnerId!=accommodation.OwnerId)
             {
-                throw new Exception("Invalid owner");
+                throw new ForeignKeyViolationException("Owner");
             }
 
             accommodation.Title = accommodation.Title;
