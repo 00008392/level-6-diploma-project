@@ -1,26 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Profile.Domain.Entities;
+using Post.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Profile.DAL.EF.Configurations
+namespace Post.DAL.EF.Configurations
 {
-    public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
+    public class OwnerEntityTypeConfiguration : IEntityTypeConfiguration<Owner>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<Owner> builder)
         {
             builder.HasKey(u => u.Id);
             builder.HasIndex(u => u.Email).IsUnique(true);
             builder.Property(u => u.Email).IsRequired(true);
             builder.Property(u => u.DateOfBirth).IsRequired(false);
             builder.Property(u => u.Gender).IsRequired(false);
-            builder.HasOne(u => u.City).WithMany(c => c.Users).HasForeignKey(u => u.CityId).OnDelete(DeleteBehavior.SetNull);
-            builder.Property(u => u.CityId).IsRequired(false);
-            builder.Property(u => u.ProfilePhoto).IsRequired(false);
+
         }
     }
 }

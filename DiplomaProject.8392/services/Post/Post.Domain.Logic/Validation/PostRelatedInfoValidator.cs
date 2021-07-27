@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Post.Domain.Logic.Core;
 using Post.Domain.Logic.DTOs;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Logic.Validation
 {
-    public class PostRelatedInfoValidator: AbstractValidator<PostRelatedInfoBaseDTO>
+    public class PostRelatedInfoValidator: AbstractValidator<AccommodationItemDTO>
     {
         public PostRelatedInfoValidator()
         {

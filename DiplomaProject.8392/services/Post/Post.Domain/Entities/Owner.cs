@@ -16,6 +16,7 @@ namespace Post.Domain.Entities
         public Gender? Gender { get; set; }
         public string UserInfo { get; set; }
         public DateTime? DateOfBirth { get; set; }
+        public DateTime RegistrationDate { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public ICollection<Accommodation> Accommodations { get; set; }
