@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Entities
 {
-    public class Accommodation: BaseEntity
+    public class Accommodation: BaseEntity 
     {
         public string Title { get; set; }
         public string Description { get; set; }
@@ -34,4 +34,6 @@ namespace Post.Domain.Entities
         public ICollection<AccommodationRule> AccommodationRules { get; set; }
         public ICollection<AccommodationFacility> AccommodationFacilities { get; set; }
     }
+
+
 }

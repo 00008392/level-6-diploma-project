@@ -26,7 +26,7 @@ namespace Profile.Domain.Logic.Services
         }
     
 
-        public async Task DeleteProfile(long id)
+        public async Task DeleteProfileAsync(long id)
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
@@ -37,7 +37,7 @@ namespace Profile.Domain.Logic.Services
         }
 
 
-        public async Task UpdateProfile(UpdateProfileDTO profile)
+        public async Task UpdateProfileAsync(UpdateProfileDTO profile)
         {
             var user = await _userRepository.GetByIdAsync(profile.Id);
             if (user == null)

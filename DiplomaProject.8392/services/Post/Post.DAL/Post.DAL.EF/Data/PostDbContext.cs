@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Post.DAL.EF.Configurations;
+using Post.Domain.Core;
 using Post.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -29,14 +30,17 @@ namespace Post.DAL.EF.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Ignore<ItemBase>();
+            modelBuilder.Ignore<ItemAccommodationBase>();
             modelBuilder.ApplyConfiguration(new AccommodationEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new AccommodationFacilityEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new AccommodationPhotoEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new AccommodationFacilityEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new AccommodationRuleEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new AccommodationSpecificityEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new ItemEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ItemEntityTypeConfiguration<Rule>());
+            modelBuilder.ApplyConfiguration(new ItemEntityTypeConfiguration<Facility>());
+            modelBuilder.ApplyConfiguration(new ItemEntityTypeConfiguration<Specificity>());
             modelBuilder.ApplyConfiguration(new OwnerEntityTypeConfiguration());
         }
     }

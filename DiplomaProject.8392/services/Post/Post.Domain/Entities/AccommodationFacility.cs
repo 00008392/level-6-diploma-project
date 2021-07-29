@@ -10,7 +10,6 @@ namespace Post.Domain.Entities
     public class AccommodationFacility: ItemAccommodationBase
     {
 
-        public Facility Facility { get; set; }
 
     }
 }

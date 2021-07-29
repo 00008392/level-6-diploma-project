@@ -9,6 +9,6 @@ namespace Profile.Domain.Logic.Contracts
 {
     public interface IProfileInfoService
     {
-        Task<ProfileInfoDTO> GetProfileInfo(long id);
+        Task<ProfileInfoDTO> GetProfileInfoAsync(long id);
     }
 }

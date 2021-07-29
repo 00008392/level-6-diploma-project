@@ -37,7 +37,7 @@ namespace Profile.API.Services
             };
             try
             {
-                await _service.UpdateProfile(updateDTO);
+                await _service.UpdateProfileAsync(updateDTO);
                 return new Response {
                     IsSuccess = true
                 };
@@ -52,11 +52,11 @@ namespace Profile.API.Services
             }
         
         }
-        public override async Task<Response> DeleteProfile(DeleteRequest request, ServerCallContext context)
+        public override async Task<Response> DeleteProfile(Request request, ServerCallContext context)
         {
             try
             {
-                await _service.DeleteProfile(request.Id);
+                await _service.DeleteProfileAsync(request.Id);
                 return new Response { 
                 IsSuccess = true
                 };

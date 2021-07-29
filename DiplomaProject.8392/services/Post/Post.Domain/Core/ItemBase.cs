@@ -10,5 +10,8 @@ namespace Post.Domain.Core
     public abstract class ItemBase: BaseEntity
     {
         public string Name { get; set; }
+        public ICollection<ItemAccommodationBase> AccommodationItems { get; set; }
     }
+
+
 }

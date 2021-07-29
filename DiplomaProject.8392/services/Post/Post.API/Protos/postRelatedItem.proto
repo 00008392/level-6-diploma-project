@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "Protos/common.proto";
+
+
+option csharp_namespace = "Post.API";
+
+package post;
+
+
+service PostRelatedItems {
+
+  rpc AddRule (AddItemRequest) returns (common.Response);
+  rpc RemoveRule (common.Request) returns (common.Response);
+
+  rpc AddFacility (AddItemRequest) returns (common.Response);
+  rpc RemoveFacility (common.Request) returns (common.Response);
+
+  rpc AddSpecificity (AddItemRequest) returns (common.Response);
+  rpc RemoveSpecificity (common.Request) returns (common.Response);
+
+}
+
+message AddItemRequest {
+int64 accommodationId = 1;
+int64 itemId = 2;
+string otherValue = 3;
+}

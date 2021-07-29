@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Entities
 {
-    public class AccommodationPhoto: AccommodationBase
+    public class AccommodationPhoto: AccommodationEntityBase
     {
         public byte[] Photo { get; set; }
         public string MimeType { get; set; }

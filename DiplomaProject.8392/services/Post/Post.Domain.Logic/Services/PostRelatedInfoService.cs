@@ -24,10 +24,13 @@ namespace Post.Domain.Logic.Services
         private readonly IRepository<Accommodation> _accommodationRepository;
         private readonly IRepository<B> _itemRepository;
         private readonly AbstractValidator<T> _validator;
-        public PostRelatedInfoService(IRepository<E> repository,
+        public PostRelatedInfoService(IRepository<E> repository, IRepository<Accommodation> accommodationRepository,
+            IRepository<B> itemRepository,
             AbstractValidator<T> validator)
         {
             _repository = repository;
+            _accommodationRepository = accommodationRepository;
+            _itemRepository = itemRepository;
             _validator = validator;
         }
 

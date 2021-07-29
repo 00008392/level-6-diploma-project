@@ -9,15 +9,12 @@ using System.Threading.Tasks;
 
 namespace Post.DAL.EF.Configurations
 {
-    public class AccommodationSpecificityEntityTypeConfiguration : IEntityTypeConfiguration<AccommodationSpecificity>
+    public class AccommodationSpecificityEntityTypeConfiguration : AccommodationItemEntityTypeConfiguration<AccommodationSpecificity>
     {
-        public void Configure(EntityTypeBuilder<AccommodationSpecificity> builder)
+        public override void Configure(EntityTypeBuilder<AccommodationSpecificity> builder)
         {
-            builder.HasKey(i => i.Id);
             builder.HasOne(i => i.Accommodation).WithMany(a => a.AccommodationSpecificities)
-                .HasForeignKey(i => i.AccommodationId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(i => i.Specificity).WithMany(r => r.AccommodationSpecificities)
-                .HasForeignKey(i => i.ItemId).OnDelete(DeleteBehavior.Cascade);
+             .HasForeignKey(i => i.AccommodationId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

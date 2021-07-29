@@ -16,9 +16,9 @@ namespace Profile.API.Services
             _service = service;
         }
 
-        public override async Task<ProfileInfoResponse> GetProfileInfo(ProfileInfoRequest request, ServerCallContext context)
+        public override async Task<ProfileInfoResponse> GetProfileInfo(Request request, ServerCallContext context)
         {
-            var user = await _service.GetProfileInfo(request.Id);
+            var user = await _service.GetProfileInfoAsync(request.Id);
             if(user==null)
             {
                 return new ProfileInfoResponse {

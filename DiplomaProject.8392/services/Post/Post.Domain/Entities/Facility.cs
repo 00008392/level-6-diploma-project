@@ -9,6 +9,7 @@ namespace Post.Domain.Entities
 {
     public class Facility: ItemBase
     {
-        public ICollection<AccommodationFacility> AccommodationFacilities { get; set; }
+
     }
+
 }

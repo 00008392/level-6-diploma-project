@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+import "Protos/common.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "Post.API";
+
+package post;
+
+service PostCRUD {
+
+  rpc CreatePost (CreatePostRequest) returns (common.Response);
+  rpc UpdatePost (UpdatePostRequest) returns (common.Response);
+  rpc DeletePost (common.Request) returns (common.Response);
+  rpc GetPostById (common.Request) returns (PostInfoResponse);
+
+}
+
+message BasePostRequest {
+  string title = 1;
+  string description = 2;
+  int64 ownerId = 3;
+  int64 categoryId = 4;
+  string address = 5;
+  string referencePoint = 6;
+  string contactNumber = 7;
+  int32 roomsNo = 8;
+  int32 bathroomsNo = 9;
+  int32 bedsNo = 10;
+  int32 maxGuestsNo = 11;
+  int32 squareMeters = 12;
+  double price = 13;
+  double latitude = 14;
+  double longitude = 15;
+  bool isWholeApartment = 16;
+  string additionalInfo = 17;
+}
+
+message CreatePostRequest {
+BasePostRequest baseRequest = 1;
+}
+
+message UpdatePostRequest {
+int64 id = 1;
+BasePostRequest baseRequest = 2;
+}
+
+message AccommodationItem {
+int64 id = 1;
+int64 accommodationId = 2;
+google.protobuf.StringValue otherValue = 3;
+Item base = 4;
+}
+
+message Item {
+int64 id = 1;
+google.protobuf.StringValue name = 2;
+}
+
+message PostInfoResponse {
+   int64 Id = 1;
+   google.protobuf.StringValue title = 2;
+   google.protobuf.StringValue description = 3;
+   Owner owner = 4;
+   Category category = 5;
+   google.protobuf.StringValue address = 6;
+   google.protobuf.StringValue referencePoint = 7;
+   google.protobuf.StringValue contactNumber = 8;
+   google.protobuf.Int32Value roomsNo = 9;
+   google.protobuf.Int32Value bathroomsNo = 10;
+   google.protobuf.Int32Value bedsNo = 11;
+   google.protobuf.Int32Value maxGuestsNo = 12;
+   google.protobuf.Int32Value squareMeters = 13;
+   google.protobuf.DoubleValue price = 14;
+   google.protobuf.DoubleValue latitude = 15;
+   google.protobuf.DoubleValue longitude = 16;
+   google.protobuf.BoolValue isWholeApartment = 17;
+   google.protobuf.StringValue additionalInfo = 18;
+   google.protobuf.Timestamp datePublished = 19;
+   repeated AccommodationPhoto accommodationPhotos = 20;
+   repeated AccommodationItem accommodationSpecificities = 21;
+   repeated AccommodationItem accommodationRules = 22;
+   repeated AccommodationItem accommodationFacilities = 23;
+   bool NoItem = 24;
+}
+
+message Owner {
+int64 id = 1;
+google.protobuf.StringValue firstName = 2;
+google.protobuf.StringValue lastName = 3;
+google.protobuf.StringValue address = 4;
+google.protobuf.Int32Value gender = 5;
+google.protobuf.StringValue userInfo = 6;
+google.protobuf.Timestamp dateOfBirth = 7;
+google.protobuf.Timestamp registrationDate = 8;
+google.protobuf.StringValue email = 9;
+google.protobuf.StringValue phoneNumber = 10;
+}
+
+message Category {
+int64 id = 1;
+string name = 2;
+}
+
+message AccommodationPhoto {
+int64 id = 1;
+int64 accommodationId = 2;
+google.protobuf.BytesValue photo = 3;
+google.protobuf.StringValue mimeType = 4;
+}
+
+
+
+

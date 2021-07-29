@@ -9,6 +9,6 @@ namespace Post.Domain.Entities
 {
     public class Rule: ItemBase
     {
-        public ICollection<AccommodationRule> AccommodationRules { get; set; }
+
     }
 }

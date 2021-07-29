@@ -11,13 +11,13 @@ package profile;
 service ProfileManipulation {
 
   rpc UpdateProfile (UpdateRequest) returns (Response);
-  rpc DeleteProfile (DeleteRequest) returns (Response);
+  rpc DeleteProfile (Request) returns (Response);
 }
 
 
 service ProfileInfo {
 
-  rpc GetProfileInfo (ProfileInfoRequest) returns (ProfileInfoResponse);
+  rpc GetProfileInfo (Request) returns (ProfileInfoResponse);
 
 }
 message UpdateRequest {
@@ -32,7 +32,7 @@ message UpdateRequest {
   int64 cityId = 9;
   string userInfo = 10;
 }
-message DeleteRequest {
+message Request {
   int64 id = 1;
 }
 message Error {
@@ -45,9 +45,6 @@ message Response {
 	string message = 3;
 }
 
-message ProfileInfoRequest {
-	int64 id = 1;
-}
 
 message ProfileInfoResponse {
     int64 id = 1;

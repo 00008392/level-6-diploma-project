@@ -9,8 +9,8 @@ namespace Profile.Domain.Logic.Contracts
 {
     public interface IProfileManipulationService
     {
-        Task UpdateProfile(UpdateProfileDTO profile);
-        Task DeleteProfile(long id);
+        Task UpdateProfileAsync(UpdateProfileDTO profile);
+        Task DeleteProfileAsync(long id);
    
     }
 }

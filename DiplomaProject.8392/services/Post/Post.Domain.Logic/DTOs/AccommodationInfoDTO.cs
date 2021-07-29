@@ -1,4 +1,5 @@
-﻿using Post.Domain.Entities;
+﻿using Post.Domain.Core;
+using Post.Domain.Entities;
 using Post.Domain.Logic.Core;
 using System;
 using System.Collections.Generic;

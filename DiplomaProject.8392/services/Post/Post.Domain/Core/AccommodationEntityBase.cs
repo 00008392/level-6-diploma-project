@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Core
 {
-   public abstract class AccommodationBase: BaseEntity
+   public abstract class AccommodationEntityBase: BaseEntity
     {
         public long AccommodationId { get; set; }
         public Accommodation Accommodation { get; set; }
     }
+
 }

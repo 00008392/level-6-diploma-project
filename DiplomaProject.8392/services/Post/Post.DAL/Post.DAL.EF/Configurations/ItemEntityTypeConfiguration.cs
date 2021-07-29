@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 
 namespace Post.DAL.EF.Configurations
 {
-    public class ItemEntityTypeConfiguration : IEntityTypeConfiguration<ItemBase>
+    public class ItemEntityTypeConfiguration<T> : IEntityTypeConfiguration<T>
+        where T: ItemBase
     {
-        public void Configure(EntityTypeBuilder<ItemBase> builder)
+        public void Configure(EntityTypeBuilder<T> builder)
         {
             builder.HasKey(i => i.Id);
             builder.Property(i => i.Name).IsRequired(true);
+            
         }
     }
 }

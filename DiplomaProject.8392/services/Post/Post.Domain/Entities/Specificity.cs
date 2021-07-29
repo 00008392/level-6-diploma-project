@@ -9,6 +9,6 @@ namespace Post.Domain.Entities
 {
     public class Specificity: ItemBase
     {
-        public ICollection<AccommodationSpecificity> AccommodationSpecificities { get; set; }
+       
     }
 }
