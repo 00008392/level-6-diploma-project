@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +8,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Post.API.Services;
+using Post.API.Services.Strategy;
 using Post.DAL.EF.Data;
+using Post.DAL.EF.Repositories;
+using Post.Domain.Core;
+using Post.Domain.Logic.Contracts;
+using Post.Domain.Logic.Core;
+using Post.Domain.Logic.Services;
+using Post.Domain.Logic.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +35,13 @@ namespace Post.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
+            services.AddFluentValidation();
+            services.AddScoped<AbstractValidator<BaseAccommodationDTO>, PostValidator>();
+            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IPostCRUDService, PostCRUDService>();
+            services.AddScoped(typeof(IPostRelatedInfoService<,>), typeof(PostRelatedInfoService<,>));
+            services.AddScoped(typeof(IPostRelatedInfoStrategy<,>), typeof(PostRelatedInfoGenericStrategy<,>));
             services.AddDbContext<PostDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
         }
@@ -43,6 +59,7 @@ namespace Post.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<PostCRUDServiceGrpc>();
+                endpoints.MapGrpcService<PostRelatedInfoServiceGrpc>();
 
                 endpoints.MapGet("/", async context =>
                 {

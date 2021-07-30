@@ -89,11 +89,6 @@ message Owner {
 int64 id = 1;
 google.protobuf.StringValue firstName = 2;
 google.protobuf.StringValue lastName = 3;
-google.protobuf.StringValue address = 4;
-google.protobuf.Int32Value gender = 5;
-google.protobuf.StringValue userInfo = 6;
-google.protobuf.Timestamp dateOfBirth = 7;
-google.protobuf.Timestamp registrationDate = 8;
 google.protobuf.StringValue email = 9;
 google.protobuf.StringValue phoneNumber = 10;
 }

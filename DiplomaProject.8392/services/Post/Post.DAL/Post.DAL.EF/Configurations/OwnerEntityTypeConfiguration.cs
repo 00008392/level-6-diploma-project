@@ -16,8 +16,6 @@ namespace Post.DAL.EF.Configurations
             builder.HasKey(u => u.Id);
             builder.HasIndex(u => u.Email).IsUnique(true);
             builder.Property(u => u.Email).IsRequired(true);
-            builder.Property(u => u.DateOfBirth).IsRequired(false);
-            builder.Property(u => u.Gender).IsRequired(false);
 
         }
     }

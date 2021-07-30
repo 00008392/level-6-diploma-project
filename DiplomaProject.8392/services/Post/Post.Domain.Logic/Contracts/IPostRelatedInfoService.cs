@@ -14,11 +14,11 @@ namespace Post.Domain.Logic.Contracts
     //AccommodationItemDTO - rule/facility/specificity DTO
     //ItemAccommodationBase - entity representing bridge table
     //ItemBase - rule/facility/specificity
-    public interface IPostRelatedInfoService<T, E, B> where T: AccommodationItemDTO
-                                                      where E: ItemAccommodationBase, new()
-                                                      where B: ItemBase
+    public interface IPostRelatedInfoService<T, E> 
+                                                  where T: ItemAccommodationBase, new()
+                                                  where E: ItemBase
     {
-        Task AddItemAsync(T itemDTO);
+        Task AddItemAsync(AccommodationItemDTO itemDTO);
         Task RemoveItemAsync(long id);
     }
 }

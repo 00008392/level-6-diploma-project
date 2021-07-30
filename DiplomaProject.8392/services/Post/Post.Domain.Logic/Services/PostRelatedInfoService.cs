@@ -15,32 +15,25 @@ using System.Threading.Tasks;
 namespace Post.Domain.Logic.Services
 {
     //E - entity representing bridge table
-    public class PostRelatedInfoService<T, E, B> : IPostRelatedInfoService<T, E, B> where T: AccommodationItemDTO
-                                                                              where E: ItemAccommodationBase, new()
-                                                                              where B: ItemBase
+    public class PostRelatedInfoService<T, E> : IPostRelatedInfoService<T, E> 
+                                                                              where T: ItemAccommodationBase, new()
+                                                                              where E: ItemBase
 
     {
-        private readonly IRepository<E> _repository;
+        private readonly IRepository<T> _repository;
         private readonly IRepository<Accommodation> _accommodationRepository;
-        private readonly IRepository<B> _itemRepository;
-        private readonly AbstractValidator<T> _validator;
-        public PostRelatedInfoService(IRepository<E> repository, IRepository<Accommodation> accommodationRepository,
-            IRepository<B> itemRepository,
-            AbstractValidator<T> validator)
+        private readonly IRepository<E> _itemRepository;
+        public PostRelatedInfoService(IRepository<T> repository, IRepository<Accommodation> accommodationRepository,
+            IRepository<E> itemRepository)
         {
             _repository = repository;
             _accommodationRepository = accommodationRepository;
             _itemRepository = itemRepository;
-            _validator = validator;
         }
 
-        public async Task AddItemAsync(T itemDTO)
+        public async Task AddItemAsync(AccommodationItemDTO itemDTO)
         {
-            var validationResult = await _validator.ValidateAsync(itemDTO);
-            if(!validationResult.IsValid)
-            {
-                throw new ValidationException(validationResult.Errors);
-            }
+
             if(!_accommodationRepository.IfExists(itemDTO.AccommodationId))
             {
                 throw new ForeignKeyViolationException("Accommodation");
@@ -49,7 +42,7 @@ namespace Post.Domain.Logic.Services
             {
                 throw new ForeignKeyViolationException("Item");
             }
-            var item = new E
+            var item = new T
             {
                 ItemId = itemDTO.ItemId,
                 AccommodationId = itemDTO.AccommodationId,

@@ -137,11 +137,6 @@ namespace Post.API.Services
                     Id = owner.Id,
                     FirstName = owner.FirstName,
                     LastName = owner.LastName,
-                    Address = owner.Address,
-                    Gender = (int)owner.Gender,
-                    UserInfo = owner.UserInfo,
-                    DateOfBirth = owner.DateOfBirth == null ? null : Timestamp.FromDateTime(DateTime.SpecifyKind((DateTime)owner.DateOfBirth, DateTimeKind.Utc)),
-                    RegistrationDate = Timestamp.FromDateTime(DateTime.SpecifyKind(owner.RegistrationDate, DateTimeKind.Utc)),
                     Email = owner.Email,
                     PhoneNumber = owner.PhoneNumber
                 },
