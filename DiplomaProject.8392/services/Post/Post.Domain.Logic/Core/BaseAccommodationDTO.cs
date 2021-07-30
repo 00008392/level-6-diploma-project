@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,10 @@ namespace Post.Domain.Logic.Core
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
         public bool? IsWholeApartment { get; set; }
+        [DataType(DataType.Time)]
+        public DateTime MovingInTime { get; set; }
+        [DataType(DataType.Time)]
+        public DateTime MovingOutTime { get; set; }
         public string AdditionalInfo { get; set; }
     }
 }

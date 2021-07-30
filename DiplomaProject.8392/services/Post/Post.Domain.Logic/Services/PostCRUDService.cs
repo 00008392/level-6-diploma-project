@@ -69,6 +69,8 @@ namespace Post.Domain.Logic.Services
                 Latitude = item.Latitude,
                 Longitude = item.Longitude,
                 IsWholeApartment = item.IsWholeApartment,
+                MovingInTime = item.MovingInTime,
+                MovingOutTime = item.MovingOutTime,
                 AdditionalInfo = item.AdditionalInfo
 
             };
@@ -115,6 +117,8 @@ namespace Post.Domain.Logic.Services
                     Latitude = accommodation.Latitude,
                     Longitude = accommodation.Longitude,
                     IsWholeApartment = accommodation.IsWholeApartment,
+                    MovingInTime = accommodation.MovingInTime,
+                    MovingOutTime = accommodation.MovingOutTime,
                     AdditionalInfo = accommodation.AdditionalInfo,
                     AccommodationFacilities = accommodation.AccommodationFacilities,
                     AccommodationRules = accommodation.AccommodationRules,
@@ -152,23 +156,25 @@ namespace Post.Domain.Logic.Services
                 throw new ForeignKeyViolationException("Owner");
             }
 
-            accommodation.Title = accommodation.Title;
-            accommodation.Description = accommodation.Description;
-            accommodation.OwnerId = accommodation.OwnerId;
-            accommodation.CategoryId = accommodation.CategoryId;
-            accommodation.Address = accommodation.Address;
-            accommodation.ReferencePoint = accommodation.ReferencePoint;
-            accommodation.ContactNumber = accommodation.ContactNumber;
-            accommodation.RoomsNo = accommodation.RoomsNo;
-            accommodation.BathroomsNo = accommodation.BathroomsNo;
-            accommodation.BedsNo = accommodation.BedsNo;
-            accommodation.MaxGuestsNo = accommodation.MaxGuestsNo;
-            accommodation.SquareMeters = accommodation.MaxGuestsNo;
-            accommodation.Price = accommodation.Price;
-            accommodation.Latitude = accommodation.Latitude;
-            accommodation.Longitude = accommodation.Longitude;
-            accommodation.IsWholeApartment = accommodation.IsWholeApartment;
-            accommodation.AdditionalInfo = accommodation.AdditionalInfo;
+            accommodation.Title = item.Title;
+            accommodation.Description = item.Description;
+            accommodation.OwnerId = item.OwnerId;
+            accommodation.CategoryId = item.CategoryId;
+            accommodation.Address = item.Address;
+            accommodation.ReferencePoint = item.ReferencePoint;
+            accommodation.ContactNumber = item.ContactNumber;
+            accommodation.RoomsNo = item.RoomsNo;
+            accommodation.BathroomsNo = item.BathroomsNo;
+            accommodation.BedsNo = item.BedsNo;
+            accommodation.MaxGuestsNo = item.MaxGuestsNo;
+            accommodation.SquareMeters = item.MaxGuestsNo;
+            accommodation.Price = item.Price;
+            accommodation.Latitude = item.Latitude;
+            accommodation.Longitude = item.Longitude;
+            accommodation.IsWholeApartment = item.IsWholeApartment;
+            accommodation.MovingInTime = item.MovingInTime;
+            accommodation.MovingOutTime = item.MovingOutTime;
+            accommodation.AdditionalInfo = item.AdditionalInfo;
 
             await _repository.UpdateAsync(accommodation);
         }

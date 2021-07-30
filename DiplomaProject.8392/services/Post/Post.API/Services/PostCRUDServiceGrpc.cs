@@ -40,6 +40,8 @@ namespace Post.API.Services
                 Latitude = (decimal)baseRequest.Latitude,
                 Longitude = (decimal)baseRequest.Longitude,
                 IsWholeApartment = baseRequest.IsWholeApartment,
+                MovingInTime = baseRequest.MovingInTime.ToDateTime(),
+                MovingOutTime = baseRequest.MovingOutTime.ToDateTime(),
                 AdditionalInfo = baseRequest.AdditionalInfo
             };
             try
@@ -81,6 +83,8 @@ namespace Post.API.Services
                 Latitude = (decimal)baseRequest.Latitude,
                 Longitude = (decimal)baseRequest.Longitude,
                 IsWholeApartment = baseRequest.IsWholeApartment,
+                MovingInTime = baseRequest.MovingInTime.ToDateTime(),
+                MovingOutTime = baseRequest.MovingOutTime.ToDateTime(),
                 AdditionalInfo = baseRequest.AdditionalInfo
             };
             try
@@ -158,6 +162,8 @@ namespace Post.API.Services
                 Longitude = (double)post.Longitude,
                 IsWholeApartment = post.IsWholeApartment,
                 AdditionalInfo = post.AdditionalInfo,
+                MovingInTime = Timestamp.FromDateTime(DateTime.SpecifyKind(post.MovingInTime, DateTimeKind.Utc)),
+                MovingOutTime = Timestamp.FromDateTime(DateTime.SpecifyKind(post.MovingOutTime, DateTimeKind.Utc)),
                 DatePublished = Timestamp.FromDateTime(DateTime.SpecifyKind(post.DatePublished, DateTimeKind.Utc))
             };
             if (post.AccommodationPhotos != null)

@@ -9,6 +9,6 @@ namespace Post.Domain.Logic.DTOs
 {
     public class CreatePostDTO: BaseAccommodationDTO
     {
-        
+
     }
 }
