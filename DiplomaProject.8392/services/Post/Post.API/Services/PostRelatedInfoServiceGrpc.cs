@@ -28,29 +28,29 @@ namespace Post.API.Services
             _specificityStrategy = specificityStrategy;
         }
 
-        public override async Task<Response> AddRule(AddItemRequest request, ServerCallContext context)
+        public override async Task<Response> AddRules(AddItemsRequest request, ServerCallContext context)
         {
-            return await _ruleStrategy.AddItemAsync(request);
+            return await _ruleStrategy.AddItemsAsync(request);
         }
-        public override async Task<Response> RemoveRule(Request request, ServerCallContext context)
+        public override async Task<Response> RemoveRules(RemoveItemsRequest request, ServerCallContext context)
         {
-            return await _ruleStrategy.RemoveItemAsync(request);
+            return await _ruleStrategy.RemoveItemsAsync(request);
         }
-        public override async Task<Response> AddFacility(AddItemRequest request, ServerCallContext context)
+        public override async Task<Response> AddFacilities(AddItemsRequest request, ServerCallContext context)
         {
-            return await _facilityStrategy.AddItemAsync(request);
+            return await _facilityStrategy.AddItemsAsync(request);
         }
-        public override async Task<Response> RemoveFacility(Request request, ServerCallContext context)
+        public override async Task<Response> RemoveFacilities(RemoveItemsRequest request, ServerCallContext context)
         {
-            return await _facilityStrategy.RemoveItemAsync(request);
+            return await _facilityStrategy.RemoveItemsAsync(request);
         }
-        public override async Task<Response> AddSpecificity(AddItemRequest request, ServerCallContext context)
+        public override async Task<Response> AddSpecificities(AddItemsRequest request, ServerCallContext context)
         {
-            return await _specificityStrategy.AddItemAsync(request);
+            return await _specificityStrategy.AddItemsAsync(request);
         }
-        public override async Task<Response> RemoveSpecificity(Request request, ServerCallContext context)
+        public override async Task<Response> RemoveSpecificities(RemoveItemsRequest request, ServerCallContext context)
         {
-            return await _specificityStrategy.RemoveItemAsync(request);
+            return await _specificityStrategy.RemoveItemsAsync(request);
         }
 
 

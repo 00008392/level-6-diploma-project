@@ -98,8 +98,8 @@ namespace Post.DAL.EF.Migrations
                     Latitude = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     Longitude = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     IsWholeApartment = table.Column<bool>(type: "bit", nullable: true),
-                    MovingInTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    MovingOutTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    MovingInTime = table.Column<TimeSpan>(type: "time", nullable: true),
+                    MovingOutTime = table.Column<TimeSpan>(type: "time", nullable: true),
                     AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -127,7 +127,7 @@ namespace Post.DAL.EF.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccommodationId = table.Column<long>(type: "bigint", nullable: false),
                     ItemId = table.Column<long>(type: "bigint", nullable: false),
-                    OtherItem = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    OtherItem = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -136,6 +136,12 @@ namespace Post.DAL.EF.Migrations
                         name: "FK_AccommodationFacilities_Accommodations_AccommodationId",
                         column: x => x.AccommodationId,
                         principalTable: "Accommodations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AccommodationFacilities_Facilities_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Facilities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -169,7 +175,7 @@ namespace Post.DAL.EF.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccommodationId = table.Column<long>(type: "bigint", nullable: false),
                     ItemId = table.Column<long>(type: "bigint", nullable: false),
-                    OtherItem = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    OtherItem = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -178,6 +184,12 @@ namespace Post.DAL.EF.Migrations
                         name: "FK_AccommodationRules_Accommodations_AccommodationId",
                         column: x => x.AccommodationId,
                         principalTable: "Accommodations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AccommodationRules_Rules_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Rules",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -190,7 +202,7 @@ namespace Post.DAL.EF.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccommodationId = table.Column<long>(type: "bigint", nullable: false),
                     ItemId = table.Column<long>(type: "bigint", nullable: false),
-                    OtherItem = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    OtherItem = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -201,12 +213,32 @@ namespace Post.DAL.EF.Migrations
                         principalTable: "Accommodations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AccommodationSpecificities_Specificities_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Specificities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AccommodationFacilities_AccommodationId",
                 table: "AccommodationFacilities",
                 column: "AccommodationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccommodationFacilities_ItemId_AccommodationId",
+                table: "AccommodationFacilities",
+                columns: new[] { "ItemId", "AccommodationId" },
+                unique: true,
+                filter: "OtherItem is null");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccommodationFacilities_ItemId_AccommodationId_OtherItem",
+                table: "AccommodationFacilities",
+                columns: new[] { "ItemId", "AccommodationId", "OtherItem" },
+                unique: true,
+                filter: "[OtherItem] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AccommodationPhotos_AccommodationId",
@@ -217,6 +249,20 @@ namespace Post.DAL.EF.Migrations
                 name: "IX_AccommodationRules_AccommodationId",
                 table: "AccommodationRules",
                 column: "AccommodationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccommodationRules_ItemId_AccommodationId",
+                table: "AccommodationRules",
+                columns: new[] { "ItemId", "AccommodationId" },
+                unique: true,
+                filter: "OtherItem is null");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccommodationRules_ItemId_AccommodationId_OtherItem",
+                table: "AccommodationRules",
+                columns: new[] { "ItemId", "AccommodationId", "OtherItem" },
+                unique: true,
+                filter: "[OtherItem] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accommodations_CategoryId",
@@ -232,6 +278,20 @@ namespace Post.DAL.EF.Migrations
                 name: "IX_AccommodationSpecificities_AccommodationId",
                 table: "AccommodationSpecificities",
                 column: "AccommodationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccommodationSpecificities_ItemId_AccommodationId",
+                table: "AccommodationSpecificities",
+                columns: new[] { "ItemId", "AccommodationId" },
+                unique: true,
+                filter: "OtherItem is null");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccommodationSpecificities_ItemId_AccommodationId_OtherItem",
+                table: "AccommodationSpecificities",
+                columns: new[] { "ItemId", "AccommodationId", "OtherItem" },
+                unique: true,
+                filter: "[OtherItem] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Owners_Email",
@@ -261,10 +321,10 @@ namespace Post.DAL.EF.Migrations
                 name: "Rules");
 
             migrationBuilder.DropTable(
-                name: "Specificities");
+                name: "Accommodations");
 
             migrationBuilder.DropTable(
-                name: "Accommodations");
+                name: "Specificities");
 
             migrationBuilder.DropTable(
                 name: "Categories");

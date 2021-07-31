@@ -31,34 +31,46 @@ namespace Post.Domain.Logic.Services
             _itemRepository = itemRepository;
         }
 
-        public async Task AddItemAsync(AccommodationItemDTO itemDTO)
+        public async Task AddItemsAsync(ICollection<AccommodationItemDTO> itemDTOs)
         {
+            var items = new List<T>();
+            foreach(var itemDTO in itemDTOs)
+            {
+                if (!_accommodationRepository.IfExists(itemDTO.AccommodationId))
+                {
+                    throw new ForeignKeyViolationException("Accommodation");
+                }
+                if (!_itemRepository.IfExists(itemDTO.ItemId))
+                {
+                    throw new ForeignKeyViolationException("Item");
+                }
+                var item = new T
+                {
+                    ItemId = itemDTO.ItemId,
+                    AccommodationId = itemDTO.AccommodationId,
+                    OtherItem = itemDTO.OtherItem
+                };
+                items.Add(item);
+            }
 
-            if(!_accommodationRepository.IfExists(itemDTO.AccommodationId))
-            {
-                throw new ForeignKeyViolationException("Accommodation");
-            }
-            if(!_itemRepository.IfExists(itemDTO.ItemId))
-            {
-                throw new ForeignKeyViolationException("Item");
-            }
-            var item = new T
-            {
-                ItemId = itemDTO.ItemId,
-                AccommodationId = itemDTO.AccommodationId,
-                OtherItem = itemDTO.OtherItem
-            };
-            await _repository.CreateAsync(item);
+          
+            await _repository.AddRangeAsync(items);
         }
 
-        public async Task RemoveItemAsync(long id)
+        public async Task RemoveItemsAsync(ICollection<long> ids)
         {
-            var item = await _repository.GetByIdAsync(id);
-            if(item==null)
+            var items = new List<T>();
+            foreach(var id in ids)
             {
-                throw new NotFoundException(id, "Item");
+                var item = await _repository.GetByIdAsync(id);
+                if (item == null)
+                {
+                    throw new NotFoundException(id, "Item");
+                }
+                items.Add(item);
             }
-           await _repository.DeleteAsync(item);
+           
+           await _repository.RemoveRangeAsync(items);
         }
     }
 }

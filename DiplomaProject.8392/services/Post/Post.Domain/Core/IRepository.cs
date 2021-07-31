@@ -16,6 +16,8 @@ namespace Post.Domain.Core
         Task<ICollection<T>> GetAllAsync(params Expression<Func<T, object>>[] includes);
         Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> filter,
             params Expression<Func<T, object>>[] includes);
+        Task AddRangeAsync(ICollection<T> items);
+        Task RemoveRangeAsync(ICollection<T> items);
         bool IfExists(long id);
     }
 }

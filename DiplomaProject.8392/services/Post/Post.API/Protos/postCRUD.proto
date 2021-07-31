@@ -80,8 +80,8 @@ message PostInfoResponse {
    google.protobuf.BoolValue isWholeApartment = 17;
    google.protobuf.StringValue additionalInfo = 18;
    google.protobuf.Timestamp datePublished = 19;
-   google.protobuf.Timestamp movingInTime = 20;
-   google.protobuf.Timestamp movingOutTime = 21;
+   google.protobuf.StringValue movingInTime = 20;
+   google.protobuf.StringValue movingOutTime = 21;
    repeated AccommodationPhoto accommodationPhotos = 22;
    repeated AccommodationItem accommodationSpecificities = 23;
    repeated AccommodationItem accommodationRules = 24;

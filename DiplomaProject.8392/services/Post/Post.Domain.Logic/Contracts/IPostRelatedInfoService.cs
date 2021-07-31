@@ -18,7 +18,7 @@ namespace Post.Domain.Logic.Contracts
                                                   where T: ItemAccommodationBase, new()
                                                   where E: ItemBase
     {
-        Task AddItemAsync(AccommodationItemDTO itemDTO);
-        Task RemoveItemAsync(long id);
+        Task AddItemsAsync(ICollection<AccommodationItemDTO> itemDTOs);
+        Task RemoveItemsAsync(ICollection<long> ids);
     }
 }

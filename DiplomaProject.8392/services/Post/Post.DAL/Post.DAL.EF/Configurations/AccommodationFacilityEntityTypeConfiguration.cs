@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace Post.DAL.EF.Configurations
 {
-    public class AccommodationFacilityEntityTypeConfiguration : AccommodationItemEntityTypeConfiguration<AccommodationFacility>
+    public class AccommodationFacilityEntityTypeConfiguration : AccommodationItemEntityTypeConfiguration<AccommodationFacility, Facility>
     {
         public override void Configure(EntityTypeBuilder<AccommodationFacility> builder)
         {
+            base.Configure(builder);
             builder.HasOne(i => i.Accommodation).WithMany(a => a.AccommodationFacilities)
                 .HasForeignKey(i => i.AccommodationId).OnDelete(DeleteBehavior.Cascade);
         }

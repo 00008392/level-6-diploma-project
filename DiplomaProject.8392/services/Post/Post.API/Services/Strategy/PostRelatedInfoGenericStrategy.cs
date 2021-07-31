@@ -18,17 +18,23 @@ namespace Post.API.Services.Strategy
         {
             _service = service;
         }
-        public async Task<Response> AddItemAsync(AddItemRequest request)
+        public async Task<Response> AddItemsAsync(AddItemsRequest request)
         {
-            var accommodationItemDTO = new AccommodationItemDTO
+            var items = new List<AccommodationItemDTO>();
+            foreach (var item in request.Items)
             {
-                AccommodationId = request.AccommodationId,
-                ItemId = request.ItemId,
-                OtherItem = request.OtherValue
-            };
+                var accommodationItemDTO = new AccommodationItemDTO
+                {
+                    AccommodationId = item.AccommodationId,
+                    ItemId = item.ItemId,
+                    OtherItem = item.OtherValue
+                };
+                items.Add(accommodationItemDTO);
+            }
+          
             try
             {
-                await _service.AddItemAsync(accommodationItemDTO);
+                await _service.AddItemsAsync(items);
                 return new Response
                 {
                     IsSuccess = true
@@ -40,11 +46,11 @@ namespace Post.API.Services.Strategy
             }
         }
 
-        public async Task<Response> RemoveItemAsync(Request request)
+        public async Task<Response> RemoveItemsAsync(RemoveItemsRequest request)
         {
             try
             {
-                await _service.RemoveItemAsync(request.Id);
+                await _service.RemoveItemsAsync(request.Ids);
                 return new Response
                 {
                     IsSuccess = true

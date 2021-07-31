@@ -21,8 +21,8 @@ namespace Post.DAL.EF.Configurations
                 .HasForeignKey(a => a.CategoryId).OnDelete(DeleteBehavior.SetNull);
             builder.Property(a => a.Address).IsRequired(true);
             builder.Property(a => a.ContactNumber).IsRequired(true);
-            builder.Property(a => a.MovingInTime).HasColumnType("time").HasConversion<TimeSpan>(t=>t.TimeOfDay, t=>DateTime.Now.Add(t));
-            builder.Property(a => a.MovingOutTime).HasColumnType("time").HasConversion<TimeSpan>(t => t.TimeOfDay, t => DateTime.Now.Add(t));
+            builder.Property(a => a.MovingInTime).HasColumnType("time").HasConversion(t=>TimeSpan.Parse(t), t=>t.ToString("hh\\:mm"));
+            builder.Property(a => a.MovingOutTime).HasColumnType("time").HasConversion(t => TimeSpan.Parse(t), t => t.ToString("hh\\:mm"));
         }
     }
 }

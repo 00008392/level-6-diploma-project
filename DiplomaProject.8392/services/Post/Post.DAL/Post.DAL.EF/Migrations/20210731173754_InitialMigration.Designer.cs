@@ -10,7 +10,7 @@ using Post.DAL.EF.Data;
 namespace Post.DAL.EF.Migrations
 {
     [DbContext(typeof(PostDbContext))]
-    [Migration("20210730140040_InitialMigration")]
+    [Migration("20210731173754_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,10 +66,10 @@ namespace Post.DAL.EF.Migrations
                     b.Property<int>("MaxGuestsNo")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan>("MovingInTime")
+                    b.Property<TimeSpan?>("MovingInTime")
                         .HasColumnType("time");
 
-                    b.Property<TimeSpan>("MovingOutTime")
+                    b.Property<TimeSpan?>("MovingOutTime")
                         .HasColumnType("time");
 
                     b.Property<long>("OwnerId")
@@ -114,11 +114,19 @@ namespace Post.DAL.EF.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("OtherItem")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccommodationId");
+
+                    b.HasIndex("ItemId", "AccommodationId")
+                        .IsUnique()
+                        .HasFilter("OtherItem is null");
+
+                    b.HasIndex("ItemId", "AccommodationId", "OtherItem")
+                        .IsUnique()
+                        .HasFilter("[OtherItem] IS NOT NULL");
 
                     b.ToTable("AccommodationFacilities");
                 });
@@ -162,11 +170,19 @@ namespace Post.DAL.EF.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("OtherItem")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccommodationId");
+
+                    b.HasIndex("ItemId", "AccommodationId")
+                        .IsUnique()
+                        .HasFilter("OtherItem is null");
+
+                    b.HasIndex("ItemId", "AccommodationId", "OtherItem")
+                        .IsUnique()
+                        .HasFilter("[OtherItem] IS NOT NULL");
 
                     b.ToTable("AccommodationRules");
                 });
@@ -185,11 +201,19 @@ namespace Post.DAL.EF.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("OtherItem")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccommodationId");
+
+                    b.HasIndex("ItemId", "AccommodationId")
+                        .IsUnique()
+                        .HasFilter("OtherItem is null");
+
+                    b.HasIndex("ItemId", "AccommodationId", "OtherItem")
+                        .IsUnique()
+                        .HasFilter("[OtherItem] IS NOT NULL");
 
                     b.ToTable("AccommodationSpecificities");
                 });
@@ -312,7 +336,15 @@ namespace Post.DAL.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Post.Domain.Entities.Facility", "Item")
+                        .WithMany("AccommodationItems")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Accommodation");
+
+                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("Post.Domain.Entities.AccommodationPhoto", b =>
@@ -334,7 +366,15 @@ namespace Post.DAL.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Post.Domain.Entities.Rule", "Item")
+                        .WithMany("AccommodationItems")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Accommodation");
+
+                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("Post.Domain.Entities.AccommodationSpecificity", b =>
@@ -345,7 +385,15 @@ namespace Post.DAL.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Post.Domain.Entities.Specificity", "Item")
+                        .WithMany("AccommodationItems")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Accommodation");
+
+                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("Post.Domain.Entities.Accommodation", b =>
@@ -364,9 +412,24 @@ namespace Post.DAL.EF.Migrations
                     b.Navigation("Accommodations");
                 });
 
+            modelBuilder.Entity("Post.Domain.Entities.Facility", b =>
+                {
+                    b.Navigation("AccommodationItems");
+                });
+
             modelBuilder.Entity("Post.Domain.Entities.Owner", b =>
                 {
                     b.Navigation("Accommodations");
+                });
+
+            modelBuilder.Entity("Post.Domain.Entities.Rule", b =>
+                {
+                    b.Navigation("AccommodationItems");
+                });
+
+            modelBuilder.Entity("Post.Domain.Entities.Specificity", b =>
+                {
+                    b.Navigation("AccommodationItems");
                 });
 #pragma warning restore 612, 618
         }

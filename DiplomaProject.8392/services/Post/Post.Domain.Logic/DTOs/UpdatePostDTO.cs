@@ -11,7 +11,8 @@ namespace Post.Domain.Logic.DTOs
     public class UpdatePostDTO: BaseAccommodationDTO
     {
         public long Id { get; set; }
-
+        public DateTime MovingInTime { get; set; }
+        public DateTime MovingOutTime { get; set; }
 
     }
 }

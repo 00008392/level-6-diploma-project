@@ -69,8 +69,8 @@ namespace Post.Domain.Logic.Services
                 Latitude = item.Latitude,
                 Longitude = item.Longitude,
                 IsWholeApartment = item.IsWholeApartment,
-                MovingInTime = item.MovingInTime,
-                MovingOutTime = item.MovingOutTime,
+                MovingInTime = item.MovingInTime.ToString("HH:mm"),
+                MovingOutTime = item.MovingOutTime.ToString("HH:mm"),
                 AdditionalInfo = item.AdditionalInfo
 
             };
@@ -172,8 +172,8 @@ namespace Post.Domain.Logic.Services
             accommodation.Latitude = item.Latitude;
             accommodation.Longitude = item.Longitude;
             accommodation.IsWholeApartment = item.IsWholeApartment;
-            accommodation.MovingInTime = item.MovingInTime;
-            accommodation.MovingOutTime = item.MovingOutTime;
+            accommodation.MovingInTime = item.MovingInTime.ToString("HH:mm");
+            accommodation.MovingOutTime = item.MovingOutTime.ToString("HH:mm");
             accommodation.AdditionalInfo = item.AdditionalInfo;
 
             await _repository.UpdateAsync(accommodation);

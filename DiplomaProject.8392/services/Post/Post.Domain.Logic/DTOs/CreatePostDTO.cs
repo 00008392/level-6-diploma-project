@@ -9,6 +9,7 @@ namespace Post.Domain.Logic.DTOs
 {
     public class CreatePostDTO: BaseAccommodationDTO
     {
-
+        public DateTime MovingInTime { get; set; }
+        public DateTime MovingOutTime { get; set; }
     }
 }

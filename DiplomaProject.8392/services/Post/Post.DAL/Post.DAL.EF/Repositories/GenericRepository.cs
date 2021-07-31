@@ -18,6 +18,13 @@ namespace Post.DAL.EF.Repositories
             _context = context;
         }
         private DbSet<T> _dbSet => _context.Set<T>();
+
+        public async Task AddRangeAsync(ICollection<T> items)
+        {
+             _dbSet.AddRange(items);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task CreateAsync(T entity)
         {
             _dbSet.Add(entity);
@@ -50,6 +57,12 @@ namespace Post.DAL.EF.Repositories
         public bool IfExists(long id)
         {
             return _dbSet.Any(t => t.Id == id);
+        }
+
+        public async Task RemoveRangeAsync(ICollection<T> items)
+        {
+             _dbSet.RemoveRange(items);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(T entity)

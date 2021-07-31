@@ -15,6 +15,8 @@ namespace Post.Domain.Logic.DTOs
         public Owner Owner { get; set; }
         public DateTime DatePublished { get; set; }
         public Category Category { get; set; }
+        public string MovingInTime { get; set; }
+        public string MovingOutTime { get; set; }
         public ICollection<AccommodationPhoto> AccommodationPhotos { get; set; }
         public ICollection<AccommodationSpecificity> AccommodationSpecificities { get; set; }
         public ICollection<AccommodationRule> AccommodationRules { get; set; }

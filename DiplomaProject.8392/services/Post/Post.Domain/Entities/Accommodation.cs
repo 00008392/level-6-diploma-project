@@ -29,10 +29,8 @@ namespace Post.Domain.Entities
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
         public bool? IsWholeApartment { get; set; }
-        [DataType(DataType.Time)]
-        public DateTime MovingInTime { get; set; }
-        [DataType(DataType.Time)]
-        public DateTime MovingOutTime { get; set; }
+        public string MovingInTime { get; set; }
+        public string MovingOutTime { get; set; }
         public string AdditionalInfo { get; set; }
         public ICollection<AccommodationPhoto> AccommodationPhotos { get; set; }
         public ICollection<AccommodationSpecificity> AccommodationSpecificities { get; set; }

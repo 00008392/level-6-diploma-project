@@ -10,18 +10,24 @@ package post;
 
 service PostRelatedItems {
 
-  rpc AddRule (AddItemRequest) returns (common.Response);
-  rpc RemoveRule (common.Request) returns (common.Response);
+  rpc AddRules (AddItemsRequest) returns (common.Response);
+  rpc RemoveRules (RemoveItemsRequest) returns (common.Response);
 
-  rpc AddFacility (AddItemRequest) returns (common.Response);
-  rpc RemoveFacility (common.Request) returns (common.Response);
+  rpc AddFacilities (AddItemsRequest) returns (common.Response);
+  rpc RemoveFacilities (RemoveItemsRequest) returns (common.Response);
 
-  rpc AddSpecificity (AddItemRequest) returns (common.Response);
-  rpc RemoveSpecificity (common.Request) returns (common.Response);
+  rpc AddSpecificities (AddItemsRequest) returns (common.Response);
+  rpc RemoveSpecificities (RemoveItemsRequest) returns (common.Response);
 
 }
 
-message AddItemRequest {
+message AddItemsRequest {
+repeated ItemRequest items = 1;
+}
+message RemoveItemsRequest {
+	repeated int64 ids = 1;
+}
+message ItemRequest {
 int64 accommodationId = 1;
 int64 itemId = 2;
 string otherValue = 3;

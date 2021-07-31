@@ -10,7 +10,7 @@ namespace Post.API.Services.Strategy
         where T: ItemAccommodationBase, new()
         where E: ItemBase
     {
-        Task<Response> AddItemAsync(AddItemRequest request);
-        Task<Response> RemoveItemAsync(Request request);
+        Task<Response> AddItemsAsync(AddItemsRequest request);
+        Task<Response> RemoveItemsAsync(RemoveItemsRequest request);
     }
 }
