@@ -10,33 +10,12 @@ using System.Threading.Tasks;
 
 namespace Post.DAL.EF.Repositories
 {
-    public class GenericRepository<T> : IRepository<T> where T : BaseEntity
+    public class GenericRepository<T> : BaseRepository<T>, IRepository<T>
+        where T : BaseEntity
     {
-        private readonly PostDbContext _context;
-        public GenericRepository(PostDbContext context)
+        public GenericRepository(PostDbContext context):base(context)
         {
-            _context = context;
         }
-        private DbSet<T> _dbSet => _context.Set<T>();
-
-        public async Task AddRangeAsync(ICollection<T> items)
-        {
-             _dbSet.AddRange(items);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task CreateAsync(T entity)
-        {
-            _dbSet.Add(entity);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(T entity)
-        {
-            _dbSet.Remove(entity);
-            await _context.SaveChangesAsync();
-        }
-
 
         public async Task<ICollection<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
         {
@@ -53,34 +32,16 @@ namespace Post.DAL.EF.Repositories
             var list = await Include(includes).Where(filter).ToListAsync();
             return list;
         }
-
-        public bool IfExists(long id)
-        {
-            return _dbSet.Any(t => t.Id == id);
-        }
-
-        public async Task RemoveRangeAsync(ICollection<T> items)
-        {
-             _dbSet.RemoveRange(items);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(T entity)
-        {
-            _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-
         private IQueryable<T> Include(params Expression<Func<T, object>>[] includes)
         {
-            IQueryable<T> query = null;
-            foreach (var include in includes)
+            IQueryable<T> query = _dbSet.AsQueryable();
+            if (includes != null)
             {
-                query = _dbSet.Include(include);
+                query = includes.Aggregate(query,
+                  (current, include) => current.Include(include));
             }
 
-            return query == null ? _dbSet : query;
+            return query;
         }
     }
 }

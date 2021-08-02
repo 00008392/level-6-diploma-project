@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Post.API.Services.Strategy
+namespace Post.API.Services.Strategies
 {
     public class PostRelatedInfoGenericStrategy<T, E> : IPostRelatedInfoStrategy<T, E>
         where T : ItemAccommodationBase, new()

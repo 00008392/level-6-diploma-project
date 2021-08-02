@@ -16,14 +16,14 @@ namespace Post.Domain.Logic.Services
 {
     public class PostCRUDService : IPostCRUDService
     {
-        private readonly IRepository<Accommodation> _repository;
+        private readonly IPostRepository _repository;
         private readonly IRepository<Owner> _ownerRepository;
         private readonly IRepository<Category> _categoryRepository;
-        private readonly AbstractValidator<BaseAccommodationDTO> _validator;
-        public PostCRUDService(IRepository<Accommodation> repository, 
+        private readonly AbstractValidator<AccommodaitonManipulationDTO> _validator;
+        public PostCRUDService(IPostRepository repository, 
             IRepository<Owner> ownerRepository,
             IRepository<Category> categoryRepository,
-            AbstractValidator<BaseAccommodationDTO> validator)
+            AbstractValidator<AccommodaitonManipulationDTO> validator)
         {
             _repository = repository;
             _ownerRepository = ownerRepository;
@@ -69,8 +69,8 @@ namespace Post.Domain.Logic.Services
                 Latitude = item.Latitude,
                 Longitude = item.Longitude,
                 IsWholeApartment = item.IsWholeApartment,
-                MovingInTime = item.MovingInTime.ToString("HH:mm"),
-                MovingOutTime = item.MovingOutTime.ToString("HH:mm"),
+                MovingInTime = item.MovingInTime==null? null: ((DateTime)item.MovingInTime).ToString("HH:mm"),
+                MovingOutTime = item.MovingOutTime==null? null: ((DateTime)item.MovingOutTime).ToString("HH:mm"),
                 AdditionalInfo = item.AdditionalInfo
 
             };
@@ -90,9 +90,7 @@ namespace Post.Domain.Logic.Services
         public async Task<AccommodationInfoDTO> GetPostByIdAsync(long id)
         {
             
-            var accommodation = await _repository.GetByIdAsync(id, a=>a.Owner, a=>a.Category, 
-                a=>a.AccommodationFacilities, a=>a.AccommodationRules, a=>a.AccommodationSpecificities,
-                a=>a.AccommodationPhotos);
+            var accommodation = await _repository.GetByIdAsync(id);
             if(accommodation!=null)
             {
                 var accommodationDTO = new AccommodationInfoDTO
@@ -172,8 +170,8 @@ namespace Post.Domain.Logic.Services
             accommodation.Latitude = item.Latitude;
             accommodation.Longitude = item.Longitude;
             accommodation.IsWholeApartment = item.IsWholeApartment;
-            accommodation.MovingInTime = item.MovingInTime.ToString("HH:mm");
-            accommodation.MovingOutTime = item.MovingOutTime.ToString("HH:mm");
+            accommodation.MovingInTime = item.MovingInTime == null ? null : ((DateTime)item.MovingInTime).ToString("HH:mm");
+            accommodation.MovingOutTime = item.MovingOutTime == null ? null : ((DateTime)item.MovingOutTime).ToString("HH:mm");
             accommodation.AdditionalInfo = item.AdditionalInfo;
 
             await _repository.UpdateAsync(accommodation);

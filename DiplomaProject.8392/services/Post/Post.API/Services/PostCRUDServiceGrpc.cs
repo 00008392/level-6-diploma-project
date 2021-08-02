@@ -37,11 +37,11 @@ namespace Post.API.Services
                 MaxGuestsNo = baseRequest.MaxGuestsNo,
                 SquareMeters = baseRequest.SquareMeters,
                 Price = (decimal)baseRequest.Price,
-                Latitude = (decimal)baseRequest.Latitude,
-                Longitude = (decimal)baseRequest.Longitude,
+                Latitude = (decimal?)baseRequest.Latitude,
+                Longitude = (decimal?)baseRequest.Longitude,
                 IsWholeApartment = baseRequest.IsWholeApartment,
-                MovingInTime = baseRequest.MovingInTime.ToDateTime(),
-                MovingOutTime = baseRequest.MovingOutTime.ToDateTime(),
+                MovingInTime = baseRequest.MovingInTime==null?null: baseRequest.MovingInTime.ToDateTime(),
+                MovingOutTime = baseRequest.MovingOutTime==null?null: baseRequest.MovingOutTime.ToDateTime(),
                 AdditionalInfo = baseRequest.AdditionalInfo
             };
             try
@@ -80,11 +80,11 @@ namespace Post.API.Services
                 MaxGuestsNo = baseRequest.MaxGuestsNo,
                 SquareMeters = baseRequest.SquareMeters,
                 Price = (decimal)baseRequest.Price,
-                Latitude = (decimal)baseRequest.Latitude,
-                Longitude = (decimal)baseRequest.Longitude,
+                Latitude = (decimal?)baseRequest.Latitude,
+                Longitude = (decimal?)baseRequest.Longitude,
                 IsWholeApartment = baseRequest.IsWholeApartment,
-                MovingInTime = baseRequest.MovingInTime.ToDateTime(),
-                MovingOutTime = baseRequest.MovingOutTime.ToDateTime(),
+                MovingInTime = baseRequest.MovingInTime==null? null: baseRequest.MovingInTime.ToDateTime(),
+                MovingOutTime = baseRequest.MovingOutTime==null?null: baseRequest.MovingOutTime.ToDateTime(),
                 AdditionalInfo = baseRequest.AdditionalInfo
             };
             try
@@ -158,15 +158,15 @@ namespace Post.API.Services
                 MaxGuestsNo = post.MaxGuestsNo,
                 SquareMeters = post.SquareMeters,
                 Price = (double)post.Price,
-                Latitude = (double)post.Latitude,
-                Longitude = (double)post.Longitude,
+                Latitude = (double?)post.Latitude,
+                Longitude = (double?)post.Longitude,
                 IsWholeApartment = post.IsWholeApartment,
                 AdditionalInfo = post.AdditionalInfo,
                 MovingInTime = post.MovingInTime,
                 MovingOutTime = post.MovingOutTime,
                 DatePublished = Timestamp.FromDateTime(DateTime.SpecifyKind(post.DatePublished, DateTimeKind.Utc))
             };
-            if (post.AccommodationPhotos != null)
+            if (post.AccommodationPhotos.Count!=0)
             {
                 response.AccommodationPhotos.AddRange(post.AccommodationPhotos.Select(x => new AccommodationPhoto
                 {
@@ -176,17 +176,17 @@ namespace Post.API.Services
                     MimeType = x.MimeType
                 }));
             }
-            if (post.AccommodationRules != null)
+            if (post.AccommodationRules.Count!=0)
             {
-                response.AccommodationRules.AddRange(GetItemsList<Post.Domain.Entities.AccommodationRule>(post.AccommodationRules));
+                response.AccommodationRules.AddRange(GetItemsList(post.AccommodationRules));
             }
-            if (post.AccommodationFacilities != null)
+            if (post.AccommodationFacilities.Count!=0)
             {
-                response.AccommodationFacilities.AddRange(GetItemsList<Post.Domain.Entities.AccommodationFacility>(post.AccommodationFacilities));
+                response.AccommodationFacilities.AddRange(GetItemsList(post.AccommodationFacilities));
             }
-            if (post.AccommodationSpecificities != null)
+            if (post.AccommodationSpecificities.Count!=0)
             {
-                response.AccommodationSpecificities.AddRange(GetItemsList<Post.Domain.Entities.AccommodationSpecificity>(post.AccommodationSpecificities));
+                response.AccommodationSpecificities.AddRange(GetItemsList(post.AccommodationSpecificities));
             }
             return response;
         }
@@ -197,7 +197,7 @@ namespace Post.API.Services
                 Id = x.Id,
                 AccommodationId = x.AccommodationId,
                 OtherValue = x.OtherItem,
-                Base =
+                Base = new Item
                 {
                     Id = x.Item.Id,
                     Name = x.Item.Name

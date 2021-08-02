@@ -5,8 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Protos\postItem.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Protobuf Include="Protos\common.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\postCRUD.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\postItem.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\postRelatedItem.proto" GrpcServices="Server" />
 
   </ItemGroup>

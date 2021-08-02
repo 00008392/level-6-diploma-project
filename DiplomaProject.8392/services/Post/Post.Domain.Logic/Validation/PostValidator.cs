@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Logic.Validation
 {
-   public class PostValidator: AbstractValidator<BaseAccommodationDTO>
+   public class PostValidator: AbstractValidator<AccommodaitonManipulationDTO>
     {
         public PostValidator()
         {
@@ -25,6 +25,10 @@ namespace Post.Domain.Logic.Validation
                 .NotEmpty().WithMessage("Guest number cannot be empty");
             RuleFor(p => p.Price)
                 .NotEmpty().WithMessage("Price cannot be empty");
+            RuleFor(p => p.MovingInTime)
+                .NotEmpty().WithMessage("Moving in time cannot be empty");
+            RuleFor(p => p.MovingOutTime)
+                .NotEmpty().WithMessage("Moving out time cannot be empty");
         }
     }
 }

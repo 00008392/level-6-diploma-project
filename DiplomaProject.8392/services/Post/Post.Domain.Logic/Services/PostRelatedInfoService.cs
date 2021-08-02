@@ -8,6 +8,7 @@ using Post.Domain.Logic.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,9 +34,24 @@ namespace Post.Domain.Logic.Services
 
         public async Task AddItemsAsync(ICollection<AccommodationItemDTO> itemDTOs)
         {
+            CheckItemsList(itemDTOs);
             var items = new List<T>();
-            foreach(var itemDTO in itemDTOs)
+            var duplicatesinList = (itemDTOs.Where(x=>x.OtherItem!=null).GroupBy(x=> new { 
+            x.AccommodationId,
+            x.ItemId,
+            x.OtherItem
+            }).Any(g => g.Count() > 1)) || (itemDTOs.Where(x => x.OtherItem == null).GroupBy(x => new {
+                x.AccommodationId,
+                x.ItemId
+            }).Any(g => g.Count() > 1));
+            if(duplicatesinList)
             {
+                throw new DuplicateListValueException();
+            }
+
+            foreach (var itemDTO in itemDTOs)
+            {
+
                 if (!_accommodationRepository.IfExists(itemDTO.AccommodationId))
                 {
                     throw new ForeignKeyViolationException("Accommodation");
@@ -43,6 +59,23 @@ namespace Post.Domain.Logic.Services
                 if (!_itemRepository.IfExists(itemDTO.ItemId))
                 {
                     throw new ForeignKeyViolationException("Item");
+                }
+                if(itemDTO.OtherItem!=null)
+                {
+                    var otherItem = (await _itemRepository.GetFilteredAsync(i => i.Id == itemDTO.ItemId && (bool)i.IsOther)).FirstOrDefault();
+                    if(otherItem == null)
+                    {
+                        throw new OtherItemException();
+                    }
+                    
+                    await CheckDuplicates(i => i.AccommodationId == itemDTO.AccommodationId
+                    && i.ItemId == itemDTO.ItemId && i.OtherItem == itemDTO.OtherItem);
+                }
+                else
+                {
+                   
+                    await CheckDuplicates(i => i.AccommodationId == itemDTO.AccommodationId
+                   && i.ItemId == itemDTO.ItemId);
                 }
                 var item = new T
                 {
@@ -59,6 +92,11 @@ namespace Post.Domain.Logic.Services
 
         public async Task RemoveItemsAsync(ICollection<long> ids)
         {
+            CheckItemsList(ids);
+            if( ids.GroupBy(x => x).Any(g => g.Count() > 1))
+            {
+                throw new DuplicateListValueException();
+            }
             var items = new List<T>();
             foreach(var id in ids)
             {
@@ -72,5 +110,23 @@ namespace Post.Domain.Logic.Services
            
            await _repository.RemoveRangeAsync(items);
         }
+
+        private void CheckItemsList<I>(ICollection<I> items)
+        {
+            if(items.Count==0)
+            {
+                throw new EmptyItemsListException();
+            }
+        }
+        private async Task CheckDuplicates(Expression<Func<T, bool>> filter)
+        {
+            var record = (await _repository.GetFilteredAsync(filter)).FirstOrDefault();
+            if (record != null)
+            {
+                throw new DuplicateItemException(record.ItemId);
+            }
+        }
+        
+       
     }
 }

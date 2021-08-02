@@ -7,17 +7,13 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Core
 {
-    public interface IRepository<T> where T: BaseEntity
+    public interface IRepository<T>: IBaseRepository<T> where T: BaseEntity
     {
-        Task CreateAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task DeleteAsync(T entity);
+       
         Task<T> GetByIdAsync(long id, params Expression<Func<T, object>>[] includes);
         Task<ICollection<T>> GetAllAsync(params Expression<Func<T, object>>[] includes);
         Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> filter,
             params Expression<Func<T, object>>[] includes);
-        Task AddRangeAsync(ICollection<T> items);
-        Task RemoveRangeAsync(ICollection<T> items);
-        bool IfExists(long id);
+        
     }
 }

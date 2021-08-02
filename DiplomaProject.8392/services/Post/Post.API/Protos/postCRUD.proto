@@ -10,33 +10,33 @@ package post;
 
 service PostCRUD {
 
-  rpc CreatePost (CreatePostRequest) returns (common.Response);
-  rpc UpdatePost (UpdatePostRequest) returns (common.Response);
-  rpc DeletePost (common.Request) returns (common.Response);
-  rpc GetPostById (common.Request) returns (PostInfoResponse);
+  rpc CreatePost (CreatePostRequest) returns (common.Response); //tested
+  rpc UpdatePost (UpdatePostRequest) returns (common.Response); //tested
+  rpc DeletePost (common.Request) returns (common.Response);  //tested
+  rpc GetPostById (common.Request) returns (PostInfoResponse); //tested
 
 }
 
 message BasePostRequest {
-  string title = 1;
-  string description = 2;
+  google.protobuf.StringValue title = 1;
+  google.protobuf.StringValue description = 2;
   int64 ownerId = 3;
-  int64 categoryId = 4;
-  string address = 5;
-  string referencePoint = 6;
-  string contactNumber = 7;
-  int32 roomsNo = 8;
-  int32 bathroomsNo = 9;
-  int32 bedsNo = 10;
+  google.protobuf.Int64Value categoryId = 4;
+  google.protobuf.StringValue address = 5;
+  google.protobuf.StringValue referencePoint = 6;
+  google.protobuf.StringValue contactNumber = 7;
+  google.protobuf.Int32Value roomsNo = 8;
+  google.protobuf.Int32Value bathroomsNo = 9;
+  google.protobuf.Int32Value bedsNo = 10;
   int32 maxGuestsNo = 11;
-  int32 squareMeters = 12;
+  google.protobuf.Int32Value squareMeters = 12;
   double price = 13;
-  double latitude = 14;
-  double longitude = 15;
-  bool isWholeApartment = 16;
+  google.protobuf.DoubleValue latitude = 14;
+  google.protobuf.DoubleValue longitude = 15;
+  google.protobuf.BoolValue isWholeApartment = 16;
   google.protobuf.Timestamp movingInTime = 17;
   google.protobuf.Timestamp movingOutTime = 18;
-  string additionalInfo = 19;
+  google.protobuf.StringValue additionalInfo = 19;
 }
 
 message CreatePostRequest {
@@ -52,13 +52,10 @@ message AccommodationItem {
 int64 id = 1;
 int64 accommodationId = 2;
 google.protobuf.StringValue otherValue = 3;
-Item base = 4;
+common.Item base = 4;
 }
 
-message Item {
-int64 id = 1;
-google.protobuf.StringValue name = 2;
-}
+
 
 message PostInfoResponse {
    int64 id = 1;
@@ -99,7 +96,7 @@ google.protobuf.StringValue phoneNumber = 10;
 
 message Category {
 int64 id = 1;
-string name = 2;
+google.protobuf.StringValue name = 2;
 }
 
 message AccommodationPhoto {

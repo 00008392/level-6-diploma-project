@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Profile.DAL.EF.Repositories
 {
-    public class GenericRepository<T> : IRepository<T> where T: BaseEntity
+    public class GenericRepository<T> :  IRepository<T> where T: BaseEntity
     {
         private readonly ProfileDbContext _context;
         public GenericRepository(ProfileDbContext context)
@@ -59,15 +59,16 @@ namespace Profile.DAL.EF.Repositories
         }
 
 
-        private IQueryable<T> Include( params Expression<Func<T, object>>[] includes)
+        private IQueryable<T> Include(params Expression<Func<T, object>>[] includes)
         {
-            IQueryable<T> query = null;
-            foreach (var include in includes)
+            IQueryable<T> query = _dbSet.AsQueryable();
+            if (includes != null)
             {
-                query = _dbSet.Include(include);
+                query = includes.Aggregate(query,
+                  (current, include) => current.Include(include));
             }
 
-            return query == null ? _dbSet : query;
+            return query;
         }
     }
 }

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-
+import "google/protobuf/wrappers.proto";
 option csharp_namespace = "Post.API";
 
 package common;
@@ -17,4 +17,8 @@ string message = 3;
 message Request {
   int64 id = 1;
 }
-
+message Item {
+int64 id = 1;
+google.protobuf.StringValue name = 2;
+google.protobuf.BoolValue isOther = 3;
+}

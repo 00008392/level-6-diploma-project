@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "Protos/common.proto";
+import "google/protobuf/wrappers.proto";
 
 
 option csharp_namespace = "Post.API";
@@ -10,14 +11,14 @@ package post;
 
 service PostRelatedItems {
 
-  rpc AddRules (AddItemsRequest) returns (common.Response);
-  rpc RemoveRules (RemoveItemsRequest) returns (common.Response);
+  rpc AddRules (AddItemsRequest) returns (common.Response); //tested
+  rpc RemoveRules (RemoveItemsRequest) returns (common.Response);//tested
+   
+  rpc AddFacilities (AddItemsRequest) returns (common.Response); //tested
+  rpc RemoveFacilities (RemoveItemsRequest) returns (common.Response);//tested
 
-  rpc AddFacilities (AddItemsRequest) returns (common.Response);
-  rpc RemoveFacilities (RemoveItemsRequest) returns (common.Response);
-
-  rpc AddSpecificities (AddItemsRequest) returns (common.Response);
-  rpc RemoveSpecificities (RemoveItemsRequest) returns (common.Response);
+  rpc AddSpecificities (AddItemsRequest) returns (common.Response); //tested
+  rpc RemoveSpecificities (RemoveItemsRequest) returns (common.Response);//tested
 
 }
 
@@ -30,5 +31,5 @@ message RemoveItemsRequest {
 message ItemRequest {
 int64 accommodationId = 1;
 int64 itemId = 2;
-string otherValue = 3;
+google.protobuf.StringValue otherValue = 3;
 }
