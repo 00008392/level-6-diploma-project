@@ -30,7 +30,7 @@ namespace Account.API.Services
                 {
                     Id = loggedUser.Id,
                     Email = loggedUser.Email,
-                    Role = (int)loggedUser.Role
+                    Role = (LoginReply.Types.Role)loggedUser.Role
                 };
                 return loginReply;
 

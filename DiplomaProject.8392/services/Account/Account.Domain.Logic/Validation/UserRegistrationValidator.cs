@@ -23,7 +23,8 @@ namespace Account.Domain.Logic.Validation
                 .EmailAddress().WithMessage("Invalid email");
            
             RuleFor(u => u.Role)
-                .NotNull();
+                .NotNull()
+                .WithMessage("Role cannot be empty");
 
         }
 

@@ -1,31 +1,36 @@
 syntax = "proto3";
 
+import "google/protobuf/wrappers.proto";
 option csharp_namespace = "Account.API";
 
 package account;
 
 
 message LoginRequest {
-  string email = 1;
-  string password = 2;
+  google.protobuf.StringValue email = 1;
+  google.protobuf.StringValue password = 2;
 }
 
 message LoginReply {
   int64 id = 1;
   string email = 2;
-  int32 role = 3;
+  enum Role {
+	User = 0;
+	Admin = 1;
+}
+Role role = 3;
   bool noUser = 4;
 }
 
 message ChangePasswordRequest {
 	int64 id = 1;
-	string password = 2;
+	google.protobuf.StringValue password = 2;
 }
 
 message RegistrationRequest {
-  string email = 1;
-  string password = 2;
-  int32 role = 3;
+  google.protobuf.StringValue email = 1;
+  google.protobuf.StringValue password = 2;
+  google.protobuf.Int32Value role = 3;
 }
 message Error {
 	string propertyName = 1;
@@ -34,16 +39,18 @@ message Error {
 message Response {
 bool IsSuccess = 1;
 repeated Error errors = 2;
-string message = 3;
+google.protobuf.StringValue message = 3;
+
 }
+
 
 
 service Login {
-  rpc GetLoggedUser (LoginRequest) returns (LoginReply);
+  rpc GetLoggedUser (LoginRequest) returns (LoginReply); //tested
 }
 service Register {
-  rpc RegisterUser (RegistrationRequest) returns (Response);
+  rpc RegisterUser (RegistrationRequest) returns (Response); //tested
 }
 service PasswordChange {
-  rpc ChangePassword (ChangePasswordRequest) returns (Response);
+  rpc ChangePassword (ChangePasswordRequest) returns (Response); //tested
 }

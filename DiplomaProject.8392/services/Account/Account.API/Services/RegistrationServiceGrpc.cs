@@ -25,7 +25,7 @@ namespace Account.API.Services
             {
                 Email = request.Email,
                 Password = request.Password,
-                Role = (Domain.Enums.Role)request.Role
+                Role = (Domain.Enums.Role?)request.Role
             };
             try
             {

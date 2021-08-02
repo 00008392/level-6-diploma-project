@@ -10,6 +10,6 @@ namespace Account.Domain.Logic.DTOs
     public class UserRegistrationDTO: PasswordBaseDTO
     {
         public string Email { get; set; }
-        public Role Role { get; set; }
+        public Role? Role { get; set; }
     }
 }

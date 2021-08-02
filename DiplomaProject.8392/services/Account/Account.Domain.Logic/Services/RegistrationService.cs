@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Account.Domain.Logic.Exceptions;
+using Account.Domain.Enums;
 
 namespace Account.Domain.Logic.Services
 {
@@ -38,7 +39,7 @@ namespace Account.Domain.Logic.Services
                 {
                     Email = userDTO.Email,
                     RegistrationDate = DateTime.Now,
-                    Role = userDTO.Role,
+                    Role = (Role)userDTO.Role,
                     PasswordHash = hashedPassword,
                     PasswordSalt = salt
                 };

@@ -12,7 +12,7 @@ string message = 2;
 message Response {
 bool IsSuccess = 1;
 repeated Error errors = 2;
-string message = 3;
+google.protobuf.StringValue message = 3;
 }
 message Request {
   int64 id = 1;

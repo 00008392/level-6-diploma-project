@@ -25,22 +25,22 @@ namespace Account.Domain.Logic.Validation
 
         private bool ContainsSymbol(string password)
         {
-            return password.IndexOfAny("!@#$%^&*()".ToCharArray()) >= 0;
+            return password==null? false: password.IndexOfAny("!@#$%^&*()".ToCharArray()) >= 0;
         }
 
         private bool ContainsUpperCase(string password)
         {
-            return password.Any(c => char.IsUpper(c));
+            return password==null? false:password.Any(c => char.IsUpper(c));
         }
 
         private bool ContainsLowercase(string password)
         {
-            return password.Any(c => char.IsLower(c));
+            return password==null? false: password.Any(c => char.IsLower(c));
         }
 
         private bool ContainsDigit(string password)
         {
-            return password.Any(c => char.IsDigit(c));
+            return password==null? false: password.Any(c => char.IsDigit(c));
         }
 
 
