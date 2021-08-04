@@ -14,11 +14,7 @@ message LoginRequest {
 message LoginReply {
   int64 id = 1;
   string email = 2;
-  enum Role {
-	User = 0;
-	Admin = 1;
-}
-Role role = 3;
+  google.protobuf.Int32Value Role = 3;
   bool noUser = 4;
 }
 

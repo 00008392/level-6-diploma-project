@@ -34,9 +34,9 @@ namespace Profile.API.Services
                 PhoneNumber = user.PhoneNumber,
                 DateOfBirth = user.DateOfBirth==null? null: Timestamp.FromDateTime(DateTime.SpecifyKind((DateTime)user.DateOfBirth, DateTimeKind.Utc)),
                 RegistrationDate = Timestamp.FromDateTime(DateTime.SpecifyKind(user.RegistrationDate, DateTimeKind.Utc)),
-                Gender = (int)user.Gender,
+                Gender = (int?)user.Gender,
                 Address = user.Address,
-                City = new City
+                City = user.City == null? null: new City
                 {
                     Id = user.City.Id,
                     Name = user.City.Name

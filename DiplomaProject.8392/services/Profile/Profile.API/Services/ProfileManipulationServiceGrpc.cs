@@ -30,7 +30,7 @@ namespace Profile.API.Services
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
                 DateOfBirth = request.DateOfBirth==null? null: request.DateOfBirth.ToDateTime(),
-                Gender = (Domain.Enums.Gender)request.Gender,
+                Gender = (Domain.Enums.Gender?)request.Gender,
                 Address = request.Address,
                 CityId = request.CityId,
                 UserInfo = request.UserInfo
