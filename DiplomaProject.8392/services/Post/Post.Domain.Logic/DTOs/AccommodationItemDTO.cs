@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Logic.DTOs
 {
-    //DTO fir bridge tables between accommodation and rules/facilities/specificities
+    //DTO for bridge tables between accommodation and rules/facilities/specificities
     public class AccommodationItemDTO
     {
         public long AccommodationId  { get; set; }

@@ -12,13 +12,13 @@ string message = 2;
 message Response {
 bool IsSuccess = 1;
 repeated Error errors = 2;
-google.protobuf.StringValue message = 3;
+string message = 3;
 }
 message Request {
   int64 id = 1;
 }
 message Item {
 int64 id = 1;
-google.protobuf.StringValue name = 2;
+string name = 2;
 google.protobuf.BoolValue isOther = 3;
 }

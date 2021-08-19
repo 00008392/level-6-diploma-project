@@ -1,5 +1,4 @@
 ﻿using Grpc.Core;
-using Post.API.ExceptionHandling;
 using Post.API.Services.Strategies;
 using Post.Domain.Core;
 using Post.Domain.Entities;

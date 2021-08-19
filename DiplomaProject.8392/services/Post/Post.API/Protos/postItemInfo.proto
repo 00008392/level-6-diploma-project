@@ -9,9 +9,9 @@ package post;
 
 
 service Items {
-	rpc GetRules (Empty) returns (ItemsList); //tested
-	rpc GetFacilities (Empty) returns (ItemsList); //tested
-	rpc GetSpecificities (Empty) returns (ItemsList); //tested
+	rpc GetRules (Empty) returns (ItemsList); 
+	rpc GetFacilities (Empty) returns (ItemsList); 
+	rpc GetSpecificities (Empty) returns (ItemsList); 
 }
 message Empty {
 

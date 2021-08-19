@@ -1,4 +1,5 @@
-﻿using Post.API.ExceptionHandling;
+﻿
+using ExceptionHandling;
 using Post.Domain.Core;
 using Post.Domain.Logic.Contracts;
 using Post.Domain.Logic.DTOs;
@@ -14,7 +15,7 @@ namespace Post.API.Services.Strategies
         where E : ItemBase
     {
         private readonly IPostRelatedInfoService<T, E> _service;
-        public PostRelatedInfoGenericStrategy (IPostRelatedInfoService<T, E> service)
+        public PostRelatedInfoGenericStrategy(IPostRelatedInfoService<T, E> service)
         {
             _service = service;
         }
@@ -31,35 +32,34 @@ namespace Post.API.Services.Strategies
                 };
                 items.Add(accommodationItemDTO);
             }
-          
+            var response = new Response();
             try
             {
                 await _service.AddItemsAsync(items);
-                return new Response
-                {
-                    IsSuccess = true
-                };
+
+                response.IsSuccess = true;
             }
             catch (Exception ex)
             {
-                return ExceptionHandler.HandleException(ex);
+                response.HandleException(ex);
             }
+            return response;
         }
 
         public async Task<Response> RemoveItemsAsync(RemoveItemsRequest request)
         {
+            var response = new Response();
             try
             {
                 await _service.RemoveItemsAsync(request.Ids);
-                return new Response
-                {
-                    IsSuccess = true
-                };
+                response.IsSuccess = true;
+
             }
             catch (Exception ex)
             {
-                return ExceptionHandler.HandleException(ex);
+                response.HandleException(ex);
             }
+            return response;
         }
     }
 }

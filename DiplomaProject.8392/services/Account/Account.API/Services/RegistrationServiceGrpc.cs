@@ -1,6 +1,7 @@
-﻿using Account.API.ExceptionHandling;
+﻿
 using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.DTOs;
+using ExceptionHandling;
 using FluentValidation;
 using Grpc.Core;
 using System;
@@ -27,22 +28,21 @@ namespace Account.API.Services
                 Password = request.Password,
                 Role = (Domain.Enums.Role?)request.Role
             };
+            var response = new Response();
             try
             {
                 await _service.RegisterUserAsync(userDTO);
-                return new Response { 
-                IsSuccess = true
-                };
+                response.IsSuccess = true;
             }
             catch (ValidationException ex)
             {
-                return ExceptionHandler.HandleValidationException(ex);
+               response.HandleValidationException(ex);
             }
             catch (Exception ex)
             {
-                return ExceptionHandler.HandleException(ex);
+                response.HandleException(ex);
             }
-
+            return response;
 
         }
     }

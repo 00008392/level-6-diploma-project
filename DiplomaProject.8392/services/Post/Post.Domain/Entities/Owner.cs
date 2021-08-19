@@ -1,5 +1,4 @@
 ﻿using Post.Domain.Core;
-using Post.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

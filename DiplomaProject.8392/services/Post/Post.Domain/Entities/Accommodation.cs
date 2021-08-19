@@ -10,6 +10,7 @@ namespace Post.Domain.Entities
 {
     public class Accommodation: BaseEntity 
     {
+
         public string Title { get; set; }
         public string Description { get; set; }
         public long OwnerId { get; set; }

@@ -110,7 +110,7 @@ namespace Post.Domain.Logic.Services
                     BathroomsNo = accommodation.BathroomsNo,
                     BedsNo = accommodation.BedsNo,
                     MaxGuestsNo = accommodation.MaxGuestsNo,
-                    SquareMeters = accommodation.MaxGuestsNo,
+                    SquareMeters = accommodation.SquareMeters,
                     Price = accommodation.Price,
                     Latitude = accommodation.Latitude,
                     Longitude = accommodation.Longitude,
@@ -165,7 +165,7 @@ namespace Post.Domain.Logic.Services
             accommodation.BathroomsNo = item.BathroomsNo;
             accommodation.BedsNo = item.BedsNo;
             accommodation.MaxGuestsNo = item.MaxGuestsNo;
-            accommodation.SquareMeters = item.MaxGuestsNo;
+            accommodation.SquareMeters = item.SquareMeters;
             accommodation.Price = item.Price;
             accommodation.Latitude = item.Latitude;
             accommodation.Longitude = item.Longitude;

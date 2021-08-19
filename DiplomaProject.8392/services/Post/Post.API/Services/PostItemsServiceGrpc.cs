@@ -36,7 +36,7 @@ namespace Post.API.Services
             return await GetItems(_specificityStrategy);
         }
 
-        private async Task<ItemsList> GetItems<T>(IPostItemsStrategy<T> strategy) where T: ItemBase
+        private async Task<ItemsList> GetItems<T>(IPostItemsStrategy<T> strategy) where T : ItemBase
         {
             var list = new ItemsList();
             list.Items.Add(await strategy.GetItems());

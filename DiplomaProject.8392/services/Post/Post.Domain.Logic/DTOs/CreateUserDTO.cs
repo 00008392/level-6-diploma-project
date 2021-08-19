@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Post.Domain.Enums
+namespace Post.Domain.Logic.DTOs
 {
-    public enum Gender
+    public class CreateUserDTO
     {
-        Male,
-        Female
+        public string Email { get; set; }
     }
 }

@@ -1,7 +1,7 @@
-﻿using FluentValidation;
+﻿using ExceptionHandling;
+using FluentValidation;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using Post.API.ExceptionHandling;
 using Post.Domain.Core;
 using Post.Domain.Logic.Contracts;
 using Post.Domain.Logic.DTOs;
@@ -21,12 +21,20 @@ namespace Post.API.Services
         }
         public override async Task<Response> CreatePost(CreatePostRequest request, ServerCallContext context)
         {
+
             var baseRequest = request.BaseRequest;
+            if (baseRequest == null)
+            {
+                return new Response
+                {
+                    Message = "Empty request"
+                };
+            }
             var createPostDTO = new CreatePostDTO
             {
                 Title = baseRequest.Title,
                 Description = baseRequest.Description,
-                OwnerId = baseRequest.OwnerId,
+                OwnerId = baseRequest.OwnerId ?? 0,
                 CategoryId = baseRequest.CategoryId,
                 Address = baseRequest.Address,
                 ReferencePoint = baseRequest.ReferencePoint,
@@ -34,32 +42,31 @@ namespace Post.API.Services
                 RoomsNo = baseRequest.RoomsNo,
                 BathroomsNo = baseRequest.BathroomsNo,
                 BedsNo = baseRequest.BedsNo,
-                MaxGuestsNo = baseRequest.MaxGuestsNo,
+                MaxGuestsNo = baseRequest.MaxGuestsNo ?? 0,
                 SquareMeters = baseRequest.SquareMeters,
-                Price = (decimal)baseRequest.Price,
+                Price = (decimal)(baseRequest.Price ?? 0),
                 Latitude = (decimal?)baseRequest.Latitude,
                 Longitude = (decimal?)baseRequest.Longitude,
                 IsWholeApartment = baseRequest.IsWholeApartment,
-                MovingInTime = baseRequest.MovingInTime==null?null: baseRequest.MovingInTime.ToDateTime(),
-                MovingOutTime = baseRequest.MovingOutTime==null?null: baseRequest.MovingOutTime.ToDateTime(),
+                MovingInTime = baseRequest.MovingInTime == null ? null : baseRequest.MovingInTime.ToDateTime(),
+                MovingOutTime = baseRequest.MovingOutTime == null ? null : baseRequest.MovingOutTime.ToDateTime(),
                 AdditionalInfo = baseRequest.AdditionalInfo
             };
+            var response = new Response();
             try
             {
                 await _service.CreatePostAsync(createPostDTO);
-                return new Response
-                {
-                    IsSuccess = true
-                };
+                response.IsSuccess = true;
             }
             catch (ValidationException ex)
             {
-                return ExceptionHandler.HandleValidationException(ex);
+                response.HandleValidationException(ex);
             }
             catch (Exception ex)
             {
-                return ExceptionHandler.HandleException(ex);
+                response.HandleException(ex);
             }
+            return response;
         }
         public override async Task<Response> UpdatePost(UpdatePostRequest request, ServerCallContext context)
         {
@@ -69,7 +76,7 @@ namespace Post.API.Services
                 Id = request.Id,
                 Title = baseRequest.Title,
                 Description = baseRequest.Description,
-                OwnerId = baseRequest.OwnerId,
+                OwnerId = baseRequest.OwnerId ?? 0,
                 CategoryId = baseRequest.CategoryId,
                 Address = baseRequest.Address,
                 ReferencePoint = baseRequest.ReferencePoint,
@@ -77,47 +84,45 @@ namespace Post.API.Services
                 RoomsNo = baseRequest.RoomsNo,
                 BathroomsNo = baseRequest.BathroomsNo,
                 BedsNo = baseRequest.BedsNo,
-                MaxGuestsNo = baseRequest.MaxGuestsNo,
+                MaxGuestsNo = baseRequest.MaxGuestsNo ?? 0,
                 SquareMeters = baseRequest.SquareMeters,
-                Price = (decimal)baseRequest.Price,
+                Price = (decimal)(baseRequest.Price ?? 0),
                 Latitude = (decimal?)baseRequest.Latitude,
                 Longitude = (decimal?)baseRequest.Longitude,
                 IsWholeApartment = baseRequest.IsWholeApartment,
-                MovingInTime = baseRequest.MovingInTime==null? null: baseRequest.MovingInTime.ToDateTime(),
-                MovingOutTime = baseRequest.MovingOutTime==null?null: baseRequest.MovingOutTime.ToDateTime(),
+                MovingInTime = baseRequest.MovingInTime == null ? null : baseRequest.MovingInTime.ToDateTime(),
+                MovingOutTime = baseRequest.MovingOutTime == null ? null : baseRequest.MovingOutTime.ToDateTime(),
                 AdditionalInfo = baseRequest.AdditionalInfo
             };
+            var response = new Response();
             try
             {
                 await _service.UpdatePostAsync(updatePostDTO);
-                return new Response
-                {
-                    IsSuccess = true
-                };
+                response.IsSuccess = true;
             }
             catch (ValidationException ex)
             {
-                return ExceptionHandler.HandleValidationException(ex);
+                response.HandleValidationException(ex);
             }
             catch (Exception ex)
             {
-                return ExceptionHandler.HandleException(ex);
+                response.HandleException(ex);
             }
+            return response;
         }
         public override async Task<Response> DeletePost(Request request, ServerCallContext context)
         {
+            var response = new Response();
             try
             {
                 await _service.DeletePostAsync(request.Id);
-                return new Response
-                {
-                    IsSuccess = true
-                };
+                response.IsSuccess = true;
             }
             catch (Exception ex)
             {
-                return ExceptionHandler.HandleException(ex);
+                response.HandleException(ex);
             }
+            return response;
         }
         public override async Task<PostInfoResponse> GetPostById(Request request, ServerCallContext context)
         {
@@ -166,7 +171,7 @@ namespace Post.API.Services
                 MovingOutTime = post.MovingOutTime,
                 DatePublished = Timestamp.FromDateTime(DateTime.SpecifyKind(post.DatePublished, DateTimeKind.Utc))
             };
-            if (post.AccommodationPhotos.Count!=0)
+            if (post.AccommodationPhotos.Count != 0)
             {
                 response.AccommodationPhotos.AddRange(post.AccommodationPhotos.Select(x => new AccommodationPhoto
                 {
@@ -176,15 +181,15 @@ namespace Post.API.Services
                     MimeType = x.MimeType
                 }));
             }
-            if (post.AccommodationRules.Count!=0)
+            if (post.AccommodationRules.Count != 0)
             {
                 response.AccommodationRules.AddRange(GetItemsList(post.AccommodationRules));
             }
-            if (post.AccommodationFacilities.Count!=0)
+            if (post.AccommodationFacilities.Count != 0)
             {
                 response.AccommodationFacilities.AddRange(GetItemsList(post.AccommodationFacilities));
             }
-            if (post.AccommodationSpecificities.Count!=0)
+            if (post.AccommodationSpecificities.Count != 0)
             {
                 response.AccommodationSpecificities.AddRange(GetItemsList(post.AccommodationSpecificities));
             }

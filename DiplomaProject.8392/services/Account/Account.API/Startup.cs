@@ -41,11 +41,13 @@ namespace Account.API
             services.AddFluentValidation();
             services.AddScoped<AbstractValidator<PasswordBaseDTO>, PasswordBaseValidator>();
             services.AddScoped<AbstractValidator<UserRegistrationDTO>, UserRegistrationValidator>();
+            services.AddScoped<AbstractValidator<UpdateUserDTO>, UpdateUserValidator>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>) );
-            services.AddScoped(typeof(ILoginService), typeof(LoginService));
-            services.AddScoped(typeof(IRegistrationService), typeof(RegistrationService));
-            services.AddScoped(typeof(IPasswordChangeService), typeof(PasswordChangeService));
-            services.AddScoped(typeof(IPasswordHandlingService), typeof(PasswordHandlingService));
+            services.AddScoped<ILoginService, LoginService>();
+            services.AddScoped<IRegistrationService, RegistrationService>();
+            services.AddScoped<IPasswordChangeService, PasswordChangeService>();
+            services.AddScoped<IEventHandlerService, EventHandlerService>();
+            services.AddScoped<IPasswordHandlingService, PasswordHandlingService>();
             services.AddDbContext<AccountDbContext>(options =>
          options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
         }

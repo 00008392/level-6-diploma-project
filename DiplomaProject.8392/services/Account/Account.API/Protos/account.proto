@@ -35,18 +35,17 @@ message Error {
 message Response {
 bool IsSuccess = 1;
 repeated Error errors = 2;
-google.protobuf.StringValue message = 3;
-
+string message = 3;
 }
 
 
 
 service Login {
-  rpc GetLoggedUser (LoginRequest) returns (LoginReply); //tested
+  rpc GetLoggedUser (LoginRequest) returns (LoginReply); 
 }
 service Register {
-  rpc RegisterUser (RegistrationRequest) returns (Response); //tested
+  rpc RegisterUser (RegistrationRequest) returns (Response); 
 }
 service PasswordChange {
-  rpc ChangePassword (ChangePasswordRequest) returns (Response); //tested
+  rpc ChangePassword (ChangePasswordRequest) returns (Response); 
 }

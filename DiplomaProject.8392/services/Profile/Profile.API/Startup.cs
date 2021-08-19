@@ -36,8 +36,10 @@ namespace Profile.API
             services.AddGrpc();
             services.AddFluentValidation();
             services.AddScoped<AbstractValidator<UpdateProfileDTO>, ProfileValidator>();
-            services.AddScoped(typeof(IProfileInfoService), typeof(ProfileInfoService));
-            services.AddScoped(typeof(IProfileManipulationService), typeof(ProfileManipulationService));
+            services.AddScoped<AbstractValidator<CreateProfileDTO>, CreateProfileValidator>();
+            services.AddScoped<IProfileInfoService, ProfileInfoService>();
+            services.AddScoped<IProfileManipulationService, ProfileManipulationService>();
+            services.AddScoped<IEventHandlerService,EventHandlerService>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));       
             services.AddDbContext<ProfileDbContext>(options =>
          options.UseSqlServer(Configuration.GetConnectionString("ProfileDbContext")));

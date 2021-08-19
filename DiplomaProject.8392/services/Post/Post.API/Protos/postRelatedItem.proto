@@ -11,14 +11,14 @@ package post;
 
 service PostRelatedItems {
 
-  rpc AddRules (AddItemsRequest) returns (common.Response); //tested
-  rpc RemoveRules (RemoveItemsRequest) returns (common.Response);//tested
+  rpc AddRules (AddItemsRequest) returns (common.Response); 
+  rpc RemoveRules (RemoveItemsRequest) returns (common.Response);
    
-  rpc AddFacilities (AddItemsRequest) returns (common.Response); //tested
-  rpc RemoveFacilities (RemoveItemsRequest) returns (common.Response);//tested
+  rpc AddFacilities (AddItemsRequest) returns (common.Response); 
+  rpc RemoveFacilities (RemoveItemsRequest) returns (common.Response);
 
-  rpc AddSpecificities (AddItemsRequest) returns (common.Response); //tested
-  rpc RemoveSpecificities (RemoveItemsRequest) returns (common.Response);//tested
+  rpc AddSpecificities (AddItemsRequest) returns (common.Response); 
+  rpc RemoveSpecificities (RemoveItemsRequest) returns (common.Response);
 
 }
 

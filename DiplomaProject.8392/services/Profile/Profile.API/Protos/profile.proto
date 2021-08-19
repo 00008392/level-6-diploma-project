@@ -10,14 +10,14 @@ package profile;
 
 service ProfileManipulation {
 
-  rpc UpdateProfile (UpdateRequest) returns (Response); //tested
-  rpc DeleteProfile (Request) returns (Response); //tested
+  rpc UpdateProfile (UpdateRequest) returns (Response);
+  rpc DeleteProfile (Request) returns (Response);
 }
 
 
 service ProfileInfo {
 
-  rpc GetProfileInfo (Request) returns (ProfileInfoResponse); //tested
+  rpc GetProfileInfo (Request) returns (ProfileInfoResponse);
 
 }
 message UpdateRequest {
@@ -42,7 +42,7 @@ message Error {
 message Response {
 	bool IsSuccess = 1;
 	repeated Error errors = 2;
-	google.protobuf.StringValue message = 3;
+	string message = 3;
 }
 
 
@@ -50,7 +50,7 @@ message ProfileInfoResponse {
     int64 id = 1;
    google.protobuf.StringValue firstName = 2;
    google.protobuf.StringValue lastName = 3;
-    google.protobuf.StringValue Email = 4;
+    string Email = 4;
     google.protobuf.StringValue phoneNumber = 5;
     google.protobuf.Timestamp DateOfBirth = 6;
     google.protobuf.Timestamp RegistrationDate = 7;

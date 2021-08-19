@@ -1,6 +1,7 @@
-﻿using Account.API.ExceptionHandling;
+﻿
 using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.DTOs;
+using ExceptionHandling;
 using FluentValidation;
 using Grpc.Core;
 using System;
@@ -14,6 +15,7 @@ namespace Account.API.Services
     {
         private readonly IPasswordChangeService _service;
         public PasswordChangeServiceGrpc(IPasswordChangeService service)
+       
         {
             _service = service;
         }
@@ -25,23 +27,22 @@ namespace Account.API.Services
                 Id = request.Id,
                 Password = request.Password
             };
+            var response = new Response();
             try
             {
                 await _service.ChangePasswordAsync(passwordDTO);
-                return new Response
-                {
-                    IsSuccess = true
-                };
+                response.IsSuccess = true;
             }
             catch (ValidationException ex)
             {
-                
-                return ExceptionHandler.HandleValidationException(ex);
+
+                response.HandleValidationException(ex);
             }
             catch(Exception ex)
             {
-                return ExceptionHandler.HandleException(ex);
+                response.HandleException(ex);
             }
+            return response;
         }
     }
 }
