@@ -1,4 +1,4 @@
-﻿using Account.Domain.Core;
+﻿
 using Account.Domain.Entities;
 using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.IntegrationEvents.EventHandlers.Core;

@@ -1,8 +1,9 @@
-﻿using Account.Domain.Core;
+﻿
 using Account.Domain.Entities;
 using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.DTOs;
 using Account.Domain.Logic.Exceptions;
+using BaseClasses.Contracts;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

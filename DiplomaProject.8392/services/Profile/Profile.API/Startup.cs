@@ -9,8 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Profile.API.Services;
 using Profile.DAL.EF.Data;
-using Profile.DAL.EF.Repositories;
-using Profile.Domain.Core;
 using Profile.Domain.Logic.DTOs;
 using Profile.Domain.Logic.Contracts;
 using Profile.Domain.Logic.Services;
@@ -19,6 +17,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BaseClasses.Contracts;
+using BaseClasses.Repositories.EF;
 
 namespace Profile.API
 {

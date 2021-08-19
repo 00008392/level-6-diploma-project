@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using BaseClasses.Contracts;
+using BaseClasses.Repositories.EF;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

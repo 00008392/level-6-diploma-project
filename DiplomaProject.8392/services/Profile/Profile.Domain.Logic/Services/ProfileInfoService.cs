@@ -1,4 +1,4 @@
-﻿using Profile.Domain.Core;
+﻿
 using Profile.Domain.Entities;
 using Profile.Domain.Logic.DTOs;
 using Profile.Domain.Logic.Contracts;
@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BaseClasses.Contracts;
 
 namespace Profile.Domain.Logic.Services
 {

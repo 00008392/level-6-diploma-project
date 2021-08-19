@@ -1,4 +1,5 @@
-﻿using Profile.Domain.Core;
+﻿
+using BaseClasses.Entities;
 using Profile.Domain.Enums;
 using System;
 using System.Collections.Generic;

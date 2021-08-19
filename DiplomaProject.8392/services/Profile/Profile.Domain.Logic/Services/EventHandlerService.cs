@@ -1,5 +1,5 @@
-﻿using FluentValidation;
-using Profile.Domain.Core;
+﻿using BaseClasses.Contracts;
+using FluentValidation;
 using Profile.Domain.Entities;
 using Profile.Domain.Logic.Contracts;
 using Profile.Domain.Logic.DTOs;

@@ -13,9 +13,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Post.Domain.Logic\Post.Domain.Logic.csproj" />
-    <ProjectReference Include="..\..\Post.Domain\Post.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

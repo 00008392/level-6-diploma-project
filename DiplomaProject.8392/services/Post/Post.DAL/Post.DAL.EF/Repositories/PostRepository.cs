@@ -11,11 +11,48 @@ using System.Threading.Tasks;
 
 namespace Post.DAL.EF.Repositories
 {
-    public class PostRepository : BaseRepository<Accommodation>, IPostRepository
+    public class PostRepository :  IPostRepository
     {
-        public PostRepository(PostDbContext context):base(context)
+        protected readonly PostDbContext _context;
+        public PostRepository(PostDbContext context)
         {
+            _context = context;
         }
+        protected DbSet<Accommodation> _dbSet => _context.Set<Accommodation>();
+        public async Task AddRangeAsync(ICollection<Accommodation> items)
+        {
+            _dbSet.AddRange(items);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CreateAsync(Accommodation entity)
+        {
+            _dbSet.Add(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(Accommodation entity)
+        {
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
+        public bool DoesItemWithIdExist(long id)
+        {
+            return _dbSet.Any(t => t.Id == id);
+        }
+
+        public async Task RemoveRangeAsync(ICollection<Accommodation> items)
+        {
+            _dbSet.RemoveRange(items);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Accommodation entity)
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<ICollection<Accommodation>> GetAllAsync()
         {
             return await GetIncludes().ToListAsync();

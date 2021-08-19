@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Profile.Domain.Core;
 using Profile.Domain.Logic.DTOs;
 using System;
 using System.Collections.Generic;

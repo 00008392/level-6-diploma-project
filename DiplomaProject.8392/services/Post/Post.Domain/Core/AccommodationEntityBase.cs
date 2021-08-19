@@ -1,4 +1,5 @@
-﻿using Post.Domain.Entities;
+﻿using BaseClasses.Entities;
+using Post.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

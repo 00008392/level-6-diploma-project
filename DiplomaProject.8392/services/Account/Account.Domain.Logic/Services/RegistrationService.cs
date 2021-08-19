@@ -1,4 +1,4 @@
-﻿using Account.Domain.Core;
+﻿
 using Account.Domain.Entities;
 using Account.Domain.Logic.Core;
 using Account.Domain.Logic.DTOs;
@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Account.Domain.Logic.Exceptions;
 using Account.Domain.Enums;
+using BaseClasses.Contracts;
 
 namespace Account.Domain.Logic.Services
 {

@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Profile.Domain.Core;
 using Profile.Domain.Entities;
 using Profile.Domain.Logic.DTOs;
 using Profile.Domain.Logic.Contracts;
@@ -9,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Profile.Domain.Logic.Exceptions;
+using BaseClasses.Contracts;
 
 namespace Profile.Domain.Logic.Services
 {
@@ -56,7 +56,7 @@ namespace Profile.Domain.Logic.Services
             }
             if (profile.CityId != null)
             {
-                if (!_cityRepository.IfExists((long)profile.CityId))
+                if (!_cityRepository.DoesItemWithIdExist((long)profile.CityId))
                 {
                     throw new ForeignKeyViolationException("city");
                 }

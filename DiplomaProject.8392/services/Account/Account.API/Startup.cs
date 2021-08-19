@@ -1,7 +1,5 @@
 ﻿
 using Account.DAL.EF.Data;
-using Account.DAL.EF.Repositories;
-using Account.Domain.Core;
 using Account.Domain.Logic.DTOs;
 using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.Services;
@@ -21,6 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Account.API.Services;
+using BaseClasses.Contracts;
+using BaseClasses.Repositories.EF;
 
 namespace Account.API
 {

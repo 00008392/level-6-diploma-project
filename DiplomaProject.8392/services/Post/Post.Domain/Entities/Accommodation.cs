@@ -1,4 +1,4 @@
-﻿using Post.Domain.Core;
+﻿using BaseClasses.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

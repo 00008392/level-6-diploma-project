@@ -1,4 +1,5 @@
-﻿using Post.Domain.Core;
+﻿using BaseClasses.Contracts;
+using Post.Domain.Core;
 using Post.Domain.Logic.Contracts;
 using Post.Domain.Logic.DTOs;
 using System;

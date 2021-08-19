@@ -1,5 +1,4 @@
 ﻿using Account.DAL.EF.Data;
-using Account.Domain.Core;
 using Account.Domain.Entities;
 using Account.Domain.Enums;
 using Account.Domain.Logic.Core;
@@ -12,16 +11,15 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using BaseClasses.Contracts;
 
 namespace Account.Domain.Logic.Services
 {
     public class LoginService : BaseService, ILoginService
     {
-        private readonly AccountDbContext _context;
-        public LoginService(IRepository<User> repository, IPasswordHandlingService pwdService,
-                            AccountDbContext context) : base(repository, pwdService)
+        public LoginService(IRepository<User> repository, IPasswordHandlingService pwdService
+                           ) : base(repository, pwdService)
         {
-            _context = context;
         }
         public async Task<LoggedUserDTO> LoginUserAsync(UserLoginDTO login)
         {

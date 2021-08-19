@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\utilities\BaseClasses\BaseClasses.csproj" />
     <ProjectReference Include="..\..\..\utilities\ExceptionHandling\ExceptionHandling.csproj" />
     <ProjectReference Include="..\Post.DAL\Post.DAL.EF\Post.DAL.EF.csproj" />
     <ProjectReference Include="..\Post.Domain.Logic\Post.Domain.Logic.csproj" />

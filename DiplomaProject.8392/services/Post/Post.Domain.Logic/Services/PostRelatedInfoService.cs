@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using BaseClasses.Contracts;
+using FluentValidation;
 using Post.Domain.Core;
 using Post.Domain.Entities;
 using Post.Domain.Logic.Contracts;
@@ -52,11 +53,11 @@ namespace Post.Domain.Logic.Services
             foreach (var itemDTO in itemDTOs)
             {
 
-                if (!_accommodationRepository.IfExists(itemDTO.AccommodationId))
+                if (!_accommodationRepository.DoesItemWithIdExist(itemDTO.AccommodationId))
                 {
                     throw new ForeignKeyViolationException("Accommodation");
                 }
-                if (!_itemRepository.IfExists(itemDTO.ItemId))
+                if (!_itemRepository.DoesItemWithIdExist(itemDTO.ItemId))
                 {
                     throw new ForeignKeyViolationException("Item");
                 }

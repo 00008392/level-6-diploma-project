@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using BaseClasses.Contracts;
+using FluentValidation;
 using Post.Domain.Core;
 using Post.Domain.Entities;
 using Post.Domain.Logic.Contracts;
@@ -39,13 +40,13 @@ namespace Post.Domain.Logic.Services
             }
             if (item.CategoryId != null)
             {
-                var categoryExists = _categoryRepository.IfExists((long)item.CategoryId);
+                var categoryExists = _categoryRepository.DoesItemWithIdExist((long)item.CategoryId);
                 if (!categoryExists)
                 {
                     throw new ForeignKeyViolationException("Category");
                 }
             }
-            var ownerExists = _ownerRepository.IfExists(item.OwnerId);
+            var ownerExists = _ownerRepository.DoesItemWithIdExist(item.OwnerId);
             if (!ownerExists)
             {
                 throw new ForeignKeyViolationException("Owner");
@@ -143,7 +144,7 @@ namespace Post.Domain.Logic.Services
             }
             if (item.CategoryId != null)
             {
-                var categoryExists = _categoryRepository.IfExists((long)item.CategoryId);
+                var categoryExists = _categoryRepository.DoesItemWithIdExist((long)item.CategoryId);
                 if (!categoryExists)
                 {
                     throw new ForeignKeyViolationException("Category");

@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using BaseClasses.Contracts;
+using FluentValidation;
 using Post.Domain.Core;
 using Post.Domain.Entities;
 using Post.Domain.Logic.Contracts;
