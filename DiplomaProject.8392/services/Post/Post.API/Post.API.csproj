@@ -28,6 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
+    <ProjectReference Include="..\..\..\integration\RabbitMQEventBus\RabbitMQEventBus.csproj" />
     <ProjectReference Include="..\..\..\utilities\BaseClasses\BaseClasses.csproj" />
     <ProjectReference Include="..\..\..\utilities\ExceptionHandling\ExceptionHandling.csproj" />
     <ProjectReference Include="..\Post.DAL\Post.DAL.EF\Post.DAL.EF.csproj" />

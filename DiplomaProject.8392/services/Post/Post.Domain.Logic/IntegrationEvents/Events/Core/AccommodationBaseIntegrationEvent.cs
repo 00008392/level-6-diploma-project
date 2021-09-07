@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EventBus.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Logic.IntegrationEvents.Events.Core
 {
-   public abstract class AccommodationBaseIntegrationEvent
+   public abstract class AccommodationBaseIntegrationEvent: IntegrationEvent
     {
         public string Title { get; set; }
         public string Description { get; set; }

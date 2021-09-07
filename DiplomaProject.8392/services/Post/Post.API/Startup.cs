@@ -1,5 +1,6 @@
 ﻿using BaseClasses.Contracts;
 using BaseClasses.Repositories.EF;
+using EventBus.Contracts;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -24,6 +25,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Post.Domain.Logic.IntegrationEvents.Events;
+using Post.Domain.Logic.IntegrationEvents.EventHandlers;
 
 namespace Post.API
 {
@@ -53,6 +56,8 @@ namespace Post.API
             services.AddScoped(typeof(IPostItemsStrategy<>), typeof(PostItemsGenericStrategy<>));
             services.AddDbContext<PostDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
+
+            services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,6 +81,11 @@ namespace Post.API
                     await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
                 });
             });
+
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<UserCreatedIntegrationEvent, UserCreatedIntegrationEventHandler>();
+            eventBus.Subscribe<UserDeletedIntegrationEvent, UserDeletedIntegrationEventhandler>();
+            eventBus.Subscribe<UserUpdatedIntegrationEvent, UserUpdatedIntegrationEventHandler>();
         }
     }
 }

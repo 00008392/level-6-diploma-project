@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using Post.DAL.EF.Data;
 using Post.Domain.Core;
 using Post.Domain.Entities;
@@ -14,6 +15,7 @@ namespace Post.DAL.EF.Repositories
     public class PostRepository :  IPostRepository
     {
         protected readonly PostDbContext _context;
+       
         public PostRepository(PostDbContext context)
         {
             _context = context;
@@ -55,20 +57,20 @@ namespace Post.DAL.EF.Repositories
 
         public async Task<ICollection<Accommodation>> GetAllAsync()
         {
-            return await GetIncludes().ToListAsync();
+            return await GetDbSetWithRelatedTables().ToListAsync();
         }
 
         public async Task<Accommodation> GetByIdAsync(long id)
         {
-            return await GetIncludes().SingleOrDefaultAsync(a => a.Id == id);
+            return await GetDbSetWithRelatedTables().SingleOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<ICollection<Accommodation>> GetFilteredAsync(Expression<Func<Accommodation, bool>> filter)
         {
-            return await GetIncludes().Where(filter).ToListAsync();
+            return await GetDbSetWithRelatedTables().Where(filter).ToListAsync();
         }
 
-        private IQueryable<Accommodation> GetIncludes()
+        private IQueryable<Accommodation> GetDbSetWithRelatedTables()
         {
            return _dbSet.Include(x => x.Owner).Include(x => x.Category)
                 .Include(x => x.AccommodationPhotos)

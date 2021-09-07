@@ -19,6 +19,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using BaseClasses.Contracts;
 using BaseClasses.Repositories.EF;
+using EventBus.Contracts;
+using Profile.Domain.Logic.IntegrationEvents.Events;
+using Profile.Domain.Logic.IntegrationEvents.EventHandlers;
 
 namespace Profile.API
 {
@@ -43,6 +46,8 @@ namespace Profile.API
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));       
             services.AddDbContext<ProfileDbContext>(options =>
          options.UseSqlServer(Configuration.GetConnectionString("ProfileDbContext")));
+
+            services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +71,8 @@ namespace Profile.API
                     await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
                 });
             });
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<UserCreatedIntegrationEvent, UserCreatedIntegrationEventHandler>();
         }
     }
 }

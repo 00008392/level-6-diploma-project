@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Account.Domain.Logic.IntegrationEvents.Events
+namespace EventBus.Contracts
 {
-   public class UserDeletedIntegrationEvent: IntegrationEvent
+    public interface IIntegrationEventHandler<T> where T: IntegrationEvent
     {
-        public long UserId { get; set; }
+        Task Handle(T @event);
     }
 }

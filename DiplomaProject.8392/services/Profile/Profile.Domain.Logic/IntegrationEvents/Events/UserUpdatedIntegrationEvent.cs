@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EventBus.Events;
 
 namespace Profile.Domain.Logic.IntegrationEvents.Events
 {
-    public class UserUpdatedIntegrationEvent
+    public class UserUpdatedIntegrationEvent: IntegrationEvent
     {
         public long UserId { get; set; }
         public string FirstName { get; set; }

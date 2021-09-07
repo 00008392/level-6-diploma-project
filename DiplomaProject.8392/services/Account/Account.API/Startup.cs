@@ -21,6 +21,9 @@ using System.Threading.Tasks;
 using Account.API.Services;
 using BaseClasses.Contracts;
 using BaseClasses.Repositories.EF;
+using EventBus.Contracts;
+using Account.Domain.Logic.IntegrationEvents.Events;
+using Account.Domain.Logic.IntegrationEvents.EventHandlers;
 
 namespace Account.API
 {
@@ -50,6 +53,8 @@ namespace Account.API
             services.AddScoped<IPasswordHandlingService, PasswordHandlingService>();
             services.AddDbContext<AccountDbContext>(options =>
          options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
+            services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,6 +78,10 @@ namespace Account.API
                     await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
                 });
             }));
+
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<UserDeletedIntegrationEvent, UserDeletedIntegrationEventHandler>();
+            eventBus.Subscribe<UserUpdatedIntegrationEvent, UserUpdatedIntegrationEventHandler>();
         }
     }
 }

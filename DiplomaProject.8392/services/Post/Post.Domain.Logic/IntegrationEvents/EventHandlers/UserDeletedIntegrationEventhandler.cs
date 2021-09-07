@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EventBus.Contracts;
 
 namespace Post.Domain.Logic.IntegrationEvents.EventHandlers
 {
-   public class UserDeletedIntegrationEventhandler: BaseIntegrationEventHandler
+   public class UserDeletedIntegrationEventhandler: BaseIntegrationEventHandler, IIntegrationEventHandler<UserDeletedIntegrationEvent>
     {
         public UserDeletedIntegrationEventhandler(IEventHandlerService service)
             :base(service)

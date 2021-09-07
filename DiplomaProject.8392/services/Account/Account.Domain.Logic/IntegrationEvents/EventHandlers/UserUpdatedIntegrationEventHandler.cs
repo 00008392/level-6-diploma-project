@@ -2,6 +2,7 @@
 using Account.Domain.Logic.DTOs;
 using Account.Domain.Logic.IntegrationEvents.EventHandlers.Core;
 using Account.Domain.Logic.IntegrationEvents.Events;
+using EventBus.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,8 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.IntegrationEvents.EventHandlers
 {
-   public class UserUpdatedIntegrationEventHandler: BaseIntegrationEventHandler
+   public class UserUpdatedIntegrationEventHandler: BaseIntegrationEventHandler,
+        IIntegrationEventHandler<UserUpdatedIntegrationEvent>
     {
         public UserUpdatedIntegrationEventHandler(IEventHandlerService service)
             :base(service)

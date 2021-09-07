@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EventBus.Contracts;
 
 namespace Post.Domain.Logic.IntegrationEvents.EventHandlers
 {
-    public class UserCreatedIntegrationEventHandler: BaseIntegrationEventHandler
+    public class UserCreatedIntegrationEventHandler: BaseIntegrationEventHandler, IIntegrationEventHandler<UserCreatedIntegrationEvent>
     {
         public UserCreatedIntegrationEventHandler(IEventHandlerService service)
             :base(service)

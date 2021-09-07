@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EventBus.Contracts;
 
 namespace Profile.Domain.Logic.IntegrationEvents.EventHandlers
 {
-    public class UserCreatedIntegrationEventHandler
+    public class UserCreatedIntegrationEventHandler: IIntegrationEventHandler<UserCreatedIntegrationEvent>
     {
         private readonly IEventHandlerService _service;
         public UserCreatedIntegrationEventHandler(IEventHandlerService service)

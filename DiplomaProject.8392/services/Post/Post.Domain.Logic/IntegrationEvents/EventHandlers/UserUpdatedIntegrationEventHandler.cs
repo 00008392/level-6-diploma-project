@@ -7,17 +7,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EventBus.Contracts;
 
 namespace Post.Domain.Logic.IntegrationEvents.EventHandlers
 {
-    public class UserUpdatedIntegrationEventHandler: BaseIntegrationEventHandler
+    public class UserUpdatedIntegrationEventHandler: BaseIntegrationEventHandler, IIntegrationEventHandler<UserUpdatedIntegrationEvent>
     {
         public UserUpdatedIntegrationEventHandler(IEventHandlerService service)
             :base(service)
         {
 
         }
-        public async Task Hadle(UserUpdatedIntegrationEvent @event)
+        public async Task Handle(UserUpdatedIntegrationEvent @event)
         {
             var userDTO = new UpdateUserDTO
             {
@@ -29,5 +30,6 @@ namespace Post.Domain.Logic.IntegrationEvents.EventHandlers
             };
             await _service.UpdateUserAsync(userDTO);
         }
+
     }
 }

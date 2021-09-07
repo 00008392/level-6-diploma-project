@@ -19,6 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
+    <ProjectReference Include="..\..\..\integration\RabbitMQEventBus\RabbitMQEventBus.csproj" />
     <ProjectReference Include="..\..\..\utilities\ExceptionHandling\ExceptionHandling.csproj" />
     <ProjectReference Include="..\Account.DAL\Account.DAL.EF\Account.DAL.EF.csproj" />
     <ProjectReference Include="..\Account.Domain.Logic\Account.Domain.Logic.csproj" />

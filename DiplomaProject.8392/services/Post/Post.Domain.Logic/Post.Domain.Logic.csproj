@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\Post.Domain\Post.Domain.csproj" />
   </ItemGroup>
 
