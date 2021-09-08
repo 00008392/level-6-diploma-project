@@ -27,6 +27,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Post.Domain.Logic.IntegrationEvents.Events;
 using Post.Domain.Logic.IntegrationEvents.EventHandlers;
+using EventBus.SubscriptionManager;
+using RabbitMQ.Client;
 
 namespace Post.API
 {
@@ -43,10 +45,13 @@ namespace Post.API
         {
             services.AddGrpc();
             services.AddFluentValidation();
+            services.AddDbContext<PostDbContext>(options =>
+options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
+            services.AddScoped<DbContext, PostDbContext>();
+            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
             services.AddScoped<AbstractValidator<AccommodaitonManipulationDTO>, PostValidator>();
             services.AddScoped<AbstractValidator<CreateUserDTO>, BaseUserValidator>();
             services.AddScoped<AbstractValidator<UpdateUserDTO>, UpdateUserValidator>();
-            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IPostRepository,PostRepository>();
             services.AddScoped<IPostCRUDService, PostCRUDService>();
             services.AddScoped<IEventHandlerService, EventHandlerService>();
@@ -54,10 +59,24 @@ namespace Post.API
             services.AddScoped(typeof(IPostItemsService<>), typeof(PostItemsService<>));
             services.AddScoped(typeof(IPostRelatedInfoStrategy<,>), typeof(PostRelatedInfoGenericStrategy<,>));
             services.AddScoped(typeof(IPostItemsStrategy<>), typeof(PostItemsGenericStrategy<>));
-            services.AddDbContext<PostDbContext>(options =>
-        options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
+            services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();
+            services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>(sp => {
 
-            services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>();
+                var queueName = "post_queue";
+                var subsManager = sp.GetRequiredService<ISubscriptionManager>();
+                var serviceFactory = sp.GetRequiredService<IServiceScopeFactory>();
+                var factory = new ConnectionFactory() { 
+                    HostName = "localhost",
+                    DispatchConsumersAsync = true
+                };
+                var connection = factory.CreateConnection();
+                return new RabbitMQEventBus.EventBus.RabbitMQEventBus(queueName, subsManager,
+                    serviceFactory, connection);
+            }
+          );
+            services.AddTransient<UserDeletedIntegrationEventHandler>();
+            services.AddTransient<UserUpdatedIntegrationEventHandler>();
+            services.AddTransient<UserCreatedIntegrationEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,7 +103,7 @@ namespace Post.API
 
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             eventBus.Subscribe<UserCreatedIntegrationEvent, UserCreatedIntegrationEventHandler>();
-            eventBus.Subscribe<UserDeletedIntegrationEvent, UserDeletedIntegrationEventhandler>();
+            eventBus.Subscribe<UserDeletedIntegrationEvent, UserDeletedIntegrationEventHandler>();
             eventBus.Subscribe<UserUpdatedIntegrationEvent, UserUpdatedIntegrationEventHandler>();
         }
     }

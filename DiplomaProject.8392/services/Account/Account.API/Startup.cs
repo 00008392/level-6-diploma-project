@@ -24,6 +24,8 @@ using BaseClasses.Repositories.EF;
 using EventBus.Contracts;
 using Account.Domain.Logic.IntegrationEvents.Events;
 using Account.Domain.Logic.IntegrationEvents.EventHandlers;
+using EventBus.SubscriptionManager;
+using RabbitMQ.Client;
 
 namespace Account.API
 {
@@ -42,19 +44,35 @@ namespace Account.API
         {
             services.AddGrpc();
             services.AddFluentValidation();
+            services.AddDbContext<AccountDbContext>(options =>
+options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
+            services.AddScoped<DbContext, AccountDbContext>();
+            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
             services.AddScoped<AbstractValidator<PasswordBaseDTO>, PasswordBaseValidator>();
             services.AddScoped<AbstractValidator<UserRegistrationDTO>, UserRegistrationValidator>();
             services.AddScoped<AbstractValidator<UpdateUserDTO>, UpdateUserValidator>();
-            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>) );
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IRegistrationService, RegistrationService>();
             services.AddScoped<IPasswordChangeService, PasswordChangeService>();
             services.AddScoped<IEventHandlerService, EventHandlerService>();
             services.AddScoped<IPasswordHandlingService, PasswordHandlingService>();
-            services.AddDbContext<AccountDbContext>(options =>
-         options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
-            services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>();
-           
+            services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();
+            services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>(sp => {
+          
+                var queueName = "account_queue";
+                var subsManager = sp.GetRequiredService<ISubscriptionManager>();
+                var serviceFactory = sp.GetRequiredService<IServiceScopeFactory>();
+                var factory = new ConnectionFactory() {
+                    HostName = "localhost",
+                    DispatchConsumersAsync = true
+                };
+                var connection = factory.CreateConnection();
+                return new RabbitMQEventBus.EventBus.RabbitMQEventBus(queueName, subsManager,
+                    serviceFactory, connection);
+            }
+            );
+            services.AddTransient<UserDeletedIntegrationEventHandler>();
+            services.AddTransient<UserUpdatedIntegrationEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

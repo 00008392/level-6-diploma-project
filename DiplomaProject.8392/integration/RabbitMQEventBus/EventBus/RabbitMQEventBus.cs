@@ -12,23 +12,32 @@ using System.Threading.Tasks;
 
 namespace RabbitMQEventBus.EventBus
 {
-    public class RabbitMQEventBus : IEventBus
+    public class RabbitMQEventBus : IEventBus, IDisposable
     {
         private readonly string _queueName;
         private readonly ISubscriptionManager _subscriptionManager;
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IConnection _connection;
+        private readonly IModel _consumerChannel;
         public RabbitMQEventBus(string queueName, ISubscriptionManager subscriptionManager,
-            IServiceScopeFactory scopeFactory)
+            IServiceScopeFactory scopeFactory, IConnection connection)
         {
             _queueName = queueName;
             _subscriptionManager = subscriptionManager;
             _scopeFactory = scopeFactory;
+            _connection = connection;
+            _consumerChannel = CreateConsumerChannel();
         }
+
+        public void Dispose()
+        {
+           
+        }
+
         public void Publish(IntegrationEvent @event)
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
+           
+            using (var channel = _connection.CreateModel())
             {
                 channel.ExchangeDeclare(exchange: "event_bus", type: ExchangeType.Direct);
 
@@ -52,26 +61,16 @@ namespace RabbitMQEventBus.EventBus
             where E : IntegrationEvent
             where EH : IIntegrationEventHandler<E>
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                channel.ExchangeDeclare(exchange: "event_bus",
-                                  type: ExchangeType.Direct);
+            
 
-                channel.QueueDeclare(queue: _queueName,
-                                     durable: true,
-                                     exclusive: false,
-                                     autoDelete: false,
-                                     arguments: null);
-
-                channel.QueueBind(queue: _queueName,
+            _consumerChannel.QueueBind(queue: _queueName,
                                      exchange: "event_bus",
                                      routingKey: typeof(E).Name);
+            _subscriptionManager.AddSubscription<E, EH>();
 
-                var consumer = new AsyncEventingBasicConsumer(channel);
+            var consumer = new AsyncEventingBasicConsumer(_consumerChannel);
 
-                consumer.Received += async (s, e) =>
+                consumer.Received += async(s, e) =>
                 {
                     var eventName = e.RoutingKey;
                     var message = Encoding.UTF8.GetString(e.Body.Span);
@@ -88,15 +87,15 @@ namespace RabbitMQEventBus.EventBus
                                 await handler.Handle(@event);
                             }
                         }
-                           
+
                     }
                 };
 
-                channel.BasicConsume(
+                _consumerChannel.BasicConsume(
                     queue: _queueName,
                     autoAck: false,
                     consumer: consumer);
-            }
+            
 
         }
 
@@ -105,6 +104,24 @@ namespace RabbitMQEventBus.EventBus
             where EH : IIntegrationEventHandler<E>
         {
             _subscriptionManager.RemoveSubscription<E, EH>();
+        }
+
+
+        private IModel CreateConsumerChannel()
+        {
+            var channel = _connection.CreateModel();
+
+            channel.ExchangeDeclare(exchange: "event_bus",
+                             type: ExchangeType.Direct);
+
+            channel.QueueDeclare(queue: _queueName,
+                                 durable: true,
+                                 exclusive: false,
+                                 autoDelete: false,
+                                 arguments: null);
+
+
+            return channel;
         }
     }
 }

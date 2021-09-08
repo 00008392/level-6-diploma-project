@@ -10,9 +10,9 @@ using EventBus.Contracts;
 
 namespace Post.Domain.Logic.IntegrationEvents.EventHandlers
 {
-   public class UserDeletedIntegrationEventhandler: BaseIntegrationEventHandler, IIntegrationEventHandler<UserDeletedIntegrationEvent>
+   public class UserDeletedIntegrationEventHandler: BaseIntegrationEventHandler, IIntegrationEventHandler<UserDeletedIntegrationEvent>
     {
-        public UserDeletedIntegrationEventhandler(IEventHandlerService service)
+        public UserDeletedIntegrationEventHandler(IEventHandlerService service)
             :base(service)
         {
 

@@ -1,6 +1,8 @@
 ﻿
 using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.DTOs;
+using Account.Domain.Logic.IntegrationEvents.Events;
+using EventBus.Contracts;
 using ExceptionHandling;
 using FluentValidation;
 using Grpc.Core;
@@ -14,9 +16,11 @@ namespace Account.API.Services
     public class RegistrationServiceGrpc: Register.RegisterBase
     {
         private readonly IRegistrationService _service;
-        public RegistrationServiceGrpc(IRegistrationService service)
+        private readonly IEventBus _eventBus;
+        public RegistrationServiceGrpc(IRegistrationService service, IEventBus eventBus)
         {
             _service = service;
+            _eventBus = eventBus;
         }
 
         public override async Task<Response> RegisterUser(RegistrationRequest request, ServerCallContext context)
@@ -33,6 +37,12 @@ namespace Account.API.Services
             {
                 await _service.RegisterUserAsync(userDTO);
                 response.IsSuccess = true;
+                var integrationEvent = new UserCreatedIntegrationEvent
+                {
+                    Email = userDTO.Email,
+                    RegistrationDate = DateTime.Now
+                };
+                _eventBus.Publish(integrationEvent);
             }
             catch (ValidationException ex)
             {
