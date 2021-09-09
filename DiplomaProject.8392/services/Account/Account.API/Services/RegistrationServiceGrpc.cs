@@ -37,11 +37,7 @@ namespace Account.API.Services
             {
                 await _service.RegisterUserAsync(userDTO);
                 response.IsSuccess = true;
-                var integrationEvent = new UserCreatedIntegrationEvent
-                {
-                    Email = userDTO.Email,
-                    RegistrationDate = DateTime.Now
-                };
+                var integrationEvent = new UserCreatedIntegrationEvent(userDTO.Email, DateTime.Now);
                 _eventBus.Publish(integrationEvent);
             }
             catch (ValidationException ex)

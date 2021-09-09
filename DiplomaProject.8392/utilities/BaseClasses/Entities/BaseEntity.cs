@@ -8,6 +8,15 @@ namespace BaseClasses.Entities
 {
     public abstract class BaseEntity
     {
-        public long Id { get; set; }
+        public long Id { get; protected set; }
+
+        protected BaseEntity()
+        {
+
+        }
+        protected BaseEntity(long id)
+        {
+            Id = id;
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace Post.Domain.Logic.Services
 {
     //E - entity representing bridge table
     public class PostRelatedInfoService<T, E> : IPostRelatedInfoService<T, E> 
-                                                                              where T: ItemAccommodationBase, new()
+                                                                              where T: ItemAccommodationBase
                                                                               where E: ItemBase
 
     {
@@ -78,12 +78,8 @@ namespace Post.Domain.Logic.Services
                     await CheckDuplicates(i => i.AccommodationId == itemDTO.AccommodationId
                    && i.ItemId == itemDTO.ItemId);
                 }
-                var item = new T
-                {
-                    ItemId = itemDTO.ItemId,
-                    AccommodationId = itemDTO.AccommodationId,
-                    OtherItem = itemDTO.OtherItem
-                };
+
+                var item = (T)Activator.CreateInstance(typeof(T), itemDTO.ItemId, itemDTO.AccommodationId, itemDTO.OtherItem);
                 items.Add(item);
             }
 

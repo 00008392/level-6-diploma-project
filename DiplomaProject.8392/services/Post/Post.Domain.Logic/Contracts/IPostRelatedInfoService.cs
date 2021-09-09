@@ -15,7 +15,7 @@ namespace Post.Domain.Logic.Contracts
     //ItemAccommodationBase - entity representing bridge table
     //ItemBase - rule/facility/specificity
     public interface IPostRelatedInfoService<T, E> 
-                                                  where T: ItemAccommodationBase, new()
+                                                  where T: ItemAccommodationBase
                                                   where E: ItemBase
     {
         Task AddItemsAsync(ICollection<AccommodationItemDTO> itemDTOs);

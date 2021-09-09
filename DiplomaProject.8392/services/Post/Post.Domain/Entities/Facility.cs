@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Entities
 {
-    public class Facility: ItemBase
+    public class Facility : ItemBase
     {
-
+        public Facility(string name, bool? isOther)
+            : base(name, isOther)
+        {
+        }
     }
 
 }

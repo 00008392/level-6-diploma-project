@@ -34,11 +34,7 @@ namespace Profile.Domain.Logic.Services
             {
                 throw new UniqueConstraintViolationException(nameof(userDTO.Email), userDTO.Email);
             }
-            var user = new User
-            {
-                Email = userDTO.Email,
-                RegistrationDate = userDTO.RegistrationDate
-            };
+            var user = new User(userDTO.Email, userDTO.RegistrationDate);
             await _repository.CreateAsync(user);
            
         }

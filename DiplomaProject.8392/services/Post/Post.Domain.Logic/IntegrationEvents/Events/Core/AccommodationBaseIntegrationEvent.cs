@@ -9,24 +9,26 @@ namespace Post.Domain.Logic.IntegrationEvents.Events.Core
 {
    public abstract class AccommodationBaseIntegrationEvent: IntegrationEvent
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public long OwnerId { get; set; }
-        public long? CategoryId { get; set; }
-        public string Address { get; set; }
-        public string ReferencePoint { get; set; }
-        public string ContactNumber { get; set; }
-        public int? RoomsNo { get; set; }
-        public int? BathroomsNo { get; set; }
-        public int? BedsNo { get; set; }
-        public int MaxGuestsNo { get; set; }
-        public int? SquareMeters { get; set; }
-        public decimal Price { get; set; }
-        public decimal? Latitude { get; set; }
-        public decimal? Longitude { get; set; }
-        public bool? IsWholeApartment { get; set; }
-        public string MovingInTime { get; set; }
-        public string MovingOutTime { get; set; }
-        public string AdditionalInfo { get; set; }
+        public string Title { get; protected set; }
+        public string Description { get; protected set; }
+        public long OwnerId { get; protected set; }
+        public long? CategoryId { get; protected set; }
+        public string Address { get; protected set; }
+        public string ReferencePoint { get; protected set; }
+        public string ContactNumber { get; protected set; }
+        public int? RoomsNo { get; protected set; }
+        public int? BathroomsNo { get; protected set; }
+        public int? BedsNo { get; protected set; }
+        public int MaxGuestsNo { get; protected set; }
+        public int? SquareMeters { get; protected set; }
+        public decimal Price { get; protected set; }
+        public decimal? Latitude { get; protected set; }
+        public decimal? Longitude { get; protected set; }
+        public bool? IsWholeApartment { get; protected set; }
+        public string MovingInTime { get; protected set; }
+        public string MovingOutTime { get; protected set; }
+        public string AdditionalInfo { get; protected set; }
+
+       
     }
 }

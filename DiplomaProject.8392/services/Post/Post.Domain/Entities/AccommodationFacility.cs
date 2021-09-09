@@ -7,8 +7,16 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Entities
 {
-    public class AccommodationFacility: ItemAccommodationBase
+    public class AccommodationFacility : ItemAccommodationBase
     {
+        //public AccommodationFacility()
+        //{
+        //}
+
+        public AccommodationFacility(long itemId, string otherItem)
+            : base(itemId, otherItem)
+        {
+        }
 
 
     }

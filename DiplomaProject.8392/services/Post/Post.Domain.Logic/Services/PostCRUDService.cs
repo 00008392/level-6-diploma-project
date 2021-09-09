@@ -51,30 +51,15 @@ namespace Post.Domain.Logic.Services
             {
                 throw new ForeignKeyViolationException("Owner");
             }
-            var accommodation = new Accommodation
-            {
-                Title = item.Title,
-                Description = item.Description,
-                OwnerId = item.OwnerId,
-                DatePublished = DateTime.Now,
-                CategoryId = item.CategoryId,
-                Address = item.Address,
-                ReferencePoint = item.ReferencePoint,
-                ContactNumber = item.ContactNumber,
-                RoomsNo = item.RoomsNo,
-                BathroomsNo = item.BathroomsNo,
-                BedsNo = item.BedsNo,
-                MaxGuestsNo = item.MaxGuestsNo,
-                SquareMeters = item.MaxGuestsNo,
-                Price = item.Price,
-                Latitude = item.Latitude,
-                Longitude = item.Longitude,
-                IsWholeApartment = item.IsWholeApartment,
-                MovingInTime = item.MovingInTime==null? null: ((DateTime)item.MovingInTime).ToString("HH:mm"),
-                MovingOutTime = item.MovingOutTime==null? null: ((DateTime)item.MovingOutTime).ToString("HH:mm"),
-                AdditionalInfo = item.AdditionalInfo
+            var accommodation = new Accommodation(item.Title, item.Description, item.OwnerId,
+                DateTime.Now, item.CategoryId, item.Address, item.ReferencePoint, item.ContactNumber,
+                item.RoomsNo, item.BathroomsNo, item.BedsNo, item.MaxGuestsNo, item.SquareMeters,
+                item.Price, item.Latitude, item.Longitude, item.IsWholeApartment,
+                item.MovingInTime == null ? null : ((DateTime)item.MovingInTime).ToString("HH:mm"),
+                item.MovingOutTime == null ? null : ((DateTime)item.MovingOutTime).ToString("HH:mm"),
+                item.AdditionalInfo
+                );
 
-            };
             await _repository.CreateAsync(accommodation);
         }
 
@@ -155,27 +140,15 @@ namespace Post.Domain.Logic.Services
                 throw new ForeignKeyViolationException("Owner");
             }
 
-            accommodation.Title = item.Title;
-            accommodation.Description = item.Description;
-            accommodation.OwnerId = item.OwnerId;
-            accommodation.CategoryId = item.CategoryId;
-            accommodation.Address = item.Address;
-            accommodation.ReferencePoint = item.ReferencePoint;
-            accommodation.ContactNumber = item.ContactNumber;
-            accommodation.RoomsNo = item.RoomsNo;
-            accommodation.BathroomsNo = item.BathroomsNo;
-            accommodation.BedsNo = item.BedsNo;
-            accommodation.MaxGuestsNo = item.MaxGuestsNo;
-            accommodation.SquareMeters = item.SquareMeters;
-            accommodation.Price = item.Price;
-            accommodation.Latitude = item.Latitude;
-            accommodation.Longitude = item.Longitude;
-            accommodation.IsWholeApartment = item.IsWholeApartment;
-            accommodation.MovingInTime = item.MovingInTime == null ? null : ((DateTime)item.MovingInTime).ToString("HH:mm");
-            accommodation.MovingOutTime = item.MovingOutTime == null ? null : ((DateTime)item.MovingOutTime).ToString("HH:mm");
-            accommodation.AdditionalInfo = item.AdditionalInfo;
 
-            await _repository.UpdateAsync(accommodation);
+            var accommodationToUpdate = new Accommodation(accommodation.Id,
+                item.Title, item.Description, item.OwnerId, accommodation.DatePublished, item.CategoryId,
+                item.Address, item.ReferencePoint, item.ContactNumber, item.RoomsNo, item.BathroomsNo,
+                item.BedsNo, item.MaxGuestsNo, item.SquareMeters, item.Price, item.Latitude, item.Longitude,
+                item.IsWholeApartment, item.MovingInTime == null ? null : ((DateTime)item.MovingInTime).ToString("HH:mm"),
+                item.MovingOutTime == null ? null : ((DateTime)item.MovingOutTime).ToString("HH:mm"),
+                item.AdditionalInfo);
+            await _repository.UpdateAsync(accommodationToUpdate);
         }
     }
 }

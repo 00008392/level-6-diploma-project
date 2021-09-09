@@ -9,7 +9,40 @@ namespace Post.Domain.Logic.IntegrationEvents.Events
 {
     public class AccommodationCreatedIntegrationEvent: AccommodationBaseIntegrationEvent
     {
-        public DateTime DatePublished { get; set; }
-     
+        public DateTime DatePublished { get; }
+
+        public AccommodationCreatedIntegrationEvent(string title, string description,
+           long ownerId, long? categoryId,
+           string address, string referencePoint,
+           string contactNumber, int? roomsNo,
+           int? bathroomsNo, int? bedsNo,
+           int maxGuestsNo, int? squareMeters,
+           decimal price, decimal? latitude,
+           decimal? longitude, bool? isWholeApartment,
+           string movingInTime, string movingOutTime,
+           string additionalInfo, DateTime datePublished)
+        {
+            Title = title;
+            Description = description;
+            OwnerId = ownerId;
+            CategoryId = categoryId;
+            Address = address;
+            ReferencePoint = referencePoint;
+            ContactNumber = contactNumber;
+            RoomsNo = roomsNo;
+            BathroomsNo = bathroomsNo;
+            BedsNo = bedsNo;
+            MaxGuestsNo = maxGuestsNo;
+            SquareMeters = squareMeters;
+            Price = price;
+            Latitude = latitude;
+            Longitude = longitude;
+            IsWholeApartment = isWholeApartment;
+            MovingInTime = movingInTime;
+            MovingOutTime = movingOutTime;
+            AdditionalInfo = additionalInfo;
+            DatePublished = datePublished;
+        }
     }
 }
+

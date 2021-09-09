@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\..\..\integration\RabbitMQEventBus\RabbitMQEventBus.csproj" />
     <ProjectReference Include="..\..\..\utilities\BaseClasses\BaseClasses.csproj" />
+    <ProjectReference Include="..\..\..\utilities\ExceptionHandling\ExceptionHandling.csproj" />
     <ProjectReference Include="..\Profile.DAL\Profile.DAL.EF\Profile.DAL.EF.csproj" />
     <ProjectReference Include="..\Profile.Domain.Logic\Profile.Domain.Logic.csproj" />
     <ProjectReference Include="..\Profile.Domain\Profile.Domain.csproj" />

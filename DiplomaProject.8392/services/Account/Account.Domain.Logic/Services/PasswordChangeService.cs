@@ -37,9 +37,9 @@ namespace Account.Domain.Logic.Services
             {
                 var salt = _pwdService.GetSalt();
                 var hashedPassword = _pwdService.HashPassword(Convert.FromBase64String(salt), password.Password);
-                user.PasswordSalt = salt;
-                user.PasswordHash = hashedPassword;
-                await _repository.UpdateAsync(user);
+                var userToUpdate = new User(user.Id, user.Email, user.RegistrationDate,
+                    user.Role, hashedPassword, salt);
+                await _repository.UpdateAsync(userToUpdate);
             } else
             {
                 throw new ValidationException(result.Errors);

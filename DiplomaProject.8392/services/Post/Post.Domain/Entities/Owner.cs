@@ -9,10 +9,32 @@ namespace Post.Domain.Entities
 {
     public class Owner: BaseEntity
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public ICollection<Accommodation> Accommodations { get; set; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
+        public string Email { get; private set; }
+        public string PhoneNumber { get; private set; }
+        public ICollection<Accommodation> Accommodations { get; }
+
+        public Owner(string firstName, string lastName, 
+            string email, string phoneNumber)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            PhoneNumber = phoneNumber;
+        }
+        public Owner(long id, string firstName, string lastName,
+            string email, string phoneNumber):base(id)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            PhoneNumber = phoneNumber;
+        }
+
+        public Owner(string email)
+        {
+            Email = email;
+        }
     }
 }

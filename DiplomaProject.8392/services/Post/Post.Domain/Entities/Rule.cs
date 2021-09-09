@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Entities
 {
-    public class Rule: ItemBase
+    public class Rule : ItemBase
     {
-
+        public Rule(string name, bool? isOther) 
+            : base(name, isOther)
+        {
+        }
     }
 }

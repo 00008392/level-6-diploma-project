@@ -10,7 +10,12 @@ namespace Profile.Domain.Entities
 {
    public class Country: BaseEntity
     {
-        public string Name { get; set; }
-        public ICollection<City> Cities { get; set; }
+        public string Name { get; private set; }
+        public ICollection<City> Cities { get; }
+
+        public Country(string name)
+        {
+            Name = name;
+        }
     }
 }

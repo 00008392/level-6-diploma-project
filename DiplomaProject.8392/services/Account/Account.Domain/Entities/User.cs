@@ -11,10 +11,29 @@ namespace Account.Domain.Entities
 {
    public class User: BaseEntity
     {
-        public string Email { get; set; }
-        public DateTime RegistrationDate { get; set; }
-        public Role Role { get; set; }
-        public string PasswordHash { get; set; }
-        public string PasswordSalt { get; set; }
+        public string Email { get; private set; }
+        public DateTime RegistrationDate { get; private set; }
+        public Role Role { get; private set; }
+        public string PasswordHash { get; private set; }
+        public string PasswordSalt { get; private set; }
+
+        public User(string email, DateTime registrationDate,
+            Role role, string passwordHash, string passwordSalt)
+        {
+            Email = email;
+            RegistrationDate = registrationDate;
+            Role = role;
+            PasswordHash = passwordHash;
+            PasswordSalt = passwordSalt;
+        }
+        public User(long id, string email, DateTime registrationDate,
+           Role role, string passwordHash, string passwordSalt):base(id)
+        {
+            Email = email;
+            RegistrationDate = registrationDate;
+            Role = role;
+            PasswordHash = passwordHash;
+            PasswordSalt = passwordSalt;
+        }
     }
 }

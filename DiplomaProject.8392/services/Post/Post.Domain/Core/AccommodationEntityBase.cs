@@ -10,8 +10,17 @@ namespace Post.Domain.Core
 {
    public abstract class AccommodationEntityBase: BaseEntity
     {
-        public long AccommodationId { get; set; }
-        public Accommodation Accommodation { get; set; }
+        public long AccommodationId { get; protected set; }
+        public Accommodation Accommodation { get; }
+
+        protected AccommodationEntityBase(long accommodationId)
+        {
+            AccommodationId = accommodationId;
+        }
+        protected AccommodationEntityBase()
+        {
+        
+        }
     }
 
 }

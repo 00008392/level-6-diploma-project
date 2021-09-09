@@ -9,7 +9,18 @@ namespace Post.Domain.Entities
 {
     public class AccommodationPhoto: AccommodationEntityBase
     {
-        public byte[] Photo { get; set; }
-        public string MimeType { get; set; }
+
+        public byte[] Photo { get; private set; }
+        public string MimeType { get; private set; }
+        public AccommodationPhoto(byte[] photo, string mimeType, long accommodationId) 
+            : base(accommodationId)
+        {
+            Photo = photo;
+            MimeType = mimeType;
+        }
+
+        public AccommodationPhoto()
+        {
+        }
     }
 }

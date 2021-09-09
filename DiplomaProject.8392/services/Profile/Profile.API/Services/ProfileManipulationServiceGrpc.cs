@@ -6,17 +6,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Profile.API.ExceptionHandling;
 using Microsoft.EntityFrameworkCore;
+using EventBus.Contracts;
+using Profile.Domain.Logic.IntegrationEvents.Events;
+using ExceptionHandling;
 
 namespace Profile.API.Services
 {
     public class ProfileManipulationServiceGrpc: ProfileManipulation.ProfileManipulationBase
     {
         private readonly IProfileManipulationService _service;
-        public ProfileManipulationServiceGrpc(IProfileManipulationService service)
+        private readonly IEventBus _eventBus;
+        public ProfileManipulationServiceGrpc(IProfileManipulationService service, IEventBus eventBus)
         {
             _service = service;
+            _eventBus = eventBus;
         }
 
         public override async Task<Response> UpdateProfile(UpdateRequest request, ServerCallContext context)
@@ -35,37 +39,52 @@ namespace Profile.API.Services
                 CityId = request.CityId,
                 UserInfo = request.UserInfo
             };
+            var response = new Response();
             try
             {
                 await _service.UpdateProfileAsync(updateDTO);
-                return new Response {
-                    IsSuccess = true
-                };
+                response.IsSuccess = true;
+                var integrationEvent = new UserUpdatedIntegrationEvent(updateDTO.Id,
+                    updateDTO.FirstName,
+                    updateDTO.LastName,
+                    updateDTO.Email,
+                    updateDTO.PhoneNumber,
+                    updateDTO.DateOfBirth,
+                    updateDTO.Gender,
+                    updateDTO.Address,
+                    updateDTO.UserInfo,
+                    updateDTO.CityId);
+               
+                _eventBus.Publish(integrationEvent);
+
             }
             catch(ValidationException ex)
             {
-                return ExceptionHandler.HandleValidationException(ex);
+                response.HandleValidationException(ex);
             }
             catch(Exception ex)
             {
-                return ExceptionHandler.HandleException(ex);
+               response.HandleException(ex);
             }
+            return response;
         
         }
         public override async Task<Response> DeleteProfile(Request request, ServerCallContext context)
         {
+            var response = new Response();
             try
             {
                 await _service.DeleteProfileAsync(request.Id);
-                return new Response { 
-                IsSuccess = true
-                };
+                response.IsSuccess = true;
+                var integrationEvent = new UserDeletedIntegrationEvent(request.Id);
+                _eventBus.Publish(integrationEvent);
+
             }
             catch(Exception ex)
             {
-                return ExceptionHandler.HandleException(ex);
+                response.HandleException(ex);
             }
-
+            return response;
         }
     }
 }

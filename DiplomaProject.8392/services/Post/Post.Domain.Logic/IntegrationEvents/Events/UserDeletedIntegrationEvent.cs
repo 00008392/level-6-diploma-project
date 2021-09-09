@@ -9,6 +9,11 @@ namespace Post.Domain.Logic.IntegrationEvents.Events
 {
     public class UserDeletedIntegrationEvent: IntegrationEvent
     {
-        public long UserId { get; set; }
+        public long UserId { get;}
+
+        public UserDeletedIntegrationEvent(long userId)
+        {
+            UserId = userId;
+        }
     }
 }

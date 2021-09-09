@@ -9,7 +9,12 @@ namespace Post.Domain.Entities
 {
     public class Category: BaseEntity
     {
-        public string Name { get; set; }
-        public ICollection<Accommodation> Accommodations { get; set; }
+        public string Name { get; private set; }
+        public ICollection<Accommodation> Accommodations { get; }
+
+        public Category(string name)
+        {
+            Name = name;
+        }
     }
 }

@@ -9,7 +9,13 @@ namespace Account.Domain.Logic.IntegrationEvents.Events
 {
    public class UserUpdatedIntegrationEvent: IntegrationEvent
     {
-        public long UserId { get; set; }
-        public string Email { get; set; }
+        public long UserId { get;}
+        public string Email { get; }
+
+        public UserUpdatedIntegrationEvent(long userId, string email)
+        {
+            UserId = userId;
+            Email = email;
+        }
     }
 }

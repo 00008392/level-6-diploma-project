@@ -36,14 +36,8 @@ namespace Account.Domain.Logic.Services
                 }
                 string salt = _pwdService.GetSalt();
                 string hashedPassword = _pwdService.HashPassword(Convert.FromBase64String(salt) ,userDTO.Password);
-                var user = new User
-                {
-                    Email = userDTO.Email,
-                    RegistrationDate = DateTime.Now,
-                    Role = (Role)userDTO.Role,
-                    PasswordHash = hashedPassword,
-                    PasswordSalt = salt
-                };
+                var user = new User(userDTO.Email, DateTime.Now, (Role)userDTO.Role,
+                    hashedPassword, salt);
                 await _repository.CreateAsync(user);
             } else
             {

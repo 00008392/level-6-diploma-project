@@ -10,9 +10,19 @@ namespace Post.Domain.Core
     //for rule/facility/speecificity
     public abstract class ItemBase: BaseEntity
     {
-        public string Name { get; set; }
-        public bool? IsOther { get; set; }
-        public ICollection<ItemAccommodationBase> AccommodationItems { get; set; }
+        public string Name { get; protected set; }
+        public bool? IsOther { get; protected set; }
+        public ICollection<ItemAccommodationBase> AccommodationItems { get; }
+
+        protected ItemBase(string name, bool? isOther)
+        {
+            Name = name;
+            IsOther = isOther;
+        }
+        protected ItemBase()
+        {
+
+        }
     }
 
 

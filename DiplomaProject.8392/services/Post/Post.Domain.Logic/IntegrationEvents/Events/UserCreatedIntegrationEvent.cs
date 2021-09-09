@@ -9,6 +9,11 @@ namespace Post.Domain.Logic.IntegrationEvents.Events
 {
     public class UserCreatedIntegrationEvent: IntegrationEvent
     {
-        public string Email { get; set; }
+        public string Email { get; }
+
+        public UserCreatedIntegrationEvent(string email)
+        {
+            Email = email;
+        }
     }
 }

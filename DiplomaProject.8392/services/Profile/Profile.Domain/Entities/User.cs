@@ -11,18 +11,61 @@ namespace Profile.Domain.Entities
 {
     public class User: BaseEntity
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public DateTime? DateOfBirth { get; set; }
-        public DateTime RegistrationDate { get; set; }
-        public Gender? Gender { get; set; }
-        public string Address { get; set; }
-        public long? CityId { get; set; }
-        public City City { get; set; }
-        public string UserInfo { get; set; }
-        public byte[] ProfilePhoto { get; set; }
-        public string MimeType { get; set; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
+        public string Email { get; private set; }
+        public string PhoneNumber { get; private set; }
+        public DateTime? DateOfBirth { get; private set; }
+        public DateTime RegistrationDate { get; private set; }
+        public Gender? Gender { get; private set; }
+        public string Address { get; private set; }
+        public long? CityId { get; private set; }
+        public City City { get; }
+        public string UserInfo { get; private set; }
+        public byte[] ProfilePhoto { get; private set; }
+        public string MimeType { get; private set; }
+
+        public User(string firstName,
+            string lastName, string email,
+            string phoneNumber, DateTime? dateOfBirth,
+            Gender? gender,
+            string address, long? cityId, 
+            string userInfo)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            PhoneNumber = phoneNumber;
+            DateOfBirth = dateOfBirth;
+            Gender = gender;
+            Address = address;
+            CityId = cityId;
+            UserInfo = userInfo;
+        }
+        public User(string email, DateTime registrationDate)
+        {
+            Email = email;
+            RegistrationDate = registrationDate;
+        }
+
+        public User(long id, string firstName, 
+            string lastName,
+            string email, string phoneNumber,
+            DateTime? dateOfBirth, 
+            DateTime registrationDate, 
+            Gender? gender, string address, 
+            long? cityId, string userInfo): base(id)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            PhoneNumber = phoneNumber;
+            DateOfBirth = dateOfBirth;
+            RegistrationDate = registrationDate;
+            Gender = gender;
+            Address = address;
+            CityId = cityId;
+            UserInfo = userInfo;
+        }
     }
 }

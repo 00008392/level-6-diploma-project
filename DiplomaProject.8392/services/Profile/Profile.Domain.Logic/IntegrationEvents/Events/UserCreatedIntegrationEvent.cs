@@ -10,7 +10,14 @@ namespace Profile.Domain.Logic.IntegrationEvents.Events
 {
    public class UserCreatedIntegrationEvent: IntegrationEvent
     {
-        public string Email { get; set; }
-        public DateTime RegistrationDate { get; set; }
+        public string Email { get; }
+        public DateTime RegistrationDate { get; }
+
+        public UserCreatedIntegrationEvent(string email, DateTime registrationDate)
+        {
+            Email = email;
+            RegistrationDate = registrationDate;
+        }
+
     }
 }

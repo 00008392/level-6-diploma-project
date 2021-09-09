@@ -1,10 +1,12 @@
-﻿using ExceptionHandling;
+﻿using EventBus.Contracts;
+using ExceptionHandling;
 using FluentValidation;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Post.Domain.Core;
 using Post.Domain.Logic.Contracts;
 using Post.Domain.Logic.DTOs;
+using Post.Domain.Logic.IntegrationEvents.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +17,11 @@ namespace Post.API.Services
     public class PostCRUDServiceGrpc: PostCRUD.PostCRUDBase
     {
         private readonly IPostCRUDService _service;
-        public PostCRUDServiceGrpc(IPostCRUDService service)
+        private readonly IEventBus _eventBus;
+        public PostCRUDServiceGrpc(IPostCRUDService service, IEventBus eventBus)
         {
             _service = service;
+            _eventBus = eventBus;
         }
         public override async Task<Response> CreatePost(CreatePostRequest request, ServerCallContext context)
         {
@@ -29,7 +33,7 @@ namespace Post.API.Services
                 {
                     Message = "Empty request"
                 };
-            }
+            } 
             var createPostDTO = new CreatePostDTO
             {
                 Title = baseRequest.Title,
@@ -57,6 +61,14 @@ namespace Post.API.Services
             {
                 await _service.CreatePostAsync(createPostDTO);
                 response.IsSuccess = true;
+                var integrationEvent = new AccommodationCreatedIntegrationEvent(createPostDTO.Title,
+                    createPostDTO.Description, createPostDTO.OwnerId, createPostDTO.CategoryId,
+                    createPostDTO.Address, createPostDTO.ReferencePoint, createPostDTO.ContactNumber,
+                    createPostDTO.RoomsNo, createPostDTO.BathroomsNo, createPostDTO.BedsNo, createPostDTO.MaxGuestsNo,
+                    createPostDTO.SquareMeters, createPostDTO.Price, createPostDTO.Latitude, createPostDTO.Longitude,
+                    createPostDTO.IsWholeApartment, createPostDTO.MovingInTime.ToString(), 
+                    createPostDTO.MovingOutTime.ToString(), createPostDTO.AdditionalInfo, DateTime.Now);
+                _eventBus.Publish(integrationEvent);
             }
             catch (ValidationException ex)
             {
@@ -99,6 +111,16 @@ namespace Post.API.Services
             {
                 await _service.UpdatePostAsync(updatePostDTO);
                 response.IsSuccess = true;
+                var integrationEvent = new AccommodationUpdatedIntegrationEvent(
+                    updatePostDTO.Title,
+                    updatePostDTO.Description, updatePostDTO.OwnerId, updatePostDTO.CategoryId,
+                    updatePostDTO.Address, updatePostDTO.ReferencePoint, updatePostDTO.ContactNumber,
+                    updatePostDTO.RoomsNo, updatePostDTO.BathroomsNo, updatePostDTO.BedsNo, updatePostDTO.MaxGuestsNo,
+                    updatePostDTO.SquareMeters, updatePostDTO.Price, updatePostDTO.Latitude, updatePostDTO.Longitude,
+                    updatePostDTO.IsWholeApartment, updatePostDTO.MovingInTime.ToString(),
+                    updatePostDTO.MovingOutTime.ToString(), updatePostDTO.AdditionalInfo, updatePostDTO.Id
+                    );
+                _eventBus.Publish(integrationEvent);
             }
             catch (ValidationException ex)
             {
@@ -117,6 +139,8 @@ namespace Post.API.Services
             {
                 await _service.DeletePostAsync(request.Id);
                 response.IsSuccess = true;
+                var integrationEvent = new AccommodationDeletedIntegrationEvent(request.Id);
+                _eventBus.Publish(integrationEvent);
             }
             catch (Exception ex)
             {

@@ -9,6 +9,11 @@ namespace Post.Domain.Logic.IntegrationEvents.Events
 {
     public class AccommodationDeletedIntegrationEvent: IntegrationEvent
     {
-        public long AccommodationId { get; set; }
+        public long AccommodationId { get; }
+
+        public AccommodationDeletedIntegrationEvent(long accommodationId)
+        {
+            AccommodationId = accommodationId;
+        }
     }
 }

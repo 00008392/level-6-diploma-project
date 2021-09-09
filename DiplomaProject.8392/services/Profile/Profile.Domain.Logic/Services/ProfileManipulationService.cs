@@ -62,17 +62,11 @@ namespace Profile.Domain.Logic.Services
                 }
             }
 
-            user.FirstName = profile.FirstName;
-            user.LastName = profile.LastName;
-            user.Email = profile.Email;
-            user.PhoneNumber = profile.PhoneNumber;
-            user.DateOfBirth = profile.DateOfBirth;
-            user.Gender = profile.Gender;
-            user.Address = profile.Address;
-            user.CityId = profile.CityId;
-            user.UserInfo = profile.UserInfo;
-             
-            await _userRepository.UpdateAsync(user);
+            var userToUpdate = new User(profile.Id, profile.FirstName, profile.LastName,
+                profile.Email, profile.PhoneNumber, profile.DateOfBirth,
+                user.RegistrationDate, profile.Gender, profile.Address,
+                profile.CityId, profile.UserInfo);
+            await _userRepository.UpdateAsync(userToUpdate);
 
         }
     }

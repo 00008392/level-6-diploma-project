@@ -50,8 +50,10 @@ namespace Account.Domain.Logic.Services
             {
                 throw new UniqueConstraintViolationException(nameof(userDTO.Email), userDTO.Email);
             }
-            user.Email = userDTO.Email;
-            await _repository.UpdateAsync(user);
+
+            var userToUpdate = new User(user.Id, userDTO.Email, user.RegistrationDate,
+                user.Role, user.PasswordHash, user.PasswordSalt);
+            await _repository.UpdateAsync(userToUpdate);
         }
     }
 }

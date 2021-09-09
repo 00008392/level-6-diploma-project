@@ -38,10 +38,7 @@ namespace Post.Domain.Logic.Services
             {
                 throw new UniqueConstraintViolationException(nameof(userDTO.Email), userDTO.Email);
             }
-            var user = new Owner
-            {
-                Email = userDTO.Email
-            };
+            var user = new Owner(userDTO.Email);
             await _repository.CreateAsync(user);
         }
 
@@ -72,11 +69,10 @@ namespace Post.Domain.Logic.Services
             {
                 throw new UniqueConstraintViolationException(nameof(userDTO.Email), userDTO.Email);
             }
-            user.Email = userDTO.Email;
-            user.FirstName = userDTO.FirstName;
-            user.LastName = userDTO.LastName;
-            user.PhoneNumber = userDTO.PhoneNumber;
-            await _repository.UpdateAsync(user);
+
+            var userToUpdate = new Owner(user.Id, userDTO.FirstName, userDTO.LastName,
+                userDTO.Email, userDTO.PhoneNumber);
+            await _repository.UpdateAsync(userToUpdate);
         }
     }
 }
