@@ -11,6 +11,7 @@ using EventBus.Contracts;
 
 namespace Post.Domain.Logic.IntegrationEvents.EventHandlers
 {
+    //tested
     public class UserCreatedIntegrationEventHandler: BaseIntegrationEventHandler, IIntegrationEventHandler<UserCreatedIntegrationEvent>
     {
         public UserCreatedIntegrationEventHandler(IEventHandlerService service)
@@ -21,10 +22,7 @@ namespace Post.Domain.Logic.IntegrationEvents.EventHandlers
 
         public async Task Handle(UserCreatedIntegrationEvent @event)
         {
-            var user = new CreateUserDTO
-            {
-                Email = @event.Email
-            };
+            var user = new CreateUserDTO(@event.Email);
             await _service.CreateUserAsync(user);
         }
     }

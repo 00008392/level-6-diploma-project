@@ -8,6 +8,10 @@ namespace Account.Domain.Logic.DTOs
 {
    public class PasswordBaseDTO
     {
-        public string Password { get; set; }
+        public string Password { get; protected set; }
+        protected PasswordBaseDTO(string password)
+        {
+            Password = password;
+        }
     }
 }

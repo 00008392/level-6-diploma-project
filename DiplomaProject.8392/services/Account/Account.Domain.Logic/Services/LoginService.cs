@@ -30,12 +30,8 @@ namespace Account.Domain.Logic.Services
             {
                 if (_pwdService.VerifyPassword(login.Password, user.PasswordHash, user.PasswordSalt))
                 {
-                    return new LoggedUserDTO
-                    {
-                        Id = user.Id,
-                        Role = (int)user.Role,
-                        Email = user.Email
-                    };
+                    return new LoggedUserDTO(user.Id, user.Email, (int)user.Role);
+                   
                 }
                 
                 return null;

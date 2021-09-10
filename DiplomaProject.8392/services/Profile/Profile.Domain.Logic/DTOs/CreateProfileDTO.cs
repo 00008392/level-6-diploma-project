@@ -8,7 +8,13 @@ namespace Profile.Domain.Logic.DTOs
 {
     public class CreateProfileDTO
     {
-        public string Email { get; set; }
-        public DateTime RegistrationDate { get; set; }
+        public string Email { get;private set; }
+        public DateTime RegistrationDate { get;private set; }
+
+        public CreateProfileDTO(string email, DateTime registrationDate)
+        {
+            Email = email;
+            RegistrationDate = registrationDate;
+        }
     }
 }

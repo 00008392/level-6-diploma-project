@@ -29,12 +29,8 @@ namespace Post.API.Services.Strategies
             var items = new List<AccommodationItemDTO>();
             foreach (var item in request.Items)
             {
-                var accommodationItemDTO = new AccommodationItemDTO
-                {
-                    AccommodationId = item.AccommodationId,
-                    ItemId = item.ItemId,
-                    OtherItem = item.OtherValue
-                };
+                var accommodationItemDTO = new AccommodationItemDTO(item.AccommodationId,
+                    item.ItemId, item.OtherValue);
                 items.Add(accommodationItemDTO);
             }
             var response = new Response();

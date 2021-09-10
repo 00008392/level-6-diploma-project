@@ -71,8 +71,9 @@ options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
                     serviceFactory, connection);
             }
             );
-            services.AddTransient<UserDeletedIntegrationEventHandler>();
             services.AddTransient<UserUpdatedIntegrationEventHandler>();
+            services.AddTransient<UserDeletedIntegrationEventHandler>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -98,8 +99,9 @@ options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
             }));
 
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.Subscribe<UserDeletedIntegrationEvent, UserDeletedIntegrationEventHandler>();
             eventBus.Subscribe<UserUpdatedIntegrationEvent, UserUpdatedIntegrationEventHandler>();
+            eventBus.Subscribe<UserDeletedIntegrationEvent, UserDeletedIntegrationEventHandler>();
+            
         }
     }
 }

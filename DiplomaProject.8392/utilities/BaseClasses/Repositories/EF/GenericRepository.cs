@@ -45,7 +45,7 @@ namespace BaseClasses.Repositories.EF
 
         public async Task<T> GetByIdAsync(long id, params Expression<Func<T, object>>[] includes)
         {
-            return await GetDbSetWithRelatedTables(includes).SingleOrDefaultAsync(t => t.Id == id);
+            return await GetDbSetWithRelatedTables(includes).AsNoTracking().SingleOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes)

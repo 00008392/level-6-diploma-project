@@ -10,15 +10,15 @@ using Profile.DAL.EF.Data;
 namespace Profile.DAL.EF.Migrations
 {
     [DbContext(typeof(ProfileDbContext))]
-    [Migration("20210718141150_NullFixes")]
-    partial class NullFixes
+    [Migration("20210910101911_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.8")
+                .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Profile.Domain.Entities.City", b =>

@@ -23,8 +23,7 @@ namespace Post.API.Services
 
         public PostRelatedInfoServiceGrpc(IPostRelatedInfoStrategy<Post.Domain.Entities.AccommodationRule, Post.Domain.Entities.Rule> ruleStrategy,
             IPostRelatedInfoStrategy<Post.Domain.Entities.AccommodationFacility, Post.Domain.Entities.Facility> facilityStrategy,
-            IPostRelatedInfoStrategy<Post.Domain.Entities.AccommodationSpecificity, Post.Domain.Entities.Specificity> specificityStrategy,
-            IEventBus eventBus
+            IPostRelatedInfoStrategy<Post.Domain.Entities.AccommodationSpecificity, Post.Domain.Entities.Specificity> specificityStrategy
             )
         {
             _ruleStrategy = ruleStrategy;

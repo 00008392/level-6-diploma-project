@@ -3,7 +3,6 @@ using FluentValidation;
 using Post.Domain.Core;
 using Post.Domain.Entities;
 using Post.Domain.Logic.Contracts;
-using Post.Domain.Logic.Core;
 using Post.Domain.Logic.DTOs;
 using Post.Domain.Logic.Exceptions;
 using Post.Domain.Logic.Validation;
@@ -79,37 +78,17 @@ namespace Post.Domain.Logic.Services
             var accommodation = await _repository.GetByIdAsync(id);
             if(accommodation!=null)
             {
-                var accommodationDTO = new AccommodationInfoDTO
-                {
-                    Id = accommodation.Id,
-                    Title = accommodation.Title,
-                    Description = accommodation.Description,
-                    OwnerId = accommodation.OwnerId,
-                    Owner = accommodation.Owner,
-                    DatePublished = accommodation.DatePublished,
-                    CategoryId = accommodation.CategoryId,
-                    Category = accommodation.Category,
-                    Address = accommodation.Address,
-                    ReferencePoint = accommodation.ReferencePoint,
-                    ContactNumber = accommodation.ContactNumber,
-                    RoomsNo = accommodation.RoomsNo,
-                    BathroomsNo = accommodation.BathroomsNo,
-                    BedsNo = accommodation.BedsNo,
-                    MaxGuestsNo = accommodation.MaxGuestsNo,
-                    SquareMeters = accommodation.SquareMeters,
-                    Price = accommodation.Price,
-                    Latitude = accommodation.Latitude,
-                    Longitude = accommodation.Longitude,
-                    IsWholeApartment = accommodation.IsWholeApartment,
-                    MovingInTime = accommodation.MovingInTime,
-                    MovingOutTime = accommodation.MovingOutTime,
-                    AdditionalInfo = accommodation.AdditionalInfo,
-                    AccommodationFacilities = accommodation.AccommodationFacilities,
-                    AccommodationRules = accommodation.AccommodationRules,
-                    AccommodationSpecificities = accommodation.AccommodationSpecificities,
-                    AccommodationPhotos = accommodation.AccommodationPhotos
-
-                };
+                var accommodationDTO = new AccommodationInfoDTO(accommodation.Id,
+                    accommodation.Title, accommodation.Description, accommodation.OwnerId,
+                    accommodation.CategoryId, accommodation.Address, accommodation.ReferencePoint,
+                    accommodation.ContactNumber, accommodation.RoomsNo, accommodation.BathroomsNo,
+                    accommodation.BedsNo, accommodation.MaxGuestsNo, accommodation.SquareMeters,
+                    accommodation.Price, accommodation.Latitude, accommodation.Longitude,
+                    accommodation.IsWholeApartment, accommodation.AdditionalInfo, accommodation.Owner,
+                    accommodation.DatePublished, accommodation.Category, accommodation.MovingInTime,
+                    accommodation.MovingOutTime, accommodation.AccommodationPhotos, accommodation.AccommodationSpecificities,
+                    accommodation.AccommodationRules, accommodation.AccommodationFacilities);
+                
                 return accommodationDTO;
             }
             return null;

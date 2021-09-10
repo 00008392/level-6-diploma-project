@@ -10,6 +10,7 @@ using EventBus.Contracts;
 
 namespace Profile.Domain.Logic.IntegrationEvents.EventHandlers
 {
+    //tested
     public class UserCreatedIntegrationEventHandler: IIntegrationEventHandler<UserCreatedIntegrationEvent>
     {
         private readonly IEventHandlerService _service;
@@ -19,11 +20,7 @@ namespace Profile.Domain.Logic.IntegrationEvents.EventHandlers
         }
         public async Task Handle(UserCreatedIntegrationEvent @event)
         {
-            var user = new CreateProfileDTO
-            {
-                Email = @event.Email,
-                RegistrationDate = @event.RegistrationDate
-            };
+            var user = new CreateProfileDTO(@event.Email, @event.RegistrationDate);
             await _service.CreateUserAsync(user);
         }  
     }

@@ -33,29 +33,16 @@ namespace Post.API.Services
                 {
                     Message = "Empty request"
                 };
-            } 
-            var createPostDTO = new CreatePostDTO
-            {
-                Title = baseRequest.Title,
-                Description = baseRequest.Description,
-                OwnerId = baseRequest.OwnerId ?? 0,
-                CategoryId = baseRequest.CategoryId,
-                Address = baseRequest.Address,
-                ReferencePoint = baseRequest.ReferencePoint,
-                ContactNumber = baseRequest.ContactNumber,
-                RoomsNo = baseRequest.RoomsNo,
-                BathroomsNo = baseRequest.BathroomsNo,
-                BedsNo = baseRequest.BedsNo,
-                MaxGuestsNo = baseRequest.MaxGuestsNo ?? 0,
-                SquareMeters = baseRequest.SquareMeters,
-                Price = (decimal)(baseRequest.Price ?? 0),
-                Latitude = (decimal?)baseRequest.Latitude,
-                Longitude = (decimal?)baseRequest.Longitude,
-                IsWholeApartment = baseRequest.IsWholeApartment,
-                MovingInTime = baseRequest.MovingInTime == null ? null : baseRequest.MovingInTime.ToDateTime(),
-                MovingOutTime = baseRequest.MovingOutTime == null ? null : baseRequest.MovingOutTime.ToDateTime(),
-                AdditionalInfo = baseRequest.AdditionalInfo
-            };
+            }
+            var createPostDTO = new CreatePostDTO(baseRequest.Title, baseRequest.Description,
+                baseRequest.OwnerId ?? 0, baseRequest.CategoryId, baseRequest.Address,
+                baseRequest.ReferencePoint, baseRequest.ContactNumber, baseRequest.RoomsNo,
+                baseRequest.BathroomsNo, baseRequest.BedsNo, baseRequest.MaxGuestsNo??0,
+                baseRequest.SquareMeters, (decimal)(baseRequest.Price??0), (decimal?)baseRequest.Latitude,
+                (decimal?)baseRequest.Longitude, baseRequest.IsWholeApartment, 
+                baseRequest.AdditionalInfo, baseRequest.MovingInTime?.ToDateTime(),
+                baseRequest.MovingOutTime?.ToDateTime());
+
             var response = new Response();
             try
             {
@@ -83,29 +70,15 @@ namespace Post.API.Services
         public override async Task<Response> UpdatePost(UpdatePostRequest request, ServerCallContext context)
         {
             var baseRequest = request.BaseRequest;
-            var updatePostDTO = new UpdatePostDTO
-            {
-                Id = request.Id,
-                Title = baseRequest.Title,
-                Description = baseRequest.Description,
-                OwnerId = baseRequest.OwnerId ?? 0,
-                CategoryId = baseRequest.CategoryId,
-                Address = baseRequest.Address,
-                ReferencePoint = baseRequest.ReferencePoint,
-                ContactNumber = baseRequest.ContactNumber,
-                RoomsNo = baseRequest.RoomsNo,
-                BathroomsNo = baseRequest.BathroomsNo,
-                BedsNo = baseRequest.BedsNo,
-                MaxGuestsNo = baseRequest.MaxGuestsNo ?? 0,
-                SquareMeters = baseRequest.SquareMeters,
-                Price = (decimal)(baseRequest.Price ?? 0),
-                Latitude = (decimal?)baseRequest.Latitude,
-                Longitude = (decimal?)baseRequest.Longitude,
-                IsWholeApartment = baseRequest.IsWholeApartment,
-                MovingInTime = baseRequest.MovingInTime == null ? null : baseRequest.MovingInTime.ToDateTime(),
-                MovingOutTime = baseRequest.MovingOutTime == null ? null : baseRequest.MovingOutTime.ToDateTime(),
-                AdditionalInfo = baseRequest.AdditionalInfo
-            };
+            var updatePostDTO = new UpdatePostDTO(request.Id, baseRequest.Title, baseRequest.Description,
+                baseRequest.OwnerId ?? 0, baseRequest.CategoryId, baseRequest.Address,
+                baseRequest.ReferencePoint, baseRequest.ContactNumber, baseRequest.RoomsNo,
+                baseRequest.BathroomsNo, baseRequest.BedsNo, baseRequest.MaxGuestsNo ?? 0,
+                baseRequest.SquareMeters, (decimal)(baseRequest.Price ?? 0), (decimal?)baseRequest.Latitude,
+                (decimal?)baseRequest.Longitude, baseRequest.IsWholeApartment,
+                baseRequest.AdditionalInfo, baseRequest.MovingInTime?.ToDateTime(),
+                baseRequest.MovingOutTime?.ToDateTime());
+            
             var response = new Response();
             try
             {

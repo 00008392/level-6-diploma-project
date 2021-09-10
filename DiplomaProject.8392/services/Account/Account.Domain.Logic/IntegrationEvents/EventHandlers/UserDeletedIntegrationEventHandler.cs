@@ -15,6 +15,7 @@ namespace Account.Domain.Logic.IntegrationEvents.EventHandlers
    public class UserDeletedIntegrationEventHandler: BaseIntegrationEventHandler,
         IIntegrationEventHandler<UserDeletedIntegrationEvent>
     {
+        //tested
         public UserDeletedIntegrationEventHandler(IEventHandlerService service)
             :base(service)
         {

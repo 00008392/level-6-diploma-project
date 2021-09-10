@@ -10,15 +10,15 @@ using Post.DAL.EF.Data;
 namespace Post.DAL.EF.Migrations
 {
     [DbContext(typeof(PostDbContext))]
-    [Migration("20210802100932_ItemUpdated")]
-    partial class ItemUpdated
+    [Migration("20210910102124_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.8")
+                .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Post.Domain.Entities.Accommodation", b =>

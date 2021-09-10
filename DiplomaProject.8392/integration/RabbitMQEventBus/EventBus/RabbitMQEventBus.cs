@@ -31,29 +31,31 @@ namespace RabbitMQEventBus.EventBus
 
         public void Dispose()
         {
-           
+            if(_consumerChannel!=null)
+            {
+                _consumerChannel.Dispose();
+            }
+        
         }
 
         public void Publish(IntegrationEvent @event)
         {
-           
-            using (var channel = _connection.CreateModel())
-            {
-                channel.ExchangeDeclare(exchange: "event_bus", type: ExchangeType.Direct);
 
-                var properties = channel.CreateBasicProperties();
-                properties.Persistent = true;
-                var body = JsonSerializer.SerializeToUtf8Bytes(@event, @event.GetType(), new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                });
-                channel.BasicPublish(
-                       exchange: "event_bus",
-                       routingKey: @event.GetType().Name,
-                       mandatory: true,
-                       basicProperties: properties,
-                       body: body);
-            }
+            using var channel = _connection.CreateModel();
+            channel.ExchangeDeclare(exchange: "event_bus", type: ExchangeType.Direct);
+
+            var properties = channel.CreateBasicProperties();
+            properties.Persistent = true;
+            var body = JsonSerializer.SerializeToUtf8Bytes(@event, @event.GetType(), new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+            channel.BasicPublish(
+                   exchange: "event_bus",
+                   routingKey: @event.GetType().Name,
+                   mandatory: true,
+                   basicProperties: properties,
+                   body: body);
 
         }
 
@@ -74,23 +76,24 @@ namespace RabbitMQEventBus.EventBus
                 {
                     var eventName = e.RoutingKey;
                     var message = Encoding.UTF8.GetString(e.Body.Span);
-                    var @event = JsonSerializer.Deserialize(message, typeof(E)) as E;
+                    var eventType = _subscriptionManager.GetEventType(eventName);
+                    var @event = JsonSerializer.Deserialize(message, eventType);
 
-                    if (_subscriptionManager.HasSubscriptionsForEvent<E>())
+                    if (_subscriptionManager.HasSubscriptionsForEvent(eventName))
                     {
-                        using (var scope = _scopeFactory.CreateScope())
+                        using var scope = _scopeFactory.CreateScope();
+                        var subscriptions = _subscriptionManager.GetHandlersForEvent(eventName);
+                        foreach (var subscription in subscriptions)
                         {
-                            var subscriptions = _subscriptionManager.GetHandlersForEvent<E>();
-                            foreach (var subscription in subscriptions)
-                            {
-                                var handler = scope.ServiceProvider.GetService(subscription) as IIntegrationEventHandler<E>;
-                                await handler.Handle(@event);
-                            }
+                            var handler = scope.ServiceProvider.GetService(subscription);
+                            var concreteHandler = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
+                            await (Task)concreteHandler.GetMethod("Handle").Invoke(handler, new object[] { @event });
                         }
 
                     }
+                    _consumerChannel.BasicAck(e.DeliveryTag, multiple: false);
                 };
-
+              
                 _consumerChannel.BasicConsume(
                     queue: _queueName,
                     autoAck: false,

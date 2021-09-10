@@ -26,19 +26,12 @@ namespace Profile.API.Services
         public override async Task<Response> UpdateProfile(UpdateRequest request, ServerCallContext context)
         {
 
-            var updateDTO = new UpdateProfileDTO
-            {
-                Id = request.Id,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Email = request.Email,
-                PhoneNumber = request.PhoneNumber,
-                DateOfBirth = request.DateOfBirth==null? null: request.DateOfBirth.ToDateTime(),
-                Gender = (Domain.Enums.Gender?)request.Gender,
-                Address = request.Address,
-                CityId = request.CityId,
-                UserInfo = request.UserInfo
-            };
+            var updateDTO = new UpdateProfileDTO(request.Id,
+                request.FirstName, request.LastName,
+                request.Email, request.PhoneNumber, request.DateOfBirth?.ToDateTime(),
+                (Domain.Enums.Gender?)request.Gender, request.Address, request.UserInfo, 
+                request.CityId);
+            
             var response = new Response();
             try
             {

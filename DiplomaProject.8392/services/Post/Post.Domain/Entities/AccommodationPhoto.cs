@@ -19,8 +19,5 @@ namespace Post.Domain.Entities
             MimeType = mimeType;
         }
 
-        public AccommodationPhoto()
-        {
-        }
     }
 }

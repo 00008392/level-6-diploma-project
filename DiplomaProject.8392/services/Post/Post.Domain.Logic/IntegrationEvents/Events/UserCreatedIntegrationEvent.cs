@@ -7,6 +7,7 @@ using EventBus.Events;
 
 namespace Post.Domain.Logic.IntegrationEvents.Events
 {
+    //tested
     public class UserCreatedIntegrationEvent: IntegrationEvent
     {
         public string Email { get; }

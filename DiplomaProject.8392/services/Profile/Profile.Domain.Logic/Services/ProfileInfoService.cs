@@ -23,22 +23,11 @@ namespace Profile.Domain.Logic.Services
             var user = await _repository.GetByIdAsync(id, u=>u.City);
             if(user!=null)
             {
-                var profileDTO = new ProfileInfoDTO
-                {
-                    Id = user.Id,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email,
-                    PhoneNumber = user.PhoneNumber,
-                    DateOfBirth = user.DateOfBirth,
-                    RegistrationDate = user.RegistrationDate,
-                    Gender = user.Gender,
-                    Address = user.Address,
-                    City = user.City,
-                    UserInfo = user.UserInfo,
-                    ProfilePhoto = user.ProfilePhoto,
-                    MimeType = user.MimeType
-                };
+                var profileDTO = new ProfileInfoDTO(user.Id, user.FirstName, user.LastName,
+                    user.Email, user.PhoneNumber, user.DateOfBirth, user.Gender,
+                    user.Address, user.UserInfo, user.RegistrationDate, user.City,
+                    user.ProfilePhoto, user.MimeType);
+               
                 return profileDTO;
             }
 

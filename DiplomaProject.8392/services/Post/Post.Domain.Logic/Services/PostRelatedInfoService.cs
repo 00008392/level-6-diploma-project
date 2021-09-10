@@ -3,7 +3,6 @@ using FluentValidation;
 using Post.Domain.Core;
 using Post.Domain.Entities;
 using Post.Domain.Logic.Contracts;
-using Post.Domain.Logic.Core;
 using Post.Domain.Logic.DTOs;
 using Post.Domain.Logic.Exceptions;
 using System;

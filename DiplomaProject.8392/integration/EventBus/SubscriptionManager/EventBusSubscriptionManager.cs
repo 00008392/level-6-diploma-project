@@ -12,15 +12,21 @@ namespace EventBus.SubscriptionManager
     {
         private readonly Dictionary<string, 
             List<Type>> _handlers;
+        private readonly List<Type> _eventTypes;
         public EventBusSubscriptionManager()
         {
             _handlers = new Dictionary<string,
                 List<Type>>();
+            _eventTypes = new List<Type>();
         }
         public void AddSubscription<E, EH>()
             where E : IntegrationEvent
             where EH : IIntegrationEventHandler<E>
         {
+            if (!_eventTypes.Contains(typeof(E)))
+            {
+                _eventTypes.Add(typeof(E));
+            }
             if (!HasSubscriptionsForEvent<E>())
             {
                 _handlers.Add(typeof(E).Name, new List<Type>());
@@ -31,14 +37,18 @@ namespace EventBus.SubscriptionManager
             }
         }
 
-        public IEnumerable<Type> GetHandlersForEvent<E>() where E : IntegrationEvent
+        public IEnumerable<Type> GetHandlersForEvent(string eventName)
         {
-            return _handlers[typeof(E).Name];
+            return _handlers[eventName];
         }
 
         public bool HasSubscriptionsForEvent<E>() where E : IntegrationEvent
         {
             return _handlers.ContainsKey(typeof(E).Name);
+        }
+        public bool HasSubscriptionsForEvent(string eventName) 
+        {
+            return _handlers.ContainsKey(eventName);
         }
 
         public void RemoveSubscription<E, EH>()
@@ -53,11 +63,19 @@ namespace EventBus.SubscriptionManager
                 _handlers[typeof(E).Name].Remove(handlerToRemove);
                 if (!_handlers[typeof(E).Name].Any())
                 {
-                    _handlers.Remove(typeof(E).Name);
-                  
+                    var eventType = _eventTypes.SingleOrDefault(e => e.Name == typeof(E).Name);
+                    if (eventType != null)
+                    {
+                        _eventTypes.Remove(eventType);
+                    }
                 }
 
+               
             }
+        }
+        public Type GetEventType(string eventName)
+        {
+           return _eventTypes.SingleOrDefault(t => t.Name == eventName);
         }
     }
 }

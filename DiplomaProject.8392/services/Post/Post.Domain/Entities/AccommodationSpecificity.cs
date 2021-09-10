@@ -9,9 +9,6 @@ namespace Post.Domain.Entities
 {
     public class AccommodationSpecificity : ItemAccommodationBase
     {
-        public AccommodationSpecificity()
-        {
-        }
 
         public AccommodationSpecificity(long itemId, string otherItem) 
             : base(itemId, otherItem)

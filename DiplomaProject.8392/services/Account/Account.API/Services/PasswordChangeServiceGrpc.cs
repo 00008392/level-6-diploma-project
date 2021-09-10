@@ -22,11 +22,7 @@ namespace Account.API.Services
 
         public override async Task<Response> ChangePassword(ChangePasswordRequest request, ServerCallContext context)
         {
-            var passwordDTO = new ChangePasswordDTO
-            {
-                Id = request.Id,
-                Password = request.Password
-            };
+            var passwordDTO = new ChangePasswordDTO(request.Id, request.Password);
             var response = new Response();
             try
             {

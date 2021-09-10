@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.IntegrationEvents.Events
 {
+    //tested
     public class UserCreatedIntegrationEvent: IntegrationEvent
     {
         public string Email { get; }

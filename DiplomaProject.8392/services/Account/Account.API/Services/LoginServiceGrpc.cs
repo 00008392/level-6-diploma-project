@@ -18,11 +18,7 @@ namespace Account.API.Services
 
         public override async Task<LoginReply> GetLoggedUser(LoginRequest request, ServerCallContext context)
         {
-            var loginDTO = new UserLoginDTO
-            {
-                Email = request.Email,
-                Password = request.Password
-            };
+            var loginDTO = new UserLoginDTO(request.Password, request.Email);
             var loggedUser = await _service.LoginUserAsync(loginDTO);
             if (loggedUser != null)
             {

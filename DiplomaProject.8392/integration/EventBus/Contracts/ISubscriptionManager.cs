@@ -15,9 +15,11 @@ namespace EventBus.Contracts
         void RemoveSubscription<E, EH>()
             where E : IntegrationEvent
             where EH : IIntegrationEventHandler<E>;
-        bool HasSubscriptionsForEvent<E>() 
+        bool HasSubscriptionsForEvent(string eventName);
+        bool HasSubscriptionsForEvent<E>()
             where E : IntegrationEvent;
-        IEnumerable<Type> GetHandlersForEvent<E>()
-            where E : IntegrationEvent;
+        IEnumerable<Type> GetHandlersForEvent(string eventName);
+ 
+        Type GetEventType(string eventName);
     }
 }

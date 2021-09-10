@@ -8,6 +8,7 @@ using EventBus.Events;
 
 namespace Profile.Domain.Logic.IntegrationEvents.Events
 {
+    //tested
     public class UserUpdatedIntegrationEvent: IntegrationEvent
     {
         public long UserId { get; }

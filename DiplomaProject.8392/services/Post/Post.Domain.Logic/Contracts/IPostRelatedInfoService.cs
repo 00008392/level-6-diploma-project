@@ -1,5 +1,4 @@
 ﻿using Post.Domain.Core;
-using Post.Domain.Logic.Core;
 using Post.Domain.Logic.DTOs;
 using System;
 using System.Collections.Generic;

@@ -8,6 +8,11 @@ namespace Post.Domain.Logic.DTOs
 {
     public class CreateUserDTO
     {
-        public string Email { get; set; }
+        public string Email { get; private set; }
+
+        public CreateUserDTO(string email)
+        {
+            Email = email;
+        }
     }
 }

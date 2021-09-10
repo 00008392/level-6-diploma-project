@@ -25,12 +25,8 @@ namespace Post.Domain.Logic.Services
             foreach(var item in items)
             {
 
-                var itemDTO = new ItemInfoDTO
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    IsOther = item.IsOther
-                };
+                var itemDTO = new ItemInfoDTO(item.Id, item.Name, item.IsOther);
+               
                 itemDTOs.Add(itemDTO);
             }
             return itemDTOs;

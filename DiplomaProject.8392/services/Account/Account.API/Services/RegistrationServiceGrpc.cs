@@ -26,12 +26,8 @@ namespace Account.API.Services
         public override async Task<Response> RegisterUser(RegistrationRequest request, ServerCallContext context)
         {
 
-            var userDTO = new UserRegistrationDTO
-            {
-                Email = request.Email,
-                Password = request.Password,
-                Role = (Domain.Enums.Role?)request.Role
-            };
+            var userDTO = new UserRegistrationDTO(request.Email, (Domain.Enums.Role?)request.Role,
+                request.Password);
             var response = new Response();
             try
             {
