@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
+    <ProjectReference Include="..\..\..\utilities\BaseClasses\BaseClasses.csproj" />
+    <ProjectReference Include="..\Booking.Domain\Booking.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

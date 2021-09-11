@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventBus.Events
+namespace Booking.Domain.Logic.DTOs.Core
 {
-    public class IntegrationEvent
+    public abstract class CreateEntityDTO
     {
     }
 }
