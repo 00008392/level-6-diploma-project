@@ -45,8 +45,8 @@ namespace Booking.Domain.Logic.Services
                 item.Accommodation.IsWholeApartment,
                 item.Accommodation.MovingInTime,
                 item.Accommodation.MovingOutTime),
-                item.StartDate, item.EndDate, item.IsAccepted,
-                item.IsCancelled)));
+                item.StartDate, item.EndDate, item.Status
+                )));
             return requestsDTOList;
         }
     }

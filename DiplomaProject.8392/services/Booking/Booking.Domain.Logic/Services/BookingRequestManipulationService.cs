@@ -1,5 +1,6 @@
 ﻿using BaseClasses.Contracts;
 using Booking.Domain.Entities;
+using Booking.Domain.Enums;
 using Booking.Domain.Logic.Contracts;
 using Booking.Domain.Logic.DTOs;
 using Booking.Domain.Logic.Exceptions;
@@ -31,17 +32,16 @@ namespace Booking.Domain.Logic.Services
 
         public async Task AcceptBookingRequest(long id)
         {
-            var request = await _repository.GetByIdAsync(id);
-            request.AcceptRequest();
-            await _repository.UpdateAsync(request);
+            await HandleRequestStatus(Status.Accepted, id);
         }
-
-        public async Task CancelBooking(CancelBookingRequestDTO requestDTO)
+        public async Task RejectBookingRequest(long id)
         {
-            //TO DO: distinction between owner and guest
-            var request = await _repository.GetByIdAsync(requestDTO.RequestId);
-            request.CancelRequest();
-            await _repository.UpdateAsync(request);
+            await HandleRequestStatus(Status.Rejected, id);
+        }
+       
+        public async Task CancelBooking(long id)
+        {
+            await HandleRequestStatus(Status.Cancelled, id);
         }
 
         public async Task CreateBookingRequest(CreateBookingRequestDTO requestDTO)
@@ -62,23 +62,36 @@ namespace Booking.Domain.Logic.Services
                 throw new ForeignKeyViolationException("Accommodation");
             }
             var request = new BookingRequest(requestDTO.GuestId, requestDTO.AccommodationId,
-                requestDTO.StartDate, requestDTO.EndDate);
+                (DateTime)requestDTO.StartDate, (DateTime)requestDTO.EndDate);
             await _repository.CreateAsync(request);
         }
-
         public async Task DeleteBookingRequest(long id)
+        {
+            var request = await FindRequest(id);
+            if(request.Status == Status.Accepted)
+            {
+                throw new DeleteBookingRequestException();
+            }
+            await _repository.DeleteAsync(request);
+        }
+        private async Task HandleRequestStatus(Status status, long id)
+        {
+            var request = await FindRequest(id);
+            if(request.Status==status)
+            {
+                throw new BookingRequestStatusException(status);
+            }
+            request.SetStatus(status);
+            await _repository.UpdateAsync(request);
+        }
+        private async Task<BookingRequest> FindRequest(long id)
         {
             var request = await _repository.GetByIdAsync(id);
             if (request == null)
             {
                 throw new NotFoundException(id, request.GetType().Name);
             }
-            if(request.IsAccepted)
-            {
-                throw new Exception("Request cannot be deleted, since it is already accpted by the owner");
-            }
-            await _repository.DeleteAsync(request);
+            return request;
         }
-        
     }
 }

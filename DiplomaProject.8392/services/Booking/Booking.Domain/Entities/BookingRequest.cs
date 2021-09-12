@@ -1,4 +1,5 @@
 ﻿using BaseClasses.Entities;
+using Booking.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,7 @@ namespace Booking.Domain.Entities
         public Accommodation Accommodation { get; }
         public DateTime StartDate { get; private set; }
         public DateTime EndDate { get; private set; }
-        //To do: replace with enum (???)
-        public bool IsAccepted { get; private set; }
-        public bool IsCancelled { get; private set; }
-        //Add enum by whom request was cancelled (???)
+        public Status Status { get; private set; }
 
         public BookingRequest(long guestId, long accommodationId, 
             DateTime startDate, DateTime endDate)
@@ -27,22 +25,13 @@ namespace Booking.Domain.Entities
             AccommodationId = accommodationId;
             StartDate = startDate;
             EndDate = endDate;
-            IsAccepted = false;
-            IsCancelled = false;
+            Status = Status.Pending;
         }
-        public void AcceptRequest()
+        public void SetStatus(Status status)
         {
-            IsAccepted = true;
+            Status = status;
         }
-        //Add condition
-        public void CancelRequest()
-        {
-            IsCancelled = true;
-        }
-        public void UpdateDates(DateTime startDate, DateTime endDate)
-        {
-            StartDate = startDate;
-            EndDate = endDate;
-        }
+      
+      
     }
 }

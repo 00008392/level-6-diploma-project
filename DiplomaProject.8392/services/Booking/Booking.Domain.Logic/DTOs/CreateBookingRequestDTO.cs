@@ -10,11 +10,11 @@ namespace Booking.Domain.Logic.DTOs
     {
         public long GuestId { get; private set; }
         public long AccommodationId { get; private set; }
-        public DateTime StartDate { get; private set; }
-        public DateTime EndDate { get; private set; }
+        public DateTime? StartDate { get; private set; }
+        public DateTime? EndDate { get; private set; }
 
         public CreateBookingRequestDTO(long guestId, long accommodationId, 
-            DateTime startDate, DateTime endDate)
+            DateTime? startDate, DateTime? endDate)
         {
             GuestId = guestId;
             AccommodationId = accommodationId;

@@ -23,6 +23,7 @@ namespace Booking.Domain.Entities
         public bool? IsWholeApartment { get; private set; }
         public string MovingInTime { get; private set; }
         public string MovingOutTime { get; private set; }
+        public ICollection<BookingRequest> BookingRequests { get; }
 
         public Accommodation(string title, long ownerId,
             string address,

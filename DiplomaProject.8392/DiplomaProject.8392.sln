@@ -59,9 +59,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQEventBus", "integra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Booking", "Booking", "{8E3C67AD-9E93-4EE8-B7DB-078348D7EDA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.Domain", "services\Booking\Booking.Domain\Booking.Domain.csproj", "{70CDF556-FB79-49A0-BB53-5623BAFE91BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Booking.Domain", "services\Booking\Booking.Domain\Booking.Domain.csproj", "{70CDF556-FB79-49A0-BB53-5623BAFE91BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.Domain.Logic", "services\Booking\Booking.Domain.Logic\Booking.Domain.Logic.csproj", "{8D3CE8C3-6C1D-4ED7-AA76-D32952C8598D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Booking.Domain.Logic", "services\Booking\Booking.Domain.Logic\Booking.Domain.Logic.csproj", "{8D3CE8C3-6C1D-4ED7-AA76-D32952C8598D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Booking.DAL", "Booking.DAL", "{99F19DF0-D014-4AFE-AC3F-4A087DDAAB81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.DAL.EF", "services\Booking\Booking.DAL\Booking.DAL.EF\Booking.DAL.EF.csproj", "{F7183308-6CDB-4158-BF1B-ADA1136E5B51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -145,6 +149,10 @@ Global
 		{8D3CE8C3-6C1D-4ED7-AA76-D32952C8598D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D3CE8C3-6C1D-4ED7-AA76-D32952C8598D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D3CE8C3-6C1D-4ED7-AA76-D32952C8598D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7183308-6CDB-4158-BF1B-ADA1136E5B51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7183308-6CDB-4158-BF1B-ADA1136E5B51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7183308-6CDB-4158-BF1B-ADA1136E5B51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7183308-6CDB-4158-BF1B-ADA1136E5B51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,6 +185,8 @@ Global
 		{8E3C67AD-9E93-4EE8-B7DB-078348D7EDA4} = {2B3013CF-128F-4CC9-8AD5-7E9A5F62981A}
 		{70CDF556-FB79-49A0-BB53-5623BAFE91BA} = {8E3C67AD-9E93-4EE8-B7DB-078348D7EDA4}
 		{8D3CE8C3-6C1D-4ED7-AA76-D32952C8598D} = {8E3C67AD-9E93-4EE8-B7DB-078348D7EDA4}
+		{99F19DF0-D014-4AFE-AC3F-4A087DDAAB81} = {8E3C67AD-9E93-4EE8-B7DB-078348D7EDA4}
+		{F7183308-6CDB-4158-BF1B-ADA1136E5B51} = {99F19DF0-D014-4AFE-AC3F-4A087DDAAB81}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E5F12852-0C37-489B-8CB9-48ADED5F8F8C}
