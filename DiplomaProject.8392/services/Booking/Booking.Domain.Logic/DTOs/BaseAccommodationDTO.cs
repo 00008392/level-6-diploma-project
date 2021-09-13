@@ -8,6 +8,7 @@ namespace Booking.Domain.Logic.DTOs
 {
     public class BaseAccommodationDTO
     {
+        public long Id { get; private set; }
         public string Title { get; private set; }
         public long OwnerId { get; private set; }
         public string Address { get; private set; }

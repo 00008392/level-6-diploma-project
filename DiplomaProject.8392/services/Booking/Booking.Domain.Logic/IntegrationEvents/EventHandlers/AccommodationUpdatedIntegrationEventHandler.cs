@@ -12,7 +12,7 @@ using EventBus.Contracts;
 
 namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 {
-    class AccommodationUpdatedIntegrationEventHandler : BaseIntegrationEventHandler<Accommodation>,
+   public class AccommodationUpdatedIntegrationEventHandler : BaseIntegrationEventHandler<Accommodation>,
         IIntegrationEventHandler<AccommodationUpdatedIntegrationEvent>
     {
         public AccommodationUpdatedIntegrationEventHandler(IEventHandlerService<Accommodation> service)
@@ -29,7 +29,7 @@ namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
                 @event.MovingOutTime);
             var accommodationDTO = new UpdateAccommodationDTO(@event.AccommodationId,
                 baseAccommodation);
-            await _service.UpdateEntity(accommodationDTO);
+            await _service.UpdateEntityAsync(accommodationDTO);
         }
     }
 }

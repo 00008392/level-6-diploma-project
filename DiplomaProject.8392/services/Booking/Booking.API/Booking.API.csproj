@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Protos\booking.proto" GrpcServices="Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.17.3" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.34.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
+    <ProjectReference Include="..\..\..\integration\RabbitMQEventBus\RabbitMQEventBus.csproj" />
+    <ProjectReference Include="..\..\..\utilities\ExceptionHandling\ExceptionHandling.csproj" />
+    <ProjectReference Include="..\Booking.DAL\Booking.DAL.EF\Booking.DAL.EF.csproj" />
+    <ProjectReference Include="..\Booking.Domain.Logic\Booking.Domain.Logic.csproj" />
+    <ProjectReference Include="..\Booking.Domain\Booking.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

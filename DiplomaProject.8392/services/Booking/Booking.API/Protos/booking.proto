@@ -1,0 +1,74 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "Booking.API";
+
+package booking;
+
+service BookingRequestManipulation {
+
+  rpc CreateBookingRequest (CreateRequest) returns (Response);
+  rpc DeleteBookingRequest (Request) returns (Response);
+  rpc AcceptBookingRequest (Request) returns (Response);
+  rpc RejectBookingRequest (Request) returns (Response);
+  rpc CancelBooking (Request) returns (Response);
+}
+service BookingRequestInfo {
+
+  rpc GetRequestsForUser (Request) returns (RequestInfoReply);
+  rpc GetRequestsForAccommodation (Request) returns (RequestInfoReply);
+}
+message Request {
+  int64 id = 1;
+}
+message Error {
+	string propertyName = 1;
+	string message = 2;
+}
+message Response {
+	bool isSuccess = 1;
+	repeated Error errors = 2;
+	string message = 3;
+}
+message CreateRequest {
+	google.protobuf.Int64Value guestId = 1;
+	google.protobuf.Int64Value accommodationId = 2;
+	google.protobuf.Timestamp startDate = 3;
+	google.protobuf.Timestamp endDate = 4;
+}
+message BookingRequest {
+ User guest = 1;
+ Accommodation accommodation = 2;
+ google.protobuf.Timestamp startDate = 3;
+ google.protobuf.Timestamp endDate = 4;
+ int32 status = 5;
+}
+message RequestInfoReply {
+repeated BookingRequest requests = 1;
+}
+message User {
+	int64 id = 1;
+	google.protobuf.StringValue firstName = 2;
+	google.protobuf.StringValue lastName = 3;
+	string email = 4;
+	google.protobuf.StringValue phoneNumber =5;
+	google.protobuf.StringValue address = 6;
+	google.protobuf.Timestamp dateOfBirth = 7;
+}
+message Accommodation {
+   int64 id = 1;
+   string title = 2;
+   int64 ownerId = 3;
+   string address = 4;
+   string contactNumber = 5;
+   google.protobuf.Int32Value roomsNo = 6;
+   google.protobuf.Int32Value bathroomsNo = 7;
+   google.protobuf.Int32Value bedsNo = 8;
+   int32 maxGuestsNo = 9;
+   google.protobuf.Int32Value squareMeters = 10;
+   double price = 11;
+   google.protobuf.BoolValue isWholeApartment = 12;
+   string movingInTime = 13;
+   string movingOutTime = 14;
+}

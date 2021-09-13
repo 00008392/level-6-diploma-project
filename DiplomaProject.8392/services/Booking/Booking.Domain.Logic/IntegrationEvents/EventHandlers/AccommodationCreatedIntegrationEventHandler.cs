@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 {
-    class AccommodationCreatedIntegrationEventHandler : BaseIntegrationEventHandler<Accommodation>,
+   public class AccommodationCreatedIntegrationEventHandler : BaseIntegrationEventHandler<Accommodation>,
         IIntegrationEventHandler<AccommodationCreatedIntegrationEvent>
     {
         public AccommodationCreatedIntegrationEventHandler(IEventHandlerService<Accommodation> service)
@@ -29,7 +29,7 @@ namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
                 @event.SquareMeters, @event.Price, @event.IsWholeApartment, @event.MovingInTime,
                 @event.MovingOutTime);
             var accommodationDTO = new CreateAccommodationDTO(baseAccommodation);
-            await _service.CreateEntity(accommodationDTO);
+            await _service.CreateEntityAsync(accommodationDTO);
         }
     }
 }

@@ -30,21 +30,21 @@ namespace Booking.Domain.Logic.Services
             _validator = validator;
         }
 
-        public async Task AcceptBookingRequest(long id)
+        public async Task AcceptBookingRequestAsync(long id)
         {
-            await HandleRequestStatus(Status.Accepted, id);
+            await HandleRequestStatusAsync(Status.Accepted, id);
         }
-        public async Task RejectBookingRequest(long id)
+        public async Task RejectBookingRequestAsync(long id)
         {
-            await HandleRequestStatus(Status.Rejected, id);
+            await HandleRequestStatusAsync(Status.Rejected, id);
         }
        
-        public async Task CancelBooking(long id)
+        public async Task CancelBookingAsync(long id)
         {
-            await HandleRequestStatus(Status.Cancelled, id);
+            await HandleRequestStatusAsync(Status.Cancelled, id);
         }
 
-        public async Task CreateBookingRequest(CreateBookingRequestDTO requestDTO)
+        public async Task CreateBookingRequestAsync(CreateBookingRequestDTO requestDTO)
         {
             var validationResult = _validator.Validate(requestDTO);
             if (!validationResult.IsValid)
@@ -65,18 +65,18 @@ namespace Booking.Domain.Logic.Services
                 (DateTime)requestDTO.StartDate, (DateTime)requestDTO.EndDate);
             await _repository.CreateAsync(request);
         }
-        public async Task DeleteBookingRequest(long id)
+        public async Task DeleteBookingRequestAsync(long id)
         {
-            var request = await FindRequest(id);
+            var request = await FindRequestAsync(id);
             if(request.Status == Status.Accepted)
             {
                 throw new DeleteBookingRequestException();
             }
             await _repository.DeleteAsync(request);
         }
-        private async Task HandleRequestStatus(Status status, long id)
+        private async Task HandleRequestStatusAsync(Status status, long id)
         {
-            var request = await FindRequest(id);
+            var request = await FindRequestAsync(id);
             if(request.Status==status)
             {
                 throw new BookingRequestStatusException(status);
@@ -84,7 +84,7 @@ namespace Booking.Domain.Logic.Services
             request.SetStatus(status);
             await _repository.UpdateAsync(request);
         }
-        private async Task<BookingRequest> FindRequest(long id)
+        private async Task<BookingRequest> FindRequestAsync(long id)
         {
             var request = await _repository.GetByIdAsync(id);
             if (request == null)

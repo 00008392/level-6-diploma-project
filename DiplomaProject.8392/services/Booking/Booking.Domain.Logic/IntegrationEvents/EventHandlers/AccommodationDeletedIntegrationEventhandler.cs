@@ -11,7 +11,7 @@ using EventBus.Contracts;
 
 namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 {
-    class AccommodationDeletedIntegrationEventhandler : BaseIntegrationEventHandler<Accommodation>,
+    public class AccommodationDeletedIntegrationEventhandler : BaseIntegrationEventHandler<Accommodation>,
         IIntegrationEventHandler<AccommodationDeletedIntegrationEvent>
     {
         public AccommodationDeletedIntegrationEventhandler(IEventHandlerService<Accommodation> service)
@@ -21,7 +21,7 @@ namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 
         public async Task Handle(AccommodationDeletedIntegrationEvent @event)
         {
-            await _service.DeleteEntity(@event.AccommodationId);
+            await _service.DeleteEntityAsync(@event.AccommodationId);
         }
     }
 }

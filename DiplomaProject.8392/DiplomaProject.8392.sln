@@ -65,7 +65,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Booking.Domain.Logic", "ser
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Booking.DAL", "Booking.DAL", "{99F19DF0-D014-4AFE-AC3F-4A087DDAAB81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.DAL.EF", "services\Booking\Booking.DAL\Booking.DAL.EF\Booking.DAL.EF.csproj", "{F7183308-6CDB-4158-BF1B-ADA1136E5B51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Booking.DAL.EF", "services\Booking\Booking.DAL\Booking.DAL.EF\Booking.DAL.EF.csproj", "{F7183308-6CDB-4158-BF1B-ADA1136E5B51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.API", "services\Booking\Booking.API\Booking.API.csproj", "{2A9E53DE-44BD-47A1-B952-8BEF85D290E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -153,6 +155,10 @@ Global
 		{F7183308-6CDB-4158-BF1B-ADA1136E5B51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7183308-6CDB-4158-BF1B-ADA1136E5B51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7183308-6CDB-4158-BF1B-ADA1136E5B51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A9E53DE-44BD-47A1-B952-8BEF85D290E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A9E53DE-44BD-47A1-B952-8BEF85D290E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A9E53DE-44BD-47A1-B952-8BEF85D290E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A9E53DE-44BD-47A1-B952-8BEF85D290E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -187,6 +193,7 @@ Global
 		{8D3CE8C3-6C1D-4ED7-AA76-D32952C8598D} = {8E3C67AD-9E93-4EE8-B7DB-078348D7EDA4}
 		{99F19DF0-D014-4AFE-AC3F-4A087DDAAB81} = {8E3C67AD-9E93-4EE8-B7DB-078348D7EDA4}
 		{F7183308-6CDB-4158-BF1B-ADA1136E5B51} = {99F19DF0-D014-4AFE-AC3F-4A087DDAAB81}
+		{2A9E53DE-44BD-47A1-B952-8BEF85D290E1} = {8E3C67AD-9E93-4EE8-B7DB-078348D7EDA4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E5F12852-0C37-489B-8CB9-48ADED5F8F8C}

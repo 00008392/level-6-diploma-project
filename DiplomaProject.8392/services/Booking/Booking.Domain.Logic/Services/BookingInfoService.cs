@@ -20,23 +20,24 @@ namespace Booking.Domain.Logic.Services
             _repository = repository;
         }
 
-        public async Task<ICollection<BookingRequestInfoDTO>> GetBookingRequestsForAccommodation(long id)
+        public async Task<ICollection<BookingRequestInfoDTO>> GetBookingRequestsForAccommodationAsync(long id)
         {
-            return await GetRequests(r => r.AccommodationId == id);
+            return await GetRequestsAsync(r => r.AccommodationId == id, true, false);
         }
 
-        public async Task<ICollection<BookingRequestInfoDTO>> GetBookingRequestsForUser(long id)
+        public async Task<ICollection<BookingRequestInfoDTO>> GetBookingRequestsForUserAsync(long id)
         {
-            return await GetRequests(r => r.GuestId == id);
+            return await GetRequestsAsync(r => r.GuestId == id, false, true);
         }
-        private async Task<ICollection<BookingRequestInfoDTO>> GetRequests(
-            Expression<Func<BookingRequest, bool>> filter)
+        private async Task<ICollection<BookingRequestInfoDTO>> GetRequestsAsync(
+            Expression<Func<BookingRequest, bool>> filter, bool includeUser, bool includeAccommodaiton)
         {
             var requestsList = (await _repository.GetFilteredAsync(filter)).ToList();
             var requestsDTOList = new List<BookingRequestInfoDTO>();
-            requestsList.ForEach(item => requestsDTOList.Add(new BookingRequestInfoDTO(new UserDTO(item.Guest.FirstName,
+            requestsList.ForEach(item => requestsDTOList.Add(new BookingRequestInfoDTO(includeUser? new UserDTO(item.Guest.FirstName,
                 item.Guest.LastName, item.Guest.Email, item.Guest.PhoneNumber,
-                item.Guest.Address, item.Guest.DateOfBirth),
+                item.Guest.Address, item.Guest.DateOfBirth): null,
+                includeAccommodaiton?
                 new BaseAccommodationDTO(item.Accommodation.Title, item.Accommodation.OwnerId,
                 item.Accommodation.Address, item.Accommodation.ContactNumber,
                 item.Accommodation.RoomsNo, item.Accommodation.BathroomsNo,
@@ -44,7 +45,7 @@ namespace Booking.Domain.Logic.Services
                 item.Accommodation.SquareMeters, item.Accommodation.Price,
                 item.Accommodation.IsWholeApartment,
                 item.Accommodation.MovingInTime,
-                item.Accommodation.MovingOutTime),
+                item.Accommodation.MovingOutTime): null,
                 item.StartDate, item.EndDate, item.Status
                 )));
             return requestsDTOList;

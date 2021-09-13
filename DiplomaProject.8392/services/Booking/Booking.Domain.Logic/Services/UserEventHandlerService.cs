@@ -28,7 +28,7 @@ namespace Booking.Domain.Logic.Services
             _repository = repository;
         }
 
-        public async Task CreateEntity(CreateEntityDTO entityDTO)
+        public async Task CreateEntityAsync(CreateEntityDTO entityDTO)
         {
             var userDTO = (CreateUserDTO)entityDTO;
             var result = _createUserValidator.Validate(userDTO);
@@ -45,7 +45,7 @@ namespace Booking.Domain.Logic.Services
             await _repository.CreateAsync(user);
         }
 
-        public async Task DeleteEntity(long id)
+        public async Task DeleteEntityAsync(long id)
         {
             var user = await _repository.GetByIdAsync(id);
             if (user == null)
@@ -55,7 +55,7 @@ namespace Booking.Domain.Logic.Services
             await _repository.DeleteAsync(user);
         }
 
-        public async Task UpdateEntity(UpdateEntityDTO entityDTO)
+        public async Task UpdateEntityAsync(UpdateEntityDTO entityDTO)
         {
             var user = await _repository.GetByIdAsync(entityDTO.Id);
             if (user == null)

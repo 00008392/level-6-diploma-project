@@ -12,7 +12,7 @@ using EventBus.Contracts;
 
 namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 {
-    class UserCreatedIntegrationEventHandler : BaseIntegrationEventHandler<User>,
+    public class UserCreatedIntegrationEventHandler : BaseIntegrationEventHandler<User>,
         IIntegrationEventHandler<UserCreatedIntegrationEvent>
     {
         public UserCreatedIntegrationEventHandler(IEventHandlerService<User> service) 
@@ -23,7 +23,7 @@ namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
         public async Task Handle(UserCreatedIntegrationEvent @event)
         {
             var userDTO = new CreateUserDTO(@event.Email);
-            await _service.CreateEntity(userDTO);
+            await _service.CreateEntityAsync(userDTO);
         }
     }
 }

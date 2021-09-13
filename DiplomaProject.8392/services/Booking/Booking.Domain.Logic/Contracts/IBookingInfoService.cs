@@ -10,8 +10,8 @@ namespace Booking.Domain.Logic.Contracts
     public interface IBookingInfoService
     {
         //can be viewed only by accommodation owner
-        Task<ICollection<BookingRequestInfoDTO>> GetBookingRequestsForAccommodation(long id);
+        Task<ICollection<BookingRequestInfoDTO>> GetBookingRequestsForAccommodationAsync(long id);
         //booking requests made by user
-        Task<ICollection<BookingRequestInfoDTO>> GetBookingRequestsForUser(long id);
+        Task<ICollection<BookingRequestInfoDTO>> GetBookingRequestsForUserAsync(long id);
     }
 }

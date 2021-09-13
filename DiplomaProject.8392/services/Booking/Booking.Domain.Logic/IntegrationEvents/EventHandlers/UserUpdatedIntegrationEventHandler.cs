@@ -12,7 +12,7 @@ using EventBus.Contracts;
 
 namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 {
-    class UserUpdatedIntegrationEventHandler : BaseIntegrationEventHandler<User>,
+    public class UserUpdatedIntegrationEventHandler : BaseIntegrationEventHandler<User>,
         IIntegrationEventHandler<UserUpdatedIntegrationEvent>
     {
         public UserUpdatedIntegrationEventHandler(IEventHandlerService<User> service)
@@ -25,7 +25,7 @@ namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
             var userBase = new UserDTO(@event.FirstName, @event.LastName, @event.Email,
                 @event.PhoneNumber, @event.Address, @event.DateOfBirth);
             var userDTO = new UpdateUserDTO(@event.UserId, userBase);
-            await _service.UpdateEntity(userDTO);
+            await _service.UpdateEntityAsync(userDTO);
         }
     }
 }
