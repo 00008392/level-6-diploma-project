@@ -1,9 +1,11 @@
-﻿using BaseClasses.Contracts;
+﻿using AutoMapper;
+using BaseClasses.Contracts;
 using FluentValidation;
 using Profile.Domain.Entities;
 using Profile.Domain.Logic.Contracts;
 using Profile.Domain.Logic.DTOs;
 using Profile.Domain.Logic.Exceptions;
+using Profile.Domain.Logic.Services.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +14,16 @@ using System.Threading.Tasks;
 
 namespace Profile.Domain.Logic.Services
 {
-    public class EventHandlerService : IEventHandlerService
+    public class EventHandlerService :BaseService, IEventHandlerService
     {
-        private readonly IRepository<User> _repository;
         private readonly AbstractValidator<CreateProfileDTO> _validator;
+        private readonly IMapper _mapper;
         public EventHandlerService(IRepository<User> repository,
-            AbstractValidator<CreateProfileDTO> validator)
+            AbstractValidator<CreateProfileDTO> validator,
+            IMapper mapper):base(repository)
         {
-            _repository = repository;
             _validator = validator;
+            _mapper = mapper;
         }
         public async Task CreateUserAsync(CreateProfileDTO userDTO)
         {
@@ -29,12 +32,8 @@ namespace Profile.Domain.Logic.Services
             {
                 throw new ValidationException(result.Errors);
             }
-            var userWithEmail = (await _repository.GetFilteredAsync(u => u.Email == userDTO.Email)).FirstOrDefault();
-            if (userWithEmail != null)
-            {
-                throw new UniqueConstraintViolationException(nameof(userDTO.Email), userDTO.Email);
-            }
-            var user = new User(userDTO.Email, userDTO.RegistrationDate);
+            await CheckUserEmailAsync(u => u.Email == userDTO.Email, userDTO.Email);
+            var user = _mapper.Map<User>(userDTO);
             await _repository.CreateAsync(user);
            
         }

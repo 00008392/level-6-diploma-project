@@ -30,8 +30,8 @@ namespace Account.API.Services
                 return loginReply;
 
             }
-            //no user
-            return new LoginReply(true);
+
+            return new LoginReply(noUser: true);
            
         }
     }

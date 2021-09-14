@@ -28,7 +28,7 @@ namespace Account.Domain.Logic.Core
             }
             return user;
         }
-        protected async Task CheckUserEmail(Expression<Func<User, bool>> filter, string email)
+        protected async Task CheckUserEmailAsync(Expression<Func<User, bool>> filter, string email)
         {
             var userWithEmail = (await _repository.GetFilteredAsync(filter)).
                 FirstOrDefault();

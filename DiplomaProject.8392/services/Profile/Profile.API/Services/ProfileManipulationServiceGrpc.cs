@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using EventBus.Contracts;
 using Profile.Domain.Logic.IntegrationEvents.Events;
 using ExceptionHandling;
+using AutoMapper;
 
 namespace Profile.API.Services
 {
@@ -17,36 +18,26 @@ namespace Profile.API.Services
     {
         private readonly IProfileManipulationService _service;
         private readonly IEventBus _eventBus;
-        public ProfileManipulationServiceGrpc(IProfileManipulationService service, IEventBus eventBus)
+        private readonly IMapper _mapper;
+        public ProfileManipulationServiceGrpc(IProfileManipulationService service, 
+            IEventBus eventBus, IMapper mapper)
         {
             _service = service;
             _eventBus = eventBus;
+            _mapper = mapper;
         }
 
         public override async Task<Response> UpdateProfile(UpdateRequest request, ServerCallContext context)
         {
 
-            var updateDTO = new UpdateProfileDTO(request.Id,
-                request.FirstName, request.LastName,
-                request.Email, request.PhoneNumber, request.DateOfBirth?.ToDateTime(),
-                (Domain.Enums.Gender?)request.Gender, request.Address, request.UserInfo, 
-                request.CityId);
+            var updateDTO = _mapper.Map<UpdateProfileDTO>(request);
             
             var response = new Response();
             try
             {
                 await _service.UpdateProfileAsync(updateDTO);
                 response.IsSuccess = true;
-                var integrationEvent = new UserUpdatedIntegrationEvent(updateDTO.Id,
-                    updateDTO.FirstName,
-                    updateDTO.LastName,
-                    updateDTO.Email,
-                    updateDTO.PhoneNumber,
-                    updateDTO.DateOfBirth,
-                    updateDTO.Gender,
-                    updateDTO.Address,
-                    updateDTO.UserInfo,
-                    updateDTO.CityId);
+                var integrationEvent = _mapper.Map<UserUpdatedIntegrationEvent>(updateDTO);
                
                 _eventBus.Publish(integrationEvent);
 

@@ -9,18 +9,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Profile.Domain.Logic.Exceptions;
 using BaseClasses.Contracts;
+using Profile.Domain.Logic.Services.Core;
 
 namespace Profile.Domain.Logic.Services
 {
-    public class ProfileManipulationService : IProfileManipulationService
+    public class ProfileManipulationService :BaseService, IProfileManipulationService
     {
-        private readonly IRepository<User> _userRepository;
         private readonly IRepository<City> _cityRepository;
         private readonly AbstractValidator<UpdateProfileDTO> _profileValidator;
         public ProfileManipulationService(IRepository<User> userRepository, IRepository<City> cityRepository,
-            AbstractValidator<UpdateProfileDTO> profileValidator)
+            AbstractValidator<UpdateProfileDTO> profileValidator):base(userRepository)
         {
-            _userRepository = userRepository;
             _profileValidator = profileValidator;
             _cityRepository = cityRepository;
         }
@@ -28,27 +27,15 @@ namespace Profile.Domain.Logic.Services
 
         public async Task DeleteProfileAsync(long id)
         {
-            var user = await _userRepository.GetByIdAsync(id);
-            if (user == null)
-            {
-                throw new ProfileNotFoundException(id);
-            }
-           await _userRepository.DeleteAsync(user);
+            var user = await FindUserAsync(id);
+           await _repository.DeleteAsync(user);
         }
 
 
         public async Task UpdateProfileAsync(UpdateProfileDTO profile)
         {
-            var user = await _userRepository.GetByIdAsync(profile.Id);
-            if (user == null)
-            {
-                throw new ProfileNotFoundException(profile.Id);
-            }
-            var userWithEmail = (await _userRepository.GetFilteredAsync(u => u.Email == profile.Email && u.Id != profile.Id)).FirstOrDefault();
-            if(userWithEmail!=null)
-            {
-                throw new UniqueConstraintViolationException(nameof(profile.Email), profile.Email);
-            }
+            var user = await FindUserAsync(profile.Id);
+           await CheckUserEmailAsync(u => u.Email == profile.Email && u.Id != profile.Id, profile.Email);
             var result = _profileValidator.Validate(profile);
             if(!result.IsValid)
             {
@@ -62,12 +49,21 @@ namespace Profile.Domain.Logic.Services
                 }
             }
 
-            var userToUpdate = new User(profile.Id, profile.FirstName, profile.LastName,
+            user.UpdateInfo(profile.FirstName, profile.LastName,
                 profile.Email, profile.PhoneNumber, profile.DateOfBirth,
-                user.RegistrationDate, profile.Gender, profile.Address,
-                profile.CityId, profile.UserInfo);
-            await _userRepository.UpdateAsync(userToUpdate);
+                profile.Gender, profile.Address, profile.CityId, profile.UserInfo);
+            await _repository.UpdateAsync(user);
 
+        }
+
+        private async Task<User> FindUserAsync(long id)
+        {
+            var user = await _repository.GetByIdAsync(id);
+            if (user == null)
+            {
+                throw new ProfileNotFoundException(id);
+            }
+            return user;
         }
     }
 }

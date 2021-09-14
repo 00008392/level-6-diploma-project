@@ -25,43 +25,24 @@ namespace Profile.Domain.Entities
         public byte[] ProfilePhoto { get; private set; }
         public string MimeType { get; private set; }
 
-        public User(string firstName,
-            string lastName, string email,
-            string phoneNumber, DateTime? dateOfBirth,
-            Gender? gender,
-            string address, long? cityId, 
-            string userInfo)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            Email = email;
-            PhoneNumber = phoneNumber;
-            DateOfBirth = dateOfBirth;
-            Gender = gender;
-            Address = address;
-            CityId = cityId;
-            UserInfo = userInfo;
-        }
         public User(string email, DateTime registrationDate)
         {
             Email = email;
             RegistrationDate = registrationDate;
         }
 
-        public User(long id, string firstName, 
+        public void UpdateInfo(string firstName,
             string lastName,
             string email, string phoneNumber,
-            DateTime? dateOfBirth, 
-            DateTime registrationDate, 
-            Gender? gender, string address, 
-            long? cityId, string userInfo): base(id)
+            DateTime? dateOfBirth,
+            Gender? gender, string address,
+            long? cityId, string userInfo)
         {
             FirstName = firstName;
             LastName = lastName;
             Email = email;
             PhoneNumber = phoneNumber;
             DateOfBirth = dateOfBirth;
-            RegistrationDate = registrationDate;
             Gender = gender;
             Address = address;
             CityId = cityId;

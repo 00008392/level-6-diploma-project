@@ -31,7 +31,7 @@ namespace Account.Domain.Logic.Services
            var result =  _validator.Validate(userDTO);
             if(result.IsValid)
             {
-                await CheckUserEmail(u => u.Email == userDTO.Email, userDTO.Email);
+                await CheckUserEmailAsync(u => u.Email == userDTO.Email, userDTO.Email);
                 string salt = _pwdService.GetSalt();
                 string hashedPassword = _pwdService.HashPassword(Convert.FromBase64String(salt) ,userDTO.Password);
                 var user = new User(userDTO.Email, DateTime.Now, (Role)userDTO.Role,

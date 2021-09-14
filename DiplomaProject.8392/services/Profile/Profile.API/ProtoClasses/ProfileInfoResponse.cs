@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Account.API
+namespace Profile.API
 {
-    public partial class LoginReply
+    public partial class ProfileInfoResponse
     {
-        public LoginReply(bool noUser)
+        public ProfileInfoResponse(bool noUser)
         {
             NoUser = noUser;
-        } 
+        }
     }
 }

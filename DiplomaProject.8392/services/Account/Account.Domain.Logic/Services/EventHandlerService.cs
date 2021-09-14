@@ -36,7 +36,7 @@ namespace Account.Domain.Logic.Services
             {
                 throw new ValidationException(result.Errors);
             }
-           await CheckUserEmail(u => u.Email == userDTO.Email && u.Id != userDTO.Id, userDTO.Email);
+           await CheckUserEmailAsync(u => u.Email == userDTO.Email && u.Id != userDTO.Id, userDTO.Email);
             user.ChangeEmail(userDTO.Email);
             await _repository.UpdateAsync(user);
         }
