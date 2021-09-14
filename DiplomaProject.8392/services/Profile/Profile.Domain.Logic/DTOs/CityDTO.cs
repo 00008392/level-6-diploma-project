@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Post.Domain.Logic.DTOs
+namespace Profile.Domain.Logic.DTOs
 {
-   public class ItemInfoDTO
+    public class CityDTO
     {
         public long Id { get;private set; }
-        public string Name { get;private set; }
+        public string Name { get; private set; }
 
-        public ItemInfoDTO(long id, string name)
+        public CityDTO(long id, string name)
         {
             Id = id;
             Name = name;

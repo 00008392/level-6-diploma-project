@@ -1,5 +1,6 @@
 ﻿using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.DTOs;
+using AutoMapper;
 using Grpc.Core;
 using System;
 using System.Collections.Generic;
@@ -11,30 +12,27 @@ namespace Account.API.Services
     public class LoginServiceGrpc: Login.LoginBase
     {
         private readonly ILoginService _service;
-        public LoginServiceGrpc(ILoginService service)
+        private readonly IMapper _mapper;
+        public LoginServiceGrpc(ILoginService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         public override async Task<LoginReply> GetLoggedUser(LoginRequest request, ServerCallContext context)
         {
-            var loginDTO = new UserLoginDTO(request.Password, request.Email);
+            var loginDTO = _mapper.Map<UserLoginDTO>(request);
             var loggedUser = await _service.LoginUserAsync(loginDTO);
             if (loggedUser != null)
             {
-                var loginReply = new LoginReply
-                {
-                    Id = loggedUser.Id,
-                    Email = loggedUser.Email,
-                    Role = loggedUser.Role
-                };
+                var loginReply = _mapper.Map<LoginReply>(loggedUser);
+                
                 return loginReply;
 
             }
-            return new LoginReply
-            {
-               NoUser = true
-            };
+            //no user
+            return new LoginReply(true);
+           
         }
     }
 }

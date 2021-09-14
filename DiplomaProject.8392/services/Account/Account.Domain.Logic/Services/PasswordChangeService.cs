@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Services
 {
-    public class PasswordChangeService : BaseService, IPasswordChangeService
+    public class PasswordChangeService : BasePasswordService, IPasswordChangeService
     {
         private readonly AbstractValidator<PasswordBaseDTO> _passwordValidator;
         public PasswordChangeService(IRepository<User> repository,
@@ -24,22 +24,16 @@ namespace Account.Domain.Logic.Services
         {
             _passwordValidator = passwordValidator;
         }
-        public async Task ChangePasswordAsync(ChangePasswordDTO password)
+        public async Task ChangePasswordAsync(ChangePasswordDTO passwordDTO)
         {
-            var user = await _repository.GetByIdAsync(password.Id);
-            if (user == null)
-            {
-                throw new AccountNotFoundException(password.Id);
-
-            }
-            var result = await _passwordValidator.ValidateAsync(password);
+            var user = await FindUserAsync(passwordDTO.Id);
+            var result =  _passwordValidator.Validate(passwordDTO);
             if (result.IsValid)
             {
                 var salt = _pwdService.GetSalt();
-                var hashedPassword = _pwdService.HashPassword(Convert.FromBase64String(salt), password.Password);
-                var userToUpdate = new User(user.Id, user.Email, user.RegistrationDate,
-                    user.Role, hashedPassword, salt);
-                await _repository.UpdateAsync(userToUpdate);
+                var hashedPassword = _pwdService.HashPassword(Convert.FromBase64String(salt), passwordDTO.Password);
+                user.ChangePassword(hashedPassword, salt);
+                await _repository.UpdateAsync(user);
             } else
             {
                 throw new ValidationException(result.Errors);

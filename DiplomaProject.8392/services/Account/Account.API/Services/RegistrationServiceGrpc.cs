@@ -2,6 +2,7 @@
 using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.DTOs;
 using Account.Domain.Logic.IntegrationEvents.Events;
+using AutoMapper;
 using EventBus.Contracts;
 using ExceptionHandling;
 using FluentValidation;
@@ -17,23 +18,25 @@ namespace Account.API.Services
     {
         private readonly IRegistrationService _service;
         private readonly IEventBus _eventBus;
-        public RegistrationServiceGrpc(IRegistrationService service, IEventBus eventBus)
+        private readonly IMapper _mapper;
+        public RegistrationServiceGrpc(IRegistrationService service, IEventBus eventBus,
+            IMapper mapper)
         {
             _service = service;
             _eventBus = eventBus;
+            _mapper = mapper;
         }
 
         public override async Task<Response> RegisterUser(RegistrationRequest request, ServerCallContext context)
         {
 
-            var userDTO = new UserRegistrationDTO(request.Email, (Domain.Enums.Role?)request.Role,
-                request.Password);
+            var userDTO = _mapper.Map<UserRegistrationDTO>(request);
             var response = new Response();
             try
             {
                 await _service.RegisterUserAsync(userDTO);
                 response.IsSuccess = true;
-                var integrationEvent = new UserCreatedIntegrationEvent(userDTO.Email, DateTime.Now);
+                var integrationEvent = _mapper.Map<UserCreatedIntegrationEvent>(userDTO);
                 _eventBus.Publish(integrationEvent);
             }
             catch (ValidationException ex)

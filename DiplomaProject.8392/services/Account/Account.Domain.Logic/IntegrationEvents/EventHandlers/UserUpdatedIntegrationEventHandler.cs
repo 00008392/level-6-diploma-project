@@ -2,6 +2,7 @@
 using Account.Domain.Logic.DTOs;
 using Account.Domain.Logic.IntegrationEvents.EventHandlers.Core;
 using Account.Domain.Logic.IntegrationEvents.Events;
+using AutoMapper;
 using EventBus.Contracts;
 using System;
 using System.Collections.Generic;
@@ -15,13 +16,16 @@ namespace Account.Domain.Logic.IntegrationEvents.EventHandlers
    public class UserUpdatedIntegrationEventHandler: BaseIntegrationEventHandler,
         IIntegrationEventHandler<UserUpdatedIntegrationEvent>
     {
-        public UserUpdatedIntegrationEventHandler(IEventHandlerService service)
+        private readonly IMapper _mapper;
+        public UserUpdatedIntegrationEventHandler(IEventHandlerService service, 
+            IMapper mapper)
             :base(service)
         {
+            _mapper = mapper;
         }
         public async Task Handle(UserUpdatedIntegrationEvent @event)
         {
-            var userDTO = new UpdateUserDTO(@event.UserId, @event.Email);
+            var userDTO = _mapper.Map<UpdateUserDTO>(@event);
             await _service.UpdateUserAsync(userDTO);
         }
     }

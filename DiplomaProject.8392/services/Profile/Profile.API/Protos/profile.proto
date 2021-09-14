@@ -57,13 +57,18 @@ message ProfileInfoResponse {
     google.protobuf.Int32Value gender = 8;
     google.protobuf.StringValue address = 9;
     City city = 10;
-    google.protobuf.StringValue userInfo = 11;
-    google.protobuf.BytesValue profilePhoto = 12;
-    google.protobuf.StringValue mimeType = 13;
-    bool NoUser = 14;
+    Country country = 11;
+    google.protobuf.StringValue userInfo = 12;
+    google.protobuf.BytesValue profilePhoto = 13;
+    google.protobuf.StringValue mimeType = 14;
+    bool NoUser = 15;
 }
 
 message City {
     int64 id = 1;
-   string Name = 2;
+   string name = 2;
+}
+message Country {
+    int64 id = 1;
+   string name = 2;
 }

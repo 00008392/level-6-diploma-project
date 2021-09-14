@@ -12,14 +12,16 @@ namespace Profile.Domain.Logic.DTOs
     {
 
         public DateTime RegistrationDate { get; private set; }
-        public City City { get; private set; }
+        public CityDTO City { get; private set; }
+        public CountryDTO Country { get; private set; }
         public byte[] ProfilePhoto { get;private set; }
         public string MimeType { get;private set; }
         public ProfileInfoDTO(long id, string firstName,
     string lastName, string email,
     string phoneNumber, DateTime? dateOfBirth,
     Gender? gender, string address,
-    string userInfo, DateTime registrationDate, City city,
+    string userInfo, DateTime registrationDate, CityDTO city,
+    CountryDTO country,
     byte[] profilePhoto, string mimeType) : base(id, firstName,
         lastName, email, phoneNumber,
         dateOfBirth, gender,
@@ -27,6 +29,7 @@ namespace Profile.Domain.Logic.DTOs
         {
             RegistrationDate = registrationDate;
             City = city;
+            Country = country;
             ProfilePhoto = profilePhoto;
             MimeType = mimeType;
         }

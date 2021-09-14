@@ -50,7 +50,6 @@ BasePostRequest baseRequest = 2;
 
 message AccommodationItem {
 int64 id = 1;
-int64 accommodationId = 2;
 google.protobuf.StringValue otherValue = 3;
 common.Item base = 4;
 }
@@ -101,7 +100,6 @@ string name = 2;
 
 message AccommodationPhoto {
 int64 id = 1;
-int64 accommodationId = 2;
 google.protobuf.BytesValue photo = 3;
 google.protobuf.StringValue mimeType = 4;
 }

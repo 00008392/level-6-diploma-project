@@ -81,5 +81,6 @@ namespace BaseClasses.Repositories.EF
 
             return query;
         }
+    
     }
 }

@@ -1,6 +1,7 @@
 ﻿
 using Account.Domain.Entities;
 using Account.Domain.Logic.Contracts;
+using Account.Domain.Logic.Core;
 using Account.Domain.Logic.DTOs;
 using Account.Domain.Logic.Exceptions;
 using BaseClasses.Contracts;
@@ -13,47 +14,33 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Services
 {
-    public class EventHandlerService : IEventHandlerService
+    public class EventHandlerService :BaseService, IEventHandlerService
     {
-        private readonly IRepository<User> _repository;
         private readonly AbstractValidator<UpdateUserDTO> _validator;
         public EventHandlerService(IRepository<User> repository,
-            AbstractValidator<UpdateUserDTO> validator)
+            AbstractValidator<UpdateUserDTO> validator):base(repository)
         {
-            _repository = repository;
             _validator = validator;
         }
         public async Task DeleteUserAsync(long id)
         {
-            var user = await _repository.GetByIdAsync(id);
-            if (user == null)
-            {
-                throw new AccountNotFoundException(id);
-            }
+            var user = await FindUserAsync(id);
             await _repository.DeleteAsync(user);
         }
 
         public async Task UpdateUserAsync(UpdateUserDTO userDTO)
         {
-            var user = await _repository.GetByIdAsync(userDTO.Id);
-            if (user == null)
-            {
-                throw new AccountNotFoundException(userDTO.Id);
-            }
+            var user =await FindUserAsync(userDTO.Id);
             var result = _validator.Validate(userDTO);
             if(!result.IsValid)
             {
                 throw new ValidationException(result.Errors);
             }
-            var userWithEmail = (await _repository.GetFilteredAsync(u => u.Email == userDTO.Email && u.Id != userDTO.Id)).FirstOrDefault();
-            if (userWithEmail != null)
-            {
-                throw new UniqueConstraintViolationException(nameof(userDTO.Email), userDTO.Email);
-            }
-
-            var userToUpdate = new User(user.Id, userDTO.Email, user.RegistrationDate,
-                user.Role, user.PasswordHash, user.PasswordSalt);
-            await _repository.UpdateAsync(userToUpdate);
+           await CheckUserEmail(u => u.Email == userDTO.Email && u.Id != userDTO.Id, userDTO.Email);
+            user.ChangeEmail(userDTO.Email);
+            await _repository.UpdateAsync(user);
         }
+
+      
     }
 }

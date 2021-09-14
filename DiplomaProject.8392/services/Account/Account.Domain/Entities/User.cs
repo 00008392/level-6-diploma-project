@@ -26,12 +26,12 @@ namespace Account.Domain.Entities
             PasswordHash = passwordHash;
             PasswordSalt = passwordSalt;
         }
-        public User(long id, string email, DateTime registrationDate,
-           Role role, string passwordHash, string passwordSalt):base(id)
+        public void ChangeEmail(string email)
         {
             Email = email;
-            RegistrationDate = registrationDate;
-            Role = role;
+        }
+        public void ChangePassword(string passwordHash, string passwordSalt)
+        {
             PasswordHash = passwordHash;
             PasswordSalt = passwordSalt;
         }

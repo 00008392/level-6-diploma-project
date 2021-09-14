@@ -1,6 +1,7 @@
 ﻿
 using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.DTOs;
+using AutoMapper;
 using ExceptionHandling;
 using FluentValidation;
 using Grpc.Core;
@@ -14,15 +15,17 @@ namespace Account.API.Services
     public class PasswordChangeServiceGrpc : PasswordChange.PasswordChangeBase
     {
         private readonly IPasswordChangeService _service;
-        public PasswordChangeServiceGrpc(IPasswordChangeService service)
+        private readonly IMapper _mapper;
+        public PasswordChangeServiceGrpc(IPasswordChangeService service, IMapper mapper)
        
         {
             _service = service;
+            _mapper = mapper;
         }
 
         public override async Task<Response> ChangePassword(ChangePasswordRequest request, ServerCallContext context)
         {
-            var passwordDTO = new ChangePasswordDTO(request.Id, request.Password);
+            var passwordDTO = _mapper.Map<ChangePasswordDTO>(request);
             var response = new Response();
             try
             {

@@ -12,14 +12,18 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using BaseClasses.Contracts;
+using AutoMapper;
 
 namespace Account.Domain.Logic.Services
 {
-    public class LoginService : BaseService, ILoginService
+    public class LoginService : BasePasswordService, ILoginService
     {
-        public LoginService(IRepository<User> repository, IPasswordHandlingService pwdService
-                           ) : base(repository, pwdService)
+        private readonly IMapper _mapper;
+        public LoginService(IRepository<User> repository,
+            IPasswordHandlingService pwdService,
+            IMapper mapper) : base(repository, pwdService)
         {
+            _mapper = mapper;
         }
         public async Task<LoggedUserDTO> LoginUserAsync(UserLoginDTO login)
         {
@@ -30,8 +34,7 @@ namespace Account.Domain.Logic.Services
             {
                 if (_pwdService.VerifyPassword(login.Password, user.PasswordHash, user.PasswordSalt))
                 {
-                    return new LoggedUserDTO(user.Id, user.Email, (int)user.Role);
-                   
+                    return _mapper.Map<LoggedUserDTO>(user);
                 }
                 
                 return null;

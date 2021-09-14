@@ -41,6 +41,11 @@ namespace Profile.API.Services
                     Id = user.City.Id,
                     Name = user.City.Name
                 },
+                Country = user.Country == null? null: new Country
+                {
+                    Id = user.Country.Id,
+                    Name = user.Country.Name
+                },
                 UserInfo = user.UserInfo,
                 ProfilePhoto = user.ProfilePhoto==null? null: Google.Protobuf.ByteString.CopyFrom(user.ProfilePhoto),
                 MimeType = user.MimeType

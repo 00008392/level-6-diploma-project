@@ -22,7 +22,7 @@ namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 
         public async Task Handle(UserUpdatedIntegrationEvent @event)
         {
-            var userBase = new UserDTO(@event.FirstName, @event.LastName, @event.Email,
+            var userBase = new UserDTO(@event.UserId,@event.FirstName, @event.LastName, @event.Email,
                 @event.PhoneNumber, @event.Address, @event.DateOfBirth);
             var userDTO = new UpdateUserDTO(@event.UserId, userBase);
             await _service.UpdateEntityAsync(userDTO);

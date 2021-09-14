@@ -20,5 +20,4 @@ message Request {
 message Item {
 int64 id = 1;
 string name = 2;
-google.protobuf.BoolValue isOther = 3;
 }

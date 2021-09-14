@@ -84,10 +84,15 @@ namespace Post.Domain.Logic.Services
                     accommodation.ContactNumber, accommodation.RoomsNo, accommodation.BathroomsNo,
                     accommodation.BedsNo, accommodation.MaxGuestsNo, accommodation.SquareMeters,
                     accommodation.Price, accommodation.Latitude, accommodation.Longitude,
-                    accommodation.IsWholeApartment, accommodation.AdditionalInfo, accommodation.Owner,
-                    accommodation.DatePublished, accommodation.Category, accommodation.MovingInTime,
-                    accommodation.MovingOutTime, accommodation.AccommodationPhotos, accommodation.AccommodationSpecificities,
-                    accommodation.AccommodationRules, accommodation.AccommodationFacilities);
+                    accommodation.IsWholeApartment, accommodation.AdditionalInfo, new OwnerDTO(
+                        accommodation.Owner.Id, accommodation.Owner.FirstName, accommodation.Owner.LastName,
+                        accommodation.Owner.Email, accommodation.Owner.PhoneNumber),
+                    accommodation.DatePublished, new CategoryDTO(accommodation.Category.Id, accommodation.Category.Name),
+                    accommodation.MovingInTime,
+                    accommodation.MovingOutTime, accommodation.AccommodationPhotos.Select(i=>new AccommodationPhotoDTO(i.Id, i.Photo, i.MimeType)).ToList(), 
+                    accommodation.AccommodationSpecificities.Select(i=>new AccommodationItemInfoDTO(i.Id, i.OtherItem, new ItemInfoDTO(i.Item.Id, i.Item.Name))).ToList(),
+                    accommodation.AccommodationRules.Select(i => new AccommodationItemInfoDTO(i.Id, i.OtherItem, new ItemInfoDTO(i.Item.Id, i.Item.Name))).ToList(), 
+                    accommodation.AccommodationFacilities.Select(i => new AccommodationItemInfoDTO(i.Id, i.OtherItem, new ItemInfoDTO(i.Item.Id, i.Item.Name))).ToList());
                 
                 return accommodationDTO;
             }

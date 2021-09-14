@@ -26,6 +26,7 @@ using Account.Domain.Logic.IntegrationEvents.Events;
 using Account.Domain.Logic.IntegrationEvents.EventHandlers;
 using EventBus.SubscriptionManager;
 using RabbitMQ.Client;
+using Account.API.Mappings;
 
 namespace Account.API
 {
@@ -43,6 +44,7 @@ namespace Account.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
+            services.AddAutoMapper(typeof(Startup));
             services.AddFluentValidation();
             services.AddDbContext<AccountDbContext>(options =>
 options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));

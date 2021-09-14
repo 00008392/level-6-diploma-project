@@ -34,7 +34,8 @@ namespace Booking.Domain.Logic.Services
         {
             var requestsList = (await _repository.GetFilteredAsync(filter)).ToList();
             var requestsDTOList = new List<BookingRequestInfoDTO>();
-            requestsList.ForEach(item => requestsDTOList.Add(new BookingRequestInfoDTO(includeUser? new UserDTO(item.Guest.FirstName,
+            requestsList.ForEach(item => requestsDTOList.Add(new BookingRequestInfoDTO(includeUser? new UserDTO(item.Guest.Id, 
+                item.Guest.FirstName,
                 item.Guest.LastName, item.Guest.Email, item.Guest.PhoneNumber,
                 item.Guest.Address, item.Guest.DateOfBirth): null,
                 includeAccommodaiton?

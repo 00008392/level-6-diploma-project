@@ -19,8 +19,7 @@ namespace Post.API.Services.Strategies
         {
             return (await _service.GetItemsAsync()).Select(x=>new Item { 
             Id = x.Id,
-            Name = x.Name,
-            IsOther = x.IsOther
+            Name = x.Name
             }).ToList();
         }
     }

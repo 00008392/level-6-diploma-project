@@ -173,7 +173,6 @@ namespace Post.API.Services
                 response.AccommodationPhotos.AddRange(post.AccommodationPhotos.Select(x => new AccommodationPhoto
                 {
                     Id = x.Id,
-                    AccommodationId = x.AccommodationId,
                     Photo = x.Photo == null ? null : Google.Protobuf.ByteString.CopyFrom(x.Photo),
                     MimeType = x.MimeType
                 }));
@@ -192,12 +191,11 @@ namespace Post.API.Services
             }
             return response;
         }
-        private IEnumerable<AccommodationItem> GetItemsList<T>(ICollection<T> items) where T : ItemAccommodationBase
+        private IEnumerable<AccommodationItem> GetItemsList<T>(ICollection<T> items) where T : AccommodationItemInfoDTO
         {
             return items.Select(x => new AccommodationItem
             {
                 Id = x.Id,
-                AccommodationId = x.AccommodationId,
                 OtherValue = x.OtherItem,
                 Base = new Item
                 {

@@ -11,15 +11,15 @@ namespace Post.Domain.Logic.DTOs
    public class AccommodationInfoDTO: BaseAccommodationDTO
     {
         public long Id { get; private set; }
-        public Owner Owner { get; private set; }
+        public OwnerDTO Owner { get; private set; }
         public DateTime DatePublished { get; private set; }
-        public Category Category { get; private set; }
+        public CategoryDTO Category { get; private set; }
         public string MovingInTime { get; private set; }
         public string MovingOutTime { get; private set; }
-        public ICollection<AccommodationPhoto> AccommodationPhotos { get; private set; }
-        public ICollection<AccommodationSpecificity> AccommodationSpecificities { get; private set; }
-        public ICollection<AccommodationRule> AccommodationRules { get; private set; }
-        public ICollection<AccommodationFacility> AccommodationFacilities { get; private set; }
+        public ICollection<AccommodationPhotoDTO> AccommodationPhotos { get; private set; }
+        public ICollection<AccommodationItemInfoDTO> AccommodationSpecificities { get; private set; }
+        public ICollection<AccommodationItemInfoDTO> AccommodationRules { get; private set; }
+        public ICollection<AccommodationItemInfoDTO> AccommodationFacilities { get; private set; }
         public AccommodationInfoDTO(long id, string title, string description,
     long ownerId, long? categoryId,
     string address, string referencePoint,
@@ -28,12 +28,12 @@ namespace Post.Domain.Logic.DTOs
     int maxGuestsNo, int? squareMeters,
     decimal price, decimal? latitude,
     decimal? longitude, bool? isWholeApartment,
-    string additionalInfo, Owner owner, DateTime datePublished,
-    Category category, string movingInTime,
-    string movingOutTime, ICollection<AccommodationPhoto> accommodationPhotos,
-    ICollection<AccommodationSpecificity> accommodationSpecificities,
-    ICollection<AccommodationRule> accommodationRules,
-    ICollection<AccommodationFacility> accommodationFacilities) : base(title, description,
+    string additionalInfo, OwnerDTO owner, DateTime datePublished,
+    CategoryDTO category, string movingInTime,
+    string movingOutTime, ICollection<AccommodationPhotoDTO> accommodationPhotos,
+    ICollection<AccommodationItemInfoDTO> accommodationSpecificities,
+    ICollection<AccommodationItemInfoDTO> accommodationRules,
+    ICollection<AccommodationItemInfoDTO> accommodationFacilities) : base(title, description,
         ownerId, categoryId, address, referencePoint,
         contactNumber, roomsNo, bathroomsNo, bedsNo,
         maxGuestsNo, squareMeters, price, latitude,
