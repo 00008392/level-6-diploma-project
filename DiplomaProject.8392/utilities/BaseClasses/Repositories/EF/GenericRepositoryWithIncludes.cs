@@ -10,15 +10,15 @@ using System.Threading.Tasks;
 
 namespace BaseClasses.Repositories.EF
 {
-    public class GenericRepository<T> : IRepository<T> where T : BaseEntity
-
+    public abstract class GenericRepositoryWithIncludes<T> : IRepositoryWithIncludes<T> where T : BaseEntity
+                                                         
     {
         private readonly DbContext _context;
-        public GenericRepository(DbContext context)
+        public GenericRepositoryWithIncludes(DbContext context)
         {
             _context = context;
         }
-        private DbSet<T> _dbSet => _context.Set<T>();
+        protected DbSet<T> _dbSet => _context.Set<T>();
 
         public async Task AddRangeAsync(ICollection<T> items)
         {
@@ -38,19 +38,22 @@ namespace BaseClasses.Repositories.EF
         }
 
 
-        public async Task<ICollection<T>> GetAllAsync()
+        public async Task<ICollection<T>> GetAllAsync(bool relatedEntitiesIncluded = false)
         {
-            return await _dbSet.ToListAsync();
+            return await (relatedEntitiesIncluded? GetDbSetWithRelatedTables():
+                _dbSet).ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(long id)
+        public async Task<T> GetByIdAsync(long id, bool relatedEntitiesIncluded = false)
         {
-            return await _dbSet.AsNoTracking().SingleOrDefaultAsync(t => t.Id == id);
+            return await (relatedEntitiesIncluded? GetDbSetWithRelatedTables():
+                _dbSet).AsNoTracking().SingleOrDefaultAsync(t => t.Id == id);
         }
 
-        public async Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> filter)
+        public async Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> filter, bool relatedEntitiesIncluded = false)
         {
-            var list = await _dbSet.Where(filter).ToListAsync();
+            var list = await (relatedEntitiesIncluded? GetDbSetWithRelatedTables():
+                _dbSet).Where(filter).ToListAsync();
             return list;
         }
 
@@ -69,5 +72,9 @@ namespace BaseClasses.Repositories.EF
             await _context.SaveChangesAsync();
         }
 
+
+        public abstract IQueryable<T> GetDbSetWithRelatedTables();
+
+    
     }
 }

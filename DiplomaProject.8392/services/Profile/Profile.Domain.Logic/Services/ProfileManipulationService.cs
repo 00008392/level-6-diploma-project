@@ -17,7 +17,7 @@ namespace Profile.Domain.Logic.Services
     {
         private readonly IRepository<City> _cityRepository;
         private readonly AbstractValidator<UpdateProfileDTO> _profileValidator;
-        public ProfileManipulationService(IRepository<User> userRepository, IRepository<City> cityRepository,
+        public ProfileManipulationService(IRepositoryWithIncludes<User> userRepository, IRepository<City> cityRepository,
             AbstractValidator<UpdateProfileDTO> profileValidator):base(userRepository)
         {
             _profileValidator = profileValidator;

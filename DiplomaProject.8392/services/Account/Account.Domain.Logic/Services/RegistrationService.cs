@@ -1,6 +1,6 @@
 ﻿
 using Account.Domain.Entities;
-using Account.Domain.Logic.Core;
+using Account.Domain.Logic.Services.Core;
 using Account.Domain.Logic.DTOs;
 using Account.Domain.Logic.Contracts;
 using Account.PasswordHandling;

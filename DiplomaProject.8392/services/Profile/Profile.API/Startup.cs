@@ -24,6 +24,8 @@ using Profile.Domain.Logic.IntegrationEvents.Events;
 using Profile.Domain.Logic.IntegrationEvents.EventHandlers;
 using EventBus.SubscriptionManager;
 using RabbitMQ.Client;
+using Profile.Domain.Entities;
+using Profile.DAL.EF.Repositories;
 
 namespace Profile.API
 {
@@ -44,6 +46,7 @@ namespace Profile.API
             services.AddDbContext<ProfileDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("ProfileDbContext")));
             services.AddScoped<DbContext, ProfileDbContext>();
+            services.AddScoped(typeof(IRepositoryWithIncludes<User>), typeof(ProfileRepository));
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
             services.AddScoped<AbstractValidator<UpdateProfileDTO>, ProfileValidator>();
             services.AddScoped<AbstractValidator<CreateProfileDTO>, CreateProfileValidator>();

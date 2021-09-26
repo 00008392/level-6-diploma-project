@@ -18,7 +18,7 @@ namespace Profile.Domain.Logic.Services
     {
         private readonly AbstractValidator<CreateProfileDTO> _validator;
         private readonly IMapper _mapper;
-        public EventHandlerService(IRepository<User> repository,
+        public EventHandlerService(IRepositoryWithIncludes<User> repository,
             AbstractValidator<CreateProfileDTO> validator,
             IMapper mapper):base(repository)
         {

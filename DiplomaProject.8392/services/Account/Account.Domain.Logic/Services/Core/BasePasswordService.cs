@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Account.Domain.Logic.Core
+namespace Account.Domain.Logic.Services.Core
 {
     public abstract class BasePasswordService: BaseService
     {

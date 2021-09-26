@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Booking.API.Services;
+using Booking.DAL.EF.Repositories;
 
 namespace Booking.API
 {
@@ -46,6 +47,7 @@ namespace Booking.API
             services.AddDbContext<BookingDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("BookingDbContext")));
             services.AddScoped<DbContext, BookingDbContext>();
+            services.AddScoped(typeof(IRepositoryWithIncludes<Domain.Entities.BookingRequest>), typeof(BookingRepository));
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
             services.AddScoped<AbstractValidator<AccommodationDTO>, AccommodationValidator>();
             services.AddScoped<AbstractValidator<CreateBookingRequestDTO>, BookingRequestValidator>();

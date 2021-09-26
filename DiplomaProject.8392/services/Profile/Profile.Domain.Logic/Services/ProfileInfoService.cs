@@ -16,17 +16,16 @@ namespace Profile.Domain.Logic.Services
     public class ProfileInfoService : BaseService, IProfileInfoService
     {
         private readonly IMapper _mapper;
-        public ProfileInfoService(IRepository<User> repository,
+        public ProfileInfoService(IRepositoryWithIncludes<User> repository,
            IMapper mapper):base(repository)
         {
             _mapper = mapper;
         }
         public async Task<ProfileInfoDTO> GetProfileInfoAsync(long id)
         {
-            var user = await _repository.GetByIdAsync(id, u=>u.City);
+            var user = await _repository.GetByIdAsync(id, true);
             if(user!=null)
             {
-
                 return _mapper.Map<ProfileInfoDTO>(user);
             }
 

@@ -17,12 +17,12 @@ namespace Post.Domain.Logic.Services
 {
     public class PostCRUDService : IPostCRUDService
     {
-        private readonly IPostRepository _repository;
+        private readonly IRepositoryWithIncludes<Accommodation> _repository;
         private readonly IRepository<Owner> _ownerRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly AbstractValidator<AccommodationManipulationDTO> _validator;
         private readonly IMapper _mapper;
-        public PostCRUDService(IPostRepository repository, 
+        public PostCRUDService(IRepositoryWithIncludes<Accommodation> repository, 
             IRepository<Owner> ownerRepository,
             IRepository<Category> categoryRepository,
             AbstractValidator<AccommodationManipulationDTO> validator, 
@@ -72,7 +72,7 @@ namespace Post.Domain.Logic.Services
         public async Task<AccommodationInfoDTO> GetPostByIdAsync(long id)
         {
             
-            var accommodation = await _repository.GetByIdAsync(id);
+            var accommodation = await _repository.GetByIdAsync(id, true);
             if(accommodation!=null)
             {
                 var accommodationDTO = _mapper.Map<AccommodationInfoDTO>(accommodation);

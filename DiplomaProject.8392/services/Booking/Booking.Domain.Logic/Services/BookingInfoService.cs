@@ -14,10 +14,10 @@ namespace Booking.Domain.Logic.Services
 {
     public class BookingInfoService : IBookingInfoService
     {
-        private readonly IRepository<BookingRequest> _repository;
+        private readonly IRepositoryWithIncludes<BookingRequest> _repository;
         private readonly IMapper _mapper;
 
-        public BookingInfoService(IRepository<BookingRequest> repository,
+        public BookingInfoService(IRepositoryWithIncludes<BookingRequest> repository,
             IMapper mapper)
         {
             _repository = repository;
@@ -36,7 +36,7 @@ namespace Booking.Domain.Logic.Services
         private async Task<ICollection<BookingRequestInfoDTO>> GetRequestsAsync(
             Expression<Func<BookingRequest, bool>> filter, bool includeUser, bool includeAccommodaiton)
         {
-            var requestsList = (await _repository.GetFilteredAsync(filter)).ToList();
+            var requestsList = (await _repository.GetFilteredAsync(filter, true)).ToList();
             var requestsDTOList = new List<BookingRequestInfoDTO>();
             requestsList.ForEach(item =>
             {

@@ -49,10 +49,10 @@ namespace Post.API
 options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             services.AddScoped<DbContext, PostDbContext>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IRepositoryWithIncludes<Accommodation>, PostRepository>();
             services.AddScoped<AbstractValidator<AccommodationManipulationDTO>, PostValidator>();
             services.AddScoped<AbstractValidator<CreateUserDTO>, BaseUserValidator>();
             services.AddScoped<AbstractValidator<UpdateUserDTO>, UpdateUserValidator>();
-            services.AddScoped<IPostRepository,PostRepository>();
             services.AddScoped<IPostCRUDService, PostCRUDService>();
             services.AddScoped<IEventHandlerService, EventHandlerService>();
             services.AddScoped(typeof(IPostRelatedInfoService<,>), typeof(PostRelatedInfoService<,>));

@@ -12,9 +12,9 @@ namespace Profile.Domain.Logic.Services.Core
 {
     public abstract class BaseService
     {
-        protected readonly IRepository<User> _repository;
+        protected readonly IRepositoryWithIncludes<User> _repository;
 
-        protected BaseService(IRepository<User> repository)
+        protected BaseService(IRepositoryWithIncludes<User> repository)
         {
             _repository = repository;
         }
