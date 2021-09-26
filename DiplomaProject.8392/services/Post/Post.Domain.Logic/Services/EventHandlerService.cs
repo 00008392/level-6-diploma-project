@@ -1,4 +1,5 @@
-﻿using BaseClasses.Contracts;
+﻿using AutoMapper;
+using BaseClasses.Contracts;
 using FluentValidation;
 using Post.Domain.Core;
 using Post.Domain.Entities;
@@ -18,13 +19,16 @@ namespace Post.Domain.Logic.Services
         private readonly IRepository<Owner> _repository;
         private readonly AbstractValidator<CreateUserDTO> _baseValidator;
         private readonly AbstractValidator<UpdateUserDTO> _updateValidator;
+        private readonly IMapper _mapper;
         public EventHandlerService(IRepository<Owner> repository,
             AbstractValidator<CreateUserDTO> baseValidator,
-            AbstractValidator<UpdateUserDTO> updateValidator)
+            AbstractValidator<UpdateUserDTO> updateValidator,
+            IMapper mapper)
         {
             _repository = repository;
             _baseValidator = baseValidator;
             _updateValidator = updateValidator;
+            _mapper = mapper;
         }
         public async Task CreateUserAsync(CreateUserDTO userDTO)
         {
@@ -38,7 +42,7 @@ namespace Post.Domain.Logic.Services
             {
                 throw new UniqueConstraintViolationException(nameof(userDTO.Email), userDTO.Email);
             }
-            var user = new Owner(userDTO.Email);
+            var user = _mapper.Map<Owner>(userDTO);
             await _repository.CreateAsync(user);
         }
 
@@ -70,8 +74,7 @@ namespace Post.Domain.Logic.Services
                 throw new UniqueConstraintViolationException(nameof(userDTO.Email), userDTO.Email);
             }
 
-            var userToUpdate = new Owner(user.Id, userDTO.FirstName, userDTO.LastName,
-                userDTO.Email, userDTO.PhoneNumber);
+            var userToUpdate = _mapper.Map<Owner>(userDTO);
             await _repository.UpdateAsync(userToUpdate);
         }
     }

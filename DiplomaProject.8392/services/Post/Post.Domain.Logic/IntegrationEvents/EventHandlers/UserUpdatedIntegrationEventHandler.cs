@@ -8,21 +8,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EventBus.Contracts;
+using AutoMapper;
 
 namespace Post.Domain.Logic.IntegrationEvents.EventHandlers
 {
     //tested
     public class UserUpdatedIntegrationEventHandler: BaseIntegrationEventHandler, IIntegrationEventHandler<UserUpdatedIntegrationEvent>
     {
-        public UserUpdatedIntegrationEventHandler(IEventHandlerService service)
+        private readonly IMapper _mapper;
+        public UserUpdatedIntegrationEventHandler(IEventHandlerService service,
+            IMapper mapper)
             :base(service)
         {
-
+            _mapper = mapper;
         }
         public async Task Handle(UserUpdatedIntegrationEvent @event)
         {
-            var userDTO = new UpdateUserDTO(@event.UserId, @event.Email,
-                @event.FirstName, @event.LastName, @event.PhoneNumber);
+            var userDTO = _mapper.Map<UpdateUserDTO>(@event);
             await _service.UpdateUserAsync(userDTO);
         }
 

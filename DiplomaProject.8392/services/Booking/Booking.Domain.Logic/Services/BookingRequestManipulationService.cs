@@ -1,4 +1,5 @@
-﻿using BaseClasses.Contracts;
+﻿using AutoMapper;
+using BaseClasses.Contracts;
 using Booking.Domain.Entities;
 using Booking.Domain.Enums;
 using Booking.Domain.Logic.Contracts;
@@ -19,15 +20,18 @@ namespace Booking.Domain.Logic.Services
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<Accommodation> _accommodationRepository;
         private readonly AbstractValidator<CreateBookingRequestDTO> _validator;
+        private readonly IMapper _mapper;
 
         public BookingRequestManipulationService(IRepository<BookingRequest> repository,
             IRepository<User> userRepository, IRepository<Accommodation> accommodationRepository,
-            AbstractValidator<CreateBookingRequestDTO> validator)
+            AbstractValidator<CreateBookingRequestDTO> validator,
+            IMapper mapper)
         {
             _repository = repository;
             _userRepository = userRepository;
             _accommodationRepository = accommodationRepository;
             _validator = validator;
+            _mapper = mapper;
         }
 
         public async Task AcceptBookingRequestAsync(long id)
@@ -61,8 +65,7 @@ namespace Booking.Domain.Logic.Services
             {
                 throw new ForeignKeyViolationException("Accommodation");
             }
-            var request = new BookingRequest(requestDTO.GuestId, requestDTO.AccommodationId,
-                (DateTime)requestDTO.StartDate, (DateTime)requestDTO.EndDate);
+            var request = _mapper.Map<BookingRequest>(requestDTO);
             await _repository.CreateAsync(request);
         }
         public async Task DeleteBookingRequestAsync(long id)

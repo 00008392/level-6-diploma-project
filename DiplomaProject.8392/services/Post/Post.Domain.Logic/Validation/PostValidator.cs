@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Logic.Validation
 {
-   public class PostValidator: AbstractValidator<AccommodaitonManipulationDTO>
+   public class PostValidator: AbstractValidator<AccommodationManipulationDTO>
     {
         public PostValidator()
         {

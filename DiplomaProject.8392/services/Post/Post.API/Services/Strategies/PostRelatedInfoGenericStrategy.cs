@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using EventBus.Contracts;
 using ExceptionHandling;
 using Post.Domain.Core;
@@ -18,21 +19,17 @@ namespace Post.API.Services.Strategies
     {
         private readonly IPostRelatedInfoService<T, E> _service;
         private readonly IEventBus _eventBus;
+        private readonly IMapper _mapper;
         public PostRelatedInfoGenericStrategy(IPostRelatedInfoService<T, E> service,
-                     IEventBus eventBus)
+                     IEventBus eventBus, IMapper mapper)
         {
             _service = service;
             _eventBus = eventBus;
+            _mapper = mapper;
         }
         public async Task<Response> AddItemsAsync(AddItemsRequest request, AccommodationItemAddedIntegrationEvent @event)
         {
-            var items = new List<AccommodationItemDTO>();
-            foreach (var item in request.Items)
-            {
-                var accommodationItemDTO = new AccommodationItemDTO(item.AccommodationId,
-                    item.ItemId, item.OtherValue);
-                items.Add(accommodationItemDTO);
-            }
+            var items = _mapper.Map<ICollection<ItemRequest>, ICollection<AccommodationItemDTO>>(request.Items);
             var response = new Response();
             try
             {

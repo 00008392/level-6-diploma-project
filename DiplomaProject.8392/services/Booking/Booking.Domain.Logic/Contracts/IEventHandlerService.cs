@@ -11,8 +11,8 @@ namespace Booking.Domain.Logic.Contracts
     public interface IEventHandlerService<T>
         where T: BaseEntity
     {
-        Task CreateEntityAsync(CreateEntityDTO entityDTO);
-        Task UpdateEntityAsync(UpdateEntityDTO entityDTO);
+        Task CreateEntityAsync(ICreateEntityDTO entityDTO);
+        Task UpdateEntityAsync(IEntityDTO entityDTO);
         Task DeleteEntityAsync(long id);
     }
 }

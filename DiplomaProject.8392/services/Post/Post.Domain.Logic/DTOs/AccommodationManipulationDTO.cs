@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Logic.DTOs
 {
-   public abstract class AccommodaitonManipulationDTO: BaseAccommodationDTO
+   public abstract class AccommodationManipulationDTO: BaseAccommodationDTO
     {
         public DateTime? MovingInTime { get; protected set; }
         public DateTime? MovingOutTime { get; protected set; }
-        protected AccommodaitonManipulationDTO(string title, string description,
+        protected AccommodationManipulationDTO(string title, string description,
     long ownerId, long? categoryId,
     string address, string referencePoint,
     string contactNumber, int? roomsNo,

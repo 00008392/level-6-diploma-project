@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Logic.DTOs
 {
-    public class CreatePostDTO : AccommodaitonManipulationDTO
+    public class CreatePostDTO : AccommodationManipulationDTO
     {
         public CreatePostDTO(string title, string description,
             long ownerId, long? categoryId,

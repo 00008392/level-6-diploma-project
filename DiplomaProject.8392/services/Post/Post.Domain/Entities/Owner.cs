@@ -15,14 +15,6 @@ namespace Post.Domain.Entities
         public string PhoneNumber { get; private set; }
         public ICollection<Accommodation> Accommodations { get; }
 
-        public Owner(string firstName, string lastName, 
-            string email, string phoneNumber)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            Email = email;
-            PhoneNumber = phoneNumber;
-        }
         public Owner(long id, string firstName, string lastName,
             string email, string phoneNumber):base(id)
         {
@@ -36,5 +28,6 @@ namespace Post.Domain.Entities
         {
             Email = email;
         }
+
     }
 }

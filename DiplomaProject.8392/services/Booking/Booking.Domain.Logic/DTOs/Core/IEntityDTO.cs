@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.DTOs.Core
 {
-    public abstract class UpdateEntityDTO
+    public interface IEntityDTO
     {
-         public long Id { get; protected set; }
+         long Id { get; }
 
-        protected UpdateEntityDTO(long id)
-        {
-            Id = id;
-        }
     }
 }

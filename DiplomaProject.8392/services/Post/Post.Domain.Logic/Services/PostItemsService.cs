@@ -1,4 +1,5 @@
-﻿using BaseClasses.Contracts;
+﻿using AutoMapper;
+using BaseClasses.Contracts;
 using Post.Domain.Core;
 using Post.Domain.Logic.Contracts;
 using Post.Domain.Logic.DTOs;
@@ -14,21 +15,17 @@ namespace Post.Domain.Logic.Services
         where T : ItemBase
     {
         private readonly IRepository<T> _repository;
-        public PostItemsService(IRepository<T> repository)
+        private readonly IMapper _mapper;
+        public PostItemsService(IRepository<T> repository,
+            IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
         public async Task<ICollection<ItemInfoDTO>> GetItemsAsync()
         {
            var items = await _repository.GetAllAsync();
-            var itemDTOs = new List<ItemInfoDTO>();
-            foreach(var item in items)
-            {
-
-                var itemDTO = new ItemInfoDTO(item.Id, item.Name);
-               
-                itemDTOs.Add(itemDTO);
-            }
+            var itemDTOs = _mapper.Map<ICollection<T>, ICollection<ItemInfoDTO>>(items);
             return itemDTOs;
         }
     }

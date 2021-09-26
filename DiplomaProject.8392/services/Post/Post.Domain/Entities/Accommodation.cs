@@ -70,8 +70,9 @@ namespace Post.Domain.Entities
             MovingOutTime = movingOutTime;
             AdditionalInfo = additionalInfo;
         }
-        public Accommodation(long id, string title, string description,
-            long ownerId, DateTime datePublished,
+       
+        public void UpdateInfo(string title, string description,
+            long ownerId, 
             long? categoryId, string address,
             string referencePoint, string contactNumber,
             int? roomsNo, int? bathroomsNo,
@@ -79,12 +80,11 @@ namespace Post.Domain.Entities
             int? squareMeters, decimal price,
             decimal? latitude, decimal? longitude,
             bool? isWholeApartment, string movingInTime,
-            string movingOutTime, string additionalInfo):base(id)
+            string movingOutTime, string additionalInfo)
         {
             Title = title;
             Description = description;
             OwnerId = ownerId;
-            DatePublished = datePublished;
             CategoryId = categoryId;
             Address = address;
             ReferencePoint = referencePoint;

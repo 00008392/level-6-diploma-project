@@ -1,4 +1,5 @@
-﻿using EventBus.Contracts;
+﻿using AutoMapper;
+using EventBus.Contracts;
 using ExceptionHandling;
 using FluentValidation;
 using Google.Protobuf.WellKnownTypes;
@@ -18,10 +19,13 @@ namespace Post.API.Services
     {
         private readonly IPostCRUDService _service;
         private readonly IEventBus _eventBus;
-        public PostCRUDServiceGrpc(IPostCRUDService service, IEventBus eventBus)
+        private readonly IMapper _mapper;
+        public PostCRUDServiceGrpc(IPostCRUDService service, IEventBus eventBus,
+            IMapper mapper)
         {
             _service = service;
             _eventBus = eventBus;
+            _mapper = mapper;
         }
         public override async Task<Response> CreatePost(CreatePostRequest request, ServerCallContext context)
         {
@@ -34,27 +38,14 @@ namespace Post.API.Services
                     Message = "Empty request"
                 };
             }
-            var createPostDTO = new CreatePostDTO(baseRequest.Title, baseRequest.Description,
-                baseRequest.OwnerId ?? 0, baseRequest.CategoryId, baseRequest.Address,
-                baseRequest.ReferencePoint, baseRequest.ContactNumber, baseRequest.RoomsNo,
-                baseRequest.BathroomsNo, baseRequest.BedsNo, baseRequest.MaxGuestsNo??0,
-                baseRequest.SquareMeters, (decimal)(baseRequest.Price??0), (decimal?)baseRequest.Latitude,
-                (decimal?)baseRequest.Longitude, baseRequest.IsWholeApartment, 
-                baseRequest.AdditionalInfo, baseRequest.MovingInTime?.ToDateTime(),
-                baseRequest.MovingOutTime?.ToDateTime());
+            var createPostDTO = _mapper.Map<CreatePostDTO>(baseRequest);
 
             var response = new Response();
             try
             {
                 await _service.CreatePostAsync(createPostDTO);
                 response.IsSuccess = true;
-                var integrationEvent = new AccommodationCreatedIntegrationEvent(createPostDTO.Title,
-                    createPostDTO.Description, createPostDTO.OwnerId, createPostDTO.CategoryId,
-                    createPostDTO.Address, createPostDTO.ReferencePoint, createPostDTO.ContactNumber,
-                    createPostDTO.RoomsNo, createPostDTO.BathroomsNo, createPostDTO.BedsNo, createPostDTO.MaxGuestsNo,
-                    createPostDTO.SquareMeters, createPostDTO.Price, createPostDTO.Latitude, createPostDTO.Longitude,
-                    createPostDTO.IsWholeApartment, createPostDTO.MovingInTime.ToString(), 
-                    createPostDTO.MovingOutTime.ToString(), createPostDTO.AdditionalInfo, DateTime.Now);
+                var integrationEvent = _mapper.Map<AccommodationCreatedIntegrationEvent>(createPostDTO);
                 _eventBus.Publish(integrationEvent);
             }
             catch (ValidationException ex)
@@ -70,29 +61,21 @@ namespace Post.API.Services
         public override async Task<Response> UpdatePost(UpdatePostRequest request, ServerCallContext context)
         {
             var baseRequest = request.BaseRequest;
-            var updatePostDTO = new UpdatePostDTO(request.Id, baseRequest.Title, baseRequest.Description,
-                baseRequest.OwnerId ?? 0, baseRequest.CategoryId, baseRequest.Address,
-                baseRequest.ReferencePoint, baseRequest.ContactNumber, baseRequest.RoomsNo,
-                baseRequest.BathroomsNo, baseRequest.BedsNo, baseRequest.MaxGuestsNo ?? 0,
-                baseRequest.SquareMeters, (decimal)(baseRequest.Price ?? 0), (decimal?)baseRequest.Latitude,
-                (decimal?)baseRequest.Longitude, baseRequest.IsWholeApartment,
-                baseRequest.AdditionalInfo, baseRequest.MovingInTime?.ToDateTime(),
-                baseRequest.MovingOutTime?.ToDateTime());
+            if (baseRequest == null)
+            {
+                return new Response
+                {
+                    Message = "Empty request"
+                };
+            }
+            var updatePostDTO = _mapper.Map<UpdatePostDTO>(request);
             
             var response = new Response();
             try
             {
                 await _service.UpdatePostAsync(updatePostDTO);
                 response.IsSuccess = true;
-                var integrationEvent = new AccommodationUpdatedIntegrationEvent(
-                    updatePostDTO.Title,
-                    updatePostDTO.Description, updatePostDTO.OwnerId, updatePostDTO.CategoryId,
-                    updatePostDTO.Address, updatePostDTO.ReferencePoint, updatePostDTO.ContactNumber,
-                    updatePostDTO.RoomsNo, updatePostDTO.BathroomsNo, updatePostDTO.BedsNo, updatePostDTO.MaxGuestsNo,
-                    updatePostDTO.SquareMeters, updatePostDTO.Price, updatePostDTO.Latitude, updatePostDTO.Longitude,
-                    updatePostDTO.IsWholeApartment, updatePostDTO.MovingInTime.ToString(),
-                    updatePostDTO.MovingOutTime.ToString(), updatePostDTO.AdditionalInfo, updatePostDTO.Id
-                    );
+                var integrationEvent = _mapper.Map<AccommodationUpdatedIntegrationEvent>(updatePostDTO);
                 _eventBus.Publish(integrationEvent);
             }
             catch (ValidationException ex)
@@ -131,51 +114,11 @@ namespace Post.API.Services
                     NoItem = true
                 };
             }
-            var owner = post.Owner;
-            var category = post.Category;
-            var response = new PostInfoResponse
-            {
-                Id = post.Id,
-                Title = post.Title,
-                Description = post.Description,
-                Owner = new Owner
-                {
-                    Id = owner.Id,
-                    FirstName = owner.FirstName,
-                    LastName = owner.LastName,
-                    Email = owner.Email,
-                    PhoneNumber = owner.PhoneNumber
-                },
-                Category = category == null ? null : new Category
-                {
-                    Id = category.Id,
-                    Name = category.Name
-                },
-                Address = post.Address,
-                ReferencePoint = post.ReferencePoint,
-                ContactNumber = post.ContactNumber,
-                RoomsNo = post.RoomsNo,
-                BathroomsNo = post.BathroomsNo,
-                BedsNo = post.BedsNo,
-                MaxGuestsNo = post.MaxGuestsNo,
-                SquareMeters = post.SquareMeters,
-                Price = (double)post.Price,
-                Latitude = (double?)post.Latitude,
-                Longitude = (double?)post.Longitude,
-                IsWholeApartment = post.IsWholeApartment,
-                AdditionalInfo = post.AdditionalInfo,
-                MovingInTime = post.MovingInTime,
-                MovingOutTime = post.MovingOutTime,
-                DatePublished = Timestamp.FromDateTime(DateTime.SpecifyKind(post.DatePublished, DateTimeKind.Utc))
-            };
+            var response = _mapper.Map<PostInfoResponse>(post);
             if (post.AccommodationPhotos.Count != 0)
             {
-                response.AccommodationPhotos.AddRange(post.AccommodationPhotos.Select(x => new AccommodationPhoto
-                {
-                    Id = x.Id,
-                    Photo = x.Photo == null ? null : Google.Protobuf.ByteString.CopyFrom(x.Photo),
-                    MimeType = x.MimeType
-                }));
+                response.AccommodationPhotos.AddRange(
+                    _mapper.Map<ICollection<AccommodationPhotoDTO>, ICollection<AccommodationPhoto>>(post.AccommodationPhotos));
             }
             if (post.AccommodationRules.Count != 0)
             {
@@ -191,18 +134,9 @@ namespace Post.API.Services
             }
             return response;
         }
-        private IEnumerable<AccommodationItem> GetItemsList<T>(ICollection<T> items) where T : AccommodationItemInfoDTO
+        private IEnumerable<AccommodationItem> GetItemsList(ICollection<AccommodationItemInfoDTO> items) 
         {
-            return items.Select(x => new AccommodationItem
-            {
-                Id = x.Id,
-                OtherValue = x.OtherItem,
-                Base = new Item
-                {
-                    Id = x.Item.Id,
-                    Name = x.Item.Name
-                }
-            });
+            return _mapper.Map<ICollection<AccommodationItemInfoDTO>, ICollection<AccommodationItem>>(items);
 
         }
 

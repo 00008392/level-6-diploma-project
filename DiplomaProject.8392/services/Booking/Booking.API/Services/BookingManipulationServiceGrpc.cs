@@ -1,4 +1,5 @@
-﻿using Booking.Domain.Logic.Contracts;
+﻿using AutoMapper;
+using Booking.Domain.Logic.Contracts;
 using Booking.Domain.Logic.DTOs;
 using ExceptionHandling;
 using FluentValidation;
@@ -13,18 +14,19 @@ namespace Booking.API.Services
     public class BookingManipulationServiceGrpc: BookingRequestManipulation.BookingRequestManipulationBase
     {
         private readonly IBookingRequestManipulationService _service;
+        private readonly IMapper _mapper;
 
-        public BookingManipulationServiceGrpc(IBookingRequestManipulationService service)
+        public BookingManipulationServiceGrpc(IBookingRequestManipulationService service,
+            IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         public override async Task<Response> CreateBookingRequest(CreateRequest request, 
             ServerCallContext context)
         {
-            var createRequestDTO = new CreateBookingRequestDTO(request.GuestId ?? 0,
-                    request.AccommodationId ?? 0, request.StartDate?.ToDateTime(),
-                    request.EndDate?.ToDateTime());
+            var createRequestDTO = _mapper.Map<CreateBookingRequestDTO>(request);
            
             return await HandleRequestAsync(_service.CreateBookingRequestAsync, createRequestDTO);
         }

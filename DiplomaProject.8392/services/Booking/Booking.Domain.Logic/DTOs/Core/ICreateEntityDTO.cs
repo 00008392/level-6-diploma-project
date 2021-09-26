@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.DTOs.Core
 {
-    public abstract class CreateEntityDTO
+    public interface ICreateEntityDTO
     {
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Logic.DTOs
 {
-    public class UpdatePostDTO: AccommodaitonManipulationDTO
+    public class UpdatePostDTO: AccommodationManipulationDTO
     {
 
         public long Id { get; private set; }

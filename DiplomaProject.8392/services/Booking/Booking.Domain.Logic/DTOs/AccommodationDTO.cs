@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Booking.Domain.Logic.DTOs.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.DTOs
 {
-    public class BaseAccommodationDTO
+    public class AccommodationDTO: IEntityDTO, ICreateEntityDTO
     {
         public long Id { get; private set; }
         public string Title { get; private set; }
@@ -22,13 +23,35 @@ namespace Booking.Domain.Logic.DTOs
         public bool? IsWholeApartment { get; private set; }
         public string MovingInTime { get; private set; }
         public string MovingOutTime { get; private set; }
-        public BaseAccommodationDTO(string title, long ownerId, 
+        public AccommodationDTO(string title, long ownerId, 
             string address, string contactNumber,
             int? roomsNo, int? bathroomsNo,
             int? bedsNo, int maxGuestsNo,
             int? squareMeters, decimal price,
             bool? isWholeApartment, string movingInTime, string movingOutTime)
         {
+            Title = title;
+            OwnerId = ownerId;
+            Address = address;
+            ContactNumber = contactNumber;
+            RoomsNo = roomsNo;
+            BathroomsNo = bathroomsNo;
+            BedsNo = bedsNo;
+            MaxGuestsNo = maxGuestsNo;
+            SquareMeters = squareMeters;
+            Price = price;
+            IsWholeApartment = isWholeApartment;
+            MovingInTime = movingInTime;
+            MovingOutTime = movingOutTime;
+        }
+        public AccommodationDTO(long id, string title, long ownerId,
+           string address, string contactNumber,
+           int? roomsNo, int? bathroomsNo,
+           int? bedsNo, int maxGuestsNo,
+           int? squareMeters, decimal price,
+           bool? isWholeApartment, string movingInTime, string movingOutTime)
+        {
+            Id = id;
             Title = title;
             OwnerId = ownerId;
             Address = address;

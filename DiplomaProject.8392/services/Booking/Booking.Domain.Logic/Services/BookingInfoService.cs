@@ -1,4 +1,5 @@
-﻿using BaseClasses.Contracts;
+﻿using AutoMapper;
+using BaseClasses.Contracts;
 using Booking.Domain.Entities;
 using Booking.Domain.Logic.Contracts;
 using Booking.Domain.Logic.DTOs;
@@ -14,10 +15,13 @@ namespace Booking.Domain.Logic.Services
     public class BookingInfoService : IBookingInfoService
     {
         private readonly IRepository<BookingRequest> _repository;
+        private readonly IMapper _mapper;
 
-        public BookingInfoService(IRepository<BookingRequest> repository)
+        public BookingInfoService(IRepository<BookingRequest> repository,
+            IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<ICollection<BookingRequestInfoDTO>> GetBookingRequestsForAccommodationAsync(long id)
@@ -34,21 +38,19 @@ namespace Booking.Domain.Logic.Services
         {
             var requestsList = (await _repository.GetFilteredAsync(filter)).ToList();
             var requestsDTOList = new List<BookingRequestInfoDTO>();
-            requestsList.ForEach(item => requestsDTOList.Add(new BookingRequestInfoDTO(includeUser? new UserDTO(item.Guest.Id, 
-                item.Guest.FirstName,
-                item.Guest.LastName, item.Guest.Email, item.Guest.PhoneNumber,
-                item.Guest.Address, item.Guest.DateOfBirth): null,
-                includeAccommodaiton?
-                new BaseAccommodationDTO(item.Accommodation.Title, item.Accommodation.OwnerId,
-                item.Accommodation.Address, item.Accommodation.ContactNumber,
-                item.Accommodation.RoomsNo, item.Accommodation.BathroomsNo,
-                item.Accommodation.BedsNo, item.Accommodation.MaxGuestsNo,
-                item.Accommodation.SquareMeters, item.Accommodation.Price,
-                item.Accommodation.IsWholeApartment,
-                item.Accommodation.MovingInTime,
-                item.Accommodation.MovingOutTime): null,
-                item.StartDate, item.EndDate, item.Status
-                )));
+            requestsList.ForEach(item =>
+            {
+                var itemDTO = _mapper.Map<BookingRequestInfoDTO>(item);
+                if (includeUser)
+                {
+                    itemDTO.LoadUser(_mapper.Map<UserDTO>(item.Guest));
+                }
+                if (includeAccommodaiton)
+                {
+                    itemDTO.LoadAccommodation(_mapper.Map<AccommodationDTO>(item.Accommodation));
+                }
+                requestsDTOList.Add(itemDTO);
+            });
             return requestsDTOList;
         }
     }

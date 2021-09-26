@@ -1,4 +1,5 @@
-﻿using BaseClasses.Contracts;
+﻿using AutoMapper;
+using BaseClasses.Contracts;
 using Booking.Domain.Entities;
 using Booking.Domain.Logic.Contracts;
 using Booking.Domain.Logic.DTOs;
@@ -18,17 +19,19 @@ namespace Booking.Domain.Logic.Services
         private readonly AbstractValidator<CreateUserDTO> _createUserValidator;
         private readonly AbstractValidator<UserDTO> _updateUserValidator;
         private readonly IRepository<User> _repository;
+        private readonly IMapper _mapper;
 
         public UserEventHandlerService(AbstractValidator<CreateUserDTO> createUserValidator,
             AbstractValidator<UserDTO> updateUserValidator,
-            IRepository<User> repository)
+            IRepository<User> repository, IMapper mapper)
         {
             _createUserValidator = createUserValidator;
             _updateUserValidator = updateUserValidator;
             _repository = repository;
+            _mapper = mapper;
         }
 
-        public async Task CreateEntityAsync(CreateEntityDTO entityDTO)
+        public async Task CreateEntityAsync(ICreateEntityDTO entityDTO)
         {
             var userDTO = (CreateUserDTO)entityDTO;
             var result = _createUserValidator.Validate(userDTO);
@@ -55,28 +58,26 @@ namespace Booking.Domain.Logic.Services
             await _repository.DeleteAsync(user);
         }
 
-        public async Task UpdateEntityAsync(UpdateEntityDTO entityDTO)
+        public async Task UpdateEntityAsync(IEntityDTO entityDTO)
         {
             var user = await _repository.GetByIdAsync(entityDTO.Id);
             if (user == null)
             {
                 throw new NotFoundException(entityDTO.Id, user.GetType().Name);
             }
-            var updateUserDTO = (UpdateUserDTO)entityDTO;
-            var userBaseDTO = updateUserDTO.UserDTO;
-            var result = _updateUserValidator.Validate(userBaseDTO);
+            var updateUserDTO = (UserDTO)entityDTO;
+            var result = _updateUserValidator.Validate(updateUserDTO);
             if (!result.IsValid)
             {
                 throw new ValidationException(result.Errors);
             }
-            var userWithEmail = (await _repository.GetFilteredAsync(u => u.Email == userBaseDTO.Email && u.Id != updateUserDTO.Id)).FirstOrDefault();
+            var userWithEmail = (await _repository.GetFilteredAsync(u => u.Email == updateUserDTO.Email && u.Id != updateUserDTO.Id)).FirstOrDefault();
             if (userWithEmail != null)
             {
-                throw new UniqueConstraintViolationException(nameof(userBaseDTO.Email), userBaseDTO.Email);
+                throw new UniqueConstraintViolationException(nameof(updateUserDTO.Email), updateUserDTO.Email);
             }
 
-            var userToUpdate = new User(user.Id, userBaseDTO.FirstName, userBaseDTO.LastName,
-                userBaseDTO.Email, userBaseDTO.PhoneNumber, userBaseDTO.Address, userBaseDTO.DateOfBirth);
+            var userToUpdate = _mapper.Map<User>(entityDTO);
             await _repository.UpdateAsync(userToUpdate);
         }
     }

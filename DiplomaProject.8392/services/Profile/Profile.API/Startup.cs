@@ -40,6 +40,7 @@ namespace Profile.API
         {
             services.AddGrpc();
             services.AddFluentValidation();
+            services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<ProfileDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("ProfileDbContext")));
             services.AddScoped<DbContext, ProfileDbContext>();

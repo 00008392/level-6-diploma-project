@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Booking.Domain.Logic.DTOs.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.DTOs
 {
-    public class UserDTO: CreateUserDTO
+    public class UserDTO: CreateUserDTO, IEntityDTO
     {
         public long Id { get; private set; }
         public string FirstName { get; private set; }
@@ -15,9 +16,9 @@ namespace Booking.Domain.Logic.DTOs
         public string Address { get; private set; }
         public DateTime? DateOfBirth { get; private set; }
 
-        public UserDTO(long id, string firstName, string lastName, 
-            string email, string phoneNumber, string address,
-            DateTime? dateOfBirth): base(email)
+        public UserDTO(long id, string firstName, string lastName,
+           string email, string phoneNumber, string address,
+           DateTime? dateOfBirth):base(email)
         {
             Id = id;
             FirstName = firstName;
@@ -26,5 +27,6 @@ namespace Booking.Domain.Logic.DTOs
             Address = address;
             DateOfBirth = dateOfBirth;
         }
+
     }
 }

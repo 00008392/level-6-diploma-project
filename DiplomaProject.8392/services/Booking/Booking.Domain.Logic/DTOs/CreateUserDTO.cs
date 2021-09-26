@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.DTOs
 {
-    public class CreateUserDTO: CreateEntityDTO
+    public class CreateUserDTO: ICreateEntityDTO
     {
         public string Email { get; protected set; }
 

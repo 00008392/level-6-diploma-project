@@ -1,4 +1,5 @@
-﻿using BaseClasses.Contracts;
+﻿using AutoMapper;
+using BaseClasses.Contracts;
 using FluentValidation;
 using Post.Domain.Core;
 using Post.Domain.Entities;
@@ -19,16 +20,19 @@ namespace Post.Domain.Logic.Services
         private readonly IPostRepository _repository;
         private readonly IRepository<Owner> _ownerRepository;
         private readonly IRepository<Category> _categoryRepository;
-        private readonly AbstractValidator<AccommodaitonManipulationDTO> _validator;
+        private readonly AbstractValidator<AccommodationManipulationDTO> _validator;
+        private readonly IMapper _mapper;
         public PostCRUDService(IPostRepository repository, 
             IRepository<Owner> ownerRepository,
             IRepository<Category> categoryRepository,
-            AbstractValidator<AccommodaitonManipulationDTO> validator)
+            AbstractValidator<AccommodationManipulationDTO> validator, 
+            IMapper mapper)
         {
             _repository = repository;
             _ownerRepository = ownerRepository;
             _categoryRepository = categoryRepository;
             _validator = validator;
+            _mapper = mapper;
         }
         public async Task CreatePostAsync(CreatePostDTO item)
         {
@@ -50,14 +54,7 @@ namespace Post.Domain.Logic.Services
             {
                 throw new ForeignKeyViolationException("Owner");
             }
-            var accommodation = new Accommodation(item.Title, item.Description, item.OwnerId,
-                DateTime.Now, item.CategoryId, item.Address, item.ReferencePoint, item.ContactNumber,
-                item.RoomsNo, item.BathroomsNo, item.BedsNo, item.MaxGuestsNo, item.SquareMeters,
-                item.Price, item.Latitude, item.Longitude, item.IsWholeApartment,
-                item.MovingInTime == null ? null : ((DateTime)item.MovingInTime).ToString("HH:mm"),
-                item.MovingOutTime == null ? null : ((DateTime)item.MovingOutTime).ToString("HH:mm"),
-                item.AdditionalInfo
-                );
+            var accommodation = _mapper.Map<Accommodation>(item);
 
             await _repository.CreateAsync(accommodation);
         }
@@ -78,21 +75,7 @@ namespace Post.Domain.Logic.Services
             var accommodation = await _repository.GetByIdAsync(id);
             if(accommodation!=null)
             {
-                var accommodationDTO = new AccommodationInfoDTO(accommodation.Id,
-                    accommodation.Title, accommodation.Description, accommodation.OwnerId,
-                    accommodation.CategoryId, accommodation.Address, accommodation.ReferencePoint,
-                    accommodation.ContactNumber, accommodation.RoomsNo, accommodation.BathroomsNo,
-                    accommodation.BedsNo, accommodation.MaxGuestsNo, accommodation.SquareMeters,
-                    accommodation.Price, accommodation.Latitude, accommodation.Longitude,
-                    accommodation.IsWholeApartment, accommodation.AdditionalInfo, new OwnerDTO(
-                        accommodation.Owner.Id, accommodation.Owner.FirstName, accommodation.Owner.LastName,
-                        accommodation.Owner.Email, accommodation.Owner.PhoneNumber),
-                    accommodation.DatePublished, new CategoryDTO(accommodation.Category.Id, accommodation.Category.Name),
-                    accommodation.MovingInTime,
-                    accommodation.MovingOutTime, accommodation.AccommodationPhotos.Select(i=>new AccommodationPhotoDTO(i.Id, i.Photo, i.MimeType)).ToList(), 
-                    accommodation.AccommodationSpecificities.Select(i=>new AccommodationItemInfoDTO(i.Id, i.OtherItem, new ItemInfoDTO(i.Item.Id, i.Item.Name))).ToList(),
-                    accommodation.AccommodationRules.Select(i => new AccommodationItemInfoDTO(i.Id, i.OtherItem, new ItemInfoDTO(i.Item.Id, i.Item.Name))).ToList(), 
-                    accommodation.AccommodationFacilities.Select(i => new AccommodationItemInfoDTO(i.Id, i.OtherItem, new ItemInfoDTO(i.Item.Id, i.Item.Name))).ToList());
+                var accommodationDTO = _mapper.Map<AccommodationInfoDTO>(accommodation);
                 
                 return accommodationDTO;
             }
@@ -125,14 +108,14 @@ namespace Post.Domain.Logic.Services
             }
 
 
-            var accommodationToUpdate = new Accommodation(accommodation.Id,
-                item.Title, item.Description, item.OwnerId, accommodation.DatePublished, item.CategoryId,
+                accommodation.UpdateInfo(
+                item.Title, item.Description, item.OwnerId, item.CategoryId,
                 item.Address, item.ReferencePoint, item.ContactNumber, item.RoomsNo, item.BathroomsNo,
                 item.BedsNo, item.MaxGuestsNo, item.SquareMeters, item.Price, item.Latitude, item.Longitude,
                 item.IsWholeApartment, item.MovingInTime == null ? null : ((DateTime)item.MovingInTime).ToString("HH:mm"),
                 item.MovingOutTime == null ? null : ((DateTime)item.MovingOutTime).ToString("HH:mm"),
                 item.AdditionalInfo);
-            await _repository.UpdateAsync(accommodationToUpdate);
+            await _repository.UpdateAsync(accommodation);
         }
     }
 }

@@ -44,11 +44,12 @@ namespace Post.API
         {
             services.AddGrpc();
             services.AddFluentValidation();
+            services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<PostDbContext>(options =>
 options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             services.AddScoped<DbContext, PostDbContext>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
-            services.AddScoped<AbstractValidator<AccommodaitonManipulationDTO>, PostValidator>();
+            services.AddScoped<AbstractValidator<AccommodationManipulationDTO>, PostValidator>();
             services.AddScoped<AbstractValidator<CreateUserDTO>, BaseUserValidator>();
             services.AddScoped<AbstractValidator<UpdateUserDTO>, UpdateUserValidator>();
             services.AddScoped<IPostRepository,PostRepository>();

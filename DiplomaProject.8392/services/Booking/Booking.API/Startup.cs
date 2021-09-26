@@ -42,11 +42,12 @@ namespace Booking.API
         {
             services.AddGrpc();
             services.AddFluentValidation();
+            services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<BookingDbContext>(options =>
         options.UseSqlServer(Configuration.GetConnectionString("BookingDbContext")));
             services.AddScoped<DbContext, BookingDbContext>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
-            services.AddScoped<AbstractValidator<BaseAccommodationDTO>, BaseAccommodationValidator>();
+            services.AddScoped<AbstractValidator<AccommodationDTO>, AccommodationValidator>();
             services.AddScoped<AbstractValidator<CreateBookingRequestDTO>, BookingRequestValidator>();
             services.AddScoped<AbstractValidator<CreateUserDTO>, CreateUserValidator>();
             services.AddScoped<AbstractValidator<UserDTO>, UpdateUserValidator>();

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.Validation
 {
-   public class BaseAccommodationValidator: AbstractValidator<BaseAccommodationDTO>
+   public class AccommodationValidator: AbstractValidator<AccommodationDTO>
     {
-        public BaseAccommodationValidator()
+        public AccommodationValidator()
         {
             RuleFor(p => p.Title)
                 .NotEmpty().WithMessage("Title cannot be empty");
