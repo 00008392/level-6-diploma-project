@@ -10,10 +10,10 @@ package post;
 
 service PostCRUD {
 
-  rpc CreatePost (CreatePostRequest) returns (common.Response); 
-  rpc UpdatePost (UpdatePostRequest) returns (common.Response); 
-  rpc DeletePost (common.Request) returns (common.Response); 
-  rpc GetPostById (common.Request) returns (PostInfoResponse); 
+  rpc CreatePost (CreatePostRequest) returns (common.Response); //tested
+  rpc UpdatePost (UpdatePostRequest) returns (common.Response); //tested
+  rpc DeletePost (common.Request) returns (common.Response); //tested
+  rpc GetPostById (common.Request) returns (PostInfoResponse); //tested
 
 }
 

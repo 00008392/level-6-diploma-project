@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Contracts
 {
-    public interface IRegistrationService
+    public interface IUserInfoService
     {
-        Task RegisterUserAsync(UserRegistrationDTO user);
+        Task<UserInfoDTO> GetProfileInfoAsync(long id);
     }
 }

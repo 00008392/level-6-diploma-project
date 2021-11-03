@@ -24,7 +24,10 @@ namespace Profile.API.Services
             var user = await _service.GetProfileInfoAsync(request.Id);
             if(user==null)
             {
-                return new ProfileInfoResponse(noUser: true);
+                return new ProfileInfoResponse
+                {
+                    NoUser = true
+                };
             }
             var response = _mapper.Map<ProfileInfoResponse>(user);
 

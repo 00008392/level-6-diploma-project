@@ -1,6 +1,7 @@
 ﻿
 using Account.Domain.Entities;
 using Account.Domain.Logic.DTOs;
+using Account.Domain.Logic.DTOs.Core;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Validation
 {
-    public class PasswordBaseValidator: AbstractValidator<PasswordBaseDTO>
+    public class PasswordValidator: AbstractValidator<IPasswordBaseDTO>
     {
-        public PasswordBaseValidator()
+        public PasswordValidator()
         {
             RuleFor(u => u.Password)
                 .NotEmpty().WithMessage("Password is empty.")

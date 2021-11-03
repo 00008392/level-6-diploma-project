@@ -10,8 +10,8 @@ namespace Post.Domain.Entities
     public class AccommodationFacility : ItemAccommodationBase
     {
 
-        public AccommodationFacility(long itemId, string otherItem)
-            : base(itemId, otherItem)
+        public AccommodationFacility(long accommodationId,long itemId, string otherItem)
+            : base(accommodationId, itemId, otherItem)
         {
         }
 

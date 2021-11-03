@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.DTOs
 {
-    public class UpdateUserDTO
+    public class CountryDTO
     {
-        public long Id { get;private set; }
-        public string Email { get;private set; }
+        public long Id { get; private set; }
+        public string Name { get; private set; }
 
-        public UpdateUserDTO(long id, string email)
+        public CountryDTO(long id, string name)
         {
             Id = id;
-            Email = email;
+            Name = name;
         }
     }
 }

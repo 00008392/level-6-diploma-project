@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Contracts
 {
-    public interface IPasswordChangeService
+    public interface IUserManipulationService
     {
+        Task RegisterUserAsync(UserRegistrationDTO user);
+        Task UpdateUserAsync(UserUpdateDTO user);
+        Task DeleteUserAsync(long id);
         Task ChangePasswordAsync(ChangePasswordDTO password);
     }
 }

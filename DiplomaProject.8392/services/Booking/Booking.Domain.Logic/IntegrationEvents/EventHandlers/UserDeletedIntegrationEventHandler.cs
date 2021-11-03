@@ -11,7 +11,8 @@ using EventBus.Contracts;
 
 namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 {
-   public class UserDeletedIntegrationEventHandler : BaseIntegrationEventHandler<User>,
+    //tested
+    public class UserDeletedIntegrationEventHandler : BaseIntegrationEventHandler<User>,
         IIntegrationEventHandler<UserDeletedIntegrationEvent>
     {
         public UserDeletedIntegrationEventHandler(IEventHandlerService<User> service)

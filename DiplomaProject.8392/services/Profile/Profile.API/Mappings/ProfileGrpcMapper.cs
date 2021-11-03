@@ -13,17 +13,22 @@ namespace Profile.API.Mappings
         public ProfileGrpcMapper()
         {
             CreateMap<UpdateRequest, UpdateProfileDTO>()
-                .ForMember(x => x.DateOfBirth, opt => opt.MapFrom((src, dest) => src.DateOfBirth?.ToDateTime()))
-                .ForMember(x => x.Gender, opt => opt.MapFrom(src => (Gender?)src.Gender));
+                .ConvertUsing((x, context) => new UpdateProfileDTO(x.Id, x.FirstName, x.LastName,
+                x.Email, x.PhoneNumber, x.DateOfBirth?.ToDateTime(), (Gender?)x.Gender,
+                x.Address, x.UserInfo, x.CityId));
+                     
+       
             CreateMap<CityDTO, City>();
             CreateMap<CountryDTO, Country>();
             CreateMap<ProfileInfoDTO, ProfileInfoResponse>()
-                .ForMember(x => x.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth == null ? null :
-                    Timestamp.FromDateTime(DateTime.SpecifyKind((DateTime)src.DateOfBirth, DateTimeKind.Utc))))
+                .ForMember(x => x.DateOfBirth, opt => opt.MapFrom(src => FromDateTimeToTimeStamp(src.DateOfBirth)))
                 .ForMember(x => x.RegistrationDate, opt => opt.MapFrom(src =>
-                    Timestamp.FromDateTime(DateTime.SpecifyKind(src.RegistrationDate, DateTimeKind.Utc))))
-                .ForMember(x => x.ProfilePhoto, opt => opt.MapFrom(src => src.ProfilePhoto == null ? null :
-                    Google.Protobuf.ByteString.CopyFrom(src.ProfilePhoto)))
+                    FromDateTimeToTimeStamp(src.RegistrationDate)))
+                .ForMember(x => x.ProfilePhoto, opt => {
+                    opt.PreCondition(src => src.ProfilePhoto != null);
+                    opt.MapFrom(src => 
+                    Google.Protobuf.ByteString.CopyFrom(src.ProfilePhoto));
+                } )
                 .ForMember(x => x.City, opt => opt.MapFrom((userDTO, user, city, context) =>
                 {
                     return userDTO.City == null ? null : context.Mapper.Map<City>(userDTO.City);
@@ -33,6 +38,10 @@ namespace Profile.API.Mappings
                     return userDTO.Country == null ? null : context.Mapper.Map<Country>(userDTO.Country);
                 }));
 
+        }
+        private Timestamp FromDateTimeToTimeStamp(DateTime? time)
+        {
+            return time == null? null: Timestamp.FromDateTime(DateTime.SpecifyKind((DateTime)time, DateTimeKind.Utc));
         }
     }
 }

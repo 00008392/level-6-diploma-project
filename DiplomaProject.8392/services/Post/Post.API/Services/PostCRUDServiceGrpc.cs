@@ -115,20 +115,20 @@ namespace Post.API.Services
                 };
             }
             var response = _mapper.Map<PostInfoResponse>(post);
-            if (post.AccommodationPhotos.Count != 0)
+            if (post.AccommodationPhotos != null)
             {
                 response.AccommodationPhotos.AddRange(
                     _mapper.Map<ICollection<AccommodationPhotoDTO>, ICollection<AccommodationPhoto>>(post.AccommodationPhotos));
             }
-            if (post.AccommodationRules.Count != 0)
+            if (post.AccommodationRules!=null)
             {
                 response.AccommodationRules.AddRange(GetItemsList(post.AccommodationRules));
             }
-            if (post.AccommodationFacilities.Count != 0)
+            if (post.AccommodationFacilities!=null)
             {
                 response.AccommodationFacilities.AddRange(GetItemsList(post.AccommodationFacilities));
             }
-            if (post.AccommodationSpecificities.Count != 0)
+            if (post.AccommodationSpecificities!=null)
             {
                 response.AccommodationSpecificities.AddRange(GetItemsList(post.AccommodationSpecificities));
             }

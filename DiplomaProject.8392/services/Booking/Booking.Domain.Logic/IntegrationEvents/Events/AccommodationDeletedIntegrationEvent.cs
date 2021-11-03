@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.IntegrationEvents.Events
 {
+    //tested
     public class AccommodationDeletedIntegrationEvent : IntegrationEvent
     {
         public long AccommodationId { get; private set; }

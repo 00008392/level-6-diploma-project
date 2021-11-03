@@ -23,10 +23,13 @@ using BaseClasses.Contracts;
 using BaseClasses.Repositories.EF;
 using EventBus.Contracts;
 using Account.Domain.Logic.IntegrationEvents.Events;
-using Account.Domain.Logic.IntegrationEvents.EventHandlers;
 using EventBus.SubscriptionManager;
 using RabbitMQ.Client;
 using Account.API.Mappings;
+using Account.Domain.Logic.DTOs.Core;
+using Account.Domain.Logic.Validation.Core;
+using Account.DAL.EF.Repository;
+using Account.Domain.Entities;
 
 namespace Account.API
 {
@@ -50,13 +53,13 @@ namespace Account.API
 options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
             services.AddScoped<DbContext, AccountDbContext>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
-            services.AddScoped<AbstractValidator<PasswordBaseDTO>, PasswordBaseValidator>();
+            services.AddScoped(typeof(IRepositoryWithIncludes<User>), typeof(AccountRepository));
+            services.AddScoped<AbstractValidator<IPasswordBaseDTO>, PasswordValidator>();
             services.AddScoped<AbstractValidator<UserRegistrationDTO>, UserRegistrationValidator>();
-            services.AddScoped<AbstractValidator<UpdateUserDTO>, UpdateUserValidator>();
+            services.AddScoped<AbstractValidator<UserBaseDTO>, UserBaseValidator>();
             services.AddScoped<ILoginService, LoginService>();
-            services.AddScoped<IRegistrationService, RegistrationService>();
-            services.AddScoped<IPasswordChangeService, PasswordChangeService>();
-            services.AddScoped<IEventHandlerService, EventHandlerService>();
+            services.AddScoped<IUserManipulationService, UserManipulationService>();
+            services.AddScoped<IUserInfoService, UserInfoService>();
             services.AddScoped<IPasswordHandlingService, PasswordHandlingService>();
             services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();
             services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>(sp => {
@@ -73,8 +76,6 @@ options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
                     serviceFactory, connection);
             }
             );
-            services.AddTransient<UserUpdatedIntegrationEventHandler>();
-            services.AddTransient<UserDeletedIntegrationEventHandler>();
 
         }
 
@@ -91,8 +92,9 @@ options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
             app.UseEndpoints((Action<Microsoft.AspNetCore.Routing.IEndpointRouteBuilder>)(endpoints =>
             {
                 GrpcEndpointRouteBuilderExtensions.MapGrpcService<LoginServiceGrpc>(endpoints);
-                GrpcEndpointRouteBuilderExtensions.MapGrpcService<RegistrationServiceGrpc>(endpoints);
-                GrpcEndpointRouteBuilderExtensions.MapGrpcService<PasswordChangeServiceGrpc>(endpoints);
+                GrpcEndpointRouteBuilderExtensions.MapGrpcService<UserInfoServiceGrpc>(endpoints);
+                GrpcEndpointRouteBuilderExtensions.MapGrpcService<UserManipulationServiceGrpc>(endpoints);
+                
 
                 endpoints.MapGet("/", async context =>
                 {
@@ -101,8 +103,7 @@ options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
             }));
 
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.Subscribe<UserUpdatedIntegrationEvent, UserUpdatedIntegrationEventHandler>();
-            eventBus.Subscribe<UserDeletedIntegrationEvent, UserDeletedIntegrationEventHandler>();
+          
             
         }
     }

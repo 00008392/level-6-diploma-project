@@ -7,6 +7,7 @@ using EventBus.Events;
 
 namespace Post.Domain.Logic.IntegrationEvents.Events
 {
+    //tested
     public class AccommodationDeletedIntegrationEvent: IntegrationEvent
     {
         public long AccommodationId { get; }

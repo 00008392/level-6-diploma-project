@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Exceptions
 {
-    public class AccountNotFoundException: Exception
+    public class UserNotFoundException : Exception
     {
-        public AccountNotFoundException(long id):base($"Account with id = {id} does not exist")
+        public UserNotFoundException(long id) : base($"User with id = {id} does not exist")
         {
 
         }

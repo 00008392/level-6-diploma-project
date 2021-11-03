@@ -19,15 +19,17 @@ namespace Booking.Domain.Logic.Services
         private readonly AbstractValidator<CreateUserDTO> _createUserValidator;
         private readonly AbstractValidator<UserDTO> _updateUserValidator;
         private readonly IRepository<User> _repository;
+        private readonly IRepository<BookingRequest> _bookingRepository;
         private readonly IMapper _mapper;
 
         public UserEventHandlerService(AbstractValidator<CreateUserDTO> createUserValidator,
             AbstractValidator<UserDTO> updateUserValidator,
-            IRepository<User> repository, IMapper mapper)
+            IRepository<User> repository,IRepository<BookingRequest> bookingRepository, IMapper mapper)
         {
             _createUserValidator = createUserValidator;
             _updateUserValidator = updateUserValidator;
             _repository = repository;
+            _bookingRepository = bookingRepository;
             _mapper = mapper;
         }
 
@@ -55,7 +57,9 @@ namespace Booking.Domain.Logic.Services
             {
                 throw new NotFoundException(id, user.GetType().Name);
             }
+            var bookingsByUser = await _bookingRepository.GetFilteredAsync(x => x.GuestId == id);
             await _repository.DeleteAsync(user);
+            await _bookingRepository.RemoveRangeAsync(bookingsByUser);
         }
 
         public async Task UpdateEntityAsync(IEntityDTO entityDTO)
@@ -77,7 +81,7 @@ namespace Booking.Domain.Logic.Services
                 throw new UniqueConstraintViolationException(nameof(updateUserDTO.Email), updateUserDTO.Email);
             }
 
-            var userToUpdate = _mapper.Map<User>(entityDTO);
+            var userToUpdate = _mapper.Map<User>(updateUserDTO);
             await _repository.UpdateAsync(userToUpdate);
         }
     }

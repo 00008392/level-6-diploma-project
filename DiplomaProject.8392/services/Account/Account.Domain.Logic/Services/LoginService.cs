@@ -18,12 +18,10 @@ namespace Account.Domain.Logic.Services
 {
     public class LoginService : BasePasswordService, ILoginService
     {
-        private readonly IMapper _mapper;
-        public LoginService(IRepository<User> repository,
+        public LoginService(IRepositoryWithIncludes<User> repository,
             IPasswordHandlingService pwdService,
-            IMapper mapper) : base(repository, pwdService)
+            IMapper mapper) : base(repository, pwdService, mapper)
         {
-            _mapper = mapper;
         }
         public async Task<LoggedUserDTO> LoginUserAsync(UserLoginDTO login)
         {

@@ -11,10 +11,11 @@ using EventBus.Contracts;
 
 namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 {
-    public class AccommodationDeletedIntegrationEventhandler : BaseIntegrationEventHandler<Accommodation>,
+    //tested
+    public class AccommodationDeletedIntegrationEventHandler : BaseIntegrationEventHandler<Accommodation>,
         IIntegrationEventHandler<AccommodationDeletedIntegrationEvent>
     {
-        public AccommodationDeletedIntegrationEventhandler(IEventHandlerService<Accommodation> service)
+        public AccommodationDeletedIntegrationEventHandler(IEventHandlerService<Accommodation> service)
             : base(service)
         {
         }

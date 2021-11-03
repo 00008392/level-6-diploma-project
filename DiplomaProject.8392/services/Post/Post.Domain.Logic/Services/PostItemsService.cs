@@ -25,6 +25,10 @@ namespace Post.Domain.Logic.Services
         public async Task<ICollection<ItemInfoDTO>> GetItemsAsync()
         {
            var items = await _repository.GetAllAsync();
+            if(items == null)
+            {
+                return null;
+            }
             var itemDTOs = _mapper.Map<ICollection<T>, ICollection<ItemInfoDTO>>(items);
             return itemDTOs;
         }

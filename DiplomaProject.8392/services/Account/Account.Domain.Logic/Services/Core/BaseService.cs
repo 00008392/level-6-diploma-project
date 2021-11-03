@@ -2,6 +2,7 @@
 using Account.Domain.Entities;
 using Account.Domain.Logic.Exceptions;
 using Account.PasswordHandling;
+using AutoMapper;
 using BaseClasses.Contracts;
 using System;
 using System.Collections.Generic;
@@ -12,19 +13,22 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Services.Core
 {
+    //need this base for all services
     public abstract class BaseService
     {
-        protected readonly IRepository<User> _repository;
-        public BaseService(IRepository<User> repository)
+        protected readonly IRepositoryWithIncludes<User> _repository;
+        protected readonly IMapper _mapper;
+        protected BaseService(IRepositoryWithIncludes<User> repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
         protected async Task<User> FindUserAsync(long id)
         {
             var user = await _repository.GetByIdAsync(id);
             if (user == null)
             {
-                throw new AccountNotFoundException(id);
+                throw new UserNotFoundException(id);
             }
             return user;
         }

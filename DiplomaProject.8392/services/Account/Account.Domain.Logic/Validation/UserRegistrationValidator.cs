@@ -1,6 +1,7 @@
 ﻿
 using Account.Domain.Entities;
 using Account.Domain.Logic.DTOs;
+using Account.Domain.Logic.DTOs.Core;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -14,19 +15,17 @@ namespace Account.Domain.Logic.Validation
     public class UserRegistrationValidator : AbstractValidator<UserRegistrationDTO>
     {
         public UserRegistrationValidator(
-            AbstractValidator<PasswordBaseDTO> pwdValidator
+            AbstractValidator<IPasswordBaseDTO> pwdValidator, 
+            AbstractValidator<UserBaseDTO> userValidator
             )
         {
             Include(pwdValidator);
-            RuleFor(u => u.Email)
-                .NotEmpty().WithMessage("Email is empty")
-                .EmailAddress().WithMessage("Invalid email");
-           
+            Include(userValidator);
             RuleFor(u => u.Role)
-                .NotNull()
-                .WithMessage("Role cannot be empty");
-
+             .NotNull()
+             .WithMessage("Role cannot be empty");
         }
+       
 
     }
 }

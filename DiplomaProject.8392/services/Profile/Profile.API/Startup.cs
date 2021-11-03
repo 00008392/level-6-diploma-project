@@ -69,6 +69,7 @@ namespace Profile.API
             }
             );
             services.AddTransient<UserCreatedIntegrationEventHandler>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,7 +86,7 @@ namespace Profile.API
             {
                 endpoints.MapGrpcService<ProfileManipulationServiceGrpc>();
                 endpoints.MapGrpcService<ProfileInfoServiceGrpc>();
-        
+
 
                 endpoints.MapGet("/", async context =>
                 {

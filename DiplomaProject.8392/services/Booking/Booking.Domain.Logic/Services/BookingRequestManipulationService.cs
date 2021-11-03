@@ -65,6 +65,11 @@ namespace Booking.Domain.Logic.Services
             {
                 throw new ForeignKeyViolationException("Accommodation");
             }
+            if((await FindBookingForDatesAsync((DateTime)requestDTO.StartDate, 
+                (DateTime)requestDTO.EndDate, requestDTO.AccommodationId)).Any())
+            {
+                throw new AccommodationBookedException(requestDTO.AccommodationId);
+            }
             var request = _mapper.Map<BookingRequest>(requestDTO);
             await _repository.CreateAsync(request);
         }
@@ -95,6 +100,15 @@ namespace Booking.Domain.Logic.Services
                 throw new NotFoundException(id, request.GetType().Name);
             }
             return request;
+        }
+        private async Task<ICollection<BookingRequest>> FindBookingForDatesAsync(DateTime startDate, DateTime endDate,
+            long accommodationId)
+        {
+            var accommodations = await _repository.GetFilteredAsync(x => x.AccommodationId == accommodationId &&
+              ((startDate >= x.StartDate && startDate <= x.EndDate) ||
+              (endDate >= x.EndDate && endDate <= x.EndDate)) && x.Status == Status.Accepted);
+
+            return accommodations;
         }
     }
 }

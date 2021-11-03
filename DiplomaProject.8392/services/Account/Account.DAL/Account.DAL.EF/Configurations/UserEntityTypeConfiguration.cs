@@ -16,9 +16,13 @@ namespace Account.DAL.EF.Configurations
             builder.HasKey(u => u.Id);
             builder.HasIndex(u => u.Email).IsUnique(true);
             builder.Property(u => u.Email).IsRequired(true);
+            builder.Property(u => u.FirstName).IsRequired(true);
+            builder.Property(u => u.LastName).IsRequired(true);
             builder.Property(u => u.Role).IsRequired(true);
             builder.Property(u => u.PasswordSalt).IsRequired(true);
             builder.Property(u => u.PasswordHash).IsRequired(true);
+            builder.HasOne(u => u.City).WithMany(c => c.Users).HasForeignKey(u => u.CityId).OnDelete(DeleteBehavior.SetNull);
+            builder.Property(u => u.ProfilePhoto).IsRequired(false);
         }
     }
 }

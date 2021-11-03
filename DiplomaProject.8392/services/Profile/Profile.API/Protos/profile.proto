@@ -10,14 +10,14 @@ package profile;
 
 service ProfileManipulation {
 
-  rpc UpdateProfile (UpdateRequest) returns (Response);
-  rpc DeleteProfile (Request) returns (Response);
+  rpc UpdateProfile (UpdateRequest) returns (Response); //tested
+  rpc DeleteProfile (Request) returns (Response); //tested
 }
 
 
 service ProfileInfo {
 
-  rpc GetProfileInfo (Request) returns (ProfileInfoResponse);
+  rpc GetProfileInfo (Request) returns (ProfileInfoResponse); //tested
 
 }
 message UpdateRequest {

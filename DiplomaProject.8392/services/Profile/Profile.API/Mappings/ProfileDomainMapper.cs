@@ -1,4 +1,5 @@
-﻿using Profile.Domain.Entities;
+﻿using AutoMapper;
+using Profile.Domain.Entities;
 using Profile.Domain.Logic.DTOs;
 using System;
 using System.Collections.Generic;
@@ -12,21 +13,19 @@ namespace Profile.API.Mappings
         public ProfileDomainMapper()
         {
             CreateMap<CreateProfileDTO, User>()
-                .ConstructUsing(x => new User(x.Email, x.RegistrationDate));
-            CreateMap<Domain.Entities.City, CityDTO>();
-            CreateMap<Domain.Entities.Country, CountryDTO>();
+                .ConvertUsing(x => new User(x.Email, x.RegistrationDate));
+            CreateMap<Domain.Entities.City, CityDTO>()
+                .ConvertUsing(x => new CityDTO(x.Id, x.Name));
+            CreateMap<Domain.Entities.Country, CountryDTO>()
+                .ConvertUsing(x => new CountryDTO(x.Id, x.Name));
             CreateMap<User, ProfileInfoDTO>()
-                .ForMember(x => x.City, opt => opt.MapFrom((user, userDTO, cityDTO, context) =>
-                    {
-                        return user.City==null?null: context.Mapper.Map<CityDTO>(user.City);
-                    }
-                  ))
-                .ForMember(x => x.Country, opt => opt.MapFrom((user, userDTO, countryDTO, context) =>
-                    {
-                        return user.City==null?null: context.Mapper.Map<CountryDTO>(user.City.Country);
-                    }));
-            CreateMap<UpdateProfileDTO, User>();
-                
+                .ConvertUsing((x, dest,context) => new ProfileInfoDTO(x.Id, x.FirstName,
+                x.LastName, x.Email, x.PhoneNumber, x.DateOfBirth, x.Gender,
+                x.Address, x.UserInfo, x.RegistrationDate, x.City == null ? null : context.Mapper.Map<CityDTO>(x.City),
+                x.City == null ? null : context.Mapper.Map<CountryDTO>(x.City.Country), x.ProfilePhoto ==null?null:x.ProfilePhoto,
+                x.MimeType));
+
         }
+     
     }
 }

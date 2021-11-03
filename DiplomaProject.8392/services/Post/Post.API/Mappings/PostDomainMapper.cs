@@ -14,80 +14,60 @@ namespace Post.API.Mappings
         public PostDomainMapper()
         {
             CreateMap<CreatePostDTO, Accommodation>()
-                .ForMember(x => x.DatePublished, opt => opt.MapFrom(src => DateTime.Now))
-                .ForMember(x => x.MovingInTime, opt => opt.MapFrom(
-                      src => src.MovingInTime == null ? null : ((DateTime)src.MovingInTime).ToString("HH:mm")
-                      ))
-                .ForMember(x => x.MovingOutTime, opt => opt.MapFrom(
-                      src => src.MovingOutTime == null ? null : ((DateTime)src.MovingOutTime).ToString("HH:mm")
-                      ));
-            CreateMap<Domain.Entities.Owner, OwnerDTO>();
-            CreateMap<Domain.Entities.Category, CategoryDTO>();
-            CreateMap<Domain.Entities.AccommodationPhoto, AccommodationPhotoDTO>();
-            CreateMap<ItemBase, ItemInfoDTO>();
+               .ConvertUsing(x => new Accommodation(x.Title, x.Description, x.OwnerId,
+                DateTime.Now, x.CategoryId, x.Address, x.ReferencePoint, x.ContactNumber,
+                x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo, x.SquareMeters,
+                x.Price, x.Latitude, x.Longitude, x.IsWholeApartment, DateTimeToString(x.MovingInTime),
+               DateTimeToString(x.MovingOutTime), x.AdditionalInfo));
+            CreateMap<Domain.Entities.Owner, OwnerDTO>()
+                .ConvertUsing(x => new OwnerDTO(x.Id, x.FirstName, x.LastName,
+                x.Email, x.PhoneNumber));
+            CreateMap<Domain.Entities.Category, CategoryDTO>()
+                .ConvertUsing(x => new CategoryDTO(x.Id, x.Name));
+            CreateMap<Domain.Entities.AccommodationPhoto, AccommodationPhotoDTO>()
+                .ConvertUsing(x => new AccommodationPhotoDTO(x.Id, x.Photo, x.MimeType));
+            CreateMap<ItemBase, ItemInfoDTO>()
+                .ConvertUsing(x => new ItemInfoDTO(x.Id, x.Name));
             CreateMap<ItemAccommodationBase, AccommodationItemInfoDTO>()
-                .Include<AccommodationFacility, AccommodationItemInfoDTO>()
-                .Include<AccommodationRule, AccommodationItemInfoDTO>()
-                .Include<AccommodationSpecificity, AccommodationItemInfoDTO>()
-                .ForMember(x => x.Item, opt => opt.MapFrom(
-                      (src, dest, prop, context) =>
-                      {
-                          return context.Mapper.Map<ItemInfoDTO>(src.Item);
-                      })
+                .ConvertUsing((x, dest, context) => new AccommodationItemInfoDTO(x.Id,
+                x.OtherItem, context.Mapper.Map<ItemInfoDTO>(x.Item))
                 );
-            CreateMap<AccommodationFacility, AccommodationItemInfoDTO>();
-            CreateMap<AccommodationRule, AccommodationItemInfoDTO>();
-            CreateMap<AccommodationSpecificity, AccommodationItemInfoDTO>();
+            CreateMap<AccommodationFacility, AccommodationItemInfoDTO>()
+                .IncludeBase<ItemAccommodationBase, AccommodationItemInfoDTO>();
+            CreateMap<AccommodationRule, AccommodationItemInfoDTO>()
+                .IncludeBase<ItemAccommodationBase, AccommodationItemInfoDTO>(); ;
+            CreateMap<AccommodationSpecificity, AccommodationItemInfoDTO>()
+                .IncludeBase<ItemAccommodationBase, AccommodationItemInfoDTO>(); ;
             CreateMap<Accommodation, AccommodationInfoDTO>()
-                .ForMember(x => x.Owner, opt => opt.MapFrom(
-                      (src, dest, prop, context) =>
-                      {
-                          return context.Mapper.Map<OwnerDTO>(src.Owner);
-                      })
-                )
-                .ForMember(x => x.Category, opt => opt.MapFrom(
-                      (src, dest, prop, context) =>
-                      {
-                          return src.Category == null ? null : context.Mapper.Map<CategoryDTO>(src.Category);
-                      })
-                )
-                .ForMember(x => x.AccommodationPhotos, opt => opt.MapFrom(
-                      (src, dest, prop, context) =>
-                      {
-                          return src.AccommodationPhotos.Any() ?
-                          context.Mapper.Map<ICollection<Domain.Entities.AccommodationPhoto>, ICollection<AccommodationPhotoDTO>>(src.AccommodationPhotos)
-                          : null;
-                      })
-                )
-                .ForMember(x => x.AccommodationFacilities, opt => opt.MapFrom(
-                      (src, dest, prop, context) =>
-                      {
-                          return src.AccommodationFacilities.Any() ?
-                          context.Mapper.Map<ICollection<AccommodationFacility>, ICollection<AccommodationItemInfoDTO>>(src.AccommodationFacilities)
-                          : null;
-                      })
-                )
-                .ForMember(x => x.AccommodationRules, opt => opt.MapFrom(
-                      (src, dest, prop, context) =>
-                      {
-                          return src.AccommodationRules.Any() ?
-                          context.Mapper.Map<ICollection<AccommodationRule>, ICollection<AccommodationItemInfoDTO>>(src.AccommodationRules)
-                          : null;
-                      })
-                )
-                .ForMember(x => x.AccommodationSpecificities, opt => opt.MapFrom(
-                      (src, dest, prop, context) =>
-                      {
-                          return src.AccommodationSpecificities.Any() ?
-                          context.Mapper.Map<ICollection<AccommodationSpecificity>, ICollection<AccommodationItemInfoDTO>>(src.AccommodationSpecificities)
-                          : null;
-                      })
-                );
+                .ConvertUsing((x,dest, context) => new AccommodationInfoDTO(x.Id,
+                x.Title, x.Description, x.OwnerId, x.CategoryId, x.Address,
+                x.ReferencePoint, x.ContactNumber, x.RoomsNo, x.BathroomsNo,
+                x.BedsNo, x.MaxGuestsNo, x.SquareMeters, x.Price, x.Latitude,
+                x.Longitude, x.IsWholeApartment, x.AdditionalInfo, context.Mapper.Map<OwnerDTO>(x.Owner),
+                x.DatePublished, x.Category == null ? null : context.Mapper.Map<CategoryDTO>(x.Category),
+                x.MovingInTime, x.MovingOutTime,
+                MapCollection<Domain.Entities.AccommodationPhoto, AccommodationPhotoDTO>(x.AccommodationPhotos, context),
+                MapCollection<AccommodationSpecificity, AccommodationItemInfoDTO>(x.AccommodationSpecificities, context),
+                MapCollection<AccommodationRule, AccommodationItemInfoDTO>(x.AccommodationRules, context),
+                MapCollection<AccommodationFacility, AccommodationItemInfoDTO>(x.AccommodationFacilities, context)
+                ));
 
             CreateMap<CreateUserDTO, Domain.Entities.Owner>()
-                .ConstructUsing(x => new Domain.Entities.Owner(x.Email));
-            CreateMap<UpdateUserDTO, Domain.Entities.Owner>();
+                .ConvertUsing(x => new Domain.Entities.Owner(x.Email));
+            CreateMap<UpdateUserDTO, Domain.Entities.Owner>()
+                .ConvertUsing(x => new Domain.Entities.Owner(x.Id, x.FirstName,
+                x.LastName, x.Email, x.PhoneNumber));
 
+        }
+        private string DateTimeToString(DateTime? time)
+        {
+            return time?.ToString("HH:mm");
+        }
+        private ICollection<E> MapCollection<T, E>(ICollection<T> collection, 
+            ResolutionContext context)
+        {
+            return collection.Any() ? context.Mapper.Map<ICollection<T>, ICollection<E>>(collection)
+                            : null;
         }
     }
 }

@@ -35,14 +35,9 @@ namespace Booking.API.Mappings
                 (DateTime.SpecifyKind(src.EndDate, DateTimeKind.Utc))))
                 .ForMember(x => x.Status, opt => opt.MapFrom(src => (int)src.Status));
             CreateMap<CreateRequest, CreateBookingRequestDTO>()
-                .ForMember(x => x.GuestId, opt => opt.MapFrom(src => src.GuestId ?? 0))
-                .ForMember(x => x.AccommodationId, opt => opt.MapFrom(src => src.AccommodationId ?? 0))
-                .ForMember(x => x.StartDate, opt => opt.MapFrom(
-                      (src, dest) => src.StartDate?.ToDateTime()
-                      ))
-                .ForMember(x => x.EndDate, opt => opt.MapFrom(
-                      (src, dest) => src.EndDate?.ToDateTime()
-                      ));
+                .ConvertUsing((x, context) => new CreateBookingRequestDTO(x.GuestId ?? 0,
+                x.AccommodationId ?? 0, x.StartDate?.ToDateTime(), x.EndDate?.ToDateTime()));
+                
         }
     }
 }

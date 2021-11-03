@@ -14,7 +14,8 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 {
-   public class AccommodationCreatedIntegrationEventHandler : BaseIntegrationEventHandler<Accommodation>,
+    //tested
+    public class AccommodationCreatedIntegrationEventHandler : BaseIntegrationEventHandler<Accommodation>,
         IIntegrationEventHandler<AccommodationCreatedIntegrationEvent>
     {
         private readonly IMapper _mapper;

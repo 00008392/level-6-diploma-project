@@ -78,7 +78,7 @@ namespace Post.Domain.Logic.Services
                    && i.ItemId == itemDTO.ItemId);
                 }
 
-                var item = (T)Activator.CreateInstance(typeof(T), itemDTO.ItemId, itemDTO.AccommodationId, itemDTO.OtherItem);
+                var item = (T)Activator.CreateInstance(typeof(T), itemDTO.AccommodationId, itemDTO.ItemId, itemDTO.OtherItem);
                 items.Add(item);
             }
 

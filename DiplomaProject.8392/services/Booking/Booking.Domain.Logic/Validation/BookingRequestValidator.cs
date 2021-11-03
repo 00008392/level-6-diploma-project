@@ -20,6 +20,19 @@ namespace Booking.Domain.Logic.Validation
                .NotEmpty().WithMessage("Start date cannot be empty");
             RuleFor(r => r.EndDate)
                .NotEmpty().WithMessage("End date cannot be empty");
+            RuleFor(x => x)
+                .Must(CheckDates);
+
+        }
+        private bool CheckDates(CreateBookingRequestDTO request)
+        {
+            if(request.StartDate==null || request.EndDate==null)
+            {
+                return false;
+            }
+            var startDate = (DateTime)request.StartDate;
+            var endDate = (DateTime)request.EndDate;
+            return startDate < endDate && (endDate - startDate).Days > 3;
         }
     }
 }

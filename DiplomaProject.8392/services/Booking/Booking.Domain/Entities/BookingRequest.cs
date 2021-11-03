@@ -10,7 +10,7 @@ namespace Booking.Domain.Entities
 {
    public class BookingRequest: BaseEntity
     {
-        public long GuestId { get; private set; }
+        public long? GuestId { get; private set; }
         public User Guest { get; }
         public long AccommodationId { get;private set; }
         public Accommodation Accommodation { get; }
@@ -18,7 +18,7 @@ namespace Booking.Domain.Entities
         public DateTime EndDate { get; private set; }
         public Status Status { get; private set; }
 
-        public BookingRequest(long guestId, long accommodationId, 
+        public BookingRequest(long? guestId, long accommodationId, 
             DateTime startDate, DateTime endDate)
         {
             GuestId = guestId;

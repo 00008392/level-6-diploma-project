@@ -13,9 +13,11 @@ using EventBus.Contracts;
 
 namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 {
+    //tested
     public class UserUpdatedIntegrationEventHandler : BaseIntegrationEventHandler<User>,
         IIntegrationEventHandler<UserUpdatedIntegrationEvent>
     {
+
         private readonly IMapper _mapper;
         public UserUpdatedIntegrationEventHandler(IEventHandlerService<User> service,
             IMapper mapper)

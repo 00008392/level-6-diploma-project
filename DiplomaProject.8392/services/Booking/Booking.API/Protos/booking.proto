@@ -8,16 +8,16 @@ package booking;
 
 service BookingRequestManipulation {
 
-  rpc CreateBookingRequest (CreateRequest) returns (Response);
-  rpc DeleteBookingRequest (Request) returns (Response);
-  rpc AcceptBookingRequest (Request) returns (Response);
-  rpc RejectBookingRequest (Request) returns (Response);
-  rpc CancelBooking (Request) returns (Response);
+  rpc CreateBookingRequest (CreateRequest) returns (Response);//tested
+  rpc DeleteBookingRequest (Request) returns (Response);//tested
+  rpc AcceptBookingRequest (Request) returns (Response);//tested
+  rpc RejectBookingRequest (Request) returns (Response);//tested
+  rpc CancelBooking (Request) returns (Response);//tested
 }
 service BookingRequestInfo {
 
-  rpc GetRequestsForUser (Request) returns (RequestInfoReply);
-  rpc GetRequestsForAccommodation (Request) returns (RequestInfoReply);
+  rpc GetRequestsForUser (Request) returns (RequestInfoReply);//tested
+  rpc GetRequestsForAccommodation (Request) returns (RequestInfoReply);//tested
 }
 message Request {
   int64 id = 1;

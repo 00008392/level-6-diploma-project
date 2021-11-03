@@ -13,7 +13,8 @@ namespace Post.Domain.Core
         public string OtherItem { get; protected set; }
         public ItemBase Item { get;}
 
-        protected ItemAccommodationBase(long itemId, string otherItem)
+        protected ItemAccommodationBase(long accommodationId, long itemId, string otherItem)
+            :base(accommodationId)
         {
             ItemId = itemId;
             OtherItem = otherItem;

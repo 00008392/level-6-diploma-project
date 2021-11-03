@@ -12,9 +12,19 @@ namespace Booking.API.Mappings
     {
         public BookingEventMapper()
         {
-            CreateMap<AccommodationCreatedIntegrationEvent, AccommodationDTO>();
+            CreateMap<AccommodationCreatedIntegrationEvent, AccommodationDTO>()
+                .ConvertUsing(x => new AccommodationDTO(x.Title, x.OwnerId, x.Address,
+                x.ContactNumber, x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo,
+                x.SquareMeters, x.Price, x.IsWholeApartment, x.MovingInTime,
+                x.MovingOutTime));
+            CreateMap<AccommodationUpdatedIntegrationEvent, AccommodationDTO>()
+                .ConvertUsing(x => new AccommodationDTO(x.AccommodationId, x.Title, x.OwnerId, x.Address,
+                x.ContactNumber, x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo,
+                x.SquareMeters, x.Price, x.IsWholeApartment, x.MovingInTime,
+                x.MovingOutTime));
             CreateMap<UserUpdatedIntegrationEvent, UserDTO>()
-                .ForMember(x => x.Id, opt => opt.MapFrom(src => src.UserId));
+                .ConvertUsing(x => new UserDTO(x.UserId, x.FirstName, x.LastName,
+                x.Email, x.PhoneNumber, x.Address, x.DateOfBirth));
         }
     }
 }

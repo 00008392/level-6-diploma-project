@@ -14,9 +14,14 @@ namespace Account.API.Mappings
         public AccountEventMapper()
         {
             CreateMap<UserRegistrationDTO, UserCreatedIntegrationEvent>()
-                .ForMember(u => u.RegistrationDate, opt => opt.MapFrom(src => DateTime.Now));
-            CreateMap<UserUpdatedIntegrationEvent, UpdateUserDTO>()
-                .ForMember(u => u.Id, opt => opt.MapFrom(src => src.UserId));
+                .ConvertUsing(x => new UserCreatedIntegrationEvent(x.Email,
+                x.FirstName, x.LastName, (DateTime)x.DateOfBirth, (int)x.Gender, DateTime.Now));
+            CreateMap<UserUpdateDTO, UserUpdatedIntegrationEvent>()
+                .ConvertUsing(x => new UserUpdatedIntegrationEvent(x.Id, x.FirstName,
+                x.LastName, x.Email, x.PhoneNumber, (DateTime)x.DateOfBirth,
+                (int)x.Gender, x.Address,
+                x.UserInfo, x.CityId));
+
         }
     }
 }

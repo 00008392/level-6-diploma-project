@@ -11,9 +11,12 @@ namespace Profile.API.Mappings
     {
         public ProfileEventMapper()
         {
-            CreateMap<UserCreatedIntegrationEvent, CreateProfileDTO>();
+            CreateMap<UserCreatedIntegrationEvent, CreateProfileDTO>()
+                .ConvertUsing(x => new CreateProfileDTO(x.Email, x.RegistrationDate));
             CreateMap<UpdateProfileDTO, UserUpdatedIntegrationEvent>()
-                .ForMember(x => x.UserId, opt => opt.MapFrom(src => src.Id));
+                .ConvertUsing(x => new UserUpdatedIntegrationEvent(x.Id,
+                x.FirstName, x.LastName, x.Email, x.PhoneNumber, x.DateOfBirth,
+                x.Gender, x.Address, x.UserInfo, x.CityId));
 
         }
     }

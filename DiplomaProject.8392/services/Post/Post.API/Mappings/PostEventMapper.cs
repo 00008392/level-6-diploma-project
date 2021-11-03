@@ -13,15 +13,27 @@ namespace Post.API.Mappings
         public PostEventMapper()
         {
             CreateMap<CreatePostDTO, AccommodationCreatedIntegrationEvent>()
-                .ForMember(x => x.MovingInTime, opt => opt.MapFrom((src, dest) => src.MovingInTime?.ToString("HH:mm")))
-                .ForMember(x => x.MovingOutTime, opt => opt.MapFrom((src, dest) => src.MovingOutTime?.ToString("HH:mm")))
-                .ForMember(x => x.DatePublished, opt => opt.MapFrom(src => DateTime.Now));
+                .ConvertUsing(x => new AccommodationCreatedIntegrationEvent(x.Title,
+                x.Description, x.OwnerId, x.CategoryId, x.Address, x.ReferencePoint,
+                x.ContactNumber, x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo, x.SquareMeters,
+                x.Price, x.Latitude, x.Longitude, x.IsWholeApartment,DateTimeToString(x.MovingInTime),
+                DateTimeToString(x.MovingOutTime),
+                x.AdditionalInfo, DateTime.Now));
+
             CreateMap<UpdatePostDTO, AccommodationUpdatedIntegrationEvent>()
-                .ForMember(x => x.MovingInTime, opt => opt.MapFrom((src, dest) => src.MovingInTime?.ToString("HH:mm")))
-                .ForMember(x => x.MovingOutTime, opt => opt.MapFrom((src, dest) => src.MovingOutTime?.ToString("HH:mm")))
-                .ForMember(x => x.AccommodationId, opt => opt.MapFrom(src => src.Id));
+                .ConvertUsing(x => new AccommodationUpdatedIntegrationEvent(x.Id, x.Title,
+                x.Description, x.OwnerId, x.CategoryId, x.Address, x.ReferencePoint,
+                x.ContactNumber, x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo, x.SquareMeters,
+                x.Price, x.Latitude, x.Longitude, x.IsWholeApartment, DateTimeToString(x.MovingInTime),
+                DateTimeToString(x.MovingOutTime), x.AdditionalInfo
+               ));
             CreateMap<UserUpdatedIntegrationEvent, UpdateUserDTO>()
-                .ForMember(x => x.Id, opt => opt.MapFrom(src => src.UserId));
+                .ConvertUsing(x => new UpdateUserDTO(x.UserId, x.FirstName,
+                x.LastName, x.PhoneNumber, x.Email));
+        }
+        private string DateTimeToString(DateTime? time)
+        {
+            return time?.ToString("HH:mm");
         }
     }
 }

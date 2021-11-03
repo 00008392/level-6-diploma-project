@@ -12,6 +12,7 @@ using EventBus.Contracts;
 
 namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 {
+    //tested
     public class UserCreatedIntegrationEventHandler : BaseIntegrationEventHandler<User>,
         IIntegrationEventHandler<UserCreatedIntegrationEvent>
     {

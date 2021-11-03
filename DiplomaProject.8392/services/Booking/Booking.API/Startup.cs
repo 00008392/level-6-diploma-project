@@ -78,7 +78,7 @@ namespace Booking.API
             services.AddTransient<UserUpdatedIntegrationEventHandler>();
             services.AddTransient<AccommodationCreatedIntegrationEventHandler>();
             services.AddTransient<AccommodationUpdatedIntegrationEventHandler>();
-            services.AddTransient<AccommodationDeletedIntegrationEventhandler>();
+            services.AddTransient<AccommodationDeletedIntegrationEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,7 +107,7 @@ namespace Booking.API
             eventBus.Subscribe<UserDeletedIntegrationEvent, UserDeletedIntegrationEventHandler>();
             eventBus.Subscribe<AccommodationCreatedIntegrationEvent, AccommodationCreatedIntegrationEventHandler>();
             eventBus.Subscribe<AccommodationUpdatedIntegrationEvent, AccommodationUpdatedIntegrationEventHandler>();
-            eventBus.Subscribe<AccommodationDeletedIntegrationEvent, AccommodationDeletedIntegrationEventhandler>();
+            eventBus.Subscribe<AccommodationDeletedIntegrationEvent, AccommodationDeletedIntegrationEventHandler>();
         }
     }
 }

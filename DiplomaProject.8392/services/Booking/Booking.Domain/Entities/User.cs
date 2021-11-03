@@ -22,17 +22,6 @@ namespace Booking.Domain.Entities
         {
             Email = email;
         }
-        public User(string firstName, string lastName,
-            string email, string phoneNumber, string address, 
-            DateTime? dateOfBirth)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            Email = email;
-            PhoneNumber = phoneNumber;
-            Address = address;
-            DateOfBirth = dateOfBirth;
-        }
         public User(long id, string firstName, string lastName,
            string email, string phoneNumber,
            string address, DateTime? dateOfBirth):base(id)
