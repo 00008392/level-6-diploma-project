@@ -10,5 +10,6 @@ namespace Account.Domain.Logic.Contracts
     public interface IUserInfoService
     {
         Task<UserInfoDTO> GetProfileInfoAsync(long id);
+        Task<ICollection<UserInfoDTO>> GetAllUsersAsync();
     }
 }

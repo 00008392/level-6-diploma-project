@@ -1,4 +1,5 @@
 ﻿using Account.Domain.Logic.Contracts;
+using Account.Domain.Logic.DTOs;
 using AutoMapper;
 using Grpc.Core;
 using System;
@@ -30,6 +31,15 @@ namespace Account.API.Services
             }
             var response = _mapper.Map<UserInfoResponse>(user);
 
+            return response;
+        }
+        public override async Task<UserList> GetAllUsers(Empty request,
+           ServerCallContext context)
+        {
+            var users = await _service.GetAllUsersAsync();
+            var usersList = _mapper.Map<ICollection<UserInfoDTO>, ICollection<UserInfoResponse>>(users);
+            var response = new UserList();
+            response.Users.Add(usersList);
             return response;
         }
     }

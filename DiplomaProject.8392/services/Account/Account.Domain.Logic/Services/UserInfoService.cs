@@ -19,6 +19,13 @@ namespace Account.Domain.Logic.Services
         {
 
         }
+
+        public async Task<ICollection<UserInfoDTO>> GetAllUsersAsync()
+        {
+            var users = (await _repository.GetAllAsync(relatedEntitiesIncluded: true)).ToList();
+            return _mapper.Map<ICollection<User>, ICollection<UserInfoDTO>>(users);
+        }
+
         public async Task<UserInfoDTO> GetProfileInfoAsync(long id)
         {
             var user = await _repository.GetByIdAsync(id, true);
@@ -29,5 +36,6 @@ namespace Account.Domain.Logic.Services
 
             return null;
         }
+        
     }
 }
