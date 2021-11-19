@@ -19,18 +19,18 @@ namespace Account.API.Mappings
                 .ConvertUsing(x => new UserLoginDTO(x.Password, x.Email));
             CreateMap<RegistrationRequest, UserRegistrationDTO>()
                 .ConvertUsing((x, context) => new UserRegistrationDTO(x.Email, (Role?)x.Role, x.FirstName, x.LastName,
-                x.DateOfBirth?.ToDateTime(), (Gender?)x.Gender, x.Password));
+                x.DateOfBirthTimeStamp?.ToDateTime(), (Gender?)x.Gender, x.Password));
             CreateMap<ChangePasswordRequest, ChangePasswordDTO>()
                 .ConvertUsing(x => new ChangePasswordDTO(x.Id, x.Password));
             CreateMap<UpdateRequest, UserUpdateDTO>()
                 .ConvertUsing((x, context) => new UserUpdateDTO(x.Id, x.FirstName,
-                x.LastName, x.Email, x.PhoneNumber, x.DateOfBirth?.ToDateTime(), (Gender?)x.Gender,
+                x.LastName, x.Email, x.PhoneNumber, x.DateOfBirthTimeStamp?.ToDateTime(), (Gender?)x.Gender,
                 x.Address, x.UserInfo, x.CityId));
             CreateMap<CityDTO, City>();
             CreateMap<CountryDTO, Country>();
             CreateMap<UserInfoDTO, UserInfoResponse>()
-                 .ForMember(x => x.DateOfBirth, opt => opt.MapFrom(src => FromDateTimeToTimeStamp(src.DateOfBirth)))
-                 .ForMember(x => x.RegistrationDate, opt => opt.MapFrom(src =>
+                 .ForMember(x => x.DateOfBirthTimeStamp, opt => opt.MapFrom(src => FromDateTimeToTimeStamp(src.DateOfBirth)))
+                 .ForMember(x => x.RegistrationDateTimeStamp, opt => opt.MapFrom(src =>
                      FromDateTimeToTimeStamp(src.RegistrationDate)))
                  .ForMember(x => x.ProfilePhoto, opt => {
                      opt.PreCondition(src => src.ProfilePhoto != null);

@@ -55,8 +55,8 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             services.AddScoped<AbstractValidator<UpdateUserDTO>, UpdateUserValidator>();
             services.AddScoped<IPostCRUDService, PostCRUDService>();
             services.AddScoped<IEventHandlerService, EventHandlerService>();
-            services.AddScoped(typeof(IPostRelatedInfoService<,>), typeof(PostRelatedInfoService<,>));
-            services.AddScoped(typeof(IPostItemsService<>), typeof(PostItemsService<>));
+            services.AddScoped(typeof(IPostItemsmanipulationService<,>), typeof(PostItemsManipulationService<,>));
+            services.AddScoped(typeof(IPostItemsInfoService<>), typeof(PostItemsInfoService<>));
             services.AddScoped(typeof(IPostRelatedInfoStrategy<,>), typeof(PostRelatedInfoGenericStrategy<,>));
             services.AddScoped(typeof(IPostItemsStrategy<>), typeof(PostItemsGenericStrategy<>));
             services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();
@@ -92,8 +92,8 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<PostCRUDServiceGrpc>();
-                endpoints.MapGrpcService<PostRelatedInfoServiceGrpc>();
-                endpoints.MapGrpcService<PostItemsServiceGrpc>();
+                endpoints.MapGrpcService<PostItemsManipulationServiceGrpc>();
+                endpoints.MapGrpcService<PostItemsInfoServiceGrpc>();
 
                 endpoints.MapGet("/", async context =>
                 {

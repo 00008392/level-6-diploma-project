@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Post.API
+namespace Protos.Common
 {
     public partial class Response : IResponse
     {

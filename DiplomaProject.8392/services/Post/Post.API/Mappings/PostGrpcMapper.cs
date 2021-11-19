@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Google.Protobuf.WellKnownTypes;
 using Post.Domain.Logic.DTOs;
+using Protos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,22 +13,24 @@ namespace Post.API.Mappings
     {
         public PostGrpcMapper()
         {
-            CreateMap<BasePostRequest, CreatePostDTO>()
+            CreateMap<CreatePostRequest, CreatePostDTO>()
                  .ConvertUsing((x, context) => new CreatePostDTO(x.Title, x.Description,
                 x.OwnerId ?? 0, x.CategoryId, x.Address, x.ReferencePoint, x.ContactNumber,
                 x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo ?? 0, x.SquareMeters,
                 (decimal)(x.Price ?? 0), (decimal?)x.Latitude, (decimal?)x.Longitude, x.IsWholeApartment, x.AdditionalInfo,
-                x.MovingInTime?.ToDateTime(), x.MovingOutTime?.ToDateTime()));
+                x.MovingInTimeStamp?.ToDateTime(), x.MovingOutTimeStamp?.ToDateTime()));
 
             CreateMap<UpdatePostRequest, UpdatePostDTO>()
-                .ConvertUsing((x, context) => {
-                    var baseRequest = x.BaseRequest;
-                    return new UpdatePostDTO(x.Id, baseRequest.Title, baseRequest.Description,
-                    baseRequest.OwnerId ?? 0, baseRequest.CategoryId, baseRequest.Address, baseRequest.ReferencePoint, baseRequest.ContactNumber,
-                    baseRequest.RoomsNo, baseRequest.BathroomsNo, baseRequest.BedsNo, baseRequest.MaxGuestsNo ?? 0, baseRequest.SquareMeters,
-                    (decimal)(baseRequest.Price ?? 0), (decimal?)baseRequest.Latitude, (decimal?)baseRequest.Longitude, baseRequest.IsWholeApartment, baseRequest.AdditionalInfo,
-                    baseRequest.MovingInTime?.ToDateTime(), baseRequest.MovingOutTime?.ToDateTime());
-                } );
+                .ConvertUsing((x, context) =>
+                {
+                   
+                    return new UpdatePostDTO(x.Id, x.Title, x.Description,
+                    x.OwnerId ?? 0, x.CategoryId, x.Address, x.ReferencePoint, x.ContactNumber,
+                    x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo ?? 0, x.SquareMeters,
+                    (decimal)(x.Price ?? 0), (decimal?)x.Latitude, (decimal?)x.Longitude, x.IsWholeApartment,
+                    x.AdditionalInfo,
+                    x.MovingInTimeStamp?.ToDateTime(), x.MovingOutTimeStamp?.ToDateTime());
+                });
             CreateMap<OwnerDTO, Owner>();
             CreateMap<CategoryDTO, Category>();
             CreateMap<AccommodationInfoDTO, PostInfoResponse>()
@@ -42,7 +45,7 @@ namespace Post.API.Mappings
                 .ForMember(x => x.Price, opt => opt.MapFrom(src => (double)src.Price))
                 .ForMember(x => x.Latitude, opt => opt.MapFrom(src => (double?)src.Latitude))
                 .ForMember(x => x.Longitude, opt => opt.MapFrom(src => (double?)src.Longitude))
-                .ForMember(x => x.DatePublished, opt => opt.MapFrom(src =>
+                .ForMember(x => x.DatePublishedTimeStamp, opt => opt.MapFrom(src =>
                     Timestamp.FromDateTime(DateTime.SpecifyKind(src.DatePublished, DateTimeKind.Utc))
                   ));
             CreateMap<ItemInfoDTO, Item>();
@@ -57,7 +60,7 @@ namespace Post.API.Mappings
             CreateMap<ItemRequest, AccommodationItemDTO>()
                 .ConvertUsing(x => new AccommodationItemDTO(x.AccommodationId,
                 x.ItemId, x.OtherValue));
-               
+
         }
     }
 }

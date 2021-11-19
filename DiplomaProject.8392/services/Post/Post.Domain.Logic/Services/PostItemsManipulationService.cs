@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace Post.Domain.Logic.Services
 {
     //E - entity representing bridge table
-    public class PostRelatedInfoService<T, E> : IPostRelatedInfoService<T, E> 
+    public class PostItemsManipulationService<T, E> : IPostItemsmanipulationService<T, E> 
                                                                               where T: ItemAccommodationBase
                                                                               where E: ItemBase
 
@@ -24,7 +24,7 @@ namespace Post.Domain.Logic.Services
         private readonly IRepository<T> _repository;
         private readonly IRepository<Accommodation> _accommodationRepository;
         private readonly IRepository<E> _itemRepository;
-        public PostRelatedInfoService(IRepository<T> repository, IRepository<Accommodation> accommodationRepository,
+        public PostItemsManipulationService(IRepository<T> repository, IRepository<Accommodation> accommodationRepository,
             IRepository<E> itemRepository)
         {
             _repository = repository;

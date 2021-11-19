@@ -6,6 +6,7 @@ using EventBus.Contracts;
 using ExceptionHandling;
 using FluentValidation;
 using Grpc.Core;
+using Protos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace Account.API.Services
             _mapper = mapper;
         }
 
-        public override async Task<Response> ChangePassword(ChangePasswordRequest request, 
+        public override async Task<Response> ChangePassword(ChangePasswordRequest request,
             ServerCallContext context)
         {
             var passwordDTO = _mapper.Map<ChangePasswordDTO>(request);

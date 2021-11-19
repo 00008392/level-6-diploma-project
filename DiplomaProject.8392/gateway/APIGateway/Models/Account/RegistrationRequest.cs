@@ -1,14 +1,13 @@
-﻿using APIGateway.Models.Account.Core;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace APIGateway.Models.Account
+namespace Account.API
 {
-    public class RegistrationRequest: AccountBase
+    public partial class RegistrationRequest: IAccountRequest
     {
-        public string Password { get; set; }
-        public int? Role { get; set; }
+        public DateTime? DateOfBirth { get; set; }
     }
 }

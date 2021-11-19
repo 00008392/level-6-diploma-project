@@ -13,7 +13,7 @@ namespace Post.Domain.Logic.Contracts
     //AccommodationItemDTO - rule/facility/specificity DTO
     //ItemAccommodationBase - entity representing bridge table
     //ItemBase - rule/facility/specificity
-    public interface IPostRelatedInfoService<T, E> 
+    public interface IPostItemsmanipulationService<T, E> 
                                                   where T: ItemAccommodationBase
                                                   where E: ItemBase
     {

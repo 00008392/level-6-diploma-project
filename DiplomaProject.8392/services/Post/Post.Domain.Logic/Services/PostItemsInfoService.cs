@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Logic.Services
 {
-    public class PostItemsService<T> : IPostItemsService<T>
+    public class PostItemsInfoService<T> : IPostItemsInfoService<T>
         where T : ItemBase
     {
         private readonly IRepository<T> _repository;
         private readonly IMapper _mapper;
-        public PostItemsService(IRepository<T> repository,
+        public PostItemsInfoService(IRepository<T> repository,
             IMapper mapper)
         {
             _repository = repository;

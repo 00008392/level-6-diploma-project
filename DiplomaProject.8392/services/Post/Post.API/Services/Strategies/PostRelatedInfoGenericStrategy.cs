@@ -5,7 +5,7 @@ using ExceptionHandling;
 using Post.Domain.Core;
 using Post.Domain.Logic.Contracts;
 using Post.Domain.Logic.DTOs;
-using Post.Domain.Logic.IntegrationEvents.Events.Core;
+using Protos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,17 +17,14 @@ namespace Post.API.Services.Strategies
         where T : ItemAccommodationBase
         where E : ItemBase
     {
-        private readonly IPostRelatedInfoService<T, E> _service;
-        private readonly IEventBus _eventBus;
+        private readonly IPostItemsmanipulationService<T, E> _service;
         private readonly IMapper _mapper;
-        public PostRelatedInfoGenericStrategy(IPostRelatedInfoService<T, E> service,
-                     IEventBus eventBus, IMapper mapper)
+        public PostRelatedInfoGenericStrategy(IPostItemsmanipulationService<T, E> service, IMapper mapper)
         {
             _service = service;
-            _eventBus = eventBus;
             _mapper = mapper;
         }
-        public async Task<Response> AddItemsAsync(AddItemsRequest request, AccommodationItemAddedIntegrationEvent @event)
+        public async Task<Response> AddItemsAsync(AddItemsRequest request)
         {
             var items = _mapper.Map<ICollection<ItemRequest>, ICollection<AccommodationItemDTO>>(request.Items);
             var response = new Response();
@@ -36,7 +33,6 @@ namespace Post.API.Services.Strategies
                 await _service.AddItemsAsync(items);
 
                 response.IsSuccess = true;
-                _eventBus.Publish(@event);
             }
             catch (Exception ex)
             {
@@ -45,14 +41,13 @@ namespace Post.API.Services.Strategies
             return response;
         }
 
-        public async Task<Response> RemoveItemsAsync(RemoveItemsRequest request, AccommodationItemRemovedIntegrationEvent @event)
+        public async Task<Response> RemoveItemsAsync(RemoveItemsRequest request)
         {
             var response = new Response();
             try
             {
                 await _service.RemoveItemsAsync(request.Ids);
                 response.IsSuccess = true;
-                _eventBus.Publish(@event);
 
             }
             catch (Exception ex)

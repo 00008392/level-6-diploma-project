@@ -1,10 +1,12 @@
 syntax = "proto3";
 
-import "google/protobuf/wrappers.proto";
-option csharp_namespace = "Post.API";
+option csharp_namespace = "Protos.Common";
 
 package common;
 
+message Empty {
+
+}
 message Error {
 string propertyName = 1;
 string message = 2;

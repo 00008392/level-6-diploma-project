@@ -1,5 +1,5 @@
 ﻿using Post.Domain.Core;
-using Post.Domain.Logic.IntegrationEvents.Events.Core;
+using Protos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace Post.API.Services.Strategies
         where T: ItemAccommodationBase
         where E: ItemBase
     {
-        Task<Response> AddItemsAsync(AddItemsRequest request, AccommodationItemAddedIntegrationEvent @event);
-        Task<Response> RemoveItemsAsync(RemoveItemsRequest request, AccommodationItemRemovedIntegrationEvent @event);
+        Task<Response> AddItemsAsync(AddItemsRequest request);
+        Task<Response> RemoveItemsAsync(RemoveItemsRequest request);
     }
 }

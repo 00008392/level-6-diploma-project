@@ -2,6 +2,7 @@
 using Post.API.Services.Strategies;
 using Post.Domain.Core;
 using Post.Domain.Entities;
+using Protos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace Post.API.Services
 {
-    public class PostItemsServiceGrpc: Items.ItemsBase
+    public class PostItemsInfoServiceGrpc: PostItemsInfo.PostItemsInfoBase
     {
         private readonly IPostItemsStrategy<Rule> _ruleStrategy;
         private readonly IPostItemsStrategy<Facility> _facilityStrategy;
         private readonly IPostItemsStrategy<Specificity> _specificityStrategy;
 
-        public PostItemsServiceGrpc(IPostItemsStrategy<Rule> ruleStrategy,
+        public PostItemsInfoServiceGrpc(IPostItemsStrategy<Rule> ruleStrategy,
             IPostItemsStrategy<Facility> facilityStrategy,
             IPostItemsStrategy<Specificity> specificityStrategy)
         {

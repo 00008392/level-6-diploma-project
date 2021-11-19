@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+import "Protos/Common/common.proto";
+
+
+option csharp_namespace = "Post.API";
+
+package post;
+
+
+service PostItemsInfo {
+	rpc GetRules (common.Empty) returns (ItemsList);  //tested
+	rpc GetFacilities (common.Empty) returns (ItemsList);  //tested
+	rpc GetSpecificities (common.Empty) returns (ItemsList);  //tested
+}
+
+message ItemsList {
+	repeated common.Item items = 1;
+}

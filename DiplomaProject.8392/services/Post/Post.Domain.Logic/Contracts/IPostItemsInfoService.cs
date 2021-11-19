@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Post.Domain.Logic.Contracts
 {
     //get all rules/facilities/specificities
-    public interface IPostItemsService<T>
+    public interface IPostItemsInfoService<T>
         where T: ItemBase
     {
         Task<ICollection<ItemInfoDTO>> GetItemsAsync();

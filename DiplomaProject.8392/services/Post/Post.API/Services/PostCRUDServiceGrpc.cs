@@ -8,6 +8,7 @@ using Post.Domain.Core;
 using Post.Domain.Logic.Contracts;
 using Post.Domain.Logic.DTOs;
 using Post.Domain.Logic.IntegrationEvents.Events;
+using Protos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,15 +31,15 @@ namespace Post.API.Services
         public override async Task<Response> CreatePost(CreatePostRequest request, ServerCallContext context)
         {
 
-            var baseRequest = request.BaseRequest;
-            if (baseRequest == null)
+            
+            if (request == null)
             {
                 return new Response
                 {
                     Message = "Empty request"
                 };
             }
-            var createPostDTO = _mapper.Map<CreatePostDTO>(baseRequest);
+            var createPostDTO = _mapper.Map<CreatePostDTO>(request);
 
             var response = new Response();
             try
@@ -60,8 +61,8 @@ namespace Post.API.Services
         }
         public override async Task<Response> UpdatePost(UpdatePostRequest request, ServerCallContext context)
         {
-            var baseRequest = request.BaseRequest;
-            if (baseRequest == null)
+          
+            if (request == null)
             {
                 return new Response
                 {

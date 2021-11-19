@@ -5,15 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Protos\postItemInfo.proto" />
+    <None Remove="Protos\postItemsInfo.proto" />
   </ItemGroup>
 
   <ItemGroup>
    
-    <Protobuf Include="Protos\common.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\Common\common.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\postCRUD.proto" GrpcServices="Server" />
-    <Protobuf Include="Protos\postItemInfo.proto" GrpcServices="Server" />
-    <Protobuf Include="Protos\postRelatedItem.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\postItemsInfo.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\postItemsManipulation.proto" GrpcServices="Server" />
 
   </ItemGroup>
 

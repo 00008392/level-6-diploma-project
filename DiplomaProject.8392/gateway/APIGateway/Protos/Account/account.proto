@@ -1,26 +1,13 @@
 syntax = "proto3";
 
+import "Protos/Common/common.proto";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Account.API";
 
 package account;
 
-message Empty {
 
-}
-message Request {
-  int64 id = 1;
-}
-message Response {
-bool IsSuccess = 1;
-repeated Error errors = 2;
-string message = 3;
-}
-message Error {
-	string propertyName = 1;
-	string message = 2;
-}
 message LoginRequest {
   google.protobuf.StringValue email = 1;
   google.protobuf.StringValue password = 2;
@@ -44,7 +31,7 @@ message RegistrationRequest {
   google.protobuf.Int32Value role = 3;
   google.protobuf.StringValue firstName = 4;
   google.protobuf.StringValue lastName = 5;
-  google.protobuf.Timestamp DateOfBirth = 6;
+  google.protobuf.Timestamp DateOfBirthTimeStamp = 6;
   google.protobuf.Int32Value gender = 7;
 }
 message UpdateRequest {
@@ -53,7 +40,7 @@ message UpdateRequest {
   google.protobuf.StringValue lastName = 3;
   google.protobuf.StringValue email = 4;
   google.protobuf.StringValue phoneNumber = 5;
-  google.protobuf.Timestamp DateOfBirth = 6;
+  google.protobuf.Timestamp DateOfBirthTimeStamp = 6;
   google.protobuf.Int32Value gender = 7;
   google.protobuf.StringValue address = 8;
   google.protobuf.Int64Value cityId = 9;
@@ -74,8 +61,8 @@ message UserInfoResponse {
    string lastName = 3;
     string email = 4;
     google.protobuf.StringValue phoneNumber = 5;
-    google.protobuf.Timestamp DateOfBirth = 6;
-    google.protobuf.Timestamp RegistrationDate = 7;
+    google.protobuf.Timestamp DateOfBirthTimeStamp = 6;
+    google.protobuf.Timestamp RegistrationDateTimeStamp = 7;
     int32 gender = 8;
     google.protobuf.StringValue address = 9;
     City city = 10;
@@ -93,16 +80,16 @@ service Login {
   rpc GetLoggedUser (LoginRequest) returns (LoginReply); //tested
 }
 service UserManipulation {
-  rpc RegisterUser (RegistrationRequest) returns (Response); //tested
-  rpc UpdateUser (UpdateRequest) returns (Response); //tested
-  rpc DeleteUser (Request) returns (Response); //tested
-  rpc ChangePassword (ChangePasswordRequest) returns (Response); //tested
+  rpc RegisterUser (RegistrationRequest) returns (common.Response); //tested
+  rpc UpdateUser (UpdateRequest) returns (common.Response); //tested
+  rpc DeleteUser (common.Request) returns (common.Response); //tested
+  rpc ChangePassword (ChangePasswordRequest) returns (common.Response); //tested
 }
 
 service UserInfo {
 
-  rpc GetUserInfo (Request) returns (UserInfoResponse); //tested
-  rpc GetAllUsers (Empty) returns (UserList);
+  rpc GetUserInfo (common.Request) returns (UserInfoResponse); //tested
+  rpc GetAllUsers (common.Empty) returns (UserList);
 }
 
 

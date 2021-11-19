@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "Protos/common.proto";
+import "Protos/Common/common.proto";
 import "google/protobuf/wrappers.proto";
 
 
@@ -9,7 +9,7 @@ option csharp_namespace = "Post.API";
 package post;
 
 
-service PostRelatedItems {
+service PostItemsManipulation {
 
   rpc AddRules (AddItemsRequest) returns (common.Response); //tested
   rpc RemoveRules (RemoveItemsRequest) returns (common.Response);//tested

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -6,6 +6,10 @@
 
   <ItemGroup>
     <None Remove="Protos\account.proto" />
+    <None Remove="Protos\PostFeedback\common.proto" />
+    <None Remove="Protos\PostFeedback\postCRUD.proto" />
+    <None Remove="Protos\PostFeedback\postItemsInfo.proto" />
+    <None Remove="Protos\PostFeedback\postItemsManipulation.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,7 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\account.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\Account\account.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\Common\common.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\PostFeedback\postCRUD.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\PostFeedback\postItemsInfo.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\PostFeedback\postItemsManipulation.proto" GrpcServices="Client" />
   </ItemGroup>
 
 </Project>

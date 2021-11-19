@@ -1,6 +1,8 @@
 ﻿using Account.API;
-using AutoMapper;
+using APIGateway.Helpers;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;
+using Protos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,37 +16,27 @@ namespace APIGateway.Controllers.Account
     [ApiController]
     public class AccountController : ControllerBase
     {
-        //methods in this controller return and take as parameters classes generated from proto definitions
-        //but in some of them, custom classes from Models.Account namespace are used 
-        //and then mapped with generated proto classes
-        //this is done, because there is date format in these classes expressed as Google.Protobuf.TimeStamp type
-        //but client should pass and receive properties of date format as DateTime, not TimeStamp 
-        //therefore, custom models with date property as DateTime type were created
         private readonly UserManipulation.UserManipulationClient _manipulationClient;
         private readonly Login.LoginClient _loginClient;
         private readonly UserInfo.UserInfoClient _infoClient;
-        private readonly IMapper _mapper;
 
         public AccountController(
             UserManipulation.UserManipulationClient manipulationClient,
             Login.LoginClient loginClient,
-            UserInfo.UserInfoClient infoClient,
-            IMapper mapper)
+            UserInfo.UserInfoClient infoClient)
         {
             _manipulationClient = manipulationClient;
             _loginClient = loginClient;
             _infoClient = infoClient;
-            _mapper = mapper;
         }
 
         // GET: api/<AccountController>
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            var reply = await _infoClient.GetAllUsersAsync(new Empty());
-            var users = _mapper.Map<ICollection<UserInfoResponse>,
-                ICollection<Models.Account.UserInfoResponse>>(reply.Users);
-            return Ok(users);
+            var reply = await _infoClient.GetAllUsersAsync(new Protos.Common.Empty());
+            reply.Users.ToList().ForEach(x => ConvertUserData(x));
+            return Ok(reply);
         }
 
         // GET api/<AccountController>/5
@@ -52,12 +44,12 @@ namespace APIGateway.Controllers.Account
         public async Task<IActionResult> GetUser(long id)
         {
             var reply = await _infoClient.GetUserInfoAsync(new Request { Id = id});
+            
             if(reply.NoUser)
             {
                 return NotFound("User not found");
             }
-            var user = _mapper.Map<Models.Account.UserInfoResponse>(reply);
-            return Ok(user);
+            return Ok(ConvertUserData(reply));
         }
         //TO DO: move to separate controller and add JWT
         [HttpPost("login")]
@@ -73,10 +65,10 @@ namespace APIGateway.Controllers.Account
 
         // POST api/account
         [HttpPost]
-        public async Task<IActionResult> PostUser(Models.Account.RegistrationRequest request)
+        public async Task<IActionResult> PostUser(RegistrationRequest request)
         {
-            var user = _mapper.Map<RegistrationRequest>(request);
-            var reply = await _manipulationClient.RegisterUserAsync(user);
+            //request.DateOfBirthTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(request.DateOfBirth);
+            var reply = await _manipulationClient.RegisterUserAsync((RegistrationRequest)ConvertUserData(request));
             if(!reply.IsSuccess)
             {
                 return BadRequest(reply);
@@ -86,14 +78,14 @@ namespace APIGateway.Controllers.Account
 
         // PUT api/<AccountController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, Models.Account.UpdateRequest request)
+        public async Task<IActionResult> PutUser(int id, UpdateRequest request)
         {
             if(id!=request.Id)
             {
                 return BadRequest("Invalid user");
             }
-            var user = _mapper.Map<UpdateRequest>(request);
-            var reply = await _manipulationClient.UpdateUserAsync(user);
+            //request.DateOfBirthTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(request.DateOfBirth);
+            var reply = await _manipulationClient.UpdateUserAsync((UpdateRequest)ConvertUserData(request));
             if (!reply.IsSuccess)
             {
                 return BadRequest(reply);
@@ -126,6 +118,18 @@ namespace APIGateway.Controllers.Account
                 return NotFound(reply);
             }
             return NoContent();
+        }
+
+        private UserInfoResponse ConvertUserData(UserInfoResponse user)
+        {
+            user.DateOfBirth = (DateTime)DateTimeConversion.FromTimeStampToDateTime(user.DateOfBirthTimeStamp);
+            user.RegistrationDate = (DateTime)DateTimeConversion.FromTimeStampToDateTime(user.RegistrationDateTimeStamp);
+            return user;
+        }
+        private IAccountRequest ConvertUserData(IAccountRequest user)
+        {
+            user.DateOfBirthTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(user.DateOfBirth);
+            return user;
         }
     }
 }

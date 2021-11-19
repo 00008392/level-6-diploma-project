@@ -1,5 +1,4 @@
 ﻿using EventBus.Events;
-using Post.Domain.Logic.IntegrationEvents.Events.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
