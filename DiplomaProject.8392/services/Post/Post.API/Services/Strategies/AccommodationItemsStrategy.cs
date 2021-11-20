@@ -1,6 +1,4 @@
-﻿
-using AutoMapper;
-using EventBus.Contracts;
+﻿using AutoMapper;
 using ExceptionHandling;
 using Post.Domain.Core;
 using Post.Domain.Logic.Contracts;
@@ -13,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace Post.API.Services.Strategies
 {
-    public class PostRelatedInfoGenericStrategy<T, E> : IPostRelatedInfoStrategy<T, E>
+    public class AccommodationItemsStrategy<T, E>: IAccommodationItemsStrategy<T, E>
         where T : ItemAccommodationBase
         where E : ItemBase
     {
-        private readonly IPostItemsmanipulationService<T, E> _service;
+        private readonly IAcommodationItemsService<T, E> _service;
         private readonly IMapper _mapper;
-        public PostRelatedInfoGenericStrategy(IPostItemsmanipulationService<T, E> service, IMapper mapper)
+        public AccommodationItemsStrategy(IAcommodationItemsService<T, E> service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
@@ -41,12 +39,18 @@ namespace Post.API.Services.Strategies
             return response;
         }
 
+        public async Task<ICollection<Item>> GetItemsAsync()
+        {
+            return _mapper.Map<ICollection<ItemInfoDTO>, ICollection<Item>>
+               (await _service.GetItemsAsync());
+        }
+
         public async Task<Response> RemoveItemsAsync(RemoveItemsRequest request)
         {
             var response = new Response();
             try
             {
-                await _service.RemoveItemsAsync(request.Ids);
+                await _service.RemoveItemsAsync(request.Items);
                 response.IsSuccess = true;
 
             }

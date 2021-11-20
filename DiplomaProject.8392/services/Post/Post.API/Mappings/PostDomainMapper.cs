@@ -53,7 +53,7 @@ namespace Post.API.Mappings
                 ));
 
             CreateMap<CreateUserDTO, Domain.Entities.Owner>()
-                .ConvertUsing(x => new Domain.Entities.Owner(x.Email));
+                .ConvertUsing(x => new Domain.Entities.Owner(x.Email, x.FirstName, x.LastName));
             CreateMap<UpdateUserDTO, Domain.Entities.Owner>()
                 .ConvertUsing(x => new Domain.Entities.Owner(x.Id, x.FirstName,
                 x.LastName, x.Email, x.PhoneNumber));

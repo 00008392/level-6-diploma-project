@@ -13,8 +13,7 @@ namespace Post.Domain.Logic.Validation
         public UpdateUserValidator(AbstractValidator<CreateUserDTO> validator)
         {
             Include(validator);
-            RuleFor(u => u.FirstName)
-                .NotEmpty().WithMessage("First name cannot be empty");
+           
         }
     }
 }

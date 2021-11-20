@@ -55,10 +55,8 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             services.AddScoped<AbstractValidator<UpdateUserDTO>, UpdateUserValidator>();
             services.AddScoped<IPostCRUDService, PostCRUDService>();
             services.AddScoped<IEventHandlerService, EventHandlerService>();
-            services.AddScoped(typeof(IPostItemsmanipulationService<,>), typeof(PostItemsManipulationService<,>));
-            services.AddScoped(typeof(IPostItemsInfoService<>), typeof(PostItemsInfoService<>));
-            services.AddScoped(typeof(IPostRelatedInfoStrategy<,>), typeof(PostRelatedInfoGenericStrategy<,>));
-            services.AddScoped(typeof(IPostItemsStrategy<>), typeof(PostItemsGenericStrategy<>));
+            services.AddScoped(typeof(IAccommodationItemsStrategy<,>), typeof(AccommodationItemsStrategy<,>));
+            services.AddScoped(typeof(IAcommodationItemsService<,>), typeof(AccommodationItemsService<,>));
             services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();
             services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>(sp => {
 
@@ -92,8 +90,9 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<PostCRUDServiceGrpc>();
-                endpoints.MapGrpcService<PostItemsManipulationServiceGrpc>();
-                endpoints.MapGrpcService<PostItemsInfoServiceGrpc>();
+                endpoints.MapGrpcService<AccommodationRulesServiceGrpc>();
+                endpoints.MapGrpcService<AccommodationFacilitiesServiceGrpc>();
+                endpoints.MapGrpcService<AccommodationSpecificitiesServiceGrpc>();
 
                 endpoints.MapGet("/", async context =>
                 {

@@ -35,15 +35,19 @@ namespace APIGateway.Controllers.PostFeedback
 
         // GET api/<PostController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPost(long id)
+        public async Task<IActionResult> Get(long id)
         {
-            var reply = ConvertPostData(await _postClient.GetPostByIdAsync(new Request { Id = id }));
-            return Ok(reply);
+            var reply = await _postClient.GetPostByIdAsync(new Request { Id = id });
+            if (reply.NoItem)
+            {
+                return NotFound("Post not found");
+            }
+            return Ok(ConvertPostData(reply));
         }
 
         //POST api/<PostController>
         [HttpPost]
-        public async Task<IActionResult> PostAccommodation(CreatePostRequest request)
+        public async Task<IActionResult> Post(CreatePostRequest request)
         {
            
             var reply = await _postClient.CreatePostAsync((CreatePostRequest)ConvertPostData(request));
@@ -56,7 +60,7 @@ namespace APIGateway.Controllers.PostFeedback
 
         // PUT api/<PostController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAccommodation(int id, UpdatePostRequest request)
+        public async Task<IActionResult> Put(int id, UpdatePostRequest request)
         {
             if (id != request.Id)
             {

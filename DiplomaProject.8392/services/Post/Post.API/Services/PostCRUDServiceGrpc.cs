@@ -116,30 +116,31 @@ namespace Post.API.Services
                 };
             }
             var response = _mapper.Map<PostInfoResponse>(post);
-            if (post.AccommodationPhotos != null)
-            {
-                response.AccommodationPhotos.AddRange(
-                    _mapper.Map<ICollection<AccommodationPhotoDTO>, ICollection<AccommodationPhoto>>(post.AccommodationPhotos));
-            }
-            if (post.AccommodationRules!=null)
-            {
-                response.AccommodationRules.AddRange(GetItemsList(post.AccommodationRules));
-            }
-            if (post.AccommodationFacilities!=null)
-            {
-                response.AccommodationFacilities.AddRange(GetItemsList(post.AccommodationFacilities));
-            }
-            if (post.AccommodationSpecificities!=null)
-            {
-                response.AccommodationSpecificities.AddRange(GetItemsList(post.AccommodationSpecificities));
-            }
+            //if (post.AccommodationPhotos != null)
+            //{
+            //    response.AccommodationPhotos.AddRange(
+            //        _mapper.Map<ICollection<AccommodationPhotoDTO>, ICollection<AccommodationPhoto>>(post.AccommodationPhotos));
+            //}
+            //if (post.AccommodationRules!=null)
+            //{
+            //    var items = GetItemsList(post.AccommodationRules);
+            //    response.AccommodationRules.AddRange(items);
+            //}
+            //if (post.AccommodationFacilities!=null)
+            //{
+            //    response.AccommodationFacilities.AddRange(GetItemsList(post.AccommodationFacilities));
+            //}
+            //if (post.AccommodationSpecificities!=null)
+            //{
+            //    response.AccommodationSpecificities.AddRange(GetItemsList(post.AccommodationSpecificities));
+            //}
             return response;
         }
-        private IEnumerable<AccommodationItem> GetItemsList(ICollection<AccommodationItemInfoDTO> items) 
-        {
-            return _mapper.Map<ICollection<AccommodationItemInfoDTO>, ICollection<AccommodationItem>>(items);
-
-        }
+        //private IEnumerable<AccommodationItem> GetItemsList(ICollection<AccommodationItemInfoDTO> items) 
+        //{
+        //    var result =  _mapper.Map<ICollection<AccommodationItemInfoDTO>, ICollection<AccommodationItem>>(items);
+        //    return result;
+        //}
 
     }
    

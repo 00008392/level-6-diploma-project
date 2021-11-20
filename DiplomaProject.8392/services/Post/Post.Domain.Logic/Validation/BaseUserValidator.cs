@@ -14,6 +14,10 @@ namespace Post.Domain.Logic.Validation
         {
             RuleFor(u => u.Email)
                 .NotEmpty().WithMessage("Email cannot be empty");
+            RuleFor(u => u.FirstName)
+                .NotEmpty().WithMessage("First name cannot be empty");
+            RuleFor(u => u.LastName)
+                .NotEmpty().WithMessage("Last name cannot be empty");
         }
     }
 }

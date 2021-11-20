@@ -15,12 +15,10 @@ namespace Post.Domain.Logic.IntegrationEvents.EventHandlers
     //tested
     public class UserUpdatedIntegrationEventHandler: BaseIntegrationEventHandler, IIntegrationEventHandler<UserUpdatedIntegrationEvent>
     {
-        private readonly IMapper _mapper;
         public UserUpdatedIntegrationEventHandler(IEventHandlerService service,
             IMapper mapper)
-            :base(service)
+            :base(service, mapper)
         {
-            _mapper = mapper;
         }
         public async Task Handle(UserUpdatedIntegrationEvent @event)
         {

@@ -1,7 +1,6 @@
 ﻿using APIGateway.Controllers.PostFeedback.Core;
 using Microsoft.AspNetCore.Mvc;
 using Post.API;
-using Protos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,40 +10,12 @@ using System.Threading.Tasks;
 
 namespace APIGateway.Controllers.PostFeedback
 {
-    [Route("api/[controller]")]
+    [Route("api/post/specificities")]
     [ApiController]
-    public class SpecificitiesController : ItemsBaseController
+    public class SpecificitiesController : AccommodationItemsGenericController<AccommodationSpecificities.AccommodationSpecificitiesClient>
     {
-        public SpecificitiesController(PostItemsInfo.PostItemsInfoClient itemsInfo,
-            PostItemsManipulation.PostItemsManipulationClient itemsManipulation)
-            : base(itemsInfo, itemsManipulation)
+        public SpecificitiesController(AccommodationSpecificities.AccommodationSpecificitiesClient client) : base(client)
         {
-
-        }
-        [HttpGet]
-        public override async Task<IActionResult> GetItems()
-        {
-            return Ok(await _itemsInfoClient.GetSpecificitiesAsync(new Empty()));
-        }
-        [HttpPost]
-        public override async Task<IActionResult> PostItems(AddItemsRequest request)
-        {
-            var reply = await _itemsManipulationClient.AddSpecificitiesAsync(request);
-            if (!reply.IsSuccess)
-            {
-                return BadRequest(reply);
-            }
-            return StatusCode(201);
-        }
-        [HttpDelete("{id}")]
-        public override async Task<IActionResult> DeleteItems(RemoveItemsRequest request)
-        {
-            var reply = await _itemsManipulationClient.RemoveSpecificitiesAsync(request);
-            if (!reply.IsSuccess)
-            {
-                return NotFound(reply);
-            }
-            return NoContent();
         }
     }
 }

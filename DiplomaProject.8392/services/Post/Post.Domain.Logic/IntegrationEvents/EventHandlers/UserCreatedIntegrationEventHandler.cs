@@ -8,21 +8,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EventBus.Contracts;
+using AutoMapper;
 
 namespace Post.Domain.Logic.IntegrationEvents.EventHandlers
 {
     //tested
     public class UserCreatedIntegrationEventHandler: BaseIntegrationEventHandler, IIntegrationEventHandler<UserCreatedIntegrationEvent>
     {
-        public UserCreatedIntegrationEventHandler(IEventHandlerService service)
-            :base(service)
+        public UserCreatedIntegrationEventHandler(IEventHandlerService service, IMapper mapper)
+            :base(service, mapper)
         {
-
         }
 
         public async Task Handle(UserCreatedIntegrationEvent @event)
         {
-            var user = new CreateUserDTO(@event.Email);
+            var user = _mapper.Map<CreateUserDTO>(@event);
             await _service.CreateUserAsync(user);
         }
     }

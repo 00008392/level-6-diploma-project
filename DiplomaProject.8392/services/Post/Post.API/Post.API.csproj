@@ -4,16 +4,13 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Protos\postItemsInfo.proto" />
-  </ItemGroup>
 
   <ItemGroup>
    
+    <Protobuf Include="Protos\accommodationItems.proto" GrpcServices="Server" />
+   
     <Protobuf Include="Protos\Common\common.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\postCRUD.proto" GrpcServices="Server" />
-    <Protobuf Include="Protos\postItemsInfo.proto" GrpcServices="Server" />
-    <Protobuf Include="Protos\postItemsManipulation.proto" GrpcServices="Server" />
 
   </ItemGroup>
 

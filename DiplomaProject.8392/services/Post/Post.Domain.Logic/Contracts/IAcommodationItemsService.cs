@@ -8,10 +8,12 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Logic.Contracts
 {
-    //get all rules/facilities/specificities
-    public interface IPostItemsInfoService<T>
-        where T: ItemBase
+    public interface IAcommodationItemsService<T, E>
+         where T : ItemAccommodationBase
+         where E : ItemBase
     {
         Task<ICollection<ItemInfoDTO>> GetItemsAsync();
+        Task AddItemsAsync(ICollection<AccommodationItemDTO> itemDTOs);
+        Task RemoveItemsAsync(ICollection<long> ids);
     }
 }

@@ -32,7 +32,7 @@ namespace APIGateway.Controllers.Account
 
         // GET: api/<AccountController>
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> Get()
         {
             var reply = await _infoClient.GetAllUsersAsync(new Protos.Common.Empty());
             reply.Users.ToList().ForEach(x => ConvertUserData(x));
@@ -41,7 +41,7 @@ namespace APIGateway.Controllers.Account
 
         // GET api/<AccountController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(long id)
+        public async Task<IActionResult> Get(long id)
         {
             var reply = await _infoClient.GetUserInfoAsync(new Request { Id = id});
             
@@ -65,7 +65,7 @@ namespace APIGateway.Controllers.Account
 
         // POST api/account
         [HttpPost]
-        public async Task<IActionResult> PostUser(RegistrationRequest request)
+        public async Task<IActionResult> Post(RegistrationRequest request)
         {
             //request.DateOfBirthTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(request.DateOfBirth);
             var reply = await _manipulationClient.RegisterUserAsync((RegistrationRequest)ConvertUserData(request));
@@ -78,7 +78,7 @@ namespace APIGateway.Controllers.Account
 
         // PUT api/<AccountController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, UpdateRequest request)
+        public async Task<IActionResult> Put(int id, UpdateRequest request)
         {
             if(id!=request.Id)
             {
@@ -94,7 +94,7 @@ namespace APIGateway.Controllers.Account
         }
         // PUT api/<AccountController>/password/5
         [HttpPut("password/{id}")]
-        public async Task<IActionResult> PutPassword(long id, [FromBody] string password)
+        public async Task<IActionResult> Put(long id, [FromBody] string password)
         {
             var reply = await _manipulationClient.ChangePasswordAsync(new ChangePasswordRequest
             {
@@ -110,7 +110,7 @@ namespace APIGateway.Controllers.Account
 
         // DELETE api/<AccountController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var reply = await _manipulationClient.DeleteUserAsync(new Request { Id = id });
             if (!reply.IsSuccess)

@@ -24,9 +24,11 @@ namespace Post.Domain.Entities
             PhoneNumber = phoneNumber;
         }
 
-        public Owner(string email)
+        public Owner(string email, string firstName, string lastName)
         {
             Email = email;
+            FirstName = firstName;
+            LastName = lastName;
         }
 
     }

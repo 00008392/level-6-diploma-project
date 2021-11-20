@@ -30,6 +30,8 @@ namespace Post.API.Mappings
             CreateMap<UserUpdatedIntegrationEvent, UpdateUserDTO>()
                 .ConvertUsing(x => new UpdateUserDTO(x.UserId, x.FirstName,
                 x.LastName, x.PhoneNumber, x.Email));
+            CreateMap<UserCreatedIntegrationEvent, CreateUserDTO>()
+                .ConvertUsing(x => new CreateUserDTO(x.Email, x.FirstName, x.LastName));
         }
         private string DateTimeToString(DateTime? time)
         {

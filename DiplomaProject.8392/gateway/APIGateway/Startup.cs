@@ -35,8 +35,8 @@ namespace APIGateway
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "APIGateway", Version = "v1" });
             });
-            //account
-            var accountUrl =new Uri(Configuration["grpcConnections:account"]);
+           // account
+            var accountUrl = new Uri(Configuration["grpcConnections:account"]);
             services.AddGrpcClient<UserManipulation.UserManipulationClient>((services, options) =>
             {
                 options.Address = accountUrl;
@@ -55,11 +55,15 @@ namespace APIGateway
             {
                 options.Address = postUrl;
             });
-            services.AddGrpcClient<PostItemsInfo.PostItemsInfoClient>((services, options) =>
+            services.AddGrpcClient<AccommodationRules.AccommodationRulesClient>((services, options) =>
             {
                 options.Address = postUrl;
             });
-            services.AddGrpcClient<PostItemsManipulation.PostItemsManipulationClient>((services, options) =>
+            services.AddGrpcClient<AccommodationFacilities.AccommodationFacilitiesClient>((services, options) =>
+            {
+                options.Address = postUrl;
+            });
+            services.AddGrpcClient<AccommodationSpecificities.AccommodationSpecificitiesClient>((services, options) =>
             {
                 options.Address = postUrl;
             });

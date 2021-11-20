@@ -1,7 +1,6 @@
 ﻿using APIGateway.Controllers.PostFeedback.Core;
 using Microsoft.AspNetCore.Mvc;
 using Post.API;
-using Protos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,38 +12,10 @@ namespace APIGateway.Controllers.PostFeedback
 {
     [Route("api/post/rules")]
     [ApiController]
-    public class RulesController : ItemsBaseController
+    public class RulesController : AccommodationItemsGenericController<AccommodationRules.AccommodationRulesClient>
     {
-        public RulesController(PostItemsInfo.PostItemsInfoClient itemsInfo,
-            PostItemsManipulation.PostItemsManipulationClient itemsManipulation)
-            :base(itemsInfo, itemsManipulation)
+        public RulesController(AccommodationRules.AccommodationRulesClient client) : base(client)
         {
-
-        }
-        [HttpGet]
-        public override async Task<IActionResult> GetItems()
-        {
-            return Ok(await _itemsInfoClient.GetRulesAsync(new Empty()));
-        }
-        [HttpPost]
-        public override async Task<IActionResult> PostItems(AddItemsRequest request)
-        {
-            var reply = await _itemsManipulationClient.AddRulesAsync(request);
-            if(!reply.IsSuccess)
-            {
-                return BadRequest(reply);
-            }
-            return StatusCode(201);
-        }
-        [HttpDelete("{id}")]
-        public override async Task<IActionResult> DeleteItems(RemoveItemsRequest request)
-        {
-            var reply = await _itemsManipulationClient.RemoveRulesAsync(request);
-            if(!reply.IsSuccess)
-            {
-                return NotFound(reply);
-            }
-            return NoContent();
         }
     }
 }
