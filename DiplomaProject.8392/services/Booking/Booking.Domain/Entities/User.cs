@@ -15,8 +15,10 @@ namespace Booking.Domain.Entities
         public string PhoneNumber { get; private set; }
         public string Address { get; private set; }
         public DateTime? DateOfBirth { get; private set; }
-        public ICollection<BookingRequest> BookingRequests { get; }
+        public ICollection<BookingRequest> BookingRequestsAsMainGuest { get; }
+        public ICollection<CoTravelerBooking> BookingRequestsAsCoTraveler { get; }
         public ICollection<Accommodation> Accommodations { get; }
+
 
         public User(string email)
         {

@@ -52,6 +52,7 @@ namespace Booking.Domain.Logic.Services
 
         public async Task DeleteEntityAsync(long id)
         {
+            //CHANGE ORDER OF DELETION
             var user = await _repository.GetByIdAsync(id);
             if (user == null)
             {

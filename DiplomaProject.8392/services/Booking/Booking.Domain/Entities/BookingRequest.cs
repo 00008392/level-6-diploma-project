@@ -14,15 +14,18 @@ namespace Booking.Domain.Entities
         public User Guest { get; }
         public long AccommodationId { get;private set; }
         public Accommodation Accommodation { get; }
+        public int GuestNo { get; set; }
         public DateTime StartDate { get; private set; }
         public DateTime EndDate { get; private set; }
         public Status Status { get; private set; }
+        public ICollection<CoTravelerBooking> CoTravelers { get; set; }
 
-        public BookingRequest(long? guestId, long accommodationId, 
+        public BookingRequest(long? guestId, long accommodationId, int guestNo,
             DateTime startDate, DateTime endDate)
         {
             GuestId = guestId;
             AccommodationId = accommodationId;
+            GuestNo = guestNo;
             StartDate = startDate;
             EndDate = endDate;
             Status = Status.Pending;

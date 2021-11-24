@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Booking.DAL.EF.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class initialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -64,6 +64,7 @@ namespace Booking.DAL.EF.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GuestId = table.Column<long>(type: "bigint", nullable: true),
                     AccommodationId = table.Column<long>(type: "bigint", nullable: false),
+                    GuestNo = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false)
@@ -85,6 +86,32 @@ namespace Booking.DAL.EF.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "CoTravelerBooking",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BookingId = table.Column<long>(type: "bigint", nullable: false),
+                    CoTravelerId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CoTravelerBooking", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CoTravelerBooking_BookingRequests_BookingId",
+                        column: x => x.BookingId,
+                        principalTable: "BookingRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CoTravelerBooking_Users_CoTravelerId",
+                        column: x => x.CoTravelerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Accommodations_OwnerId",
                 table: "Accommodations",
@@ -101,6 +128,16 @@ namespace Booking.DAL.EF.Migrations
                 column: "GuestId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CoTravelerBooking_BookingId",
+                table: "CoTravelerBooking",
+                column: "BookingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CoTravelerBooking_CoTravelerId",
+                table: "CoTravelerBooking",
+                column: "CoTravelerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
                 table: "Users",
                 column: "Email",
@@ -109,6 +146,9 @@ namespace Booking.DAL.EF.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "CoTravelerBooking");
+
             migrationBuilder.DropTable(
                 name: "BookingRequests");
 

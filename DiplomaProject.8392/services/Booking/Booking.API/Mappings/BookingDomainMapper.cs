@@ -36,9 +36,9 @@ namespace Booking.API.Mappings
             CreateMap<UserDTO, Domain.Entities.User>()
                 .ConvertUsing(x => new Domain.Entities.User(x.Id, x.FirstName,
                 x.LastName,x.Email, x.PhoneNumber, x.Address,x.DateOfBirth));
-            CreateMap<CreateBookingRequestDTO, Domain.Entities.BookingRequest>()
-                .ConvertUsing(x => new Domain.Entities.BookingRequest(x.GuestId,
-                x.AccommodationId, (DateTime)x.StartDate, (DateTime)x.EndDate));
+            //CreateMap<CreateBookingRequestDTO, Domain.Entities.BookingRequest>()
+            //    .ConvertUsing(x => new Domain.Entities.BookingRequest(x.GuestId,
+            //    x.AccommodationId,  (DateTime)x.StartDate, (DateTime)x.EndDate));
 
 
         }

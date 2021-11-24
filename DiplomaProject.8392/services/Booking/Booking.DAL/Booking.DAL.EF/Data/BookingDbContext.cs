@@ -26,6 +26,7 @@ namespace Booking.DAL.EF.Data
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new BookingRequestEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new AccommodationEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CoTravelBookingEntityTypeConfiguration());
         }
     }
 }

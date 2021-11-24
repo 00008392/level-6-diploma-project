@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.DAL.EF.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20210929150730_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20211124171844_initialMigration")]
+    partial class initialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -93,6 +93,9 @@ namespace Booking.DAL.EF.Migrations
                     b.Property<long?>("GuestId")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("GuestNo")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -106,6 +109,28 @@ namespace Booking.DAL.EF.Migrations
                     b.HasIndex("GuestId");
 
                     b.ToTable("BookingRequests");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Entities.CoTravelerBooking", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("BookingId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("CoTravelerId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("CoTravelerId");
+
+                    b.ToTable("CoTravelerBooking");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.User", b =>
@@ -162,7 +187,7 @@ namespace Booking.DAL.EF.Migrations
                         .IsRequired();
 
                     b.HasOne("Booking.Domain.Entities.User", "Guest")
-                        .WithMany("BookingRequests")
+                        .WithMany("BookingRequestsAsMainGuest")
                         .HasForeignKey("GuestId");
 
                     b.Navigation("Accommodation");
@@ -170,16 +195,40 @@ namespace Booking.DAL.EF.Migrations
                     b.Navigation("Guest");
                 });
 
+            modelBuilder.Entity("Booking.Domain.Entities.CoTravelerBooking", b =>
+                {
+                    b.HasOne("Booking.Domain.Entities.BookingRequest", "Booking")
+                        .WithMany("CoTravelers")
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Domain.Entities.User", "CoTraveler")
+                        .WithMany("BookingRequestsAsCoTraveler")
+                        .HasForeignKey("CoTravelerId");
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("CoTraveler");
+                });
+
             modelBuilder.Entity("Booking.Domain.Entities.Accommodation", b =>
                 {
                     b.Navigation("BookingRequests");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Entities.BookingRequest", b =>
+                {
+                    b.Navigation("CoTravelers");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.User", b =>
                 {
                     b.Navigation("Accommodations");
 
-                    b.Navigation("BookingRequests");
+                    b.Navigation("BookingRequestsAsCoTraveler");
+
+                    b.Navigation("BookingRequestsAsMainGuest");
                 });
 #pragma warning restore 612, 618
         }

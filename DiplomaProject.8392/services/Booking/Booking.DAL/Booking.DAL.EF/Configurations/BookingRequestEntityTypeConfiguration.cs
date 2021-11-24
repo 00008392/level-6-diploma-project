@@ -15,10 +15,11 @@ namespace Booking.DAL.EF.Configurations
         public void Configure(EntityTypeBuilder<BookingRequest> builder)
         {
             builder.HasKey(r => r.Id);
-            builder.HasOne(r => r.Guest).WithMany(g => g.BookingRequests)
+            builder.HasOne(r => r.Guest).WithMany(g => g.BookingRequestsAsMainGuest)
                 .HasForeignKey(r => r.GuestId);
             builder.HasOne(r => r.Accommodation).WithMany(a => a.BookingRequests)
                 .HasForeignKey(r => r.AccommodationId).OnDelete(DeleteBehavior.Cascade);
+           
         }
     }
 }
