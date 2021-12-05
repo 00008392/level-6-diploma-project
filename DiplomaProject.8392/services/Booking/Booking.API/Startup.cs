@@ -54,7 +54,7 @@ namespace Booking.API
             services.AddScoped<AbstractValidator<CreateUserDTO>, CreateUserValidator>();
             services.AddScoped<AbstractValidator<UserDTO>, UpdateUserValidator>();
             services.AddScoped<IBookingInfoService, BookingInfoService>();
-            services.AddScoped<IBookingRequestManipulationService, BookingRequestManipulationService>();
+            services.AddScoped<IBookingService, BookingRequestManipulationService>();
             services.AddScoped<IEventHandlerService<Domain.Entities.User>, UserEventHandlerService>();
             services.AddScoped<IEventHandlerService<Domain.Entities.Accommodation>, AccommodationEventHandlerService>();
             services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();

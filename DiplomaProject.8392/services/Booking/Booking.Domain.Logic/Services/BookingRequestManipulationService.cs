@@ -5,6 +5,7 @@ using Booking.Domain.Enums;
 using Booking.Domain.Logic.Contracts;
 using Booking.Domain.Logic.DTOs;
 using Booking.Domain.Logic.Exceptions;
+using Booking.Domain.Logic.Specification;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,9 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.Services
 {
-    public class BookingRequestManipulationService : IBookingRequestManipulationService
+    public class BookingRequestManipulationService : IBookingService
     {
-        private readonly IRepository<BookingRequest> _repository;
+        private readonly IRepository<BookingRequest> _bookingRepository;
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<Accommodation> _accommodationRepository;
         private readonly AbstractValidator<CreateBookingRequestDTO> _validator;
@@ -27,25 +28,11 @@ namespace Booking.Domain.Logic.Services
             AbstractValidator<CreateBookingRequestDTO> validator,
             IMapper mapper)
         {
-            _repository = repository;
+            _bookingRepository = repository;
             _userRepository = userRepository;
             _accommodationRepository = accommodationRepository;
             _validator = validator;
             _mapper = mapper;
-        }
-
-        public async Task AcceptBookingRequestAsync(long id)
-        {
-            await HandleRequestStatusAsync(Status.Accepted, id);
-        }
-        public async Task RejectBookingRequestAsync(long id)
-        {
-            await HandleRequestStatusAsync(Status.Rejected, id);
-        }
-       
-        public async Task CancelBookingAsync(long id)
-        {
-            await HandleRequestStatusAsync(Status.Cancelled, id);
         }
 
         public async Task CreateBookingRequestAsync(CreateBookingRequestDTO requestDTO)
@@ -71,7 +58,7 @@ namespace Booking.Domain.Logic.Services
                 throw new AccommodationBookedException(requestDTO.AccommodationId);
             }
             var request = _mapper.Map<BookingRequest>(requestDTO);
-            await _repository.CreateAsync(request);
+            await _bookingRepository.CreateAsync(request);
         }
         public async Task DeleteBookingRequestAsync(long id)
         {
@@ -80,21 +67,52 @@ namespace Booking.Domain.Logic.Services
             {
                 throw new DeleteBookingRequestException();
             }
-            await _repository.DeleteAsync(request);
+            await _bookingRepository.DeleteAsync(request);
         }
-        private async Task HandleRequestStatusAsync(Status status, long id)
+        public async Task ManipulateCoTravelerAsync(CoTravelerDTO coTravelerDTO, bool remove = false)
+        {
+            var coTraveler = await _userRepository.GetByIdAsync(coTravelerDTO.CoTravelerId);
+            if(coTraveler==null)
+            {
+                throw new NotFoundException(coTravelerDTO.CoTravelerId, "Co traveler");
+            }
+            // co traveler can be added/removed only if booking request is not accepted yet
+            var bookingRequest = (await _bookingRepository.GetFilteredAsync(
+                x=> x.Id == coTravelerDTO.BookingId && x.Status == (int)Status.Pending)).SingleOrDefault();
+            if(!_bookingRepository.DoesItemWithIdExist(coTravelerDTO.BookingId))
+            {
+                throw new NotFoundException(coTravelerDTO.CoTravelerId, "Booking request");
+            }
+            if(remove)
+            {
+                bookingRequest.CoTravelers.Remove(coTraveler);
+            } else
+            {
+                bookingRequest.CoTravelers.Add(coTraveler);
+            }
+            await _bookingRepository.UpdateAsync(bookingRequest);
+
+        }
+        public async Task HandleRequestStatusAsync(long id, BookingRequestSpecification specification, Status status)
         {
             var request = await FindRequestAsync(id);
-            if(request.Status==status)
+            bool isSatisfied = specification.IsSatisfiedBy(request);
+            if (request.Status==status || !isSatisfied)
             {
                 throw new BookingRequestStatusException(status);
             }
             request.SetStatus(status);
-            await _repository.UpdateAsync(request);
+            await _bookingRepository.UpdateAsync(request);
+        }
+        public async Task<ICollection<BookingRequestInfoDTO>> GetBookings(BookingRequestSpecification specification)
+        {
+            var requestsList = (await _bookingRepository.GetFilteredAsync(specification.ToExpression())).ToList();
+            var requestsDTOList = _mapper.Map<ICollection<BookingRequestInfoDTO>>(requestsList);
+            return requestsDTOList;
         }
         private async Task<BookingRequest> FindRequestAsync(long id)
         {
-            var request = await _repository.GetByIdAsync(id);
+            var request = await _bookingRepository.GetByIdAsync(id);
             if (request == null)
             {
                 throw new NotFoundException(id, request.GetType().Name);
@@ -104,11 +122,13 @@ namespace Booking.Domain.Logic.Services
         private async Task<ICollection<BookingRequest>> FindBookingForDatesAsync(DateTime startDate, DateTime endDate,
             long accommodationId)
         {
-            var accommodations = await _repository.GetFilteredAsync(x => x.AccommodationId == accommodationId &&
+            var accommodations = await _bookingRepository.GetFilteredAsync(x => x.AccommodationId == accommodationId &&
               ((startDate >= x.StartDate && startDate <= x.EndDate) ||
               (endDate >= x.EndDate && endDate <= x.EndDate)) && x.Status == Status.Accepted);
 
             return accommodations;
         }
+
+
     }
 }

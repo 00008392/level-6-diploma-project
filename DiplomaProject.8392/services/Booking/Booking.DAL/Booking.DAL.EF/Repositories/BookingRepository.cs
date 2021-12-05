@@ -20,7 +20,8 @@ namespace Booking.DAL.EF.Repositories
         public override IQueryable<BookingRequest> GetDbSetWithRelatedTables()
         {
             return _dbSet.Include(x => x.Guest)
-                         .Include(x => x.Accommodation);
+                         .Include(x => x.Accommodation)
+                         .Include(x => x.CoTravelers);
         }
     }
 }

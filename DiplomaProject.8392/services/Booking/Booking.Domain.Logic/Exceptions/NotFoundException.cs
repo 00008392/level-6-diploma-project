@@ -12,5 +12,9 @@ namespace Booking.Domain.Logic.Exceptions
         {
 
         }
+        public NotFoundException(string property):base($"{property} does not exist")
+        {
+
+        }
     }
 }

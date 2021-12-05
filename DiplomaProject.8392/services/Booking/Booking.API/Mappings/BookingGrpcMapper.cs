@@ -33,11 +33,17 @@ namespace Booking.API.Mappings
                 .ForMember(x => x.EndDate, opt => opt.MapFrom
                 (src => Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime
                 (DateTime.SpecifyKind(src.EndDate, DateTimeKind.Utc))))
-                .ForMember(x => x.Status, opt => opt.MapFrom(src => (int)src.Status));
+                .ForMember(x => x.Status, opt => opt.MapFrom(src => (int)src.Status))
+                .ForMember(x => x.CoTravelers, opt => opt.MapFrom((src, dest, prop, context) =>
+                    {
+                        return src.CoTravelers.Any() ? context.Mapper.Map<ICollection<User>>(src.CoTravelers)
+                        : null;
+                    }));
+            CreateMap<AddCoTravelerRequest, CoTravelerDTO>();
             CreateMap<CreateRequest, CreateBookingRequestDTO>()
                 .ConvertUsing((x, context) => new CreateBookingRequestDTO(x.GuestId ?? 0,
-                x.AccommodationId ?? 0, x.StartDate?.ToDateTime(), x.EndDate?.ToDateTime()));
-                
+                x.AccommodationId ?? 0, (int)x.GuestNo,  x.StartDate?.ToDateTime(), x.EndDate?.ToDateTime()));
+
         }
     }
 }

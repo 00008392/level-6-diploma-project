@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Booking.Domain.Entities;
 using Booking.Domain.Logic.Contracts;
 using Booking.Domain.Logic.DTOs;
@@ -16,14 +17,16 @@ namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
     public class UserCreatedIntegrationEventHandler : BaseIntegrationEventHandler<User>,
         IIntegrationEventHandler<UserCreatedIntegrationEvent>
     {
-        public UserCreatedIntegrationEventHandler(IEventHandlerService<User> service) 
+        private readonly IMapper _mapper;
+        public UserCreatedIntegrationEventHandler(IEventHandlerService<User> service, IMapper mapper) 
             : base(service)
         {
+            _mapper = mapper;
         }
 
         public async Task Handle(UserCreatedIntegrationEvent @event)
         {
-            var userDTO = new CreateUserDTO(@event.Email);
+            var userDTO = _mapper.Map<UserDTO>(@event);
             await _service.CreateEntityAsync(userDTO);
         }
     }

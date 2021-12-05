@@ -14,7 +14,10 @@ namespace Booking.Domain.Logic.Validation
         {
             RuleFor(p => p.Email)
                 .NotEmpty().WithMessage("Email cannot be empty");
-          
+            RuleFor(p => p.FirstName)
+               .NotEmpty().WithMessage("First name cannot be empty");
+            RuleFor(p => p.LastName)
+               .NotEmpty().WithMessage("Last name cannot be empty");
         }
     }
 }

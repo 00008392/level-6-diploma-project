@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Booking.DAL.EF.Migrations
 {
-    public partial class initialMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,7 +53,7 @@ namespace Booking.DAL.EF.Migrations
                         column: x => x.OwnerId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);  
                 });
 
             migrationBuilder.CreateTable(
@@ -63,7 +63,7 @@ namespace Booking.DAL.EF.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GuestId = table.Column<long>(type: "bigint", nullable: true),
-                    AccommodationId = table.Column<long>(type: "bigint", nullable: false),
+                    AccommodationId = table.Column<long>(type: "bigint", nullable: true),
                     GuestNo = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -77,7 +77,7 @@ namespace Booking.DAL.EF.Migrations
                         column: x => x.AccommodationId,
                         principalTable: "Accommodations",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BookingRequests_Users_GuestId",
                         column: x => x.GuestId,
@@ -87,29 +87,27 @@ namespace Booking.DAL.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CoTravelerBooking",
+                name: "BookingRequestUser",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BookingId = table.Column<long>(type: "bigint", nullable: false),
-                    CoTravelerId = table.Column<long>(type: "bigint", nullable: true)
+                    BookingRequestsAsCoTravelerId = table.Column<long>(type: "bigint", nullable: false),
+                    CoTravelersId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CoTravelerBooking", x => x.Id);
+                    table.PrimaryKey("PK_BookingRequestUser", x => new { x.BookingRequestsAsCoTravelerId, x.CoTravelersId });
                     table.ForeignKey(
-                        name: "FK_CoTravelerBooking_BookingRequests_BookingId",
-                        column: x => x.BookingId,
+                        name: "FK_BookingRequestUser_BookingRequests_BookingRequestsAsCoTravelerId",
+                        column: x => x.BookingRequestsAsCoTravelerId,
                         principalTable: "BookingRequests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CoTravelerBooking_Users_CoTravelerId",
-                        column: x => x.CoTravelerId,
+                        name: "FK_BookingRequestUser_Users_CoTravelersId",
+                        column: x => x.CoTravelersId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -128,26 +126,54 @@ namespace Booking.DAL.EF.Migrations
                 column: "GuestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CoTravelerBooking_BookingId",
-                table: "CoTravelerBooking",
-                column: "BookingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CoTravelerBooking_CoTravelerId",
-                table: "CoTravelerBooking",
-                column: "CoTravelerId");
+                name: "IX_BookingRequestUser_CoTravelersId",
+                table: "BookingRequestUser",
+                column: "CoTravelersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
                 table: "Users",
                 column: "Email",
                 unique: true);
+
+            migrationBuilder.Sql(@"create trigger AccommodationDeleted
+                                    on Accommodations
+                                    instead of delete
+                                    as
+                                    begin
+                                    set nocount on
+                                    delete BookingRequests from BookingRequests
+                                    join deleted
+                                    on BookingRequests.AccommodationId = deleted.Id;
+                                    delete Accommodations from Accommodations
+                                    join deleted
+                                    on Accommodations.Id = deleted.Id;
+                                    end");
+            migrationBuilder.Sql(@"create trigger UserDeleted
+                                    on Users
+                                    instead of delete
+                                    as
+                                    begin
+                                    set nocount on
+                                    delete BookingRequests from BookingRequests
+                                    join deleted
+                                    on BookingRequests.GuestId = deleted.Id;
+                                    delete Accommodations from Accommodations
+                                    join deleted
+                                    on Accommodations.OwnerId = deleted.Id;
+                                    delete Users from Users
+                                    join deleted 
+                                    on Users.Id = deleted.Id;
+                                    end");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql(@"drop trigger AccommodationDeleted");
+            migrationBuilder.Sql(@"drop trigger UserDeleted"); 
+
             migrationBuilder.DropTable(
-                name: "CoTravelerBooking");
+                name: "BookingRequestUser");
 
             migrationBuilder.DropTable(
                 name: "BookingRequests");
@@ -157,6 +183,7 @@ namespace Booking.DAL.EF.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
         }
     }
 }

@@ -16,6 +16,8 @@ namespace Booking.Domain.Logic.Validation
                 .NotEmpty().WithMessage("Accommodation cannot be empty");
             RuleFor(r => r.GuestId)
                .NotEmpty().WithMessage("Guest cannot be empty");
+            RuleFor(r => r.GuestNo)
+               .NotEmpty().WithMessage("Number of guests cannot be empty");
             RuleFor(r => r.StartDate)
                .NotEmpty().WithMessage("Start date cannot be empty");
             RuleFor(r => r.EndDate)

@@ -13,6 +13,8 @@ service BookingRequestManipulation {
   rpc AcceptBookingRequest (Request) returns (Response);//tested
   rpc RejectBookingRequest (Request) returns (Response);//tested
   rpc CancelBooking (Request) returns (Response);//tested
+  rpc AddCoTraveler (AddCoTravelerRequest) returns (Response);
+  rpc RemoveCoTraveler (Request) returns (Response);
 }
 service BookingRequestInfo {
 
@@ -34,15 +36,22 @@ message Response {
 message CreateRequest {
 	google.protobuf.Int64Value guestId = 1;
 	google.protobuf.Int64Value accommodationId = 2;
-	google.protobuf.Timestamp startDate = 3;
-	google.protobuf.Timestamp endDate = 4;
+	google.protobuf.Int32Value guestNo = 3;
+	google.protobuf.Timestamp startDate = 4;
+	google.protobuf.Timestamp endDate = 5;
+}
+message AddCoTravelerRequest {
+ int64 bookingId = 1;
+ int64 coTravelerId = 2;
 }
 message BookingRequest {
  User guest = 1;
  Accommodation accommodation = 2;
- google.protobuf.Timestamp startDate = 3;
- google.protobuf.Timestamp endDate = 4;
- int32 status = 5;
+ int32 guestNo = 3;
+ google.protobuf.Timestamp startDate = 4;
+ google.protobuf.Timestamp endDate = 5;
+ int32 status = 6;
+ repeated User coTravelers = 7;
 }
 message RequestInfoReply {
 repeated BookingRequest requests = 1;

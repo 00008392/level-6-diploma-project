@@ -23,9 +23,16 @@ namespace Booking.API.Mappings
                 x.MovingInTime, x.MovingOutTime);
                 });
 
-            CreateMap<Domain.Entities.BookingRequest, BookingRequestInfoDTO>()
-                .ConvertUsing(x => new BookingRequestInfoDTO(x.StartDate,
-                x.EndDate, x.Status));
+            //CreateMap<Domain.Entities.BookingRequest, BookingRequestInfoDTO>()
+            //    .ConvertUsing((x, dest, context) => {
+            //        List<UserDTO> coTravelers = new List<UserDTO>();
+            //        x.CoTravelers.ToList().ForEach(i => 
+            //        coTravelers.Add(context.Mapper.Map<UserDTO>(i.CoTraveler)));
+            //        return new BookingRequestInfoDTO(x.Id, coTravelers, x.GuestNo,
+            //            x.StartDate, x.EndDate, x.Status);
+            //    });
+            CreateMap<CoTravelerDTO, Domain.Entities.CoTravelerBooking>()
+                .ConvertUsing(x => new Domain.Entities.CoTravelerBooking(x.BookingId, x.CoTravelerId));
             CreateMap<Domain.Entities.Accommodation, AccommodationDTO>()
                 .ConvertUsing(x => new AccommodationDTO(x.Id, x.Title, x.OwnerId, x.Address,
                 x.ContactNumber, x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo,
@@ -36,10 +43,9 @@ namespace Booking.API.Mappings
             CreateMap<UserDTO, Domain.Entities.User>()
                 .ConvertUsing(x => new Domain.Entities.User(x.Id, x.FirstName,
                 x.LastName,x.Email, x.PhoneNumber, x.Address,x.DateOfBirth));
-            //CreateMap<CreateBookingRequestDTO, Domain.Entities.BookingRequest>()
-            //    .ConvertUsing(x => new Domain.Entities.BookingRequest(x.GuestId,
-            //    x.AccommodationId,  (DateTime)x.StartDate, (DateTime)x.EndDate));
-
+            CreateMap<CreateBookingRequestDTO, Domain.Entities.BookingRequest>()
+                .ConvertUsing(x => new Domain.Entities.BookingRequest(x.GuestId,
+                x.AccommodationId, x.GuestNo, (DateTime)x.StartDate, (DateTime)x.EndDate));
 
         }
     }

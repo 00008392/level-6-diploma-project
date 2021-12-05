@@ -17,7 +17,8 @@ namespace Booking.DAL.EF.Configurations
             builder.HasKey(u => u.Id);
             builder.HasIndex(u => u.Email).IsUnique(true);
             builder.Property(u => u.Email).IsRequired(true);
-           
+            builder.Property(u => u.FirstName).IsRequired(true);
+            builder.Property(u => u.LastName).IsRequired(true);
         }
     }
 }

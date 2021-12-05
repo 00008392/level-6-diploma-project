@@ -12,6 +12,7 @@ namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers.Core
         where T: BaseEntity
     {
         protected readonly IEventHandlerService<T> _service;
+
         protected BaseIntegrationEventHandler(
             IEventHandlerService<T> service)
         {

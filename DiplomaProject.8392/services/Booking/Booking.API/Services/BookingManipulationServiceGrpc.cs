@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Booking.Domain.Logic.Contracts;
 using Booking.Domain.Logic.DTOs;
+using EventBus.Contracts;
 using ExceptionHandling;
 using FluentValidation;
 using Grpc.Core;
@@ -13,14 +14,16 @@ namespace Booking.API.Services
 {
     public class BookingManipulationServiceGrpc: BookingRequestManipulation.BookingRequestManipulationBase
     {
-        private readonly IBookingRequestManipulationService _service;
+        private readonly IBookingService _service;
         private readonly IMapper _mapper;
+        private readonly IEventBus _eventBus;
 
-        public BookingManipulationServiceGrpc(IBookingRequestManipulationService service,
-            IMapper mapper)
+        public BookingManipulationServiceGrpc(IBookingService service,
+            IMapper mapper, IEventBus eventBus)
         {
             _service = service;
             _mapper = mapper;
+            _eventBus = eventBus;
         }
 
         public override async Task<Response> CreateBookingRequest(CreateRequest request, 
@@ -39,6 +42,7 @@ namespace Booking.API.Services
          ServerCallContext context)
         {
             return await HandleRequestAsync(_service.AcceptBookingRequestAsync, request.Id);
+            
         }
         public override async Task<Response> RejectBookingRequest(Request request,
          ServerCallContext context)
@@ -50,7 +54,12 @@ namespace Booking.API.Services
         {
             return await HandleRequestAsync(_service.CancelBookingAsync, request.Id);
         }
-
+        public override async Task<Response> AddCoTraveler(AddCoTravelerRequest request,
+            ServerCallContext context)
+        {
+            var addCoTravelerDTO = _mapper.Map<CoTravelerDTO>(request);
+            return await HandleRequestAsync(_service.AddCoTravelerAsync, addCoTravelerDTO);
+        }
         private async Task<Response> HandleRequestAsync<T>(Func<T, Task> action, T parameter)
         {
             var response = new Response();

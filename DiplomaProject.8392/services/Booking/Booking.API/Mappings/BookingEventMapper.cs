@@ -22,6 +22,8 @@ namespace Booking.API.Mappings
                 x.ContactNumber, x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo,
                 x.SquareMeters, x.Price, x.IsWholeApartment, x.MovingInTime,
                 x.MovingOutTime));
+            CreateMap<UserCreatedIntegrationEvent, CreateUserDTO>()
+                .ConvertUsing(x => new CreateUserDTO(x.Email, x.FirstName, x.LastName));
             CreateMap<UserUpdatedIntegrationEvent, UserDTO>()
                 .ConvertUsing(x => new UserDTO(x.UserId, x.FirstName, x.LastName,
                 x.Email, x.PhoneNumber, x.Address, x.DateOfBirth));

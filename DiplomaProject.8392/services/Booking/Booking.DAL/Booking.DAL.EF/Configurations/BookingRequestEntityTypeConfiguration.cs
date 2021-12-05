@@ -16,9 +16,10 @@ namespace Booking.DAL.EF.Configurations
         {
             builder.HasKey(r => r.Id);
             builder.HasOne(r => r.Guest).WithMany(g => g.BookingRequestsAsMainGuest)
-                .HasForeignKey(r => r.GuestId);
+                .HasForeignKey(r => r.GuestId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(r => r.Accommodation).WithMany(a => a.BookingRequests)
-                .HasForeignKey(r => r.AccommodationId).OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(r => r.AccommodationId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(r => r.CoTravelers).WithMany(x => x.BookingRequestsAsCoTraveler);
            
         }
     }
