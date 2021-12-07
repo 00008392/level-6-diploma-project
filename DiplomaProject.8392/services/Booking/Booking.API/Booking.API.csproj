@@ -4,8 +4,10 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+
   <ItemGroup>
     <Protobuf Include="Protos\booking.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\Common\common.proto" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>

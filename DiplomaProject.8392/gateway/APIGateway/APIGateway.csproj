@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Protos\Account\account.proto" />
+    <None Remove="Protos\Booking\booking.proto" />
+    <None Remove="Protos\Common\common.proto" />
+    <None Remove="Protos\PostFeedback\accommodationItems.proto" />
+    <None Remove="Protos\PostFeedback\postCRUD.proto" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Google.Protobuf" Version="3.19.1" />
@@ -18,10 +25,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\Booking\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Protobuf Include="Protos\Account\account.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\Booking\booking.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\Common\common.proto" GrpcServices="Client" />
-    <Protobuf Include="Protos\PostFeedback\postCRUD.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\PostFeedback\accommodationItems.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\PostFeedback\postCRUD.proto" GrpcServices="Client" />
   </ItemGroup>
 
 </Project>

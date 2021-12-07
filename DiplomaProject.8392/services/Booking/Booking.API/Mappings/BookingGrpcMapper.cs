@@ -18,7 +18,8 @@ namespace Booking.API.Mappings
                       ));
             CreateMap<AccommodationDTO, Accommodation>()
                 .ForMember(x => x.Price, opt => opt.MapFrom(src => (double)src.Price));
-            CreateMap<BookingRequestInfoDTO, BookingRequest>()
+
+            CreateMap<BookingRequestInfoDTO, BookingDetailsReply>()
                 .ForMember(x => x.Guest, opt => opt.MapFrom((src, dest, prop, context) =>
                     {
                         return src.Guest == null ? null : context.Mapper.Map<User>(src.Guest);
@@ -39,10 +40,11 @@ namespace Booking.API.Mappings
                         return src.CoTravelers.Any() ? context.Mapper.Map<ICollection<User>>(src.CoTravelers)
                         : null;
                     }));
-            CreateMap<AddCoTravelerRequest, CoTravelerDTO>();
+
+
             CreateMap<CreateRequest, CreateBookingRequestDTO>()
                 .ConvertUsing((x, context) => new CreateBookingRequestDTO(x.GuestId ?? 0,
-                x.AccommodationId ?? 0, (int)x.GuestNo,  x.StartDate?.ToDateTime(), x.EndDate?.ToDateTime()));
+                x.AccommodationId ?? 0, (int)x.GuestNo, x.StartDate?.ToDateTime(), x.EndDate?.ToDateTime()));
 
         }
     }

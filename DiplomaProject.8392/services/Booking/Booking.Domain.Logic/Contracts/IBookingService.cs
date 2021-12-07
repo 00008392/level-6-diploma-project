@@ -14,8 +14,9 @@ namespace Booking.Domain.Logic.Contracts
         Task CreateBookingRequestAsync(CreateBookingRequestDTO requestDTO);
         //can be deleted by the user who requested it until not accepted or if rejected
         Task DeleteBookingRequestAsync(long id);
-        Task HandleRequestStatusAsync(long id, BookingRequestSpecification specification, Enums.Status status);
-        Task ManipulateCoTravelerAsync(CoTravelerDTO coTraveler, bool remove=false);
-        Task<ICollection<BookingRequestInfoDTO>> GetBookings(BookingRequestSpecification specification);
+        Task HandleRequestStatusAsync(BookingStatusDTO bookingStatus);
+        Task HandleCoTravelerAsync(CoTravelerDTO coTraveler);
+        Task<ICollection<BookingRequestInfoDTO>> GetBookingsAsync(BookingRequestSpecification specification);
+        Task<BookingRequestInfoDTO> GetBookingDetailsAsync(long id);
     }
 }

@@ -10,12 +10,13 @@ using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.Services
 {
-    public class BookingRequestManipulationService : IBookingService
+    public class BookingService : IBookingService
     {
         private readonly IRepository<BookingRequest> _bookingRepository;
         private readonly IRepository<User> _userRepository;
@@ -23,7 +24,7 @@ namespace Booking.Domain.Logic.Services
         private readonly AbstractValidator<CreateBookingRequestDTO> _validator;
         private readonly IMapper _mapper;
 
-        public BookingRequestManipulationService(IRepository<BookingRequest> repository,
+        public BookingService(IRepository<BookingRequest> repository,
             IRepository<User> userRepository, IRepository<Accommodation> accommodationRepository,
             AbstractValidator<CreateBookingRequestDTO> validator,
             IMapper mapper)
@@ -69,53 +70,62 @@ namespace Booking.Domain.Logic.Services
             }
             await _bookingRepository.DeleteAsync(request);
         }
-        public async Task ManipulateCoTravelerAsync(CoTravelerDTO coTravelerDTO, bool remove = false)
+        public async Task HandleCoTravelerAsync(CoTravelerDTO coTravelerDTO)
         {
             var coTraveler = await _userRepository.GetByIdAsync(coTravelerDTO.CoTravelerId);
-            if(coTraveler==null)
+            if (coTraveler == null)
             {
                 throw new NotFoundException(coTravelerDTO.CoTravelerId, "Co traveler");
             }
             // co traveler can be added/removed only if booking request is not accepted yet
             var bookingRequest = (await _bookingRepository.GetFilteredAsync(
-                x=> x.Id == coTravelerDTO.BookingId && x.Status == (int)Status.Pending)).SingleOrDefault();
-            if(!_bookingRepository.DoesItemWithIdExist(coTravelerDTO.BookingId))
+                x => x.Id == coTravelerDTO.BookingId && x.Status == (int)Status.Pending)).SingleOrDefault();
+            if (!_bookingRepository.DoesItemWithIdExist(coTravelerDTO.BookingId))
             {
                 throw new NotFoundException(coTravelerDTO.CoTravelerId, "Booking request");
             }
-            if(remove)
+            if(coTravelerDTO.Action==Enums.CoTravelerAction.Remove)
             {
                 bookingRequest.CoTravelers.Remove(coTraveler);
-            } else
+            }
+            else
             {
                 bookingRequest.CoTravelers.Add(coTraveler);
             }
             await _bookingRepository.UpdateAsync(bookingRequest);
-
         }
-        public async Task HandleRequestStatusAsync(long id, BookingRequestSpecification specification, Status status)
+        public async Task HandleRequestStatusAsync(BookingStatusDTO bookingStatusDTO)
         {
-            var request = await FindRequestAsync(id);
-            bool isSatisfied = specification.IsSatisfiedBy(request);
-            if (request.Status==status || !isSatisfied)
+            var request = await FindRequestAsync(bookingStatusDTO.BookingId);
+            bool isSatisfied = bookingStatusDTO.BookingSpecification.IsSatisfiedBy(request);
+            if (request.Status== bookingStatusDTO.BookingStatus || !isSatisfied)
             {
-                throw new BookingRequestStatusException(status);
+                throw new BookingRequestStatusException(bookingStatusDTO.BookingStatus);
             }
-            request.SetStatus(status);
+            request.SetStatus(bookingStatusDTO.BookingStatus);
             await _bookingRepository.UpdateAsync(request);
         }
-        public async Task<ICollection<BookingRequestInfoDTO>> GetBookings(BookingRequestSpecification specification)
+        public async Task<ICollection<BookingRequestInfoDTO>> GetBookingsAsync(BookingRequestSpecification specification)
         {
             var requestsList = (await _bookingRepository.GetFilteredAsync(specification.ToExpression())).ToList();
             var requestsDTOList = _mapper.Map<ICollection<BookingRequestInfoDTO>>(requestsList);
             return requestsDTOList;
+        }
+        public async Task<BookingRequestInfoDTO> GetBookingDetailsAsync(long id)
+        {
+            var request = await _bookingRepository.GetByIdAsync(id);
+            if (request!=null)
+            {
+                return _mapper.Map<BookingRequestInfoDTO>(request);
+            }
+            return null;
         }
         private async Task<BookingRequest> FindRequestAsync(long id)
         {
             var request = await _bookingRepository.GetByIdAsync(id);
             if (request == null)
             {
-                throw new NotFoundException(id, request.GetType().Name);
+                throw new NotFoundException(request.GetType().Name);
             }
             return request;
         }
@@ -128,7 +138,6 @@ namespace Booking.Domain.Logic.Services
 
             return accommodations;
         }
-
 
     }
 }

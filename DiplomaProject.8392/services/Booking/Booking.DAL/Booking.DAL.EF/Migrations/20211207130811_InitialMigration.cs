@@ -13,8 +13,8 @@ namespace Booking.DAL.EF.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -53,7 +53,7 @@ namespace Booking.DAL.EF.Migrations
                         column: x => x.OwnerId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);  
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -62,8 +62,8 @@ namespace Booking.DAL.EF.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    GuestId = table.Column<long>(type: "bigint", nullable: true),
-                    AccommodationId = table.Column<long>(type: "bigint", nullable: true),
+                    GuestId = table.Column<long>(type: "bigint", nullable: false),
+                    AccommodationId = table.Column<long>(type: "bigint", nullable: false),
                     GuestNo = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -169,9 +169,6 @@ namespace Booking.DAL.EF.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"drop trigger AccommodationDeleted");
-            migrationBuilder.Sql(@"drop trigger UserDeleted"); 
-
             migrationBuilder.DropTable(
                 name: "BookingRequestUser");
 
@@ -184,6 +181,8 @@ namespace Booking.DAL.EF.Migrations
             migrationBuilder.DropTable(
                 name: "Users");
 
+            migrationBuilder.Sql(@"drop trigger AccommodationDeleted");
+            migrationBuilder.Sql(@"drop trigger UserDeleted");
         }
     }
 }

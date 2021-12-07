@@ -20,9 +20,11 @@ namespace Booking.Domain.Entities
         public ICollection<Accommodation> Accommodations { get; }
 
 
-        public User(string email)
+        public User(string email, string firstName, string lastName)
         {
             Email = email;
+            FirstName = firstName;
+            LastName = lastName;
         }
         public User(long id, string firstName, string lastName,
            string email, string phoneNumber,

@@ -35,7 +35,7 @@ namespace APIGateway
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "APIGateway", Version = "v1" });
             });
-           // account
+            // account
             var accountUrl = new Uri(Configuration["grpcConnections:account"]);
             services.AddGrpcClient<UserManipulation.UserManipulationClient>((services, options) =>
             {

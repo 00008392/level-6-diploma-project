@@ -53,8 +53,7 @@ namespace Booking.API
             services.AddScoped<AbstractValidator<CreateBookingRequestDTO>, BookingRequestValidator>();
             services.AddScoped<AbstractValidator<CreateUserDTO>, CreateUserValidator>();
             services.AddScoped<AbstractValidator<UserDTO>, UpdateUserValidator>();
-            services.AddScoped<IBookingInfoService, BookingInfoService>();
-            services.AddScoped<IBookingService, BookingRequestManipulationService>();
+            services.AddScoped<IBookingService, Domain.Logic.Services.BookingService>();
             services.AddScoped<IEventHandlerService<Domain.Entities.User>, UserEventHandlerService>();
             services.AddScoped<IEventHandlerService<Domain.Entities.Accommodation>, AccommodationEventHandlerService>();
             services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();
@@ -93,8 +92,7 @@ namespace Booking.API
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<BookingInfoServiceGrpc>();
-                endpoints.MapGrpcService<BookingManipulationServiceGrpc>();
+                endpoints.MapGrpcService<BookingServiceGrpc>();
 
                 endpoints.MapGet("/", async context =>
                 {

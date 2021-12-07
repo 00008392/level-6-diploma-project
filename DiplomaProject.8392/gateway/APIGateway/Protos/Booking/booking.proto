@@ -76,4 +76,4 @@ message Accommodation {
    google.protobuf.BoolValue isWholeApartment = 12;
    string movingInTime = 13;
    string movingOutTime = 14;
-}
+   }

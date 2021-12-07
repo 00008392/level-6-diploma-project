@@ -44,7 +44,7 @@ namespace Booking.Domain.Logic.Services
             {
                 throw new UniqueConstraintViolationException(nameof(userDTO.Email), userDTO.Email);
             }
-            var user = new User(userDTO.Email);
+            var user = _mapper.Map<User>(userDTO);
             await _repository.CreateAsync(user);
         }
 

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.DAL.EF.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20211202115620_InitialMigration")]
+    [Migration("20211207130811_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,13 +84,13 @@ namespace Booking.DAL.EF.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("AccommodationId")
+                    b.Property<long>("AccommodationId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("GuestId")
+                    b.Property<long>("GuestId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("GuestNo")
@@ -129,9 +129,11 @@ namespace Booking.DAL.EF.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -165,7 +167,7 @@ namespace Booking.DAL.EF.Migrations
                     b.HasOne("Booking.Domain.Entities.User", "Owner")
                         .WithMany("Accommodations")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -175,11 +177,15 @@ namespace Booking.DAL.EF.Migrations
                 {
                     b.HasOne("Booking.Domain.Entities.Accommodation", "Accommodation")
                         .WithMany("BookingRequests")
-                        .HasForeignKey("AccommodationId");
+                        .HasForeignKey("AccommodationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Booking.Domain.Entities.User", "Guest")
                         .WithMany("BookingRequestsAsMainGuest")
-                        .HasForeignKey("GuestId");
+                        .HasForeignKey("GuestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Accommodation");
 

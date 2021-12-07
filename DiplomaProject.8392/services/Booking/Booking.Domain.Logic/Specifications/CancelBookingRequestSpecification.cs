@@ -12,7 +12,7 @@ namespace Booking.Domain.Logic.Specification
     {
         public override Expression<Func<BookingRequest, bool>> ToExpression()
         {
-            return request => request.Status == Enums.Status.Accepted;
+            return request => request.Status == Domain.Enums.Status.Accepted;
         }
     }
 }
