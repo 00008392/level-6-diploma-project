@@ -10,8 +10,8 @@ namespace Post.API
 { 
     public interface IAccommodationItems
     {
-        AsyncUnaryCall<ItemsList> GetItemsAsync(Empty request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
-        AsyncUnaryCall<Response> AddItemsAsync(AddItemsRequest items, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
-        AsyncUnaryCall<Response> RemoveItemsAsync(RemoveItemsRequest items, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+        AsyncUnaryCall<ItemsList> GetItemsAsync(Empty request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default);
+        AsyncUnaryCall<Response> AddItemsAsync(AddItemsRequest items, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default);
+        AsyncUnaryCall<Response> RemoveItemsAsync(RemoveItemsRequest items, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default);
     }
 }

@@ -12,7 +12,7 @@ namespace Booking.API.Mappings
         public BookingGrpcMapper()
         {
             CreateMap<UserDTO, User>()
-                .ForMember(x => x.DateOfBirth, opt => opt.MapFrom(
+                .ForMember(x => x.DateOfBirthTimeStamp, opt => opt.MapFrom(
                       src => src.DateOfBirth == null ? null : Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime
                       (DateTime.SpecifyKind((DateTime)src.DateOfBirth, DateTimeKind.Utc))
                       ));
@@ -28,10 +28,10 @@ namespace Booking.API.Mappings
                 {
                     return src.Accommodation == null ? null : context.Mapper.Map<Accommodation>(src.Accommodation);
                 }))
-                .ForMember(x => x.StartDate, opt => opt.MapFrom
+                .ForMember(x => x.StartDateTimeStamp, opt => opt.MapFrom
                   (src => Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime
                   (DateTime.SpecifyKind(src.StartDate, DateTimeKind.Utc))))
-                .ForMember(x => x.EndDate, opt => opt.MapFrom
+                .ForMember(x => x.EndDateTimeStamp, opt => opt.MapFrom
                 (src => Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime
                 (DateTime.SpecifyKind(src.EndDate, DateTimeKind.Utc))))
                 .ForMember(x => x.Status, opt => opt.MapFrom(src => (int)src.Status))
@@ -44,7 +44,8 @@ namespace Booking.API.Mappings
 
             CreateMap<CreateRequest, CreateBookingRequestDTO>()
                 .ConvertUsing((x, context) => new CreateBookingRequestDTO(x.GuestId ?? 0,
-                x.AccommodationId ?? 0, (int)x.GuestNo, x.StartDate?.ToDateTime(), x.EndDate?.ToDateTime()));
+                x.AccommodationId ?? 0, (int)x.GuestNo, x.StartDateTimeStamp?.ToDateTime(),
+                x.EndDateTimeStamp?.ToDateTime()));
 
         }
     }

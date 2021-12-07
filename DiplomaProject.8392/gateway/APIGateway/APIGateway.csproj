@@ -25,10 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Booking\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Protobuf Include="Protos\Account\account.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\Booking\booking.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\Common\common.proto" GrpcServices="Client" />

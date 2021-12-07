@@ -1,4 +1,5 @@
 using Account.API;
+using Booking.API;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -66,6 +67,12 @@ namespace APIGateway
             services.AddGrpcClient<AccommodationSpecificities.AccommodationSpecificitiesClient>((services, options) =>
             {
                 options.Address = postUrl;
+            });
+            //booking 
+            var bookingUrl = new Uri(Configuration["grpcConnections:booking"]);
+            services.AddGrpcClient<BookingService.BookingServiceClient>((services, options) =>
+            {
+                options.Address = bookingUrl;
             });
         }
 

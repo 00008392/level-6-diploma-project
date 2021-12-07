@@ -24,8 +24,8 @@ message CreateRequest {
 	google.protobuf.Int64Value guestId = 1;
 	google.protobuf.Int64Value accommodationId = 2;
 	google.protobuf.Int32Value guestNo = 3;
-	google.protobuf.Timestamp startDate = 4;
-	google.protobuf.Timestamp endDate = 5;
+	google.protobuf.Timestamp startDateTimeStamp = 4;
+	google.protobuf.Timestamp endDateTimeStamp= 5;
 }
 message CoTravelerRequest {
  int64 bookingId = 1;
@@ -39,12 +39,12 @@ message GetBookingsRequest {
 	}
 	ForAction forAction = 2;
 }
-message BookingDetailsReply {
+message BookingDetailsReply {	
  User guest = 1;
  Accommodation accommodation = 2;
  int32 guestNo = 3;
- google.protobuf.Timestamp startDate = 4;
- google.protobuf.Timestamp endDate = 5;
+ google.protobuf.Timestamp startDateTimeStamp = 4;
+ google.protobuf.Timestamp endDateTimeStamp = 5;
  int32 status = 6;
  repeated User coTravelers = 7;
  bool noBooking = 8;
@@ -59,7 +59,7 @@ message User {
 	string email = 4;
 	google.protobuf.StringValue phoneNumber =5;
 	google.protobuf.StringValue address = 6;
-	google.protobuf.Timestamp dateOfBirth = 7;
+	google.protobuf.Timestamp dateOfBirthTimeStamp = 7;
 }
 message Accommodation {
    int64 id = 1;
