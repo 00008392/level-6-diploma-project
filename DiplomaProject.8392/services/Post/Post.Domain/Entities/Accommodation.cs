@@ -37,6 +37,7 @@ namespace Post.Domain.Entities
         public ICollection<AccommodationSpecificity> AccommodationSpecificities { get; }
         public ICollection<AccommodationRule> AccommodationRules { get; }
         public ICollection<AccommodationFacility> AccommodationFacilities { get; }
+        public ICollection<DatesBooked> DatesBooked { get; }
 
         public Accommodation(string title, string description, 
             long ownerId, DateTime datePublished, 

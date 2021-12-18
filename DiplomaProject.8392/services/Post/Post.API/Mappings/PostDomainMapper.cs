@@ -35,9 +35,9 @@ namespace Post.API.Mappings
             CreateMap<AccommodationFacility, AccommodationItemInfoDTO>()
                 .IncludeBase<ItemAccommodationBase, AccommodationItemInfoDTO>();
             CreateMap<AccommodationRule, AccommodationItemInfoDTO>()
-                .IncludeBase<ItemAccommodationBase, AccommodationItemInfoDTO>(); ;
+                .IncludeBase<ItemAccommodationBase, AccommodationItemInfoDTO>(); 
             CreateMap<AccommodationSpecificity, AccommodationItemInfoDTO>()
-                .IncludeBase<ItemAccommodationBase, AccommodationItemInfoDTO>(); ;
+                .IncludeBase<ItemAccommodationBase, AccommodationItemInfoDTO>(); 
             CreateMap<Accommodation, AccommodationInfoDTO>()
                 .ConvertUsing((x,dest, context) => new AccommodationInfoDTO(x.Id,
                 x.Title, x.Description, x.OwnerId, x.CategoryId, x.Address,
@@ -58,6 +58,9 @@ namespace Post.API.Mappings
                 .ConvertUsing(x => new Domain.Entities.Owner(x.Id, x.FirstName,
                 x.LastName, x.Email, x.PhoneNumber));
 
+            CreateMap<AddBookingDTO, DatesBooked>()
+                .ConvertUsing(x => new DatesBooked(x.BookingId, x.AccommodationId,
+                                                 x.StartDate, x.EndDate));
         }
         private string DateTimeToString(DateTime? time)
         {

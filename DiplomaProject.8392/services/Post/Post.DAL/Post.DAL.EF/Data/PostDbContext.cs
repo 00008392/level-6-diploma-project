@@ -27,6 +27,7 @@ namespace Post.DAL.EF.Data
         public DbSet<Owner> Owners { get; set; }
         public DbSet<Rule> Rules { get; set; }
         public DbSet<Specificity> Specificities { get; set; }
+        public DbSet<DatesBooked> DatesBooked { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,6 +43,7 @@ namespace Post.DAL.EF.Data
             modelBuilder.ApplyConfiguration(new ItemEntityTypeConfiguration<Facility>());
             modelBuilder.ApplyConfiguration(new ItemEntityTypeConfiguration<Specificity>());
             modelBuilder.ApplyConfiguration(new OwnerEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new DatesBookedEntityTypeConfiguration());
         }
     }
 }

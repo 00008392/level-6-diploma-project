@@ -53,6 +53,7 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             services.AddScoped<AbstractValidator<AccommodationManipulationDTO>, PostValidator>();
             services.AddScoped<AbstractValidator<CreateUserDTO>, BaseUserValidator>();
             services.AddScoped<AbstractValidator<UpdateUserDTO>, UpdateUserValidator>();
+            services.AddScoped<AbstractValidator<AddBookingDTO>, DatesBookedValidator>();
             services.AddScoped<IPostCRUDService, PostCRUDService>();
             services.AddScoped<IEventHandlerService, EventHandlerService>();
             services.AddScoped(typeof(IAccommodationItemsStrategy<,>), typeof(AccommodationItemsStrategy<,>));
@@ -75,6 +76,8 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             services.AddTransient<UserDeletedIntegrationEventHandler>();
             services.AddTransient<UserUpdatedIntegrationEventHandler>();
             services.AddTransient<UserCreatedIntegrationEventHandler>();
+            services.AddTransient<AccommodationBookedIntegrationEventHandler>();
+            services.AddTransient<AccommodationBookingCancelledIntegrationEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -104,6 +107,10 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             eventBus.Subscribe<UserCreatedIntegrationEvent, UserCreatedIntegrationEventHandler>();
             eventBus.Subscribe<UserDeletedIntegrationEvent, UserDeletedIntegrationEventHandler>();
             eventBus.Subscribe<UserUpdatedIntegrationEvent, UserUpdatedIntegrationEventHandler>();
+            eventBus.Subscribe<AccommodationBookedIntegrationEvent, 
+                AccommodationBookedIntegrationEventHandler>();
+            eventBus.Subscribe<AccommodationBookingCancelledIntegrationEvent,
+                AccommodationBookingCancelledIntegrationEventHandler>();
         }
     }
 }

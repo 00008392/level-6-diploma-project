@@ -12,5 +12,7 @@ namespace Post.Domain.Logic.Contracts
         Task CreateUserAsync(CreateUserDTO user);
         Task DeleteUserAsync(long id);
         Task UpdateUserAsync(UpdateUserDTO user);
+        Task AddBookingAsync(AddBookingDTO booking);
+        Task RemoveBookingAsync(long id);
     }
 }
