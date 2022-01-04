@@ -16,7 +16,7 @@ namespace Post.DAL.EF.Configurations
             builder.HasKey(a => a.Id);
             builder.Property(a => a.Title).IsRequired(true);
             builder.HasOne(a => a.Owner).WithMany(o => o.Accommodations)
-                .HasForeignKey(a => a.OwnerId).OnDelete(DeleteBehavior.Cascade);   
+                .HasForeignKey(a => a.OwnerId).OnDelete(DeleteBehavior.Restrict);   
             builder.HasOne(a => a.Category).WithMany(c => c.Accommodations)
                 .HasForeignKey(a => a.CategoryId).OnDelete(DeleteBehavior.SetNull);
             builder.Property(a => a.Address).IsRequired(true);

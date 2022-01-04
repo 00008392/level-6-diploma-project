@@ -1,4 +1,5 @@
 ﻿using BaseClasses.Entities;
+using Post.Domain.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Entities
 {
-    public class Accommodation: BaseEntity 
+    public class Accommodation: FeedbackEntity
     {
 
         public string Title { get; private set; }
@@ -38,6 +39,7 @@ namespace Post.Domain.Entities
         public ICollection<AccommodationRule> AccommodationRules { get; }
         public ICollection<AccommodationFacility> AccommodationFacilities { get; }
         public ICollection<DatesBooked> DatesBooked { get; }
+        public ICollection<Feedback<Accommodation>> Feedbacks { get; }
 
         public Accommodation(string title, string description, 
             long ownerId, DateTime datePublished, 

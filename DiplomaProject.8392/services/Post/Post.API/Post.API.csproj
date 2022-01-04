@@ -4,16 +4,13 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
-
   <ItemGroup>
-   
-    <Protobuf Include="Protos\accommodationItems.proto" GrpcServices="Server" />
-   
     <Protobuf Include="Protos\Common\common.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\accommodationItems.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\feedback.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\postCRUD.proto" GrpcServices="Server" />
-
-  </ItemGroup>
-
+  </ItemGroup> 
+  
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
@@ -35,5 +32,6 @@
     <ProjectReference Include="..\Post.Domain.Logic\Post.Domain.Logic.csproj" />
     <ProjectReference Include="..\Post.Domain\Post.Domain.csproj" />
   </ItemGroup>
+
 
 </Project>

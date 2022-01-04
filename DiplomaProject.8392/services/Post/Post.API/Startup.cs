@@ -50,13 +50,19 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             services.AddScoped<DbContext, PostDbContext>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IRepositoryWithIncludes<Accommodation>, PostRepository>();
+            services.AddScoped<IRepositoryWithIncludes<Feedback<User>>, FeedbackRepository<User>>();
+            services.AddScoped<IRepositoryWithIncludes<Feedback<Accommodation>>, FeedbackRepository<Accommodation>>();
+            services.AddScoped(typeof(IRepositoryWithIncludes<Feedback<Accommodation>>), typeof(FeedbackRepository<>));
             services.AddScoped<AbstractValidator<AccommodationManipulationDTO>, PostValidator>();
             services.AddScoped<AbstractValidator<CreateUserDTO>, BaseUserValidator>();
             services.AddScoped<AbstractValidator<UpdateUserDTO>, UpdateUserValidator>();
             services.AddScoped<AbstractValidator<AddBookingDTO>, DatesBookedValidator>();
+            services.AddScoped<AbstractValidator<FeedbackDTO>, FeedbackValidator>();
             services.AddScoped<IPostCRUDService, PostCRUDService>();
+            services.AddScoped(typeof(IFeedbackService<,>), typeof(FeedbackService<,>));
             services.AddScoped<IEventHandlerService, EventHandlerService>();
             services.AddScoped(typeof(IAccommodationItemsStrategy<,>), typeof(AccommodationItemsStrategy<,>));
+            services.AddScoped(typeof(IFeedbackStrategy<,>), typeof(FeedbackStrategy<,>));
             services.AddScoped(typeof(IAcommodationItemsService<,>), typeof(AccommodationItemsService<,>));
             services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();
             services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>(sp => {
@@ -96,6 +102,8 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
                 endpoints.MapGrpcService<AccommodationRulesServiceGrpc>();
                 endpoints.MapGrpcService<AccommodationFacilitiesServiceGrpc>();
                 endpoints.MapGrpcService<AccommodationSpecificitiesServiceGrpc>();
+                endpoints.MapGrpcService<FeedbackForUserServiceGrpc>();
+                endpoints.MapGrpcService<FeedbackForAccommodationServiceGrpc>();
 
                 endpoints.MapGet("/", async context =>
                 {

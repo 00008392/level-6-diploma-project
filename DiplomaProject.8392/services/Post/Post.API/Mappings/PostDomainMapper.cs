@@ -2,6 +2,7 @@
 using Post.Domain.Core;
 using Post.Domain.Entities;
 using Post.Domain.Logic.DTOs;
+using Post.Domain.Logic.DTOs.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +62,11 @@ namespace Post.API.Mappings
             CreateMap<AddBookingDTO, DatesBooked>()
                 .ConvertUsing(x => new DatesBooked(x.BookingId, x.AccommodationId,
                                                  x.StartDate, x.EndDate));
+
+            CreateFeedbackMapToDTO<User, UserDTO>();
+            CreateFeedbackMapToDTO<Accommodation, AccommodationInfoDTO>();
+            CreateFeedbackMapFromDTO<User>();
+            CreateFeedbackMapFromDTO<Accommodation>();
         }
         private string DateTimeToString(DateTime? time)
         {
@@ -71,6 +77,21 @@ namespace Post.API.Mappings
         {
             return collection.Any() ? context.Mapper.Map<ICollection<T>, ICollection<E>>(collection)
                             : null;
+        }
+        private void CreateFeedbackMapFromDTO<T>() where T: FeedbackEntity
+        {
+            CreateMap<FeedbackDTO, Feedback<T>>()
+                .ConvertUsing(x => new Feedback<T>(x.ItemId, x.UserId, x.Rating, x.Message));
+        }
+        private void CreateFeedbackMapToDTO<T, E>() where T: FeedbackEntity
+                                                    where E : IFeedbackEntityDTO
+        {
+            CreateMap<Feedback<T>, FeedbackInfoDTO<E>>()
+               .ConvertUsing((x, dest, context) => {
+                   return new FeedbackInfoDTO<E>(x.UserId, x.ItemId, x.Rating, x.Message, x.Id,
+                      x.Item == null ? default(E) : context.Mapper.Map<E>(x.Item),
+                      x.FeedbackOwner == null ? null : context.Mapper.Map<UserDTO>(x.FeedbackOwner));
+               });
         }
     }
 }

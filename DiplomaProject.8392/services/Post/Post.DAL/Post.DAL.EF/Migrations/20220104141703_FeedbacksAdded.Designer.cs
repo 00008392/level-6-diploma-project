@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Post.DAL.EF.Data;
 
 namespace Post.DAL.EF.Migrations
 {
     [DbContext(typeof(PostDbContext))]
-    partial class PostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220104141703_FeedbacksAdded")]
+    partial class FeedbacksAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -285,8 +287,8 @@ namespace Post.DAL.EF.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Rating")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("UserId")
                         .HasColumnType("bigint");
@@ -313,8 +315,8 @@ namespace Post.DAL.EF.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Rating")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("UserId")
                         .HasColumnType("bigint");
@@ -406,7 +408,7 @@ namespace Post.DAL.EF.Migrations
                     b.HasOne("Post.Domain.Entities.User", "Owner")
                         .WithMany("Accommodations")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -498,7 +500,7 @@ namespace Post.DAL.EF.Migrations
                     b.HasOne("Post.Domain.Entities.Accommodation", "Item")
                         .WithMany("Feedbacks")
                         .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Post.Domain.Entities.User", "FeedbackOwner")

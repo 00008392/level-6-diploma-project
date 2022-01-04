@@ -88,7 +88,7 @@ namespace Booking.API.Services
             else if (request.ForAction == GetBookingsRequest.Types.ForAction.ForAccommodation)
             {
                 specification = new BookingsByAccommodationSpecification(request.Id);
-            }
+            } 
             if(specification != null)
             {
                 var bookings =_mapper.Map<ICollection<BookingDetailsReply>>(await _service.GetBookingsAsync(specification));

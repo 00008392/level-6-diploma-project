@@ -31,12 +31,12 @@ namespace Post.API.Mappings
                     x.AdditionalInfo,
                     x.MovingInTimeStamp?.ToDateTime(), x.MovingOutTimeStamp?.ToDateTime());
                 });
-            CreateMap<UserDTO, Owner>();
+            CreateMap<UserDTO, User>();
             CreateMap<CategoryDTO, Category>();
             CreateMap<AccommodationInfoDTO, PostInfoResponse>()
                 .ForMember(x => x.Owner, opt => opt.MapFrom((src, dest, prop, context) =>
                     {
-                        return context.Mapper.Map<Owner>(src.Owner);
+                        return context.Mapper.Map<User>(src.Owner);
                     }))
                 .ForMember(x => x.Category, opt => opt.MapFrom((src, dest, prop, context) =>
                 {
@@ -60,6 +60,7 @@ namespace Post.API.Mappings
             CreateMap<ItemRequest, AccommodationItemDTO>()
                 .ConvertUsing(x => new AccommodationItemDTO(x.AccommodationId,
                 x.ItemId, x.OtherValue));
+
 
         }
     }

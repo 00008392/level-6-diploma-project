@@ -1,5 +1,6 @@
 ﻿using Post.Domain.Core;
 using Post.Domain.Entities;
+using Post.Domain.Logic.DTOs.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Logic.DTOs
 {
-   public class AccommodationInfoDTO: BaseAccommodationDTO
+   public class AccommodationInfoDTO: BaseAccommodationDTO, IFeedbackEntityDTO
     {
         public long Id { get; private set; }
         public UserDTO Owner { get; private set; }

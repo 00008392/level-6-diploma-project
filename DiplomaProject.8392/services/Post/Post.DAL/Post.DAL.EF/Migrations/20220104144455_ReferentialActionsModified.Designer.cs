@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Post.DAL.EF.Data;
 
 namespace Post.DAL.EF.Migrations
 {
     [DbContext(typeof(PostDbContext))]
-    partial class PostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220104144455_ReferentialActionsModified")]
+    partial class ReferentialActionsModified
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -285,8 +287,8 @@ namespace Post.DAL.EF.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Rating")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("UserId")
                         .HasColumnType("bigint");
@@ -313,8 +315,8 @@ namespace Post.DAL.EF.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Rating")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<long?>("UserId")
                         .HasColumnType("bigint");
