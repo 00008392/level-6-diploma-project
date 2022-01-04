@@ -31,7 +31,7 @@ namespace Post.API.Mappings
                     x.AdditionalInfo,
                     x.MovingInTimeStamp?.ToDateTime(), x.MovingOutTimeStamp?.ToDateTime());
                 });
-            CreateMap<OwnerDTO, Owner>();
+            CreateMap<UserDTO, Owner>();
             CreateMap<CategoryDTO, Category>();
             CreateMap<AccommodationInfoDTO, PostInfoResponse>()
                 .ForMember(x => x.Owner, opt => opt.MapFrom((src, dest, prop, context) =>

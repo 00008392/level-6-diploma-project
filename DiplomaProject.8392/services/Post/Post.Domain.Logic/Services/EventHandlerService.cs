@@ -16,7 +16,7 @@ namespace Post.Domain.Logic.Services
 {
     public class EventHandlerService : IEventHandlerService
     {
-        private readonly IRepository<Owner> _userRepository;
+        private readonly IRepository<User> _userRepository;
         private readonly IRepository<Accommodation> _accommodationRepository;
         private readonly IRepository<DatesBooked> _bookingRepository;
         private readonly AbstractValidator<CreateUserDTO> _baseUserValidator;
@@ -24,7 +24,7 @@ namespace Post.Domain.Logic.Services
         private readonly AbstractValidator<AddBookingDTO> _bookingValidator;
         private readonly IMapper _mapper;
 
-        public EventHandlerService(IRepository<Owner> userRepository,
+        public EventHandlerService(IRepository<User> userRepository,
                                    IRepository<Accommodation> accommodationRepository,
                                    IRepository<DatesBooked> bookingRepository,
                                    AbstractValidator<CreateUserDTO> baseUserValidator,
@@ -68,7 +68,7 @@ namespace Post.Domain.Logic.Services
             {
                 throw new UniqueConstraintViolationException(nameof(userDTO.Email), userDTO.Email);
             }
-            var user = _mapper.Map<Owner>(userDTO);
+            var user = _mapper.Map<User>(userDTO);
             await _userRepository.CreateAsync(user);
         }
 
@@ -77,7 +77,7 @@ namespace Post.Domain.Logic.Services
             var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
             {
-                throw new NotFoundException(id, nameof(Owner));
+                throw new NotFoundException(id, nameof(User));
             }
             await _userRepository.DeleteAsync(user);
         }
@@ -97,7 +97,7 @@ namespace Post.Domain.Logic.Services
             var user = await _userRepository.GetByIdAsync(userDTO.Id);
             if (user == null)
             {
-                throw new NotFoundException(userDTO.Id, nameof(Owner));
+                throw new NotFoundException(userDTO.Id, nameof(User));
             }
             var result = _updateUserValidator.Validate(userDTO);
             if (!result.IsValid)
@@ -110,7 +110,7 @@ namespace Post.Domain.Logic.Services
                 throw new UniqueConstraintViolationException(nameof(userDTO.Email), userDTO.Email);
             }
 
-            var userToUpdate = _mapper.Map<Owner>(userDTO);
+            var userToUpdate = _mapper.Map<User>(userDTO);
             await _userRepository.UpdateAsync(userToUpdate);
         }
     }

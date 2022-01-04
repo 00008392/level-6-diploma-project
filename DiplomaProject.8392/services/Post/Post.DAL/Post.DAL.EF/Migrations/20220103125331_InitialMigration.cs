@@ -35,22 +35,6 @@ namespace Post.DAL.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Owners",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Owners", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Rules",
                 columns: table => new
                 {
@@ -76,6 +60,22 @@ namespace Post.DAL.EF.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Specificities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -115,9 +115,9 @@ namespace Post.DAL.EF.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Accommodations_Owners_OwnerId",
+                        name: "FK_Accommodations_Users_OwnerId",
                         column: x => x.OwnerId,
-                        principalTable: "Owners",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -224,6 +224,26 @@ namespace Post.DAL.EF.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DatesBooked",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    AccommodationId = table.Column<long>(type: "bigint", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DatesBooked", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DatesBooked_Accommodations_AccommodationId",
+                        column: x => x.AccommodationId,
+                        principalTable: "Accommodations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AccommodationFacilities_AccommodationId",
                 table: "AccommodationFacilities",
@@ -297,8 +317,13 @@ namespace Post.DAL.EF.Migrations
                 filter: "[OtherItem] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Owners_Email",
-                table: "Owners",
+                name: "IX_DatesBooked_AccommodationId",
+                table: "DatesBooked",
+                column: "AccommodationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
                 column: "Email",
                 unique: true);
         }
@@ -318,22 +343,25 @@ namespace Post.DAL.EF.Migrations
                 name: "AccommodationSpecificities");
 
             migrationBuilder.DropTable(
+                name: "DatesBooked");
+
+            migrationBuilder.DropTable(
                 name: "Facilities");
 
             migrationBuilder.DropTable(
                 name: "Rules");
 
             migrationBuilder.DropTable(
-                name: "Accommodations");
+                name: "Specificities");
 
             migrationBuilder.DropTable(
-                name: "Specificities");
+                name: "Accommodations");
 
             migrationBuilder.DropTable(
                 name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Owners");
+                name: "Users");
         }
     }
 }

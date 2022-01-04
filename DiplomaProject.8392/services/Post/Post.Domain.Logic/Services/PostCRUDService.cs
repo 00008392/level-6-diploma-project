@@ -18,12 +18,12 @@ namespace Post.Domain.Logic.Services
     public class PostCRUDService : IPostCRUDService
     {
         private readonly IRepositoryWithIncludes<Accommodation> _repository;
-        private readonly IRepository<Owner> _ownerRepository;
+        private readonly IRepository<User> _ownerRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly AbstractValidator<AccommodationManipulationDTO> _validator;
         private readonly IMapper _mapper;
         public PostCRUDService(IRepositoryWithIncludes<Accommodation> repository, 
-            IRepository<Owner> ownerRepository,
+            IRepository<User> ownerRepository,
             IRepository<Category> categoryRepository,
             AbstractValidator<AccommodationManipulationDTO> validator, 
             IMapper mapper)
@@ -61,10 +61,15 @@ namespace Post.Domain.Logic.Services
 
         public async Task DeletePostAsync(long id)
         {
-            var accommodation = await _repository.GetByIdAsync(id);
+            var accommodation = await _repository.GetByIdAsync(id, relatedEntitiesIncluded: true);
+
             if(accommodation == null)
             {
                 throw new NotFoundException(id, "Accommodation");
+            }
+            if (accommodation.DatesBooked.Any())
+            {
+                throw new DeleteAccommodationException(id);
             }
             await _repository.DeleteAsync(accommodation);
         }

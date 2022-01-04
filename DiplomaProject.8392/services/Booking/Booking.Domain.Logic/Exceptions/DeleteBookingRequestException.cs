@@ -9,7 +9,7 @@ namespace Booking.Domain.Logic.Exceptions
     public class DeleteBookingRequestException: Exception
     {
         public DeleteBookingRequestException()
-            :base("Booking request cannot be deleted")
+            :base("Booking cannot be deleted")
         {
 
         }

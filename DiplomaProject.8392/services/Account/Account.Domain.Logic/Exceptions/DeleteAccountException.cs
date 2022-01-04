@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Exceptions
 {
-    public class UserNotFoundException : Exception
+    public class DeleteAccountException: Exception
     {
-        public UserNotFoundException(long id) : base($"User with id = {id} does not exist")
+        public DeleteAccountException(long id):
+            base($"Account with id = {id} cannot be deleted because it has bookings")
         {
 
         }

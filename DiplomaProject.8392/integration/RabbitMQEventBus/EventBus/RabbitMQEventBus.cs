@@ -87,6 +87,7 @@ namespace RabbitMQEventBus.EventBus
                         {
                             var handler = scope.ServiceProvider.GetService(subscription);
                             var concreteHandler = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
+                            await Task.Yield();
                             await (Task)concreteHandler.GetMethod("Handle").Invoke(handler, new object[] { @event });
                         }
 

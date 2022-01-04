@@ -27,6 +27,8 @@ namespace Account.Domain.Entities
         public string UserInfo { get; private set; }
         public byte[] ProfilePhoto { get; private set; }
         public string MimeType { get; private set; }
+        public ICollection<Booking> BookingsAsGuest { get; }
+        public ICollection<Booking> BookingsAsOwner { get; }
 
         //registration constructor
         public User(string email, DateTime registrationDate,

@@ -25,10 +25,10 @@ namespace Account.Domain.Logic.Services.Core
         }
         protected async Task<User> FindUserAsync(long id)
         {
-            var user = await _repository.GetByIdAsync(id);
+            var user = await _repository.GetByIdAsync(id, relatedEntitiesIncluded: true);
             if (user == null)
             {
-                throw new UserNotFoundException(id);
+                throw new NotFoundException(id, nameof(User));
             }
             return user;
         }

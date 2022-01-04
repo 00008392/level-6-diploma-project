@@ -18,7 +18,7 @@ namespace Booking.Domain.Entities
         public DateTime StartDate { get; private set; }
         public DateTime EndDate { get; private set; }
         public Status Status { get; private set; }
-        public ICollection<User> CoTravelers { get; }
+        public ICollection<User> CoTravelers { get; private set; }
 
         public BookingRequest(long guestId, long accommodationId, int guestNo,
             DateTime startDate, DateTime endDate)
@@ -34,7 +34,15 @@ namespace Booking.Domain.Entities
         {
             Status = status;
         }
-      
+        public void AddCotraveler(User user)
+        {
+            CoTravelers.Add(user);
+        }
+        public void RemoveCotraveler(User user)
+        {
+            CoTravelers.Remove(user);
+        }
+        
       
     }
 }

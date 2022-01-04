@@ -57,6 +57,10 @@ namespace Account.Domain.Logic.Services
         public async Task DeleteUserAsync(long id)
         {
             var user = await FindUserAsync(id);
+            if(user.BookingsAsGuest.Any() || user.BookingsAsOwner.Any())
+            {
+                throw new DeleteAccountException(id);
+            }
             await _repository.DeleteAsync(user);
         }
 

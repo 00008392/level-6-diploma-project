@@ -16,7 +16,7 @@ namespace Post.DAL.EF.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedNever();
             builder.HasOne(x => x.Accommodation).WithMany(x => x.DatesBooked)
-                .HasForeignKey(x => x.AccommodationId);
+                .HasForeignKey(x => x.AccommodationId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

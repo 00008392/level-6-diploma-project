@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Post.Domain.Logic.Exceptions
+namespace Account.Domain.Logic.Exceptions
 {
-    public class NotFoundException: Exception
+    public class NotFoundException : Exception
     {
-        public NotFoundException(long id, string property) 
+        public NotFoundException(long id, string property)
             : base($"{property} with id = {id} does not exist")
         {
 

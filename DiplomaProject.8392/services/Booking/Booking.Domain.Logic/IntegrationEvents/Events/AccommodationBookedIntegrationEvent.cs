@@ -12,6 +12,7 @@ namespace Booking.Domain.Logic.IntegrationEvents.Events
         public long BookingId { get; private set; }
         public long AccommodationId { get; private set; }
         public long GuestId { get;private set; }
+        public long OwnerId { get; private set; }
         public DateTime StartDate { get; private set; }
         public DateTime EndDate { get; private set; }
 
@@ -19,12 +20,14 @@ namespace Booking.Domain.Logic.IntegrationEvents.Events
             long bookingId,
             long accommodationId,
             long guestId,
+            long ownerId,
             DateTime startDate,
             DateTime endDate)
         {
             BookingId = bookingId;
             AccommodationId = accommodationId;
             GuestId = guestId;
+            OwnerId = ownerId;
             StartDate = startDate;
             EndDate = endDate;
         }

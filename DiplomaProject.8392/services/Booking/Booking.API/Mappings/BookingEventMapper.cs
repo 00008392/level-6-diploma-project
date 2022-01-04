@@ -31,12 +31,12 @@ namespace Booking.API.Mappings
 
             CreateMap<UserUpdatedIntegrationEvent, UserDTO>()
                 .ConvertUsing(x => new UserDTO(x.UserId, x.FirstName, x.LastName,
-                x.Email, x.PhoneNumber, x.Address, x.DateOfBirth));
+                x.Email, x.PhoneNumber, x.Address));
 
             // booking
             CreateMap<BookingRequestInfoDTO, AccommodationBookedIntegrationEvent>()
                 .ConvertUsing(x => new AccommodationBookedIntegrationEvent(x.Id, x.Accommodation.Id,
-                x.Guest.Id, x.StartDate, x.EndDate));
+                x.Guest.Id, x.Accommodation.OwnerId, x.StartDate, x.EndDate));
 
             CreateMap<BookingRequestInfoDTO, AccommodationBookingCancelledIntegrationEvent>()
               .ConvertUsing(x => new AccommodationBookingCancelledIntegrationEvent(x.Id));

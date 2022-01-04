@@ -11,7 +11,7 @@ namespace Post.Domain.Logic.DTOs
    public class AccommodationInfoDTO: BaseAccommodationDTO
     {
         public long Id { get; private set; }
-        public OwnerDTO Owner { get; private set; }
+        public UserDTO Owner { get; private set; }
         public DateTime DatePublished { get; private set; }
         public CategoryDTO Category { get; private set; }
         public string MovingInTime { get; private set; }
@@ -28,7 +28,7 @@ namespace Post.Domain.Logic.DTOs
     int maxGuestsNo, int? squareMeters,
     decimal price, decimal? latitude,
     decimal? longitude, bool? isWholeApartment,
-    string additionalInfo, OwnerDTO owner, DateTime datePublished,
+    string additionalInfo, UserDTO owner, DateTime datePublished,
     CategoryDTO category, string movingInTime,
     string movingOutTime, ICollection<AccommodationPhotoDTO> accommodationPhotos,
     ICollection<AccommodationItemInfoDTO> accommodationSpecificities,

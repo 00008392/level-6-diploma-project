@@ -56,7 +56,7 @@ namespace Booking.Domain.Logic.Services
             var accommodation = await _repository.GetByIdAsync(id);
             if (accommodation == null)
             {
-                throw new NotFoundException(id, accommodation.GetType().Name);
+                throw new NotFoundException(id, nameof(Accommodation));
             }
             await _repository.DeleteAsync(accommodation);
         }
@@ -67,7 +67,7 @@ namespace Booking.Domain.Logic.Services
             var accommodation = await _repository.GetByIdAsync(entityDTO.Id);
             if (accommodation == null)
             {
-                throw new NotFoundException(updateAccommodationDTO.Id, accommodation.GetType().Name);
+                throw new NotFoundException(updateAccommodationDTO.Id, nameof(Accommodation));
             }
             var validationResult = await _validator.ValidateAsync(updateAccommodationDTO);
             if (!validationResult.IsValid)

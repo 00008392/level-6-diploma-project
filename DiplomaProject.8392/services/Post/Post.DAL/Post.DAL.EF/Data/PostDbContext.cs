@@ -24,7 +24,7 @@ namespace Post.DAL.EF.Data
         public DbSet<AccommodationSpecificity> AccommodationSpecificities { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Facility> Facilities { get; set; }
-        public DbSet<Owner> Owners { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Rule> Rules { get; set; }
         public DbSet<Specificity> Specificities { get; set; }
         public DbSet<DatesBooked> DatesBooked { get; set; }
@@ -42,7 +42,7 @@ namespace Post.DAL.EF.Data
             modelBuilder.ApplyConfiguration(new ItemEntityTypeConfiguration<Rule>());
             modelBuilder.ApplyConfiguration(new ItemEntityTypeConfiguration<Facility>());
             modelBuilder.ApplyConfiguration(new ItemEntityTypeConfiguration<Specificity>());
-            modelBuilder.ApplyConfiguration(new OwnerEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new DatesBookedEntityTypeConfiguration());
         }
     }

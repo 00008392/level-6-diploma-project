@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Post.Domain.Logic.Exceptions
+namespace Booking.Domain.Logic.Exceptions
 {
     public class DuplicateItemException: Exception
     {
-        public DuplicateItemException(object value)
-            : base($"Item with id = {value} already exists for given accommodation")
+        public DuplicateItemException(string property, long id)
+            :base($"{property} with id={id} already exists in collection")
         {
 
-        }
+        } 
     }
 }

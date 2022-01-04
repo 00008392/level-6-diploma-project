@@ -11,11 +11,7 @@ namespace Booking.API.Mappings
     {
         public BookingGrpcMapper()
         {
-            CreateMap<UserDTO, User>()
-                .ForMember(x => x.DateOfBirthTimeStamp, opt => opt.MapFrom(
-                      src => src.DateOfBirth == null ? null : Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime
-                      (DateTime.SpecifyKind((DateTime)src.DateOfBirth, DateTimeKind.Utc))
-                      ));
+            CreateMap<UserDTO, User>();
             CreateMap<AccommodationDTO, Accommodation>()
                 .ForMember(x => x.Price, opt => opt.MapFrom(src => (double)src.Price));
 

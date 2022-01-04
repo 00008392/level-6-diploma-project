@@ -12,16 +12,14 @@ namespace Booking.Domain.Logic.DTOs
         public long Id { get; private set; }
         public string PhoneNumber { get; private set; }
         public string Address { get; private set; }
-        public DateTime? DateOfBirth { get; private set; }
 
         public UserDTO(long id, string firstName, string lastName,
-           string email, string phoneNumber, string address,
-           DateTime? dateOfBirth):base(email, firstName, lastName)
+           string email, string phoneNumber, string address)
+            :base(email, firstName, lastName)
         {
             Id = id;
             PhoneNumber = phoneNumber;
             Address = address;
-            DateOfBirth = dateOfBirth;
         }
 
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Entities
 {
-    public class Owner: BaseEntity
+    public class User: BaseEntity
     {
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
@@ -15,7 +15,7 @@ namespace Post.Domain.Entities
         public string PhoneNumber { get; private set; }
         public ICollection<Accommodation> Accommodations { get; }
 
-        public Owner(long id, string firstName, string lastName,
+        public User(long id, string firstName, string lastName,
             string email, string phoneNumber):base(id)
         {
             FirstName = firstName;
@@ -24,7 +24,7 @@ namespace Post.Domain.Entities
             PhoneNumber = phoneNumber;
         }
 
-        public Owner(string email, string firstName, string lastName)
+        public User(string email, string firstName, string lastName)
         {
             Email = email;
             FirstName = firstName;

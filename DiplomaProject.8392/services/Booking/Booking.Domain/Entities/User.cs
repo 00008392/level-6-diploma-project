@@ -14,7 +14,6 @@ namespace Booking.Domain.Entities
         public string Email { get; private set; }
         public string PhoneNumber { get; private set; }
         public string Address { get; private set; }
-        public DateTime? DateOfBirth { get; private set; }
         public ICollection<BookingRequest> BookingRequestsAsMainGuest { get; }
         public ICollection<BookingRequest> BookingRequestsAsCoTraveler { get; }
         public ICollection<Accommodation> Accommodations { get; }
@@ -28,14 +27,13 @@ namespace Booking.Domain.Entities
         }
         public User(long id, string firstName, string lastName,
            string email, string phoneNumber,
-           string address, DateTime? dateOfBirth):base(id)
+           string address):base(id)
         {
             FirstName = firstName;
             LastName = lastName;
             Email = email;
             PhoneNumber = phoneNumber;
             Address = address;
-            DateOfBirth = dateOfBirth;
         }
     }
 }

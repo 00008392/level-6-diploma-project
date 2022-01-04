@@ -19,8 +19,8 @@ namespace Post.API.Mappings
                 x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo, x.SquareMeters,
                 x.Price, x.Latitude, x.Longitude, x.IsWholeApartment, DateTimeToString(x.MovingInTime),
                DateTimeToString(x.MovingOutTime), x.AdditionalInfo));
-            CreateMap<Domain.Entities.Owner, OwnerDTO>()
-                .ConvertUsing(x => new OwnerDTO(x.Id, x.FirstName, x.LastName,
+            CreateMap<Domain.Entities.User, UserDTO>()
+                .ConvertUsing(x => new UserDTO(x.Id, x.FirstName, x.LastName,
                 x.Email, x.PhoneNumber));
             CreateMap<Domain.Entities.Category, CategoryDTO>()
                 .ConvertUsing(x => new CategoryDTO(x.Id, x.Name));
@@ -43,7 +43,7 @@ namespace Post.API.Mappings
                 x.Title, x.Description, x.OwnerId, x.CategoryId, x.Address,
                 x.ReferencePoint, x.ContactNumber, x.RoomsNo, x.BathroomsNo,
                 x.BedsNo, x.MaxGuestsNo, x.SquareMeters, x.Price, x.Latitude,
-                x.Longitude, x.IsWholeApartment, x.AdditionalInfo, context.Mapper.Map<OwnerDTO>(x.Owner),
+                x.Longitude, x.IsWholeApartment, x.AdditionalInfo, context.Mapper.Map<UserDTO>(x.Owner),
                 x.DatePublished, x.Category == null ? null : context.Mapper.Map<CategoryDTO>(x.Category),
                 x.MovingInTime, x.MovingOutTime,
                 MapCollection<Domain.Entities.AccommodationPhoto, AccommodationPhotoDTO>(x.AccommodationPhotos, context),
@@ -52,10 +52,10 @@ namespace Post.API.Mappings
                 MapCollection<AccommodationFacility, AccommodationItemInfoDTO>(x.AccommodationFacilities, context)
                 ));
 
-            CreateMap<CreateUserDTO, Domain.Entities.Owner>()
-                .ConvertUsing(x => new Domain.Entities.Owner(x.Email, x.FirstName, x.LastName));
-            CreateMap<UpdateUserDTO, Domain.Entities.Owner>()
-                .ConvertUsing(x => new Domain.Entities.Owner(x.Id, x.FirstName,
+            CreateMap<CreateUserDTO, Domain.Entities.User>()
+                .ConvertUsing(x => new Domain.Entities.User(x.Email, x.FirstName, x.LastName));
+            CreateMap<UpdateUserDTO, Domain.Entities.User>()
+                .ConvertUsing(x => new Domain.Entities.User(x.Id, x.FirstName,
                 x.LastName, x.Email, x.PhoneNumber));
 
             CreateMap<AddBookingDTO, DatesBooked>()

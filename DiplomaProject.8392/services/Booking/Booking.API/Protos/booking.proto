@@ -48,6 +48,7 @@ message BookingDetailsReply {
  int32 status = 6;
  repeated User coTravelers = 7;
  bool noBooking = 8;
+ int64 id=9;
 }
 message BookingsReply {
 repeated BookingDetailsReply bookings = 1;
@@ -59,7 +60,6 @@ message User {
 	string email = 4;
 	google.protobuf.StringValue phoneNumber =5;
 	google.protobuf.StringValue address = 6;
-	google.protobuf.Timestamp dateOfBirthTimeStamp = 7;
 }
 message Accommodation {
    int64 id = 1;

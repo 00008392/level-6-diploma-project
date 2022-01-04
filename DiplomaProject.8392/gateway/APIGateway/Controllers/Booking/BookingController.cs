@@ -89,19 +89,19 @@ namespace APIGateway.Controllers.Booking
         }
         // PUT api/<BookingController>/5
         [HttpPatch("accept/{id}")]
-        public async Task<IActionResult> AcceptBooking(Request request)
+        public async Task<IActionResult> AcceptBooking(long id)
         {
-            return await ProcessBookingStatus(request, _bookingClient.AcceptBookingRequestAsync);
+            return await ProcessBookingStatus(id, _bookingClient.AcceptBookingRequestAsync);
         }
         [HttpPatch("reject/{id}")]
-        public async Task<IActionResult> RejectBooking(Request request)
+        public async Task<IActionResult> RejectBooking(long id)
         {
-            return await ProcessBookingStatus(request, _bookingClient.RejectBookingRequestAsync);
+            return await ProcessBookingStatus(id, _bookingClient.RejectBookingRequestAsync);
         }
         [HttpPatch("cancel/{id}")]
-        public async Task<IActionResult> CancelBooking(Request request)
+        public async Task<IActionResult> CancelBooking(long id)
         {
-            return await ProcessBookingStatus(request, _bookingClient.CancelBookingAsync);
+            return await ProcessBookingStatus(id, _bookingClient.CancelBookingAsync);
         }
         // DELETE api/<BookingController>/5
         [HttpDelete("{id}")]
@@ -132,13 +132,7 @@ namespace APIGateway.Controllers.Booking
         {
             booking.StartDate = (DateTime)DateTimeConversion.FromTimeStampToDateTime(booking.StartDateTimeStamp);
             booking.EndDate = (DateTime)DateTimeConversion.FromTimeStampToDateTime(booking.EndDateTimeStamp);
-            booking.CoTravelers.ToList().ForEach(x => ConvertUserData(x));
             return booking;
-        }
-        private User ConvertUserData(User user)
-        {
-            user.DateOfBirth = (DateTime)DateTimeConversion.FromTimeStampToDateTime(user.DateOfBirthTimeStamp);
-            return user;
         }
         private CreateRequest ConvertBookingData(CreateRequest booking)
         {
@@ -146,8 +140,12 @@ namespace APIGateway.Controllers.Booking
             booking.EndDateTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(booking.EndDate);
             return booking;
         }
-        private async Task<IActionResult> ProcessBookingStatus(Request request, statusHandlingAction action)
+        private async Task<IActionResult> ProcessBookingStatus(long id, statusHandlingAction action)
         {
+            var request = new Request
+            {
+                Id = id
+            };
             var reply = await action(request);
             if (!reply.IsSuccess)
             {

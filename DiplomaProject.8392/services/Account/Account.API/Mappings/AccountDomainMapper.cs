@@ -29,7 +29,8 @@ namespace Account.API.Mappings
             CreateMap<UserRegistrationDTO, User>()
                 .ConvertUsing(x => new User(x.Email, DateTime.Now, (Role)x.Role, x.FirstName,
                 x.LastName, (DateTime)x.DateOfBirth, (Gender)x.Gender));
-
+            CreateMap<AddBookingDTO, Booking>()
+                .ConvertUsing(x => new Booking(x.BookingId, x.OwnerId, x.GuestId));
 
         }
     }

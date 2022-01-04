@@ -21,7 +21,8 @@ namespace Account.API.Mappings
                 x.LastName, x.Email, x.PhoneNumber, (DateTime)x.DateOfBirth,
                 (int)x.Gender, x.Address,
                 x.UserInfo, x.CityId));
-
+            CreateMap<AccommodationBookedIntegrationEvent, AddBookingDTO>()
+                .ConvertUsing(x => new AddBookingDTO(x.BookingId, x.GuestId, x.OwnerId));
         }
     }
 }

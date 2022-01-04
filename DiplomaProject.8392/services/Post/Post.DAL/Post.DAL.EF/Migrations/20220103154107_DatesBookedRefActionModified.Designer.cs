@@ -10,8 +10,8 @@ using Post.DAL.EF.Data;
 namespace Post.DAL.EF.Migrations
 {
     [DbContext(typeof(PostDbContext))]
-    [Migration("20211218113758_DatesBookedAdded")]
-    partial class DatesBookedAdded
+    [Migration("20220103154107_DatesBookedRefActionModified")]
+    partial class DatesBookedRefActionModified
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -274,36 +274,6 @@ namespace Post.DAL.EF.Migrations
                     b.ToTable("Facilities");
                 });
 
-            modelBuilder.Entity("Post.Domain.Entities.Owner", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("Owners");
-                });
-
             modelBuilder.Entity("Post.Domain.Entities.Rule", b =>
                 {
                     b.Property<long>("Id")
@@ -342,6 +312,36 @@ namespace Post.DAL.EF.Migrations
                     b.ToTable("Specificities");
                 });
 
+            modelBuilder.Entity("Post.Domain.Entities.User", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("Post.Domain.Entities.Accommodation", b =>
                 {
                     b.HasOne("Post.Domain.Entities.Category", "Category")
@@ -349,7 +349,7 @@ namespace Post.DAL.EF.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Post.Domain.Entities.Owner", "Owner")
+                    b.HasOne("Post.Domain.Entities.User", "Owner")
                         .WithMany("Accommodations")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -433,7 +433,7 @@ namespace Post.DAL.EF.Migrations
                     b.HasOne("Post.Domain.Entities.Accommodation", "Accommodation")
                         .WithMany("DatesBooked")
                         .HasForeignKey("AccommodationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Accommodation");
@@ -462,11 +462,6 @@ namespace Post.DAL.EF.Migrations
                     b.Navigation("AccommodationItems");
                 });
 
-            modelBuilder.Entity("Post.Domain.Entities.Owner", b =>
-                {
-                    b.Navigation("Accommodations");
-                });
-
             modelBuilder.Entity("Post.Domain.Entities.Rule", b =>
                 {
                     b.Navigation("AccommodationItems");
@@ -475,6 +470,11 @@ namespace Post.DAL.EF.Migrations
             modelBuilder.Entity("Post.Domain.Entities.Specificity", b =>
                 {
                     b.Navigation("AccommodationItems");
+                });
+
+            modelBuilder.Entity("Post.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Accommodations");
                 });
 #pragma warning restore 612, 618
         }

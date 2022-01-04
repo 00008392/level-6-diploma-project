@@ -53,7 +53,7 @@ namespace Booking.Domain.Logic.Services
             var user = await _repository.GetByIdAsync(id);
             if (user == null)
             {
-                throw new NotFoundException(id, user.GetType().Name);
+                throw new NotFoundException(id, nameof(User));
             }
             await _repository.DeleteAsync(user);
 
@@ -64,7 +64,7 @@ namespace Booking.Domain.Logic.Services
             var user = await _repository.GetByIdAsync(entityDTO.Id);
             if (user == null)
             {
-                throw new NotFoundException(entityDTO.Id, user.GetType().Name);
+                throw new NotFoundException(entityDTO.Id, nameof(User));
             }
             var updateUserDTO = (UserDTO)entityDTO;
             var result = _updateUserValidator.Validate(updateUserDTO);

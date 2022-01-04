@@ -32,11 +32,11 @@ namespace Booking.API.Mappings
             //user
             CreateMap<Domain.Entities.User, UserDTO>()
               .ConvertUsing(x => new UserDTO(x.Id, x.FirstName, x.LastName, x.Email,
-              x.PhoneNumber, x.Address, x.DateOfBirth));
+              x.PhoneNumber, x.Address));
 
             CreateMap<UserDTO, Domain.Entities.User>()
                 .ConvertUsing(x => new Domain.Entities.User(x.Id, x.FirstName,
-                x.LastName, x.Email, x.PhoneNumber, x.Address, x.DateOfBirth));
+                x.LastName, x.Email, x.PhoneNumber, x.Address));
 
             CreateMap<CreateUserDTO, Domain.Entities.User>()
                 .ConvertUsing(x => new Domain.Entities.User(x.Email, x.FirstName, x.LastName));

@@ -30,6 +30,7 @@ using Account.Domain.Logic.DTOs.Core;
 using Account.Domain.Logic.Validation.Core;
 using Account.DAL.EF.Repository;
 using Account.Domain.Entities;
+using Account.Domain.Logic.IntegrationEvents.EventHandlers;
 
 namespace Account.API
 {
@@ -61,6 +62,7 @@ options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
             services.AddScoped<IUserManipulationService, UserManipulationService>();
             services.AddScoped<IUserInfoService, UserInfoService>();
             services.AddScoped<IPasswordHandlingService, PasswordHandlingService>();
+            services.AddScoped<IEventHandlerService, EventHandlerService>();
             services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();
             services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>(sp => {
           
@@ -76,7 +78,8 @@ options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
                     serviceFactory, connection);
             }
             );
-
+            services.AddTransient<AccommodationBookedIntegrationEventHandler>();
+            services.AddTransient<AccommodationBookingCancelledIntegrationEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -103,7 +106,9 @@ options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
             }));
 
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-          
+            eventBus.Subscribe<AccommodationBookedIntegrationEvent, AccommodationBookedIntegrationEventHandler>();
+            eventBus.Subscribe<AccommodationBookingCancelledIntegrationEvent,
+                AccommodationBookingCancelledIntegrationEventHandler>();
             
         }
     }

@@ -16,11 +16,10 @@ namespace Booking.Domain.Logic.IntegrationEvents.Events
         public string Email { get; private set; }
         public string PhoneNumber { get; private set; }
         public string Address { get; private set; }
-        public DateTime? DateOfBirth { get; private set; }
 
         public UserUpdatedIntegrationEvent(long userId, string firstName,
             string lastName, string email, string phoneNumber, 
-            string address, DateTime? dateOfBirth)
+            string address)
         {
             UserId = userId;
             FirstName = firstName;
@@ -28,7 +27,6 @@ namespace Booking.Domain.Logic.IntegrationEvents.Events
             Email = email;
             PhoneNumber = phoneNumber;
             Address = address;
-            DateOfBirth = dateOfBirth;
         }
     }
 }

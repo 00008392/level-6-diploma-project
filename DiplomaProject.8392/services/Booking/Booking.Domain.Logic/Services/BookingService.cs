@@ -18,13 +18,13 @@ namespace Booking.Domain.Logic.Services
 {
     public class BookingService : IBookingService
     {
-        private readonly IRepository<BookingRequest> _bookingRepository;
+        private readonly IRepositoryWithIncludes<BookingRequest> _bookingRepository;
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<Accommodation> _accommodationRepository;
         private readonly AbstractValidator<CreateBookingRequestDTO> _validator;
         private readonly IMapper _mapper;
 
-        public BookingService(IRepository<BookingRequest> repository,
+        public BookingService(IRepositoryWithIncludes<BookingRequest> repository,
             IRepository<User> userRepository, IRepository<Accommodation> accommodationRepository,
             AbstractValidator<CreateBookingRequestDTO> validator,
             IMapper mapper)
@@ -79,18 +79,27 @@ namespace Booking.Domain.Logic.Services
             }
             // co traveler can be added/removed only if booking request is not accepted yet
             var bookingRequest = (await _bookingRepository.GetFilteredAsync(
-                x => x.Id == coTravelerDTO.BookingId && x.Status == (int)Status.Pending)).SingleOrDefault();
-            if (!_bookingRepository.DoesItemWithIdExist(coTravelerDTO.BookingId))
+                x => x.Id == coTravelerDTO.BookingId && x.Status == (int)Status.Pending, 
+                relatedEntitiesIncluded: true))
+                .SingleOrDefault();
+            if (bookingRequest==null)
             {
                 throw new NotFoundException(coTravelerDTO.CoTravelerId, "Booking request");
             }
             if(coTravelerDTO.Action==Enums.CoTravelerAction.Remove)
             {
-                bookingRequest.CoTravelers.Remove(coTraveler);
+                var coTravelerToDelete = bookingRequest.CoTravelers.Where(x => x.Id == coTraveler.Id).SingleOrDefault();
+                    if (coTravelerToDelete!=null)
+                    {
+                        bookingRequest.RemoveCotraveler(coTravelerToDelete);
+                    }
             }
             else
             {
-                bookingRequest.CoTravelers.Add(coTraveler);
+                if (!bookingRequest.CoTravelers.Where(x => x.Id == coTraveler.Id).Any())
+                {
+                    bookingRequest.AddCotraveler(coTraveler);
+                }
             }
             await _bookingRepository.UpdateAsync(bookingRequest);
         }
@@ -107,13 +116,13 @@ namespace Booking.Domain.Logic.Services
         }
         public async Task<ICollection<BookingRequestInfoDTO>> GetBookingsAsync(BookingRequestSpecification specification)
         {
-            var requestsList = (await _bookingRepository.GetFilteredAsync(specification.ToExpression())).ToList();
+            var requestsList = (await _bookingRepository.GetFilteredAsync(specification.ToExpression(), relatedEntitiesIncluded: true)).ToList();
             var requestsDTOList = _mapper.Map<ICollection<BookingRequestInfoDTO>>(requestsList);
             return requestsDTOList;
         }
         public async Task<BookingRequestInfoDTO> GetBookingDetailsAsync(long id)
         {
-            var request = await _bookingRepository.GetByIdAsync(id);
+            var request = await _bookingRepository.GetByIdAsync(id, relatedEntitiesIncluded: true);
             if (request!=null)
             {
                 return _mapper.Map<BookingRequestInfoDTO>(request);
@@ -125,7 +134,7 @@ namespace Booking.Domain.Logic.Services
             var request = await _bookingRepository.GetByIdAsync(id);
             if (request == null)
             {
-                throw new NotFoundException(request.GetType().Name);
+                throw new NotFoundException("Booking request");
             }
             return request;
         }

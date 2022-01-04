@@ -22,11 +22,12 @@ namespace Post.DAL.EF.Repositories
        
         public override IQueryable<Accommodation> GetDbSetWithRelatedTables()
         {
-           return _dbSet.Include(x => x.Owner).Include(x => x.Category)
-                .Include(x => x.AccommodationPhotos)
-                .Include(x => x.AccommodationRules).ThenInclude(r => r.Item)
-                .Include(x => x.AccommodationFacilities).ThenInclude(f => f.Item)
-                .Include(x => x.AccommodationSpecificities).ThenInclude(s => s.Item);
+            return _dbSet.Include(x => x.Owner).Include(x => x.Category)
+                 .Include(x => x.AccommodationPhotos)
+                 .Include(x => x.AccommodationRules).ThenInclude(r => r.Item)
+                 .Include(x => x.AccommodationFacilities).ThenInclude(f => f.Item)
+                 .Include(x => x.AccommodationSpecificities).ThenInclude(s => s.Item)
+                 .Include(x => x.DatesBooked);
         }
 
     }

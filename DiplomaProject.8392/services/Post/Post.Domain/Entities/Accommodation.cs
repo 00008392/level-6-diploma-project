@@ -14,7 +14,7 @@ namespace Post.Domain.Entities
         public string Title { get; private set; }
         public string Description { get; private set; }
         public long OwnerId { get; private set; }
-        public Owner Owner { get; }
+        public User Owner { get; }
         public DateTime DatePublished { get; private set; }
         public long? CategoryId { get; private set; }
         public Category Category { get; }

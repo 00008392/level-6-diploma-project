@@ -26,8 +26,9 @@ namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 
         public async Task Handle(UserCreatedIntegrationEvent @event)
         {
-            var userDTO = _mapper.Map<UserDTO>(@event);
+            var userDTO = _mapper.Map<CreateUserDTO>(@event);
             await _service.CreateEntityAsync(userDTO);
+
         }
     }
 }

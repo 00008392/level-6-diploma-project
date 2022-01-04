@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Post.Domain.Logic.DTOs
 {
-    public class OwnerDTO
+    public class UserDTO
     {
         public long Id { get; private set; }
         public string FirstName { get; private set; }
@@ -14,7 +14,7 @@ namespace Post.Domain.Logic.DTOs
         public string Email { get; private set; }
         public string PhoneNumber { get; private set; }
 
-        public OwnerDTO(long id, string firstName, 
+        public UserDTO(long id, string firstName, 
             string lastName, string email, string phoneNumber)
         {
             Id = id;
