@@ -9,6 +9,7 @@
     <None Remove="Protos\Booking\booking.proto" />
     <None Remove="Protos\Common\common.proto" />
     <None Remove="Protos\PostFeedback\accommodationItems.proto" />
+    <None Remove="Protos\PostFeedback\feedback.proto" />
     <None Remove="Protos\PostFeedback\postCRUD.proto" />
   </ItemGroup>
   <ItemGroup>
@@ -29,6 +30,7 @@
     <Protobuf Include="Protos\Booking\booking.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\Common\common.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\PostFeedback\accommodationItems.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\PostFeedback\feedback.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\PostFeedback\postCRUD.proto" GrpcServices="Client" />
   </ItemGroup>
 

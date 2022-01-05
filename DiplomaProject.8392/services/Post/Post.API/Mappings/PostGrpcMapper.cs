@@ -61,7 +61,20 @@ namespace Post.API.Mappings
                 .ConvertUsing(x => new AccommodationItemDTO(x.AccommodationId,
                 x.ItemId, x.OtherValue));
 
-
+            CreateMap<FeedbackInfoDTO<UserDTO>, FeedbackInfoResponse>()
+                .ForMember(x => x.User, opt => opt.MapFrom((src, dest, prop, context) =>
+                    {
+                        return context.Mapper.Map<User>(src.Item);
+                    }))
+                .ForMember(x => x.Accommodation, opt => opt.Ignore());
+            CreateMap<FeedbackInfoDTO<AccommodationInfoDTO>, FeedbackInfoResponse>()
+              .ForMember(x => x.Accommodation, opt => opt.MapFrom((src, dest, prop, context) =>
+              {
+                  return context.Mapper.Map<PostInfoResponse>(src.Item);
+              }))
+              .ForMember(x => x.User, opt => opt.Ignore());
+            CreateMap<CreateFeedbackRequest, FeedbackDTO>()
+                .ConvertUsing(x => new FeedbackDTO(x.UserId, x.ItemId??0, x.Rating??0, x.Message));
         }
     }
 }

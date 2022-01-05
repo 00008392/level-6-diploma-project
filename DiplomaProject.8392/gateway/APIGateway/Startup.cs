@@ -68,6 +68,14 @@ namespace APIGateway
             {
                 options.Address = postUrl;
             });
+            services.AddGrpcClient<FeedbackForUser.FeedbackForUserClient>((services, options) =>
+            {
+                options.Address = postUrl;
+            });
+            services.AddGrpcClient<FeedbackForAccommodation.FeedbackForAccommodationClient>((services, options) =>
+            {
+                options.Address = postUrl;
+            });
             //booking 
             var bookingUrl = new Uri(Configuration["grpcConnections:booking"]);
             services.AddGrpcClient<BookingService.BookingServiceClient>((services, options) =>

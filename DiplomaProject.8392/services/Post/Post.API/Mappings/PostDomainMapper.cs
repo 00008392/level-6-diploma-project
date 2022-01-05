@@ -44,7 +44,7 @@ namespace Post.API.Mappings
                 x.Title, x.Description, x.OwnerId, x.CategoryId, x.Address,
                 x.ReferencePoint, x.ContactNumber, x.RoomsNo, x.BathroomsNo,
                 x.BedsNo, x.MaxGuestsNo, x.SquareMeters, x.Price, x.Latitude,
-                x.Longitude, x.IsWholeApartment, x.AdditionalInfo, context.Mapper.Map<UserDTO>(x.Owner),
+                x.Longitude, x.IsWholeApartment, x.AdditionalInfo, x.Owner==null?null:context.Mapper.Map<UserDTO>(x.Owner),
                 x.DatePublished, x.Category == null ? null : context.Mapper.Map<CategoryDTO>(x.Category),
                 x.MovingInTime, x.MovingOutTime,
                 MapCollection<Domain.Entities.AccommodationPhoto, AccommodationPhotoDTO>(x.AccommodationPhotos, context),
@@ -63,9 +63,9 @@ namespace Post.API.Mappings
                 .ConvertUsing(x => new DatesBooked(x.BookingId, x.AccommodationId,
                                                  x.StartDate, x.EndDate));
 
-            CreateFeedbackMapToDTO<User, UserDTO>();
+            CreateFeedbackMapToDTO<Domain.Entities.User, UserDTO>();
             CreateFeedbackMapToDTO<Accommodation, AccommodationInfoDTO>();
-            CreateFeedbackMapFromDTO<User>();
+            CreateFeedbackMapFromDTO<Domain.Entities.User>();
             CreateFeedbackMapFromDTO<Accommodation>();
         }
         private string DateTimeToString(DateTime? time)
@@ -75,8 +75,12 @@ namespace Post.API.Mappings
         private ICollection<E> MapCollection<T, E>(ICollection<T> collection, 
             ResolutionContext context)
         {
-            return collection.Any() ? context.Mapper.Map<ICollection<T>, ICollection<E>>(collection)
+            if(collection!=null)
+            {
+                return collection.Any() ? context.Mapper.Map<ICollection<T>, ICollection<E>>(collection)
                             : null;
+            }
+            return null;
         }
         private void CreateFeedbackMapFromDTO<T>() where T: FeedbackEntity
         {

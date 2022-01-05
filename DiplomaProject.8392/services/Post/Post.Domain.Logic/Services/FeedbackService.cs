@@ -79,7 +79,7 @@ namespace Post.Domain.Logic.Services
             {
                 throw new ForeignKeyViolationException(nameof(T));
             }
-            if(_userRepository.DoesItemWithIdExist(feedbackDTO.UserId??0))
+            if(!_userRepository.DoesItemWithIdExist(feedbackDTO.UserId??0))
             {
                 throw new ForeignKeyViolationException(nameof(User));
             }

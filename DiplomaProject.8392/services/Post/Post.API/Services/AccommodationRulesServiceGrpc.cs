@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Post.API.Services
 {
-    public class AccommodationRulesServiceGrpc: AccommodationRules.AccommodationRulesBase
+    public class AccommodationRulesServiceGrpc : AccommodationRules.AccommodationRulesBase
     {
         public AccommodationRulesServiceGrpc(IAccommodationItemsStrategy<AccommodationRule, Rule> strategy)
             : base(strategy)

@@ -75,7 +75,7 @@ message PostInfoResponse {
    int64 id = 1;
    string title = 2;
    google.protobuf.StringValue description = 3;
-   Owner owner = 4;
+   User owner = 4;
    Category category = 5;
    string address = 6;
    google.protobuf.StringValue referencePoint = 7;
@@ -100,7 +100,7 @@ message PostInfoResponse {
    bool NoItem = 26;
 }
 
-message Owner {
+message User {
 int64 id = 1;
 google.protobuf.StringValue firstName = 2;
 google.protobuf.StringValue lastName = 3;

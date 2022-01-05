@@ -1,5 +1,6 @@
-﻿using APIGateway.Controllers.Booking.QueryParameters;
+﻿
 using APIGateway.Helpers;
+using APIGateway.QueryParameters;
 using Booking.API;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ namespace APIGateway.Controllers.Booking
         }
         // GET: api/<BookingController>
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] GetBookingsQueryParameter query)
+        public async Task<IActionResult> Get([FromQuery] UserAccommodationQueryParameter query)
         {
             if(query==null)
             {
@@ -114,7 +115,7 @@ namespace APIGateway.Controllers.Booking
             var reply = await _bookingClient.DeleteBookingRequestAsync(request);
             if(!reply.IsSuccess)
             {
-                return NotFound(reply);
+                return BadRequest(reply);
             }
             return NoContent();
         }

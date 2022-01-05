@@ -82,7 +82,7 @@ namespace APIGateway.Controllers.PostFeedback
             var reply = await _postClient.DeletePostAsync(new Request { Id = id });
             if (!reply.IsSuccess)
             {
-                return NotFound(reply);
+                return BadRequest(reply);
             }
             return NoContent();
         }
