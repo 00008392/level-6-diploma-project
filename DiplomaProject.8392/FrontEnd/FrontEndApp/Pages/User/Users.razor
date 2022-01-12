@@ -1,0 +1,42 @@
+﻿@page "/users"
+@inject HttpClient client
+@using FrontEndApp.Models
+@using Newtonsoft.Json
+
+<h1>Users</h1>
+
+
+
+@if (_users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+<div class="users__list">
+    @foreach (UserInfo user in _users)
+    {
+        <div>
+            <h4>@user.FirstName @user.LastName</h4>
+            <h4>@user.Email</h4>
+            <a href=@($"users/{user.Id}") class="btn btn-primary d-block">View details</a>
+        </div>
+    }
+</div>
+}
+
+@code {
+    private List<UserInfo> _users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await client.GetAsync("api/users");
+        if (response.IsSuccessStatusCode)
+        {
+            var responseStr = await response.Content.ReadAsStringAsync();
+
+            _users = JsonConvert.DeserializeObject<List<UserInfo>>(responseStr);
+        }
+    }
+
+}

@@ -42,6 +42,9 @@ namespace Post.DAL.EF.Migrations
                     b.Property<long?>("CategoryId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("CityId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("ContactNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -92,6 +95,8 @@ namespace Post.DAL.EF.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("CityId");
 
                     b.HasIndex("OwnerId");
 
@@ -230,6 +235,22 @@ namespace Post.DAL.EF.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Post.Domain.Entities.City", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("Post.Domain.Entities.DatesBooked", b =>
@@ -403,6 +424,11 @@ namespace Post.DAL.EF.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("Post.Domain.Entities.City", "City")
+                        .WithMany("Accommodations")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Post.Domain.Entities.User", "Owner")
                         .WithMany("Accommodations")
                         .HasForeignKey("OwnerId")
@@ -410,6 +436,8 @@ namespace Post.DAL.EF.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+
+                    b.Navigation("City");
 
                     b.Navigation("Owner");
                 });
@@ -545,6 +573,11 @@ namespace Post.DAL.EF.Migrations
                 });
 
             modelBuilder.Entity("Post.Domain.Entities.Category", b =>
+                {
+                    b.Navigation("Accommodations");
+                });
+
+            modelBuilder.Entity("Post.Domain.Entities.City", b =>
                 {
                     b.Navigation("Accommodations");
                 });

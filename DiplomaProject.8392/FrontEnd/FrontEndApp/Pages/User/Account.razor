@@ -1,0 +1,66 @@
+﻿@page "/account"
+@using FrontEndApp.Models
+@inherits Components.CustomBaseComponent
+
+
+@if (AuthState.isAuthenticated)
+{
+    if (_id == 0)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <User UserId="_id" />
+        <NavLink class="btn btn-primary" href="@($"account/edit")">
+            <span class="oi oi-plus" aria-hidden="true"></span> Edit account
+        </NavLink>
+        <button type="submit" class="btn btn-danger" @onclick="DeleteUser">Delete account</button>
+        <NavLink class="btn btn-primary" href="@($"account/password")">
+            <span class="oi oi-plus" aria-hidden="true"></span> Change password
+        </NavLink>
+        <button type="submit" class="btn btn-danger" @onclick="LogOut">Sign out</button>
+    }
+
+}
+else
+{
+    <p>
+        <NavLink class="btn btn-primary" href="@($"registration")">
+            <span class="oi oi-plus" aria-hidden="true"></span> Sign up
+        </NavLink> or
+        <NavLink class="btn btn-primary" href="@($"login")">
+            <span class="oi oi-account-login" aria-hidden="true"></span> Sign in
+        </NavLink>
+    </p>
+
+}
+
+
+
+@code {
+    private UserInfo _user = new UserInfo();
+    private long _id;
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthState.isAuthenticated)
+        {
+            _id = int.Parse(await storage.GetItemAsync<string>("userId"));
+
+        }
+    }
+    private async Task DeleteUser()
+    {
+        var reply = await client.DeleteAsync($"api/users/account");
+        if (reply.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/users");
+        }
+
+    }
+    private async Task LogOut()
+    {
+        await authService.LogOut();
+    }
+
+}

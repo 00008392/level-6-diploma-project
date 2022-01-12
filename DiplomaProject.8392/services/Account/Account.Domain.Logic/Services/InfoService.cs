@@ -12,12 +12,19 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Services
 {
-    public class UserInfoService : BaseService, IUserInfoService
+    public class InfoService : BaseService, IInfoService
     {
-        public UserInfoService(IRepositoryWithIncludes<User> repository, 
-            IMapper mapper):base(repository, mapper)
+        private readonly IRepository<Country> _countryRepository;
+        public InfoService(IRepositoryWithIncludes<User> repository, 
+            IMapper mapper, IRepository<Country> countryRepository):base(repository, mapper)
         {
+            _countryRepository = countryRepository;
+        }
 
+        public async Task<ICollection<CountryDTO>> GetAllCountriesAsync()
+        {
+            var countries = (await _countryRepository.GetAllAsync()).ToList();
+            return _mapper.Map<ICollection<Country>, ICollection<CountryDTO>>(countries);
         }
 
         public async Task<ICollection<UserInfoDTO>> GetAllUsersAsync()
@@ -36,6 +43,6 @@ namespace Account.Domain.Logic.Services
 
             return null;
         }
-        
+
     }
 }

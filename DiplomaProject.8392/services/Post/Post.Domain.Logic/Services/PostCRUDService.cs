@@ -20,17 +20,20 @@ namespace Post.Domain.Logic.Services
         private readonly IRepositoryWithIncludes<Accommodation> _repository;
         private readonly IRepository<User> _ownerRepository;
         private readonly IRepository<Category> _categoryRepository;
+        private readonly IRepository<City> _cityRepository;
         private readonly AbstractValidator<AccommodationManipulationDTO> _validator;
         private readonly IMapper _mapper;
         public PostCRUDService(IRepositoryWithIncludes<Accommodation> repository, 
             IRepository<User> ownerRepository,
             IRepository<Category> categoryRepository,
+            IRepository<City> cityRepository,
             AbstractValidator<AccommodationManipulationDTO> validator, 
             IMapper mapper)
         {
             _repository = repository;
             _ownerRepository = ownerRepository;
             _categoryRepository = categoryRepository;
+            _cityRepository = cityRepository;
             _validator = validator;
             _mapper = mapper;
         }
@@ -47,6 +50,13 @@ namespace Post.Domain.Logic.Services
                 if (!categoryExists)
                 {
                     throw new ForeignKeyViolationException("Category");
+                }
+            }
+            if (item.CityId != null)
+            {
+                if (!_cityRepository.DoesItemWithIdExist((long)item.CityId))
+                {
+                    throw new ForeignKeyViolationException("City");
                 }
             }
             var ownerExists = _ownerRepository.DoesItemWithIdExist(item.OwnerId);
@@ -114,7 +124,7 @@ namespace Post.Domain.Logic.Services
 
 
                 accommodation.UpdateInfo(
-                item.Title, item.Description, item.OwnerId, item.CategoryId,
+                item.Title, item.Description, item.OwnerId, item.CategoryId, item.CityId,
                 item.Address, item.ReferencePoint, item.ContactNumber, item.RoomsNo, item.BathroomsNo,
                 item.BedsNo, item.MaxGuestsNo, item.SquareMeters, item.Price, item.Latitude, item.Longitude,
                 item.IsWholeApartment, item.MovingInTime == null ? null : ((DateTime)item.MovingInTime).ToString("HH:mm"),

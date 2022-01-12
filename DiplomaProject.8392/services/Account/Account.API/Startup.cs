@@ -60,7 +60,7 @@ options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
             services.AddScoped<AbstractValidator<UserBaseDTO>, UserBaseValidator>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IUserManipulationService, UserManipulationService>();
-            services.AddScoped<IUserInfoService, UserInfoService>();
+            services.AddScoped<IInfoService, InfoService>();
             services.AddScoped<IPasswordHandlingService, PasswordHandlingService>();
             services.AddScoped<IEventHandlerService, EventHandlerService>();
             services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();

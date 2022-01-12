@@ -23,6 +23,7 @@ namespace Post.DAL.EF.Data
         public DbSet<AccommodationRule> AccommodationRules { get; set; }
         public DbSet<AccommodationSpecificity> AccommodationSpecificities { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<City> Cities { get; set; }
         public DbSet<Facility> Facilities { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Rule> Rules { get; set; }
@@ -41,6 +42,7 @@ namespace Post.DAL.EF.Data
             modelBuilder.ApplyConfiguration(new AccommodationRuleEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new AccommodationSpecificityEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CityEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ItemEntityTypeConfiguration<Rule>());
             modelBuilder.ApplyConfiguration(new ItemEntityTypeConfiguration<Facility>());
             modelBuilder.ApplyConfiguration(new ItemEntityTypeConfiguration<Specificity>());

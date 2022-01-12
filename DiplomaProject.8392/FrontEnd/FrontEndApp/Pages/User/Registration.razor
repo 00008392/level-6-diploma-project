@@ -1,0 +1,66 @@
+﻿@page "/registration"
+@using FrontEndApp.Models
+@using FrontEndApp.Enums
+@inherits Components.CustomBaseComponent
+
+<h3>Registration</h3>
+@if (AuthState.isAuthenticated)
+{
+    <p>You are already signed in</p>
+}
+else
+{
+    @if (_newUser.ErrorMessage != null)
+    {
+
+        <p>@_newUser.ErrorMessage</p>
+    }
+    <EditForm Model="@_newUser" OnValidSubmit="@CreateUser">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <label for="firstName">First name</label>
+        <InputText @bind-Value="@_newUser.FirstName" id="firstName" />
+        <label for="lastName">Last name</label>
+        <InputText @bind-Value="@_newUser.LastName" id="lastName" />
+        <label for="lastName">Email</label>
+        <InputText @bind-Value="@_newUser.Email" id="email" />
+        <label for="DOB">Date of Birth</label>
+        <InputDate @bind-Value="@_newUser.DateOfBirth" id="DOB" />
+        <label for="gender">Gender</label>
+        <InputSelect @bind-Value="@_newUser.Gender" id="gender">
+            @foreach (var gender in Enum.GetValues(typeof(Gender)))
+                {
+                <option value="@gender">@gender</option>
+                }
+        </InputSelect>
+        <label for="password">Password</label>
+        <InputText @bind-Value="@_newUser.Password" id="password" type="password" />
+
+        <button type="submit" class="btn btn-primary">Sign up</button>
+    </EditForm>
+}
+
+
+@code {
+
+    private CreateUser _newUser = new CreateUser();
+    private async Task CreateUser()
+    {
+        _newUser.Role = 0;
+        var reply = await client.PostAsJsonAsync<CreateUser>("api/users", _newUser);
+        if (reply.IsSuccessStatusCode)
+        {
+            var login = new Models.Login
+            {
+                Email = _newUser.Email,
+                Password = _newUser.Password
+            };
+            await authService.LogIn(login);
+            navManager.NavigateTo("/account");
+        }
+        else
+        {
+            _newUser.ErrorMessage = reply.Content.ReadAsStringAsync().Result;
+        }
+    }
+}

@@ -21,17 +21,17 @@ namespace Account.Domain.Logic.Services
     {
         private readonly AbstractValidator<UserRegistrationDTO> _registrationValidator;
         private readonly AbstractValidator<UserBaseDTO> _baseValidator;
-        private readonly IRepository<City> _cityRepository;
+        private readonly IRepository<Country> _countryRepository;
         private readonly AbstractValidator<IPasswordBaseDTO> _passwordValidator;
         public UserManipulationService(IRepositoryWithIncludes<User> repository, 
             AbstractValidator<UserRegistrationDTO> registrationValidator,
-            IPasswordHandlingService pwdService, IRepository<City> cityRepository,
+            IPasswordHandlingService pwdService, IRepository<Country> countryRepository,
             AbstractValidator<UserBaseDTO> baseValidator, IMapper mapper,
              AbstractValidator<IPasswordBaseDTO> passwordValidator)
             : base(repository, pwdService, mapper)
         {
             _registrationValidator = registrationValidator;
-            _cityRepository = cityRepository;
+            _countryRepository = countryRepository;
             _baseValidator = baseValidator;
             _passwordValidator = passwordValidator;
         }
@@ -91,18 +91,18 @@ namespace Account.Domain.Logic.Services
             {
                 throw new ValidationException(result.Errors);
             }
-            if (userDTO.CityId != null)
+            if (userDTO.CountryId != null)
             {
-                if (!_cityRepository.DoesItemWithIdExist((long)userDTO.CityId))
+                if (!_countryRepository.DoesItemWithIdExist((long)userDTO.CountryId))
                 {
-                    throw new ForeignKeyViolationException("city");
+                    throw new ForeignKeyViolationException("country");
                 }
             }
 
             user.UpdateInfo(userDTO.FirstName, userDTO.LastName,
                 userDTO.Email, userDTO.PhoneNumber, (DateTime)userDTO.DateOfBirth,
                 (Gender)userDTO.Gender, userDTO.Address,
-                userDTO.CityId, userDTO.UserInfo);
+                userDTO.CountryId, userDTO.UserInfo);
             await _repository.UpdateAsync(user);
         }
     }

@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+import "Protos/Common/common.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "Post.API";
+
+package post;
+
+service PostCRUD {
+
+  rpc CreatePost (CreatePostRequest) returns (common.Response);
+  rpc UpdatePost (UpdatePostRequest) returns (common.Response);
+  rpc DeletePost (common.Request) returns (common.Response); 
+  rpc GetPostById (common.Request) returns (PostInfoResponse); 
+}
+
+service PostInfo {
+  rpc GetAllCities (common.Empty) returns (CityList);
+  rpc GetAllCategories (common.Empty) returns (CategoryList);
+}
+
+message CreatePostRequest {
+  google.protobuf.StringValue title = 1;
+  google.protobuf.StringValue description = 2;
+  google.protobuf.Int64Value ownerId = 3;
+  google.protobuf.Int64Value categoryId = 4;
+  google.protobuf.Int64Value cityId = 5;
+  google.protobuf.StringValue address = 6;
+  google.protobuf.StringValue referencePoint = 7;
+  google.protobuf.StringValue contactNumber = 8;
+  google.protobuf.Int32Value roomsNo = 9;
+  google.protobuf.Int32Value bathroomsNo = 10;
+  google.protobuf.Int32Value bedsNo = 11;
+  google.protobuf.Int32Value maxGuestsNo = 12;
+  google.protobuf.Int32Value squareMeters = 13;
+  google.protobuf.DoubleValue price = 14;
+  google.protobuf.DoubleValue latitude = 15;
+  google.protobuf.DoubleValue longitude = 16;
+  google.protobuf.BoolValue isWholeApartment = 17;
+  google.protobuf.Timestamp movingInTimeStamp = 18;
+  google.protobuf.Timestamp movingOutTimeStamp = 19;
+  google.protobuf.StringValue additionalInfo = 20;
+}
+
+
+message UpdatePostRequest {
+int64 id = 1;
+  google.protobuf.StringValue title = 2;
+  google.protobuf.StringValue description = 3;
+  google.protobuf.Int64Value ownerId = 4;
+  google.protobuf.Int64Value categoryId = 5;
+  google.protobuf.Int64Value cityId = 6;
+  google.protobuf.StringValue address = 7;
+  google.protobuf.StringValue referencePoint = 8;
+  google.protobuf.StringValue contactNumber = 9;
+  google.protobuf.Int32Value roomsNo = 10;
+  google.protobuf.Int32Value bathroomsNo = 11;
+  google.protobuf.Int32Value bedsNo = 12;
+  google.protobuf.Int32Value maxGuestsNo = 13;
+  google.protobuf.Int32Value squareMeters = 14;
+  google.protobuf.DoubleValue price = 15;
+  google.protobuf.DoubleValue latitude = 16;
+  google.protobuf.DoubleValue longitude = 17;
+  google.protobuf.BoolValue isWholeApartment = 18;
+  google.protobuf.Timestamp movingInTimeStamp = 19;
+  google.protobuf.Timestamp movingOutTimeStamp = 20;
+  google.protobuf.StringValue additionalInfo = 21;
+}
+
+message User {
+int64 id = 1;
+google.protobuf.StringValue firstName = 2;
+google.protobuf.StringValue lastName = 3;
+string email = 9;
+google.protobuf.StringValue phoneNumber = 10;
+}
+
+message PostInfoResponse {
+   int64 id = 1;
+   string title = 2;
+   google.protobuf.StringValue description = 3;
+   User owner = 4;
+   Category category = 5;
+   City city = 6;
+   string address = 7;
+   google.protobuf.StringValue referencePoint = 8;
+   string contactNumber = 9;
+   google.protobuf.Int32Value roomsNo = 10;
+   google.protobuf.Int32Value bathroomsNo = 11;
+   google.protobuf.Int32Value bedsNo = 12;
+   int32 maxGuestsNo = 13;
+   google.protobuf.Int32Value squareMeters = 14;
+   double price = 15;
+   google.protobuf.DoubleValue latitude = 16;
+   google.protobuf.DoubleValue longitude = 17;
+   google.protobuf.BoolValue isWholeApartment = 18;
+   google.protobuf.StringValue additionalInfo = 19;
+   google.protobuf.Timestamp datePublishedTimeStamp = 20;
+   string movingInTime = 21;
+   string movingOutTime = 22;
+   repeated AccommodationPhoto accommodationPhotos = 23;
+   repeated AccommodationItem accommodationSpecificities = 24;
+   repeated AccommodationItem accommodationRules = 25;
+   repeated AccommodationItem accommodationFacilities = 26;
+   bool NoItem = 27;
+}
+message AccommodationItem {
+int64 id = 1;
+google.protobuf.StringValue otherValue = 3;
+common.Item base = 4;
+}
+
+message Category {
+int64 id = 1;
+string name = 2;
+}
+
+message City {
+int64 id = 1;
+string name = 2;
+}
+
+message CityList {
+repeated City items = 1;
+}
+message CategoryList {
+repeated Category items = 1;
+}
+
+message AccommodationPhoto {
+int64 id = 1;
+google.protobuf.BytesValue photo = 3;
+google.protobuf.StringValue mimeType = 4;
+}
+
+
+

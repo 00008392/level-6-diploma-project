@@ -58,6 +58,7 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             services.AddScoped<AbstractValidator<AddBookingDTO>, DatesBookedValidator>();
             services.AddScoped<AbstractValidator<FeedbackDTO>, FeedbackValidator>();
             services.AddScoped<IPostCRUDService, PostCRUDService>();
+            services.AddScoped<IInfoService, InfoService>();
             services.AddScoped(typeof(IFeedbackService<,>), typeof(FeedbackService<,>));
             services.AddScoped<IEventHandlerService, EventHandlerService>();
             services.AddScoped(typeof(IAccommodationItemsStrategy<,>), typeof(AccommodationItemsStrategy<,>));
@@ -98,6 +99,7 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<PostCRUDServiceGrpc>();
+                endpoints.MapGrpcService<PostInfoServiceGrpc>();
                 endpoints.MapGrpcService<AccommodationRulesServiceGrpc>();
                 endpoints.MapGrpcService<AccommodationFacilitiesServiceGrpc>();
                 endpoints.MapGrpcService<AccommodationSpecificitiesServiceGrpc>();

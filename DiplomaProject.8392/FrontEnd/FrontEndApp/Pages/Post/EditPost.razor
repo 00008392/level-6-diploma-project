@@ -1,0 +1,24 @@
+﻿@page "/editpost/{Id?:long?}"
+@using Models
+@using Syncfusion.Blazor.Calendars
+@inherits Components.CustomBaseComponent
+<h3>EditPost</h3>
+
+@code {
+    [Parameter]
+    public long? Id { get; set; }
+    private Models.EditPost _post = new Models.EditPost();
+        protected override async Task OnInitializedAsync()
+        {
+           
+        }
+
+        private async Task CreatePost()
+    {
+
+    }
+    private async Task UpdatePost()
+    {
+
+    }
+}

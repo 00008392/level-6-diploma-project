@@ -21,8 +21,8 @@ namespace Account.DAL.EF.Repository
         public override IQueryable<User> GetDbSetWithRelatedTables()
         {
             return _dbSet.Include(x => x.BookingsAsGuest)
-                         .Include(x=>x.BookingsAsOwner)
-                         .Include(x => x.City).ThenInclude(x => x == null ? null : x.Country);
+                         .Include(x => x.BookingsAsOwner)
+                         .Include(x => x.Country);
         }
 
        

@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Contracts
 {
-    public interface IUserInfoService
+    public interface IInfoService
     {
         Task<UserInfoDTO> GetProfileInfoAsync(long id);
         Task<ICollection<UserInfoDTO>> GetAllUsersAsync();
+        Task<ICollection<CountryDTO>> GetAllCountriesAsync();
     }
 }

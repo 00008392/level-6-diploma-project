@@ -10,7 +10,7 @@ namespace Account.Domain.Entities
     public class Country : BaseEntity
     {
         public string Name { get; private set; }
-        public ICollection<City> Cities { get; private set; }
+        public ICollection<User> Users { get; private set; }
 
         public Country(string name)
         {

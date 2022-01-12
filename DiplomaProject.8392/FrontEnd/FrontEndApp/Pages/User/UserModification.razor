@@ -1,0 +1,102 @@
+﻿@page "/account/edit"
+@using FrontEndApp.Models
+@using FrontEndApp.Enums
+@using Newtonsoft.Json
+@inherits Components.CustomBaseComponent
+
+    <h3>Edit account</h3>
+    @if (AuthState.isAuthenticated)
+    {
+        @if (_editUser.ErrorMessage != null)
+        {
+            <p>@_editUser.ErrorMessage</p>
+        }
+
+        <EditForm Model="@_editUser" OnValidSubmit="@UpdateUser">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <label for="firstName">First name</label>
+            <InputText @bind-Value="@_editUser.FirstName" id="firstName" />
+            <label for="lastName">Last name</label>
+            <InputText @bind-Value="@_editUser.LastName" id="lastName" />
+            <label for="lastName">Email</label>
+            <InputText @bind-Value="@_editUser.Email" id="email" />
+            <label for="DOB">Date of Birth</label>
+            <InputDate @bind-Value="@_editUser.DateOfBirth" id="DOB" />
+            <label for="gender">Gender</label>
+            <InputSelect @bind-Value="@_editUser.Gender" id="gender">
+                @foreach (var gender in Enum.GetValues(typeof(Gender)))
+                    {
+                    <option value="@gender">@gender</option>
+                    }
+            </InputSelect>
+            <label for="phoneNumber">Phone number</label>
+            <InputText @bind-Value="@_editUser.PhoneNumber" id="phoneNumber" />
+            <label for="address">Address</label>
+            <InputText @bind-Value="@_editUser.Address" id="address" />
+            <label for="countryId">Country</label>
+            @if (_editUser.CountryList == null)
+            {
+                <span>Loading...</span>
+            }
+            else
+            {
+                <InputSelect @bind-Value="@_editUser.CountryId" id="countryId">
+                    @foreach (var country in _editUser.CountryList)
+                            {
+                        <option value="@country.Id">@country.Name</option>
+                            }
+                </InputSelect>
+            }
+            <label for="userInfo">Additional information</label>
+            <InputText @bind-Value="@_editUser.UserInfo" id="userInfo" />
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </EditForm>
+
+    }
+    else
+    {
+        <p>Sign in to modify account</p>
+    }
+
+
+    @code {
+
+        private EditUser _editUser = new EditUser();
+
+        protected override async Task OnInitializedAsync()
+        {
+            if (AuthState.isAuthenticated)
+            {
+                var id =int.Parse(await storage.GetItemAsync<string>("userId"));
+                var userResponse = await client.GetAsync($"api/users/{id}");
+                if (userResponse.IsSuccessStatusCode)
+                {
+                    var responseStr = await userResponse.Content.ReadAsStringAsync();
+
+                    _editUser = JsonConvert.DeserializeObject<EditUser>(responseStr);
+                    _editUser.CountryId = _editUser.Country.Id;
+                }
+                var countryResponse = await client.GetAsync("api/info/countries");
+                if (countryResponse.IsSuccessStatusCode)
+                {
+                    var responseStr = await countryResponse.Content.ReadAsStringAsync();
+
+                    _editUser.CountryList = JsonConvert.DeserializeObject<List<Country>>(responseStr);
+                }
+            }
+        }
+        private async Task UpdateUser()
+        {
+            var reply = await client.PutAsJsonAsync<EditUser>($"api/users/account", _editUser);
+            if (reply.IsSuccessStatusCode)
+            {
+                navManager.NavigateTo("/account");
+            }
+            else
+            {
+                _editUser.ErrorMessage = reply.Content.ReadAsStringAsync().Result;
+            }
+        }
+       
+    }

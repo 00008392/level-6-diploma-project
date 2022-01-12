@@ -12,19 +12,19 @@ namespace Account.Domain.Logic.DTOs
     {
         public long Id { get; private set; }
         public string PhoneNumber { get; private set; }
-        public long? CityId { get; private set; }
+        public long? CountryId { get; private set; }
         public string Address { get; private set; }
         public string UserInfo { get; private set; }
         public UserUpdateDTO(long id, string firstName,
          string lastName, string email,
          string phoneNumber, DateTime? dateOfBirth,
          Gender? gender, string address,
-         string userInfo, long? cityId):base(firstName, lastName, 
+         string userInfo, long? countryId) :base(firstName, lastName, 
              email, dateOfBirth, gender)
         {
             Id = id;
             PhoneNumber = phoneNumber;
-            CityId = cityId;
+            CountryId = countryId;
             Address = address;
             UserInfo = userInfo;
         }

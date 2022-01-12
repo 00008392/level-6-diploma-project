@@ -23,6 +23,7 @@ namespace Post.DAL.EF.Repositories
         public override IQueryable<Accommodation> GetDbSetWithRelatedTables()
         {
             return _dbSet.Include(x => x.Owner).Include(x => x.Category)
+                 .Include(x=>x.City)
                  .Include(x => x.AccommodationPhotos)
                  .Include(x => x.AccommodationRules).ThenInclude(r => r.Item)
                  .Include(x => x.AccommodationFacilities).ThenInclude(f => f.Item)

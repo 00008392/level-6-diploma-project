@@ -1,0 +1,38 @@
+﻿@page "/login"
+@using FrontEndApp.Models
+@inherits Components.CustomBaseComponent
+
+<h3>Login</h3>
+@if (!AuthState.isAuthenticated)
+{
+    <p>@_error</p>
+    <EditForm Model="@_login" OnValidSubmit="LogIn">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <label for="lastName">Email</label>
+        <InputText @bind-Value="@_login.Email" id="email" />
+        <label for="password">Password</label>
+        <InputText @bind-Value="@_login.Password" id="password" type="password" />
+        <button type="submit" class="btn btn-primary">Sign in</button>
+    </EditForm>
+}
+
+
+@code {
+    private Models.Login _login = new Models.Login();
+    private LoggedUser _loggedUser;
+    private string _error;
+    private async Task LogIn()
+    {
+        var loggedUser = await authService.LogIn(_login);
+        if(loggedUser!=null)
+        {
+            navManager.NavigateTo("/account");
+        } else
+        {
+            _error = "Login failed";
+        }
+
+
+    }
+}

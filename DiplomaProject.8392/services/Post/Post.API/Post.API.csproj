@@ -8,7 +8,7 @@
     <Protobuf Include="Protos\Common\common.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\accommodationItems.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\feedback.proto" GrpcServices="Server" />
-    <Protobuf Include="Protos\postCRUD.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\post.proto" GrpcServices="Server" />
   </ItemGroup> 
   
   <ItemGroup>

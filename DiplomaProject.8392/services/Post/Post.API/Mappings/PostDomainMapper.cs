@@ -16,7 +16,7 @@ namespace Post.API.Mappings
         {
             CreateMap<CreatePostDTO, Accommodation>()
                .ConvertUsing(x => new Accommodation(x.Title, x.Description, x.OwnerId,
-                DateTime.Now, x.CategoryId, x.Address, x.ReferencePoint, x.ContactNumber,
+                DateTime.Now, x.CategoryId, x.CityId, x.Address, x.ReferencePoint, x.ContactNumber,
                 x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo, x.SquareMeters,
                 x.Price, x.Latitude, x.Longitude, x.IsWholeApartment, DateTimeToString(x.MovingInTime),
                DateTimeToString(x.MovingOutTime), x.AdditionalInfo));
@@ -25,6 +25,8 @@ namespace Post.API.Mappings
                 x.Email, x.PhoneNumber));
             CreateMap<Domain.Entities.Category, CategoryDTO>()
                 .ConvertUsing(x => new CategoryDTO(x.Id, x.Name));
+            CreateMap<Domain.Entities.City, CityDTO>()
+                .ConvertUsing(x => new CityDTO(x.Id, x.Name));
             CreateMap<Domain.Entities.AccommodationPhoto, AccommodationPhotoDTO>()
                 .ConvertUsing(x => new AccommodationPhotoDTO(x.Id, x.Photo, x.MimeType));
             CreateMap<ItemBase, ItemInfoDTO>()
@@ -41,11 +43,12 @@ namespace Post.API.Mappings
                 .IncludeBase<ItemAccommodationBase, AccommodationItemInfoDTO>(); 
             CreateMap<Accommodation, AccommodationInfoDTO>()
                 .ConvertUsing((x,dest, context) => new AccommodationInfoDTO(x.Id,
-                x.Title, x.Description, x.OwnerId, x.CategoryId, x.Address,
+                x.Title, x.Description, x.OwnerId, x.CategoryId, x.CityId, x.Address,
                 x.ReferencePoint, x.ContactNumber, x.RoomsNo, x.BathroomsNo,
                 x.BedsNo, x.MaxGuestsNo, x.SquareMeters, x.Price, x.Latitude,
                 x.Longitude, x.IsWholeApartment, x.AdditionalInfo, x.Owner==null?null:context.Mapper.Map<UserDTO>(x.Owner),
                 x.DatePublished, x.Category == null ? null : context.Mapper.Map<CategoryDTO>(x.Category),
+                 x.City == null ? null : context.Mapper.Map<CityDTO>(x.City),
                 x.MovingInTime, x.MovingOutTime,
                 MapCollection<Domain.Entities.AccommodationPhoto, AccommodationPhotoDTO>(x.AccommodationPhotos, context),
                 MapCollection<AccommodationSpecificity, AccommodationItemInfoDTO>(x.AccommodationSpecificities, context),

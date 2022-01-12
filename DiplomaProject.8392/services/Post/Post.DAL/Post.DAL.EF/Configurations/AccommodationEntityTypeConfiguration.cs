@@ -19,6 +19,8 @@ namespace Post.DAL.EF.Configurations
                 .HasForeignKey(a => a.OwnerId).OnDelete(DeleteBehavior.Restrict);   
             builder.HasOne(a => a.Category).WithMany(c => c.Accommodations)
                 .HasForeignKey(a => a.CategoryId).OnDelete(DeleteBehavior.SetNull);
+            builder.HasOne(a => a.City).WithMany(c => c.Accommodations)
+               .HasForeignKey(a => a.CityId).OnDelete(DeleteBehavior.SetNull);
             builder.Property(a => a.Address).IsRequired(true);
             builder.Property(a => a.ContactNumber).IsRequired(true);
             builder.Property(a => a.MovingInTime).HasColumnType("time").HasConversion(t=>TimeSpan.Parse(t), t=>t.ToString("hh\\:mm"));

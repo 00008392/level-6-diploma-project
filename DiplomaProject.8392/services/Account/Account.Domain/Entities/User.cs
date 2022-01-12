@@ -22,8 +22,8 @@ namespace Account.Domain.Entities
         public DateTime DateOfBirth { get; private set; }
         public Gender Gender { get; private set; }
         public string Address { get; private set; }
-        public long? CityId { get; private set; }
-        public City City { get; private set; }
+        public long? CountryId { get; private set; }
+        public Country Country { get; private set; }
         public string UserInfo { get; private set; }
         public byte[] ProfilePhoto { get; private set; }
         public string MimeType { get; private set; }
@@ -56,7 +56,7 @@ namespace Account.Domain.Entities
            string email, string phoneNumber,
            DateTime dateOfBirth,
            Gender gender, string address,
-           long? cityId, string userInfo)
+           long? countryId, string userInfo)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -65,7 +65,7 @@ namespace Account.Domain.Entities
             DateOfBirth = dateOfBirth;
             Gender = gender;
             Address = address;
-            CityId = cityId;
+            CountryId = countryId;
             UserInfo = userInfo;
         }
     }

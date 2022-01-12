@@ -20,7 +20,7 @@ namespace Account.API.Mappings
                 .ConvertUsing(x => new UserUpdatedIntegrationEvent(x.Id, x.FirstName,
                 x.LastName, x.Email, x.PhoneNumber, (DateTime)x.DateOfBirth,
                 (int)x.Gender, x.Address,
-                x.UserInfo, x.CityId));
+                x.UserInfo, x.CountryId));
             CreateMap<AccommodationBookedIntegrationEvent, AddBookingDTO>()
                 .ConvertUsing(x => new AddBookingDTO(x.BookingId, x.GuestId, x.OwnerId));
         }

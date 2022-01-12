@@ -16,15 +16,13 @@ namespace Account.API.Mappings
         {
             CreateMap<User, LoggedUserDTO>()
                 .ConvertUsing(x => new LoggedUserDTO(x.Id, x.Email, (int)x.Role));
-            CreateMap<Domain.Entities.City, CityDTO>()
-                .ConvertUsing(x => new CityDTO(x.Id, x.Name));
             CreateMap<Domain.Entities.Country, CountryDTO>()
                 .ConvertUsing(x => new CountryDTO(x.Id, x.Name));
             CreateMap<User, UserInfoDTO>()
                 .ConvertUsing((x, dest, context) => new UserInfoDTO(x.Id, x.FirstName, x.LastName,
                 x.Email, x.PhoneNumber, x.DateOfBirth, x.Gender, x.Address,
-                x.UserInfo, x.RegistrationDate, x.City == null ? null : context.Mapper.Map<CityDTO>(x.City),
-                x.City == null ? null : context.Mapper.Map<CountryDTO>(x.City.Country),
+                x.UserInfo, x.RegistrationDate,
+                x.Country == null ? null : context.Mapper.Map<CountryDTO>(x.Country),
                 x.ProfilePhoto == null ? null : x.ProfilePhoto, x.MimeType));
             CreateMap<UserRegistrationDTO, User>()
                 .ConvertUsing(x => new User(x.Email, DateTime.Now, (Role)x.Role, x.FirstName,

@@ -15,6 +15,7 @@ namespace Post.Domain.Logic.DTOs
         public UserDTO Owner { get; private set; }
         public DateTime DatePublished { get; private set; }
         public CategoryDTO Category { get; private set; }
+        public CityDTO City { get; private set; }
         public string MovingInTime { get; private set; }
         public string MovingOutTime { get; private set; }
         public ICollection<AccommodationPhotoDTO> AccommodationPhotos { get; private set; }
@@ -22,7 +23,7 @@ namespace Post.Domain.Logic.DTOs
         public ICollection<AccommodationItemInfoDTO> AccommodationRules { get; private set; }
         public ICollection<AccommodationItemInfoDTO> AccommodationFacilities { get; private set; }
         public AccommodationInfoDTO(long id, string title, string description,
-    long ownerId, long? categoryId,
+    long ownerId, long? categoryId, long? cityId,
     string address, string referencePoint,
     string contactNumber, int? roomsNo,
     int? bathroomsNo, int? bedsNo,
@@ -30,12 +31,12 @@ namespace Post.Domain.Logic.DTOs
     decimal price, decimal? latitude,
     decimal? longitude, bool? isWholeApartment,
     string additionalInfo, UserDTO owner, DateTime datePublished,
-    CategoryDTO category, string movingInTime,
+    CategoryDTO category, CityDTO city, string movingInTime,
     string movingOutTime, ICollection<AccommodationPhotoDTO> accommodationPhotos,
     ICollection<AccommodationItemInfoDTO> accommodationSpecificities,
     ICollection<AccommodationItemInfoDTO> accommodationRules,
     ICollection<AccommodationItemInfoDTO> accommodationFacilities) : base(title, description,
-        ownerId, categoryId, address, referencePoint,
+        ownerId, categoryId, cityId, address, referencePoint,
         contactNumber, roomsNo, bathroomsNo, bedsNo,
         maxGuestsNo, squareMeters, price, latitude,
         longitude, isWholeApartment, additionalInfo)
@@ -44,6 +45,7 @@ namespace Post.Domain.Logic.DTOs
             Owner = owner;
             DatePublished = datePublished;
             Category = category;
+            City = city;
             MovingInTime = movingInTime;
             MovingOutTime = movingOutTime;
             AccommodationPhotos = accommodationPhotos;

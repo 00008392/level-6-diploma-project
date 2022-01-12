@@ -17,7 +17,6 @@ namespace Account.DAL.EF.Data
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Booking> Bookings { get; set; }
-        public DbSet<City> Cities { get; set; }
         public DbSet<Country> Countries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,7 +24,6 @@ namespace Account.DAL.EF.Data
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new BookingEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CountryEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new CityEntityTypeConfiguration());
         }
 
     }

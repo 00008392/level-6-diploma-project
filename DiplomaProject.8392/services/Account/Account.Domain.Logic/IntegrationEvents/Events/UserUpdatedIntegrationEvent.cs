@@ -20,13 +20,13 @@ namespace Account.Domain.Logic.IntegrationEvents.Events
         public int Gender { get; }
         public string Address { get; }
         public string UserInfo { get; }
-        public long? CityId { get; }
+        public long? CountryId { get; }
 
         public UserUpdatedIntegrationEvent(long userId, string firstName,
             string lastName, string email,
             string phoneNumber, DateTime dateOfBirth,
             int gender, string address,
-            string userInfo, long? cityId)
+            string userInfo, long? countryId)
         {
             UserId = userId;
             FirstName = firstName;
@@ -37,7 +37,7 @@ namespace Account.Domain.Logic.IntegrationEvents.Events
             Gender = gender;
             Address = address;
             UserInfo = userInfo;
-            CityId = cityId;
+            CountryId = countryId;
         }
     }
 }

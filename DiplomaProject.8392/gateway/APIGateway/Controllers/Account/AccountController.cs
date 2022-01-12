@@ -1,32 +1,31 @@
 ﻿using Account.API;
 using APIGateway.Helpers;
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Protos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace APIGateway.Controllers.Account
 {
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [ApiController]
     public class AccountController : ControllerBase
     {
         private readonly UserManipulation.UserManipulationClient _manipulationClient;
-        private readonly Login.LoginClient _loginClient;
         private readonly UserInfo.UserInfoClient _infoClient;
 
         public AccountController(
             UserManipulation.UserManipulationClient manipulationClient,
-            Login.LoginClient loginClient,
             UserInfo.UserInfoClient infoClient)
         {
             _manipulationClient = manipulationClient;
-            _loginClient = loginClient;
             _infoClient = infoClient;
         }
 
@@ -35,8 +34,8 @@ namespace APIGateway.Controllers.Account
         public async Task<IActionResult> Get()
         {
             var reply = await _infoClient.GetAllUsersAsync(new Protos.Common.Empty());
-            reply.Users.ToList().ForEach(x => ConvertUserData(x));
-            return Ok(reply);
+            reply.Items.ToList().ForEach(x => ConvertUserData(x));
+            return Ok(reply.Items);
         }
 
         // GET api/<AccountController>/5
@@ -51,23 +50,10 @@ namespace APIGateway.Controllers.Account
             }
             return Ok(ConvertUserData(reply));
         }
-        //TO DO: move to separate controller and add JWT
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginRequest request)
-        {
-            var reply = await _loginClient.GetLoggedUserAsync(request);
-            if(reply.NoUser)
-            {
-                return Unauthorized();
-            }
-            return Ok(request.Email);
-        }
-
         // POST api/account
         [HttpPost]
         public async Task<IActionResult> Post(RegistrationRequest request)
         {
-            //request.DateOfBirthTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(request.DateOfBirth);
             var reply = await _manipulationClient.RegisterUserAsync((RegistrationRequest)ConvertUserData(request));
             if(!reply.IsSuccess)
             {
@@ -77,10 +63,11 @@ namespace APIGateway.Controllers.Account
         }
 
         // PUT api/<AccountController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, UpdateRequest request)
+        [Authorize]
+        [HttpPut("account")]
+        public async Task<IActionResult> Put(UpdateRequest request)
         {
-            if(id!=request.Id)
+            if(GetLoggedUserId()!= request.Id)
             {
                 return BadRequest("Invalid user");
             }
@@ -93,14 +80,15 @@ namespace APIGateway.Controllers.Account
             return NoContent();
         }
         // PUT api/<AccountController>/password/5
-        [HttpPut("password/{id}")]
-        public async Task<IActionResult> Put(long id, [FromBody] string password)
+        [Authorize]
+        [HttpPut("account/password")]
+        public async Task<IActionResult> Put(ChangePasswordRequest request)
         {
-            var reply = await _manipulationClient.ChangePasswordAsync(new ChangePasswordRequest
+            if (GetLoggedUserId()!= request.Id)
             {
-                Id = id,
-                Password = password
-            });
+                return Unauthorized();
+            }
+            var reply = await _manipulationClient.ChangePasswordAsync(request);
             if (!reply.IsSuccess)
             {
                 return BadRequest(reply);
@@ -109,9 +97,11 @@ namespace APIGateway.Controllers.Account
         }
 
         // DELETE api/<AccountController>/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [Authorize]
+        [HttpDelete("account")]
+        public async Task<IActionResult> Delete()
         {
+            var id = GetLoggedUserId();
             var reply = await _manipulationClient.DeleteUserAsync(new Request { Id = id });
             if (!reply.IsSuccess)
             {
@@ -130,6 +120,10 @@ namespace APIGateway.Controllers.Account
         {
             user.DateOfBirthTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(user.DateOfBirth);
             return user;
+        }
+        private int GetLoggedUserId()
+        {
+            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }

@@ -1,0 +1,42 @@
+﻿@page "/users/{UserId:long}"
+@using FrontEndApp.Models
+@using Newtonsoft.Json
+@inherits Components.CustomBaseComponent
+
+@if (_user == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <ul>
+        <li><b>First name:</b> @_user.FirstName</li>
+        <li><b>Last name:</b> @_user.LastName</li>
+        <li><b>Email:</b> @_user.Email</li>
+        <li><b>Date of birth:</b> @_user.DOB</li>
+        <li><b>Date of registration:</b> @_user.RegistrationDate</li>
+        <li><b>Gender:</b> @_user.Gender</li>
+        <li><b>Phone number:</b> @_user.PhoneNumber</li>
+        <li><b>Address:</b> @_user.Address</li>
+        <li><b>Country:</b>@(_user.Country != null? _user.Country.Name:"") </li>
+        <li><b>Additional information:</b> @_user.Info</li>
+    </ul>
+}
+
+
+@code {
+    private UserInfo _user;
+    [Parameter]
+    public long UserId { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+
+        var reply = await client.GetAsync($"api/users/{UserId}");
+        if (reply.IsSuccessStatusCode)
+        {
+            var responseStr = await reply.Content.ReadAsStringAsync();
+            _user = JsonConvert.DeserializeObject<UserInfo>(responseStr);
+        }
+
+    }
+}

@@ -10,7 +10,7 @@ namespace Post.Domain.Logic.DTOs
     public class CreatePostDTO : AccommodationManipulationDTO
     {
         public CreatePostDTO(string title, string description,
-            long ownerId, long? categoryId,
+            long ownerId, long? categoryId, long? cityId,
             string address, string referencePoint,
             string contactNumber, int? roomsNo, 
             int? bathroomsNo, int? bedsNo,
@@ -19,7 +19,7 @@ namespace Post.Domain.Logic.DTOs
             decimal? longitude, bool? isWholeApartment,
             string additionalInfo, DateTime? movingInTime,
             DateTime? movingOutTime) : base(title, description,
-                ownerId, categoryId, address, referencePoint, 
+                ownerId, categoryId, cityId, address, referencePoint, 
                 contactNumber, roomsNo, bathroomsNo, bedsNo, 
                 maxGuestsNo, squareMeters, price, latitude,
                 longitude, isWholeApartment, additionalInfo, 

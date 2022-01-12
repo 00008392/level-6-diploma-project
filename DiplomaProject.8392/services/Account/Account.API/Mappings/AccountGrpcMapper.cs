@@ -25,8 +25,7 @@ namespace Account.API.Mappings
             CreateMap<UpdateRequest, UserUpdateDTO>()
                 .ConvertUsing((x, context) => new UserUpdateDTO(x.Id, x.FirstName,
                 x.LastName, x.Email, x.PhoneNumber, x.DateOfBirthTimeStamp?.ToDateTime(), (Gender?)x.Gender,
-                x.Address, x.UserInfo, x.CityId));
-            CreateMap<CityDTO, City>();
+                x.Address, x.UserInfo, x.CountryId));
             CreateMap<CountryDTO, Country>();
             CreateMap<UserInfoDTO, UserInfoResponse>()
                  .ForMember(x => x.DateOfBirthTimeStamp, opt => opt.MapFrom(src => FromDateTimeToTimeStamp(src.DateOfBirth)))
@@ -37,10 +36,6 @@ namespace Account.API.Mappings
                      opt.MapFrom(src =>
                      Google.Protobuf.ByteString.CopyFrom(src.ProfilePhoto));
                  })
-                 .ForMember(x => x.City, opt => opt.MapFrom((userDTO, user, city, context) =>
-                 {
-                     return userDTO.City == null ? null : context.Mapper.Map<City>(userDTO.City);
-                 }))
                  .ForMember(x => x.Country, opt => opt.MapFrom((userDTO, user, country, context) =>
                  {
                      return userDTO.Country == null ? null : context.Mapper.Map<Country>(userDTO.Country);

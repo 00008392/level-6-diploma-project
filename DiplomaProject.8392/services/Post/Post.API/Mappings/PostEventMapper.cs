@@ -14,7 +14,7 @@ namespace Post.API.Mappings
         {
             CreateMap<CreatePostDTO, AccommodationCreatedIntegrationEvent>()
                 .ConvertUsing(x => new AccommodationCreatedIntegrationEvent(x.Title,
-                x.Description, x.OwnerId, x.CategoryId, x.Address, x.ReferencePoint,
+                x.Description, x.OwnerId, x.CategoryId, x.CityId, x.Address, x.ReferencePoint,
                 x.ContactNumber, x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo, x.SquareMeters,
                 x.Price, x.Latitude, x.Longitude, x.IsWholeApartment,DateTimeToString(x.MovingInTime),
                 DateTimeToString(x.MovingOutTime),
@@ -22,7 +22,7 @@ namespace Post.API.Mappings
 
             CreateMap<UpdatePostDTO, AccommodationUpdatedIntegrationEvent>()
                 .ConvertUsing(x => new AccommodationUpdatedIntegrationEvent(x.Id, x.Title,
-                x.Description, x.OwnerId, x.CategoryId, x.Address, x.ReferencePoint,
+                x.Description, x.OwnerId, x.CityId, x.CategoryId, x.Address, x.ReferencePoint,
                 x.ContactNumber, x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo, x.SquareMeters,
                 x.Price, x.Latitude, x.Longitude, x.IsWholeApartment, DateTimeToString(x.MovingInTime),
                 DateTimeToString(x.MovingOutTime), x.AdditionalInfo

@@ -20,6 +20,8 @@ namespace Post.Domain.Entities
         public long? CategoryId { get; private set; }
         public Category Category { get; }
         public string Address { get; private set; }
+        public long? CityId { get; private set; }
+        public City City { get; private set; }
         public string ReferencePoint { get; private set; }
         public string ContactNumber { get; private set; }
         public int? RoomsNo { get; private set; }
@@ -43,7 +45,7 @@ namespace Post.Domain.Entities
 
         public Accommodation(string title, string description, 
             long ownerId, DateTime datePublished, 
-            long? categoryId, string address, 
+            long? categoryId, long? cityId, string address, 
             string referencePoint, string contactNumber,
             int? roomsNo, int? bathroomsNo, 
             int? bedsNo, int maxGuestsNo, 
@@ -57,6 +59,7 @@ namespace Post.Domain.Entities
             OwnerId = ownerId;
             DatePublished = datePublished;
             CategoryId = categoryId;
+            CityId = cityId;
             Address = address;
             ReferencePoint = referencePoint;
             ContactNumber = contactNumber;
@@ -76,7 +79,7 @@ namespace Post.Domain.Entities
        
         public void UpdateInfo(string title, string description,
             long ownerId, 
-            long? categoryId, string address,
+            long? categoryId, long? cityId, string address,
             string referencePoint, string contactNumber,
             int? roomsNo, int? bathroomsNo,
             int? bedsNo, int maxGuestsNo,
@@ -89,6 +92,7 @@ namespace Post.Domain.Entities
             Description = description;
             OwnerId = ownerId;
             CategoryId = categoryId;
+            CityId = cityId;
             Address = address;
             ReferencePoint = referencePoint;
             ContactNumber = contactNumber;

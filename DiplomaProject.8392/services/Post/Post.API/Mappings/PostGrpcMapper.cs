@@ -15,7 +15,7 @@ namespace Post.API.Mappings
         {
             CreateMap<CreatePostRequest, CreatePostDTO>()
                  .ConvertUsing((x, context) => new CreatePostDTO(x.Title, x.Description,
-                x.OwnerId ?? 0, x.CategoryId, x.Address, x.ReferencePoint, x.ContactNumber,
+                x.OwnerId ?? 0, x.CategoryId, x.CityId, x.Address, x.ReferencePoint, x.ContactNumber,
                 x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo ?? 0, x.SquareMeters,
                 (decimal)(x.Price ?? 0), (decimal?)x.Latitude, (decimal?)x.Longitude, x.IsWholeApartment, x.AdditionalInfo,
                 x.MovingInTimeStamp?.ToDateTime(), x.MovingOutTimeStamp?.ToDateTime()));
@@ -25,7 +25,7 @@ namespace Post.API.Mappings
                 {
                    
                     return new UpdatePostDTO(x.Id, x.Title, x.Description,
-                    x.OwnerId ?? 0, x.CategoryId, x.Address, x.ReferencePoint, x.ContactNumber,
+                    x.OwnerId ?? 0, x.CategoryId, x.CityId, x.Address, x.ReferencePoint, x.ContactNumber,
                     x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo ?? 0, x.SquareMeters,
                     (decimal)(x.Price ?? 0), (decimal?)x.Latitude, (decimal?)x.Longitude, x.IsWholeApartment,
                     x.AdditionalInfo,
@@ -33,6 +33,7 @@ namespace Post.API.Mappings
                 });
             CreateMap<UserDTO, User>();
             CreateMap<CategoryDTO, Category>();
+            CreateMap<CityDTO, City>();
             CreateMap<AccommodationInfoDTO, PostInfoResponse>()
                 .ForMember(x => x.Owner, opt => opt.MapFrom((src, dest, prop, context) =>
                     {
@@ -41,6 +42,10 @@ namespace Post.API.Mappings
                 .ForMember(x => x.Category, opt => opt.MapFrom((src, dest, prop, context) =>
                 {
                     return src.Category == null ? null : context.Mapper.Map<Category>(src.Category);
+                }))
+                .ForMember(x => x.City, opt => opt.MapFrom((src, dest, prop, context) =>
+                {
+                    return src.City == null ? null : context.Mapper.Map<City>(src.City);
                 }))
                 .ForMember(x => x.Price, opt => opt.MapFrom(src => (double)src.Price))
                 .ForMember(x => x.Latitude, opt => opt.MapFrom(src => (double?)src.Latitude))

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Account.Domain.Logic.DTOs
+namespace Post.Domain.Logic.DTOs
 {
-    public class CityDTO
+   public class CityDTO
     {
         public long Id { get; private set; }
         public string Name { get; private set; }

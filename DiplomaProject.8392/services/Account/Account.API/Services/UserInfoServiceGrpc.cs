@@ -12,9 +12,9 @@ namespace Account.API.Services
 {
     public class UserInfoServiceGrpc : UserInfo.UserInfoBase
     {
-        private readonly IUserInfoService _service;
+        private readonly IInfoService _service;
         private readonly IMapper _mapper;
-        public UserInfoServiceGrpc(IUserInfoService service, IMapper mapper)
+        public UserInfoServiceGrpc(IInfoService service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
@@ -37,10 +37,25 @@ namespace Account.API.Services
         public override async Task<UserList> GetAllUsers(Empty request,
            ServerCallContext context)
         {
-            var users = await _service.GetAllUsersAsync();
-            var usersList = _mapper.Map<ICollection<UserInfoDTO>, ICollection<UserInfoResponse>>(users);
-            var response = new UserList();
-            response.Users.Add(usersList);
+            return await GetItems<UserList, UserInfoDTO, UserInfoResponse>
+                (_service.GetAllUsersAsync);
+        }
+        public override async Task<CountryList> GetAllCountries(Empty request,
+          ServerCallContext context)
+        {
+            return await GetItems<CountryList, CountryDTO, Country>
+               (_service.GetAllCountriesAsync);
+        }
+        //T - object with list of items
+        //D - DTO from domain logic layer
+        //I - item which is in list
+        private async Task<T> GetItems<T, D, I>(Func<Task<ICollection<D>>> action) 
+            where T: IItemList<I>, new()
+        {
+            var items = await action();
+            var itemList = _mapper.Map<ICollection<D>, ICollection<I>>(items);
+            var response = new T();
+            response.Items.Add(itemList);
             return response;
         }
     }

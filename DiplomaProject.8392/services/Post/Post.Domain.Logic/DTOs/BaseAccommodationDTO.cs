@@ -13,6 +13,7 @@ namespace Post.Domain.Logic.DTOs
         public string Description { get; protected set; }
         public long OwnerId { get; protected set; }
         public long? CategoryId { get; protected set; }
+        public long? CityId { get; protected set; }
         public string Address { get; protected set; }
         public string ReferencePoint { get; protected set; }
         public string ContactNumber { get; protected set; }
@@ -28,7 +29,7 @@ namespace Post.Domain.Logic.DTOs
         public string AdditionalInfo { get; protected set; }
 
         protected BaseAccommodationDTO(string title, string description,
-            long ownerId, long? categoryId, 
+            long ownerId, long? categoryId, long? cityId,
             string address, string referencePoint,
             string contactNumber, int? roomsNo, 
             int? bathroomsNo, int? bedsNo,
@@ -41,6 +42,7 @@ namespace Post.Domain.Logic.DTOs
             Description = description;
             OwnerId = ownerId;
             CategoryId = categoryId;
+            CityId = cityId;
             Address = address;
             ReferencePoint = referencePoint;
             ContactNumber = contactNumber;

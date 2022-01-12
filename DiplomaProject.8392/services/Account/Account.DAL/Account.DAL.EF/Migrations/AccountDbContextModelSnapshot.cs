@@ -39,27 +39,6 @@ namespace Account.DAL.EF.Migrations
                     b.ToTable("Bookings");
                 });
 
-            modelBuilder.Entity("Account.Domain.Entities.City", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("CountryId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
-
-                    b.ToTable("Cities");
-                });
-
             modelBuilder.Entity("Account.Domain.Entities.Country", b =>
                 {
                     b.Property<long>("Id")
@@ -86,7 +65,7 @@ namespace Account.DAL.EF.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("CityId")
+                    b.Property<long?>("CountryId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("DateOfBirth")
@@ -135,7 +114,7 @@ namespace Account.DAL.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CityId");
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -162,35 +141,19 @@ namespace Account.DAL.EF.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Account.Domain.Entities.City", b =>
+            modelBuilder.Entity("Account.Domain.Entities.User", b =>
                 {
                     b.HasOne("Account.Domain.Entities.Country", "Country")
-                        .WithMany("Cities")
+                        .WithMany("Users")
                         .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("Account.Domain.Entities.User", b =>
-                {
-                    b.HasOne("Account.Domain.Entities.City", "City")
-                        .WithMany("Users")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("City");
-                });
-
-            modelBuilder.Entity("Account.Domain.Entities.City", b =>
-                {
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("Account.Domain.Entities.Country", b =>
                 {
-                    b.Navigation("Cities");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Account.Domain.Entities.User", b =>

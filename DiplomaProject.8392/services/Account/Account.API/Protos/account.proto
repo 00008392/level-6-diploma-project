@@ -43,18 +43,16 @@ message UpdateRequest {
   google.protobuf.Timestamp DateOfBirthTimeStamp = 6;
   google.protobuf.Int32Value gender = 7;
   google.protobuf.StringValue address = 8;
-  google.protobuf.Int64Value cityId = 9;
+  google.protobuf.Int64Value countryId = 9;
   google.protobuf.StringValue userInfo = 10;
-}
-message City {
-    int64 id = 1;
-   string name = 2;
 }
 message Country {
     int64 id = 1;
    string name = 2;
 }
-
+message CountryList {
+    repeated Country items = 1;
+}
 message UserInfoResponse {
     int64 id = 1;
    string firstName = 2;
@@ -65,7 +63,6 @@ message UserInfoResponse {
     google.protobuf.Timestamp RegistrationDateTimeStamp = 7;
     int32 gender = 8;
     google.protobuf.StringValue address = 9;
-    City city = 10;
     Country country = 11;
     google.protobuf.StringValue userInfo = 12;
     google.protobuf.BytesValue profilePhoto = 13;
@@ -74,7 +71,7 @@ message UserInfoResponse {
 }
 
 message UserList {
-    repeated UserInfoResponse users = 1;
+    repeated UserInfoResponse items = 1;
 }
 service Login {
   rpc GetLoggedUser (LoginRequest) returns (LoginReply); //tested
@@ -90,5 +87,6 @@ service UserInfo {
 
   rpc GetUserInfo (common.Request) returns (UserInfoResponse); //tested
   rpc GetAllUsers (common.Empty) returns (UserList);
+  rpc GetAllCountries (common.Empty) returns (CountryList);
 }
 
