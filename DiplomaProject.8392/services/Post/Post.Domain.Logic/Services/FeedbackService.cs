@@ -21,6 +21,7 @@ namespace Post.Domain.Logic.Services
         private readonly IRepositoryWithIncludes<Feedback<T>> _feedbackRepository;
         private readonly IRepository<T> _itemRepository;
         private readonly IRepository<User> _userRepository;
+        private readonly IFeedbackValidationService<T> _feedbackvalidator;
         private readonly IMapper _mapper;
         private readonly AbstractValidator<FeedbackDTO> _validator;
 
@@ -28,12 +29,14 @@ namespace Post.Domain.Logic.Services
             IRepositoryWithIncludes<Feedback<T>> feedbackRepository,
             IRepository<T> itemRepository,
             IRepository<User> userRepository,
+            IFeedbackValidationService<T> feedbackvalidator,
             IMapper mapper,
             AbstractValidator<FeedbackDTO> validator)
         {
             _feedbackRepository = feedbackRepository;
             _itemRepository = itemRepository;
             _userRepository = userRepository;
+            _feedbackvalidator = feedbackvalidator;
             _mapper = mapper;
             _validator = validator;
         }
@@ -66,10 +69,15 @@ namespace Post.Domain.Logic.Services
                                                         relatedEntitiesIncluded: true);
             var feedbacksDTO = _mapper.Map<ICollection<FeedbackInfoDTO<E>>>(feedbacks);
             return feedbacksDTO;
-;        }
+        }
 
         public async Task LeaveFeedbackAsync(FeedbackDTO feedbackDTO)
         {
+            //validate if user can leave feedback or not
+            if(!await _feedbackvalidator.CanLeaveFeedback(feedbackDTO))
+            {
+                throw new LeaveFeedbackException((long)feedbackDTO.UserId, feedbackDTO.ItemId);
+            }
             var result = _validator.Validate(feedbackDTO);
             if (!result.IsValid)
             {
@@ -77,7 +85,7 @@ namespace Post.Domain.Logic.Services
             }
             if(!_itemRepository.DoesItemWithIdExist(feedbackDTO.ItemId))
             {
-                throw new ForeignKeyViolationException(nameof(T));
+                throw new ForeignKeyViolationException("Item");
             }
             if(!_userRepository.DoesItemWithIdExist(feedbackDTO.UserId??0))
             {

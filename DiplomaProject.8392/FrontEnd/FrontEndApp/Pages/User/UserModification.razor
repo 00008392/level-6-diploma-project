@@ -1,7 +1,5 @@
 ﻿@page "/account/edit"
-@using FrontEndApp.Models
-@using FrontEndApp.Enums
-@using Newtonsoft.Json
+
 @inherits Components.CustomBaseComponent
 
     <h3>Edit account</h3>
@@ -41,12 +39,13 @@
             }
             else
             {
-                <InputSelect @bind-Value="@_editUser.CountryId" id="countryId">
-                    @foreach (var country in _editUser.CountryList)
-                            {
-                        <option value="@country.Id">@country.Name</option>
-                            }
-                </InputSelect>
+        <InputSelect @bind-Value="@_editUser.CountryId" id="countryId">
+            <option value="">Choose country</option>
+            @foreach (var country in _editUser.CountryList)
+                    {
+                <option value="@country.Id">@country.Name</option>
+                    }
+        </InputSelect>
             }
             <label for="userInfo">Additional information</label>
             <InputText @bind-Value="@_editUser.UserInfo" id="userInfo" />
@@ -68,14 +67,14 @@
         {
             if (AuthState.isAuthenticated)
             {
-                var id =int.Parse(await storage.GetItemAsync<string>("userId"));
+                var id =long.Parse(await storage.GetItemAsync<string>("userId"));
                 var userResponse = await client.GetAsync($"api/users/{id}");
                 if (userResponse.IsSuccessStatusCode)
                 {
                     var responseStr = await userResponse.Content.ReadAsStringAsync();
 
                     _editUser = JsonConvert.DeserializeObject<EditUser>(responseStr);
-                    _editUser.CountryId = _editUser.Country.Id;
+                    _editUser.CountryId = _editUser.Country?.Id;
                 }
                 var countryResponse = await client.GetAsync("api/info/countries");
                 if (countryResponse.IsSuccessStatusCode)

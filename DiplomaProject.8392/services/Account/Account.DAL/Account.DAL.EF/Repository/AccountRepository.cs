@@ -22,7 +22,8 @@ namespace Account.DAL.EF.Repository
         {
             return _dbSet.Include(x => x.BookingsAsGuest)
                          .Include(x => x.BookingsAsOwner)
-                         .Include(x => x.Country);
+                         .Include(x => x.Country)
+                         .AsSplitQuery();
         }
 
        

@@ -33,7 +33,7 @@ namespace Post.API.Mappings
             CreateMap<UserCreatedIntegrationEvent, CreateUserDTO>()
                 .ConvertUsing(x => new CreateUserDTO(x.Email, x.FirstName, x.LastName));
             CreateMap<AccommodationBookedIntegrationEvent, AddBookingDTO>()
-                .ConvertUsing(x => new AddBookingDTO(x.BookingId, x.AccommodationId,
+                .ConvertUsing(x => new AddBookingDTO(x.BookingId, x.AccommodationId, x.GuestId,
                 x.StartDate, x.EndDate));
         }
         private string DateTimeToString(DateTime? time)

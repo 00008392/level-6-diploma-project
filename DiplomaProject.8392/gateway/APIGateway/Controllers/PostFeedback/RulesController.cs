@@ -14,7 +14,8 @@ namespace APIGateway.Controllers.PostFeedback
     [ApiController]
     public class RulesController : AccommodationItemsGenericController<AccommodationRules.AccommodationRulesClient>
     {
-        public RulesController(AccommodationRules.AccommodationRulesClient client) : base(client)
+        public RulesController(AccommodationRules.AccommodationRulesClient client,
+            PostCRUD.PostCRUDClient postClient) : base(client, postClient)
         {
         }
     }

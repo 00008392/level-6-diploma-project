@@ -1,0 +1,58 @@
+﻿@page "/account/posts"
+@inherits Components.CustomBaseComponent
+<h3>My posts</h3>
+@if (!AuthState.isAuthenticated)
+{
+    <p>Sign in to see posts</p>
+}
+else
+{
+    if (_posts == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        if (_posts.Count < 1)
+        {
+            <p>You don't have any posts</p>
+        }
+        foreach (var post in _posts)
+        {
+            <p><b>Title:</b> @post.Title</p>
+            <p><b>Description:</b>  @post.Description</p>
+            <p><b>Category:</b> @(post.Category==null?"": post.Category.Name)</p>
+            <p><b>City:</b>  @(post.City==null?"": post.City.Name)</p>
+            <p><b>Address:</b> @post.Address</p>
+            <a href=@($"posts/{post.Id}") class="btn btn-primary d-block">View details</a>
+            <a href=@($"posts/edit/{post.Id}") class="btn btn-primary d-block">Edit</a>
+
+        }
+        <a href="posts/edit" class="btn btn-primary d-block">Add new post</a>
+    }
+
+}
+
+@code {
+    private List<PostInfo> _posts;
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthState.isAuthenticated)
+        {
+            var userId = await storage.GetItemAsync<string>("userId");
+            var url = "https://localhost:44377/api/posts";
+            var param = new Dictionary<string, string>() { { "Owner", $"{userId}" } };
+
+            var newUrl = new Uri(QueryHelpers.AddQueryString(url, param));
+            var response = await client.GetAsync(newUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var responseStr = await response.Content.ReadAsStringAsync();
+
+                _posts = JsonConvert.DeserializeObject<List<PostInfo>>(responseStr);
+            }
+        }
+
+    }
+
+}

@@ -1,5 +1,5 @@
 ﻿@page "/login"
-@using FrontEndApp.Models
+
 @inherits Components.CustomBaseComponent
 
 <h3>Login</h3>
@@ -20,7 +20,6 @@
 
 @code {
     private Models.Login _login = new Models.Login();
-    private LoggedUser _loggedUser;
     private string _error;
     private async Task LogIn()
     {

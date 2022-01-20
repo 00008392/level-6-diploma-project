@@ -14,7 +14,7 @@ service PostCRUD {
   rpc UpdatePost (UpdatePostRequest) returns (common.Response); 
   rpc DeletePost (common.Request) returns (common.Response); 
   rpc GetPostById (common.Request) returns (PostInfoResponse); 
-
+  rpc GetPosts (FilterRequest) returns (PostList);
 }
 
 service PostInfo {
@@ -105,7 +105,9 @@ message PostInfoResponse {
    repeated AccommodationItem accommodationFacilities = 26;
    bool NoItem = 27;
 }
-
+message PostList {
+	repeated PostInfoResponse items = 1;
+}
 message User {
 int64 id = 1;
 google.protobuf.StringValue firstName = 2;
@@ -136,7 +138,20 @@ int64 id = 1;
 google.protobuf.BytesValue photo = 3;
 google.protobuf.StringValue mimeType = 4;
 }
-
+message FilterRequest {
+google.protobuf.StringValue searchText = 1;
+google.protobuf.Int64Value owner = 2;
+google.protobuf.Int64Value category = 3;
+google.protobuf.Int64Value city = 4;
+google.protobuf.Int32Value minRooms = 5;
+google.protobuf.Int32Value maxRooms = 6;
+google.protobuf.Int32Value minBeds = 7;
+google.protobuf.Int32Value maxBeds = 8;
+google.protobuf.Int32Value guests = 9;
+google.protobuf.Int32Value minPrice = 10;
+google.protobuf.Int32Value maxPrice = 11;
+google.protobuf.BoolValue entireApartment = 12;
+}
 
 
 

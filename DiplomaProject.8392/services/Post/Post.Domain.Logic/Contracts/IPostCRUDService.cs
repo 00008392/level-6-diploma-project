@@ -1,4 +1,5 @@
 ﻿using Post.Domain.Logic.DTOs;
+using Post.Domain.Logic.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace Post.Domain.Logic.Contracts
         Task UpdatePostAsync(UpdatePostDTO item);
         Task DeletePostAsync(long id);
         Task<AccommodationInfoDTO> GetPostByIdAsync(long id);
+        Task<ICollection<AccommodationInfoDTO>> GetAllPostsAsync(FilterParameters filter);
     }
 }

@@ -9,13 +9,11 @@ namespace Post.Domain.Logic.DTOs
     //DTO for bridge tables between accommodation and rules/facilities/specificities
     public class AccommodationItemDTO
     {
-        public long AccommodationId  { get; private set; }
         public long ItemId  { get; private set; }
         public string OtherItem  { get; private set; }
 
-        public AccommodationItemDTO(long accommodationId, long itemId, string otherItem)
+        public AccommodationItemDTO(long itemId, string otherItem)
         {
-            AccommodationId = accommodationId;
             ItemId = itemId;
             OtherItem = otherItem;
         }

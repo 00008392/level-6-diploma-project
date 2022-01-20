@@ -7,13 +7,15 @@ using Post.API;
 using Protos.Common;
 using Google.Protobuf.WellKnownTypes;
 using APIGateway.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace APIGateway.Controllers.PostFeedback
 {
-    [Route("api/[controller]")]
+    [Route("api/posts")]
     [ApiController]
     public class PostController : ControllerBase
     {
@@ -25,13 +27,13 @@ namespace APIGateway.Controllers.PostFeedback
             _postClient = postClient;
         }
 
-        //TO DO filtering
-        // GET: api/<PostController>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] FilterRequest request)
+        {
+            var reply = await _postClient.GetPostsAsync(request);
+            reply.Items.ToList().ForEach(x => ConvertPostData(x));
+            return Ok(reply.Items);
+        }
 
         // GET api/<PostController>/5
         [HttpGet("{id}")]
@@ -46,10 +48,14 @@ namespace APIGateway.Controllers.PostFeedback
         }
 
         //POST api/<PostController>
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post(CreatePostRequest request)
         {
-           
+           if(request.OwnerId!=GetLoggedUserId())
+            {
+                return Unauthorized();
+            }
             var reply = await _postClient.CreatePostAsync((CreatePostRequest)ConvertPostData(request));
             if (!reply.IsSuccess)
             {
@@ -59,9 +65,14 @@ namespace APIGateway.Controllers.PostFeedback
         }
 
         // PUT api/<PostController>/5
+        [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, UpdatePostRequest request)
+        public async Task<IActionResult> Put(long id, UpdatePostRequest request)
         {
+            if(request.OwnerId!=GetLoggedUserId())
+            {
+                return Unauthorized();
+            }
             if (id != request.Id)
             {
                 return BadRequest("Invalid accommodation post");
@@ -76,10 +87,17 @@ namespace APIGateway.Controllers.PostFeedback
         }
 
         // DELETE api/<PostController>/5
+        [Authorize]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(long id)
         {
-            var reply = await _postClient.DeletePostAsync(new Request { Id = id });
+            var request = new Request { Id = id };
+            var post = await _postClient.GetPostByIdAsync(request);
+            if(post.Owner.Id!=GetLoggedUserId())
+            {
+                return Unauthorized();
+            }
+            var reply = await _postClient.DeletePostAsync(request);
             if (!reply.IsSuccess)
             {
                 return BadRequest(reply);
@@ -96,6 +114,10 @@ namespace APIGateway.Controllers.PostFeedback
             post.MovingInTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(post.MovingInTime);
             post.MovingOutTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(post.MovingOutTime);
             return post;
+        }
+        private int GetLoggedUserId()
+        {
+            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }

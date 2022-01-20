@@ -10,7 +10,7 @@ namespace FrontEndApp.Models
         public long Id { get; set; }
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
-        public long CountryId { get; set; }
+        public long? CountryId { get; set; }
         public string UserInfo { get; set; }
         //to populate dropdown
         public ICollection<Country> CountryList { get; set; }

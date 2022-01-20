@@ -9,14 +9,16 @@ using System.Threading.Tasks;
 
 namespace Post.DAL.EF.Configurations
 {
-    public class DatesBookedEntityTypeConfiguration : IEntityTypeConfiguration<DatesBooked>
+    public class BookingEntityTypeConfiguration : IEntityTypeConfiguration<Booking>
     {
-        public void Configure(EntityTypeBuilder<DatesBooked> builder)
+        public void Configure(EntityTypeBuilder<Booking> builder)
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedNever();
-            builder.HasOne(x => x.Accommodation).WithMany(x => x.DatesBooked)
+            builder.HasOne(x => x.Accommodation).WithMany(x => x.Bookings)
                 .HasForeignKey(x => x.AccommodationId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.User).WithMany(x => x.Bookings)
+              .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

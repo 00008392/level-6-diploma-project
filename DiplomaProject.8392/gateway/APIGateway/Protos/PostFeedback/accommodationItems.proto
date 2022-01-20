@@ -28,15 +28,15 @@ service AccommodationSpecificities {
 message ItemsList {
 	repeated common.Item items = 1;
 }
-
 message AddItemsRequest {
 repeated ItemRequest items = 1;
+int64 accommodationId = 2;
 }
 message RemoveItemsRequest {
 	repeated int64 items = 1;
+	int64 accommodationId = 2;
 }
 message ItemRequest {
-int64 accommodationId = 1;
-int64 itemId = 2;
-google.protobuf.StringValue otherValue = 3;
+int64 itemId = 1;
+google.protobuf.StringValue otherValue = 2;
 }

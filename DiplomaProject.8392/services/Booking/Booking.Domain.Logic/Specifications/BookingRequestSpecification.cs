@@ -1,4 +1,5 @@
-﻿using Booking.Domain.Entities;
+﻿using BaseClasses.Specifications;
+using Booking.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

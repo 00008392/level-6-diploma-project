@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Post.API;
 using Protos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -14,11 +16,13 @@ namespace APIGateway.Controllers.PostFeedback.Core
     public abstract class AccommodationItemsGenericController<T> : ControllerBase
         where T: IAccommodationItems
     {
-        private readonly IAccommodationItems _client;
+        protected readonly IAccommodationItems _client;
+        protected readonly PostCRUD.PostCRUDClient _postClient;
 
-        protected AccommodationItemsGenericController(T client)
+        protected AccommodationItemsGenericController(T client, PostCRUD.PostCRUDClient postClient)
         {
             _client = client;
+            _postClient = postClient;
         }
 
         // GET: api/<AccommodationItemsGenericController>
@@ -26,14 +30,21 @@ namespace APIGateway.Controllers.PostFeedback.Core
         public async Task<IActionResult> Get()
         {
             var reply = await _client.GetItemsAsync(new Empty());
-            return Ok(reply);
+            return Ok(reply.Items);
         }
 
         // POST api/<AccommodationItemsGenericController>
-        [HttpPost]
-        public async Task<IActionResult> Post(AddItemsRequest request)
+        [Authorize]
+        [HttpPost("add")]
+        public async Task<IActionResult> AddItems(AddItemsRequest request)
         {
-            var reply = await _client.AddItemsAsync((AddItemsRequest)ConvertItems(request));
+            var post = await _postClient.GetPostByIdAsync(new Request { Id = request.AccommodationId});
+            if (post.Owner.Id != GetLoggedUserId())
+            {
+                return Unauthorized();
+            }
+            var addRequest = (AddItemsRequest)ConvertItems(request);
+            var reply = await _client.AddItemsAsync(addRequest);
             if (!reply.IsSuccess)
             {
                 return BadRequest(reply);
@@ -41,14 +52,19 @@ namespace APIGateway.Controllers.PostFeedback.Core
             return StatusCode(201);
         }
 
-        // PUT api/<AccommodationItemsGenericController>/5
-        [HttpDelete]
-        public async Task<IActionResult> Delete(RemoveItemsRequest request)
+        [Authorize]
+        [HttpPost("remove")]
+        public async Task<IActionResult> RemoveItems(RemoveItemsRequest request)
         {
+            var post = await _postClient.GetPostByIdAsync(new Request { Id = request.AccommodationId });
+            if (post.Owner.Id != GetLoggedUserId())
+            {
+                return Unauthorized();
+            }
             var reply = await _client.RemoveItemsAsync((RemoveItemsRequest)ConvertItems(request));
             if (!reply.IsSuccess)
             {
-                return NotFound(reply);
+                return BadRequest(reply);
             }
             return NoContent();
         }
@@ -57,7 +73,10 @@ namespace APIGateway.Controllers.PostFeedback.Core
         {
             request.Items.Add(request.ItemsJson);
             return request;
-        } 
-
+        }
+        private int GetLoggedUserId()
+        {
+            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        }
     }
 }

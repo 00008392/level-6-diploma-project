@@ -1,13 +1,14 @@
-﻿using System;
+﻿using BaseClasses.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Booking.Domain.Logic.Specification
+namespace BaseClasses.Specifications
 {
-    public abstract class Specification<T>
+    public abstract class Specification<T> where T: BaseEntity
     {
         public abstract Expression<Func<T, bool>> ToExpression();
 

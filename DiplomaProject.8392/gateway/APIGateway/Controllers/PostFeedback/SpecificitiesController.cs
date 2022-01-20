@@ -14,7 +14,8 @@ namespace APIGateway.Controllers.PostFeedback
     [ApiController]
     public class SpecificitiesController : AccommodationItemsGenericController<AccommodationSpecificities.AccommodationSpecificitiesClient>
     {
-        public SpecificitiesController(AccommodationSpecificities.AccommodationSpecificitiesClient client) : base(client)
+        public SpecificitiesController(AccommodationSpecificities.AccommodationSpecificitiesClient client,
+            PostCRUD.PostCRUDClient postClient) : base(client, postClient)
         {
         }
     }

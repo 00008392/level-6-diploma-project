@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Models
 {
-    public class Category
+    public class PostItem
     {
-        public long Id { get; set; }
-        public string Name { get; set; }
+        public long ItemId { get; set; }
+        public string OtherValue { get; set; }
     }
 }

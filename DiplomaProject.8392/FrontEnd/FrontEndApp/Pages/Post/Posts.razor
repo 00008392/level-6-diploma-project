@@ -1,0 +1,37 @@
+﻿@page "/posts"
+
+@inherits Components.CustomBaseComponent
+<h3>Accommodations</h3>
+@if (_posts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="users__list">
+        @foreach (var post in _posts)
+        {
+        <div>
+            <h4>@post.Title</h4>
+            <h4>Located in @post.City?.Name</h4>
+            <h4>Posted by <a href="@($"users/{post.Owner.Id}")">@post.Owner.FirstName @post.Owner.LastName</a></h4>
+            <a href=@($"posts/{post.Id}") class="btn btn-primary d-block">View details</a>
+        </div>
+        }
+    </div>
+}
+
+@code {
+    private List<PostInfo> _posts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await client.GetAsync("api/posts");
+        if (response.IsSuccessStatusCode)
+        {
+            var responseStr = await response.Content.ReadAsStringAsync();
+
+            _posts = JsonConvert.DeserializeObject<List<PostInfo>>(responseStr);
+        }
+    }
+}

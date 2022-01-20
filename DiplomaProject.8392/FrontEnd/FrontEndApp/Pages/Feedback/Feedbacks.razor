@@ -1,0 +1,76 @@
+﻿
+@inherits Components.CustomBaseComponent
+<h3>Feedbacks</h3>
+@foreach (var feedback in _feedbacks)
+{
+<p>
+    Left by:
+    @if (feedback.FeedbackOwner != null)
+    {
+        <a href=@($"users/{feedback.FeedbackOwner.Id}")>@feedback.FeedbackOwner.FirstName @feedback.FeedbackOwner.LastName</a>
+        @if (feedback.FeedbackOwner.Id == _loggedUserId)
+        {
+            <button class="btn btn-danger" @onclick="@(async ()=> await DeleteFeedback(feedback.Id))">
+                <span class="oi oi-trash"></span>
+                Delete feedback
+            </button>
+        }
+    }
+    else
+    {
+        <span>Deleted user</span>
+    }
+
+</p>
+    <RadzenRating ReadOnly="true" Stars="5" Value="feedback.Rating" />
+    <p>@feedback.Message</p>
+
+}
+
+@code {
+    private List<FeedbackInfo> _feedbacks = new List<FeedbackInfo>();
+    [Parameter]
+    public long UserId { get; set; } = 0;
+    [Parameter]
+    public long PostId { get; set; } = 0;
+    private long _loggedUserId;
+    private string _feedbackUri;
+    private string _deleteError;
+    protected override async Task OnInitializedAsync()
+    {
+        _feedbackUri = UserId != 0 ? $"api/feedbacks/user" :
+          PostId != 0 ? $"api/feedbacks/accommodation" : "";
+        await GetFeedbacks();
+        if(AuthState.isAuthenticated)
+            {
+                _loggedUserId = long.Parse(await storage.GetItemAsync<string>("userId"));
+            }
+    }
+    public async Task RefreshFeedbacks()
+    {
+        await GetFeedbacks();
+        StateHasChanged();
+    }
+    private async Task GetFeedbacks()
+    {
+        var id = UserId!=0?UserId:PostId!=0?PostId:0;
+        var reply = await client.GetAsync($"{_feedbackUri}/for/{id}");
+        if (reply.IsSuccessStatusCode)
+        {
+            var responseStr = await reply.Content.ReadAsStringAsync();
+            _feedbacks = JsonConvert.DeserializeObject<List<FeedbackInfo>>(responseStr);
+        }
+    }
+    private async Task DeleteFeedback(long id)
+    {
+        var reply = await client.DeleteAsync($"{_feedbackUri}/{id}");
+        if (reply.IsSuccessStatusCode)
+        {
+            await RefreshFeedbacks();
+        }
+        else
+        {
+            _deleteError = reply.Content.ReadAsStringAsync().Result;
+        }
+    }
+}

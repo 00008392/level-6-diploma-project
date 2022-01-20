@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Post.API;
 using Protos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -45,13 +47,18 @@ namespace APIGateway.Controllers.PostFeedback.Core
                 Id = id
             };
             var reply = await _client.GetFeedbacksAsync(request);
-            return Ok(reply);
+            return Ok(reply.Feedbacks);
         }
 
         // POST api/<FeedbackGenericController>
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post(CreateFeedbackRequest request)
         {
+            if(request.UserId!=GetLoggedUserId())
+            {
+                return Unauthorized();
+            }
             var reply = await _client.LeaveFeedbackAsync(request);
             if (!reply.IsSuccess)
             {
@@ -61,9 +68,15 @@ namespace APIGateway.Controllers.PostFeedback.Core
         }
 
         // DELETE api/<FeedbackGenericController>/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {
+            var feedback = await _client.GetFeedbackDetailsAsync(new Request { Id = id });
+            if(feedback.FeedbackOwner.Id!=GetLoggedUserId())
+            {
+                return Unauthorized();
+            }
             var request = new Request
             {
                 Id = id
@@ -74,6 +87,10 @@ namespace APIGateway.Controllers.PostFeedback.Core
                 return NotFound(reply);
             }
             return NoContent();
+        }
+        private int GetLoggedUserId()
+        {
+            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }

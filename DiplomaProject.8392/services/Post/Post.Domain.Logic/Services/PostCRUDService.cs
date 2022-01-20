@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
 using BaseClasses.Contracts;
+using BaseClasses.Specifications;
+using BaseClasses.Specifications.Composite;
 using FluentValidation;
 using Post.Domain.Core;
 using Post.Domain.Entities;
 using Post.Domain.Logic.Contracts;
 using Post.Domain.Logic.DTOs;
 using Post.Domain.Logic.Exceptions;
+using Post.Domain.Logic.Filter;
+using Post.Domain.Logic.Specifications;
 using Post.Domain.Logic.Validation;
 using System;
 using System.Collections.Generic;
@@ -77,11 +81,85 @@ namespace Post.Domain.Logic.Services
             {
                 throw new NotFoundException(id, "Accommodation");
             }
-            if (accommodation.DatesBooked.Any())
+            if (accommodation.Bookings.Any())
             {
                 throw new DeleteAccommodationException(id);
             }
             await _repository.DeleteAsync(accommodation);
+        }
+
+        public async Task<ICollection<AccommodationInfoDTO>> GetAllPostsAsync(FilterParameters filter)
+        {
+            ICollection<Accommodation> accommodations = new List<Accommodation>();
+
+            List<Specification<Accommodation>> specifications = new();
+            if(filter.SearchText!=null)
+            {
+                var specification = new SearchAccommodationSpecification(filter.SearchText);
+                specifications.Add(specification);
+            }
+            if (filter.Owner != null)
+            {
+                var specification = new AccommodationsByUserSpecification((long)filter.Owner);
+                specifications.Add(specification);
+            }
+            if (filter.Category != null)
+            {
+                var specification = new AccommodationsByCategorySpecification((long)filter.Category);
+                specifications.Add(specification);
+            }
+            if (filter.City != null)
+            {
+                var specification = new AccommodationsByCitySpecification((long)filter.City);
+                specifications.Add(specification);
+            }
+            if (filter.MinRooms != null||filter.MaxRooms!=null)
+            {
+                var specification = new RoomsNumberSpecification(filter.MinRooms, filter.MaxRooms);
+                specifications.Add(specification);
+            }
+            if (filter.MinBeds != null || filter.MaxBeds != null)
+            {
+                var specification = new BedsNumberSpecification(filter.MinBeds, filter.MaxBeds);
+                specifications.Add(specification);
+            }
+            if (filter.Guests != null)
+            {
+                var specification = new NumberOfGuestsSpecification((int)filter.Guests);
+                specifications.Add(specification);
+            }
+            if (filter.MinPrice != null || filter.MaxPrice != null)
+            {
+                var specification = new PriceSpecification(filter.MinPrice, filter.MaxPrice);
+                specifications.Add(specification);
+            }
+            if (filter.EntireApartment != null)
+            {
+                var specification = new IsWholeApartmentSpecification((bool)filter.EntireApartment);
+                specifications.Add(specification);
+            }
+            CompositeSpecification<Accommodation> compositeSpecification = null;
+            if(specifications.Count>0)
+            {
+                compositeSpecification = new AndSpecification<Accommodation>(null, specifications[0]);
+                for (var i=0; i<specifications.Count-1; i++)
+                {
+                    compositeSpecification = new AndSpecification<Accommodation>(compositeSpecification,
+                        specifications[i + 1]);
+                }
+            }
+           if(compositeSpecification!=null)
+            {
+                accommodations = await _repository
+                    .GetFilteredAsync(compositeSpecification.ToExpression(), relatedEntitiesIncluded: true);
+            }
+            else
+            {
+                accommodations = await _repository
+                    .GetAllAsync(relatedEntitiesIncluded: true);
+            }
+
+            return _mapper.Map<ICollection<AccommodationInfoDTO>>(accommodations);
         }
 
         public async Task<AccommodationInfoDTO> GetPostByIdAsync(long id)

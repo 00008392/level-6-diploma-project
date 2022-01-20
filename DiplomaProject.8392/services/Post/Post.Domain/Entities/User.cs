@@ -15,6 +15,7 @@ namespace Post.Domain.Entities
         public string Email { get; private set; }
         public string PhoneNumber { get; private set; }
         public ICollection<Accommodation> Accommodations { get; }
+        public ICollection<Booking> Bookings { get; }
         public ICollection<Feedback<User>> Feedbacks { get; }
         public ICollection<Feedback<User>> FeedbacksAsOwnerForUsers { get; }
         public ICollection<Feedback<Accommodation>> FeedbacksAsOwnerForAccommodations { get; }

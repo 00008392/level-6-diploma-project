@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Google.Protobuf.WellKnownTypes;
 using Post.Domain.Logic.DTOs;
+using Post.Domain.Logic.Filter;
 using Protos.Common;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,7 @@ namespace Post.API.Mappings
                 .ForMember(x => x.DatePublishedTimeStamp, opt => opt.MapFrom(src =>
                     Timestamp.FromDateTime(DateTime.SpecifyKind(src.DatePublished, DateTimeKind.Utc))
                   ));
+            CreateMap<FilterRequest, FilterParameters>();
             CreateMap<ItemInfoDTO, Item>();
             CreateMap<AccommodationItemInfoDTO, AccommodationItem>()
                 .ForMember(x => x.OtherValue, opt => opt.MapFrom(src => src.OtherItem))
@@ -63,14 +65,26 @@ namespace Post.API.Mappings
             CreateMap<AccommodationPhotoDTO, AccommodationPhoto>()
                 .ForMember(x => x.Photo, opt => opt.MapFrom(src => src.Photo == null ? null : Google.Protobuf.ByteString.CopyFrom(src.Photo)));
             CreateMap<ItemRequest, AccommodationItemDTO>()
-                .ConvertUsing(x => new AccommodationItemDTO(x.AccommodationId,
+                .ConvertUsing(x => new AccommodationItemDTO(
                 x.ItemId, x.OtherValue));
-
+            CreateMap<AddItemsRequest, AddItemsDTO>()
+                .ConvertUsing((x, dest, context) =>
+                {
+                    return new AddItemsDTO(x.AccommodationId,
+                        context.Mapper.Map<ICollection<AccommodationItemDTO>>(x.Items));
+                });
+            CreateMap<RemoveItemsRequest, RemoveItemsDTO>()
+               .ConvertUsing((x, dest, context) =>
+               {
+                   return new RemoveItemsDTO(x.AccommodationId,
+                       x.Items);
+               });
             CreateMap<FeedbackInfoDTO<UserDTO>, FeedbackInfoResponse>()
                 .ForMember(x => x.User, opt => opt.MapFrom((src, dest, prop, context) =>
                     {
                         return context.Mapper.Map<User>(src.Item);
                     }))
+
                 .ForMember(x => x.Accommodation, opt => opt.Ignore());
             CreateMap<FeedbackInfoDTO<AccommodationInfoDTO>, FeedbackInfoResponse>()
               .ForMember(x => x.Accommodation, opt => opt.MapFrom((src, dest, prop, context) =>
@@ -80,6 +94,7 @@ namespace Post.API.Mappings
               .ForMember(x => x.User, opt => opt.Ignore());
             CreateMap<CreateFeedbackRequest, FeedbackDTO>()
                 .ConvertUsing(x => new FeedbackDTO(x.UserId, x.ItemId??0, x.Rating??0, x.Message));
+            
         }
     }
 }

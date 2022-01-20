@@ -1,5 +1,5 @@
 ﻿@page "/account"
-@using FrontEndApp.Models
+
 @inherits Components.CustomBaseComponent
 
 
@@ -11,13 +11,16 @@
     }
     else
     {
-        <User UserId="_id" />
+        <User Id="_id" DisplayFeedbackForm="false"/>
         <NavLink class="btn btn-primary" href="@($"account/edit")">
             <span class="oi oi-plus" aria-hidden="true"></span> Edit account
         </NavLink>
         <button type="submit" class="btn btn-danger" @onclick="DeleteUser">Delete account</button>
         <NavLink class="btn btn-primary" href="@($"account/password")">
             <span class="oi oi-plus" aria-hidden="true"></span> Change password
+        </NavLink>
+        <NavLink class="btn btn-primary" href="@($"account/posts")">
+            <span class="oi oi-pencil" aria-hidden="true"></span> View my posts
         </NavLink>
         <button type="submit" class="btn btn-danger" @onclick="LogOut">Sign out</button>
     }
@@ -45,7 +48,7 @@ else
     {
         if (AuthState.isAuthenticated)
         {
-            _id = int.Parse(await storage.GetItemAsync<string>("userId"));
+            _id = long.Parse(await storage.GetItemAsync<string>("userId"));
 
         }
     }
@@ -54,6 +57,7 @@ else
         var reply = await client.DeleteAsync($"api/users/account");
         if (reply.IsSuccessStatusCode)
         {
+            await authService.LogOut();
             navManager.NavigateTo("/users");
         }
 

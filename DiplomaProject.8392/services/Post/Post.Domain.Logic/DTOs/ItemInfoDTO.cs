@@ -10,11 +10,13 @@ namespace Post.Domain.Logic.DTOs
     {
         public long Id { get;private set; }
         public string Name { get;private set; }
+        public bool IsOther { get;private set; }
 
-        public ItemInfoDTO(long id, string name)
+        public ItemInfoDTO(long id, string name, bool? isOther )
         {
             Id = id;
             Name = name;
+            IsOther = isOther ?? false;
         }
     }
 }

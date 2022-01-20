@@ -40,7 +40,7 @@ namespace Booking.API.Mappings
 
             CreateMap<CreateRequest, CreateBookingRequestDTO>()
                 .ConvertUsing((x, context) => new CreateBookingRequestDTO(x.GuestId ?? 0,
-                x.AccommodationId ?? 0, (int)x.GuestNo, x.StartDateTimeStamp?.ToDateTime(),
+                x.AccommodationId ?? 0, x.GuestNo??0, x.StartDateTimeStamp?.ToDateTime(),
                 x.EndDateTimeStamp?.ToDateTime()));
 
         }

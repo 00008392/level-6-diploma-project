@@ -36,30 +36,28 @@ namespace Post.Domain.Logic.Services
             _mapper = mapper;
         }
 
-        public async Task AddItemsAsync(ICollection<AccommodationItemDTO> itemDTOs)
+        public async Task AddItemsAsync(AddItemsDTO itemsDTO)
         {
-            CheckItemsList(itemDTOs);
+            var itemsList = itemsDTO.Items;
+            CheckItemsList(itemsList);
             var items = new List<T>();
-            var duplicatesinList = (itemDTOs.Where(x => x.OtherItem != null).GroupBy(x => new {
-                x.AccommodationId,
+            var duplicatesinList = (itemsList.Where(x => x.OtherItem != null).GroupBy(x => new {
                 x.ItemId,
                 x.OtherItem
-            }).Any(g => g.Count() > 1)) || (itemDTOs.Where(x => x.OtherItem == null).GroupBy(x => new {
-                x.AccommodationId,
+            }).Any(g => g.Count() > 1)) || (itemsList.Where(x => x.OtherItem == null).GroupBy(x => new {
                 x.ItemId
             }).Any(g => g.Count() > 1));
             if (duplicatesinList)
             {
                 throw new DuplicateListValueException();
             }
-
-            foreach (var itemDTO in itemDTOs)
+            if (!_accommodationRepository.DoesItemWithIdExist(itemsDTO.AccommodationId))
+            {
+                throw new ForeignKeyViolationException("Accommodation");
+            }
+            foreach (var itemDTO in itemsList)
             {
 
-                if (!_accommodationRepository.DoesItemWithIdExist(itemDTO.AccommodationId))
-                {
-                    throw new ForeignKeyViolationException("Accommodation");
-                }
                 if (!_itemRepository.DoesItemWithIdExist(itemDTO.ItemId))
                 {
                     throw new ForeignKeyViolationException("Item");
@@ -67,13 +65,12 @@ namespace Post.Domain.Logic.Services
                 var isOther = (await _itemRepository.GetFilteredAsync(i => i.Id == itemDTO.ItemId)).FirstOrDefault().IsOther;
                 if (itemDTO.OtherItem != null)
                 {
-                   
                     if (isOther == null)
                     {
                         throw new OtherItemException(itemDTO.ItemId);
                     }
 
-                    await CheckDuplicates(i => i.AccommodationId == itemDTO.AccommodationId
+                    await CheckDuplicates(i => i.AccommodationId == itemsDTO.AccommodationId
                     && i.ItemId == itemDTO.ItemId && i.OtherItem == itemDTO.OtherItem);
                 }
                 else
@@ -82,11 +79,11 @@ namespace Post.Domain.Logic.Services
                     {
                         throw new OtherItemException();
                     }
-                    await CheckDuplicates(i => i.AccommodationId == itemDTO.AccommodationId
+                    await CheckDuplicates(i => i.AccommodationId == itemsDTO.AccommodationId
                    && i.ItemId == itemDTO.ItemId);
                 }
 
-                var item = (T)Activator.CreateInstance(typeof(T), itemDTO.AccommodationId, itemDTO.ItemId, itemDTO.OtherItem);
+                var item = (T)Activator.CreateInstance(typeof(T), itemsDTO.AccommodationId, itemDTO.ItemId, itemDTO.OtherItem);
                 items.Add(item);
             }
 
@@ -105,25 +102,23 @@ namespace Post.Domain.Logic.Services
             return itemDTOs;
         }
 
-        public async Task RemoveItemsAsync(ICollection<long> ids)
+        public async Task RemoveItemsAsync(RemoveItemsDTO itemsDTO)
         {
-            CheckItemsList(ids);
-            if (ids.GroupBy(x => x).Any(g => g.Count() > 1))
-            {
-                throw new DuplicateListValueException();
-            }
-            var items = new List<T>();
+            CheckItemsList(itemsDTO.Items);
+            var ids = itemsDTO.Items.Distinct().ToList();
+            var itemsRange = new List<T>();
             foreach (var id in ids)
             {
-                var item = await _repository.GetByIdAsync(id);
-                if (item == null)
+                var items = await _repository.GetFilteredAsync(x=>x.ItemId==id 
+                && x.AccommodationId == itemsDTO.AccommodationId);
+                if (items.Count==0)
                 {
                     throw new NotFoundException(id, "Item");
                 }
-                items.Add(item);
+                itemsRange.AddRange(items);
             }
 
-            await _repository.RemoveRangeAsync(items);
+            await _repository.RemoveRangeAsync(itemsRange);
         }
         private void CheckItemsList<I>(ICollection<I> items)
         {

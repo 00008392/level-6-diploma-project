@@ -1,0 +1,102 @@
+﻿@page "/posts/{Id:long}"
+
+@inherits Components.CustomBaseComponent
+
+@if (_post == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <ul>
+        <li><b>Title:</b> @_post.Title</li>
+        <li><b>Description:</b>  @_post.Description</li>
+        <li><b>Owner:</b>  @_post.Owner.FirstName @_post.Owner.LastName</li>
+        <li><b>Category:</b> @(_post.Category==null?"": _post.Category.Name)</li>
+        <li><b>City:</b>  @(_post.City==null?"": _post.City.Name)</li>
+        <li><b>Address:</b> @_post.Address</li>
+        <li><b>Reference point:</b>  @_post.ReferencePoint</li>
+        <li><b>Contact number:</b> @_post.ContactNumber</li>
+        <li><b>Number of rooms:</b> @_post.RoomsNo </li>
+        <li><b>Number of bathrooms:</b>  @_post.BathroomsNo</li>
+        <li><b>Number of beds:</b>  @_post.BedsNo</li>
+        <li><b>Maximum number of guests:</b>  @_post.MaxGuestsNo</li>
+        <li><b>Square meters:</b>  @_post.SquareMeters</li>
+        <li><b>Price:</b>  @_post.Price</li>
+        <li><b>Is entire apartment available:</b>  @_post.IsWholeApartment</li>
+        <li><b>Additional information:</b> @_post.AdditionalInfo</li>
+        <li><b>Moving in time:</b>  @_post.MovingInTime</li>
+        <li><b>Moving out time:</b> @_post.MovingOutTime</li>
+        <li><b>Date published:</b> @_post.DatePublished</li>
+    </ul>
+    <h4>Rules</h4>
+    @if (_post.Rules != null)
+    {
+        <ul>
+            @foreach (var rule in _post.Rules)
+            {
+                <li>@(rule.Item.isOther?rule.OtherValue:rule.Item.Name)</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No rules</p>
+    }
+    <h4>Facilities</h4>
+    @if (_post.Facilities != null)
+    {
+        <ul>
+            @foreach (var facility in _post.Facilities)
+            {
+                <li>@(facility.Item.isOther? facility.OtherValue: facility.Item.Name)</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No facilities</p>
+    }
+    <h4>Specificities</h4>
+    @if (_post.Specificities != null)
+    {
+        <ul>
+            @foreach (var specificity in _post.Specificities)
+            {
+                <li>@(specificity.Item.isOther? specificity.OtherValue: specificity.Item.Name)</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No specificities</p>
+    }
+    <FrontEndApp.Pages.Feedback.LeaveFeedback @ref="_feedbackComponent" PostId="(long)_post.Id" 
+                                              OnFeedbackCreated="FeedbackCreatedEvent"/>
+    <FrontEndApp.Pages.Feedback.Feedbacks @ref="_feedbacksComponent" PostId="(long)_post.Id" />
+}
+
+
+@code {
+    private PostInfo _post;
+    private List<FeedbackInfo> _feedbacks = new List<FeedbackInfo>();
+    private FrontEndApp.Pages.Feedback.LeaveFeedback _feedbackComponent = new Feedback.LeaveFeedback();
+    private FrontEndApp.Pages.Feedback.Feedbacks _feedbacksComponent = new Feedback.Feedbacks();
+    [Parameter]
+    public long Id { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+
+        var reply = await client.GetAsync($"api/posts/{Id}");
+        if (reply.IsSuccessStatusCode)
+        {
+            var responseStr = await reply.Content.ReadAsStringAsync();
+            _post = JsonConvert.DeserializeObject<PostInfo>(responseStr);
+            _post.Id = Id;
+        }
+    }
+    public async Task FeedbackCreatedEvent()
+    {
+        await _feedbacksComponent.RefreshFeedbacks();
+    }
+}

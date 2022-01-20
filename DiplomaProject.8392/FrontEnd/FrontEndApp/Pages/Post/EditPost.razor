@@ -1,24 +1,160 @@
-﻿@page "/editpost/{Id?:long?}"
-@using Models
-@using Syncfusion.Blazor.Calendars
+﻿@page "/posts/edit/{Id:long?}"
+
 @inherits Components.CustomBaseComponent
-<h3>EditPost</h3>
+<h3>@(Id==null?"Create post":"Edit post")</h3>
+@if (!AuthState.isAuthenticated)
+{
+    <p>Sign in to manage posts</p>
+}
+else
+{
+    <EditForm Model="@_post" OnValidSubmit="@(Id==null?CreatePost:UpdatePost)">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <label for="title">Title</label>
+        <InputText @bind-Value="@_post.Title" id="title" />
+        <label for="description">Description</label>
+        <InputText @bind-Value="@_post.Description" id="description" />
+        <label for="cityId">City</label>
+        @if (_post.Cities == null)
+        {
+            <span>Loading...</span>
+        }
+        else
+        {
+            <InputSelect @bind-Value="@_post.CityId" id="cityId">
+                <option value="">Choose city</option>
+                @foreach (var city in _post.Cities)
+                        {
+                    <option value="@city.Id">@city.Name</option>
+                        }
+            </InputSelect>
+        }
+        <label for="categoryId">Category</label>
+        @if (_post.Categories == null)
+        {
+            <span>Loading...</span>
+        }
+        else
+        {
+            <InputSelect @bind-Value="@_post.CategoryId" id="categoryId">
+                <option value="">Choose category</option>
+                @foreach (var category in _post.Categories)
+                        {
+                    <option value="@category.Id">@category.Name</option>
+                        }
+            </InputSelect>
+        }
+        <label for="address">Address</label>
+        <InputText @bind-Value="@_post.Address" id="address" />
+        <label for="refPoint">Reference point</label>
+        <InputText @bind-Value="@_post.ReferencePoint" id="refPoint" />
+        <label for="contactNum">Contact number</label>
+        <InputText @bind-Value="@_post.ContactNumber" id="contactNum" />
+        <label for="rooms">Number of rooms</label>
+        <InputNumber @bind-Value="@_post.RoomsNo" id="rooms" />
+        <label for="bathrooms">Number of bathrooms</label>
+        <InputNumber @bind-Value="@_post.BathroomsNo" id="bathrooms" />
+        <label for="beds">Number of beds</label>
+        <InputNumber @bind-Value="@_post.BedsNo" id="beds" />
+        <label for="maxGuests">Maximum number of guests</label>
+        <InputNumber @bind-Value="@_post.MaxGuestsNo" id="maxGuests" />
+        <label for="squareMeters">Square meters</label>
+        <InputNumber @bind-Value="@_post.SquareMeters" id="squareMeters" />
+        <label for="price">Price in dollars</label>
+        <InputNumber @bind-Value="@_post.Price" id="price" />
+        <label for="isWholeApartment">Is entire apartment available for rent?</label>
+        <InputCheckbox @bind-Value="@_post.IsWholeApartment" id="isWholeApartment" />
+        <label for="info">Additional information</label>
+        <InputText @bind-Value="@_post.AdditionalInfo" id="info" />
+        <label for="moveIn">Moving in time</label>
+        <RadzenDatePicker TValue="DateTime?" ShowTime="true" TimeOnly="true" DateFormat="HH:mm"
+                          @bind-Value="@_post.MovingInTime" Class="w-100" id="moveIn" />
+        <label for="moveOut">Moving out time</label>
+        <RadzenDatePicker TValue="DateTime?" ShowTime="true" TimeOnly="true" DateFormat="HH:mm"
+                          @bind-Value="@_post.MovingOutTime" Class="w-100" id="moveOut" />
+        <button type="submit" class="btn btn-primary">Save changes</button>
+    </EditForm>
+    @if (Id != null)
+    {
+        <button type="submit" class="btn btn-danger" @onclick="DeletePost">Delete this post</button>
+        <a href=@($"posts/{Id}/items/add") class="btn btn-primary d-block">Edit additional post information</a>
+    }
+
+}
 
 @code {
     [Parameter]
     public long? Id { get; set; }
+    private long _userId;
     private Models.EditPost _post = new Models.EditPost();
-        protected override async Task OnInitializedAsync()
-        {
-           
-        }
-
-        private async Task CreatePost()
+    protected override async Task OnInitializedAsync()
     {
+        if (AuthState.isAuthenticated)
+        {
+            _userId = long.Parse(await storage.GetItemAsync<string>("userId"));
+            if (Id != null)
+            {
+                var postResponse = await client.GetAsync($"api/posts/{Id}");
+                if (postResponse.IsSuccessStatusCode)
+                {
+                    var responseStr = await postResponse.Content.ReadAsStringAsync();
 
+                    _post = JsonConvert.DeserializeObject<Models.EditPost>(responseStr);
+                    _post.OwnerId = _post.Owner.Id;
+                    _post.CityId = _post.City?.Id;
+                    _post.CategoryId = _post.Category?.Id;
+                }
+            }
+
+            var cityResponse = await client.GetAsync("api/info/cities");
+            if (cityResponse.IsSuccessStatusCode)
+            {
+                var responseStr = await cityResponse.Content.ReadAsStringAsync();
+
+                _post.Cities = JsonConvert.DeserializeObject<List<Item>>(responseStr);
+            }
+            var categoryResponse = await client.GetAsync("api/info/categories");
+            if (categoryResponse.IsSuccessStatusCode)
+            {
+                var responseStr = await categoryResponse.Content.ReadAsStringAsync();
+
+                _post.Categories = JsonConvert.DeserializeObject<List<Item>>(responseStr);
+            }
+        }
+    }
+
+    private async Task CreatePost()
+    {
+        _post.OwnerId = _userId;
+        var reply = await client.PostAsJsonAsync<Models.EditPost>("api/posts", _post);
+        if (reply.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/posts");
+        }
+        else
+        {
+            _post.ErrorMessage = reply.Content.ReadAsStringAsync().Result;
+        }
     }
     private async Task UpdatePost()
     {
-
+        var reply = await client.PutAsJsonAsync<Models.EditPost>($"api/posts/{Id}", _post);
+        if (reply.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/posts");
+        }
+        else
+        {
+            _post.ErrorMessage = reply.Content.ReadAsStringAsync().Result;
+        }
+    }
+    private async Task DeletePost()
+    {
+        var reply = await client.DeleteAsync($"api/posts/{Id}");
+        if (reply.IsSuccessStatusCode)
+        {
+            navManager.NavigateTo("/account/posts");
+        }
     }
 }

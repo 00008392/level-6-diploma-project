@@ -24,11 +24,11 @@ namespace Post.API.Services.Strategies
         }
         public async Task<Response> AddItemsAsync(AddItemsRequest request)
         {
-            var items = _mapper.Map<ICollection<ItemRequest>, ICollection<AccommodationItemDTO>>(request.Items);
+            var addItems = _mapper.Map<AddItemsDTO>(request);
             var response = new Response();
             try
             {
-                await _service.AddItemsAsync(items);
+                await _service.AddItemsAsync(addItems);
 
                 response.IsSuccess = true;
             }
@@ -50,7 +50,8 @@ namespace Post.API.Services.Strategies
             var response = new Response();
             try
             {
-                await _service.RemoveItemsAsync(request.Items);
+                var removeItems = _mapper.Map<RemoveItemsDTO>(request);
+                await _service.RemoveItemsAsync(removeItems);
                 response.IsSuccess = true;
 
             }

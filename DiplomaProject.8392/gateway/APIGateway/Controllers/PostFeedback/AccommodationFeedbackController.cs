@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace APIGateway.Controllers.PostFeedback
 {
-    [Route("api/feedback/accommodation")]
+    [Route("api/feedbacks/accommodation")]
     [ApiController]
     public class AccommodationFeedbackController : FeedbackGenericController<FeedbackForAccommodation.FeedbackForAccommodationClient>
     {

@@ -13,7 +13,7 @@ namespace Post.Domain.Logic.Contracts
          where E : ItemBase
     {
         Task<ICollection<ItemInfoDTO>> GetItemsAsync();
-        Task AddItemsAsync(ICollection<AccommodationItemDTO> itemDTOs);
-        Task RemoveItemsAsync(ICollection<long> ids);
+        Task AddItemsAsync(AddItemsDTO itemsDTO);
+        Task RemoveItemsAsync(RemoveItemsDTO itemsDTOs);
     }
 }

@@ -23,5 +23,6 @@ namespace FrontEndApp.Components
         protected ISessionStorageService storage { get; set; }
         [Inject]
         protected LoggedInState AuthState { get; set; }
+
     }
 }

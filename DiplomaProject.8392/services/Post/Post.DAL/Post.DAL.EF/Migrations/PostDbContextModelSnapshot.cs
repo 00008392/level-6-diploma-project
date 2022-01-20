@@ -221,6 +221,32 @@ namespace Post.DAL.EF.Migrations
                     b.ToTable("AccommodationSpecificities");
                 });
 
+            modelBuilder.Entity("Post.Domain.Entities.Booking", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("AccommodationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccommodationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bookings");
+                });
+
             modelBuilder.Entity("Post.Domain.Entities.Category", b =>
                 {
                     b.Property<long>("Id")
@@ -251,27 +277,6 @@ namespace Post.DAL.EF.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cities");
-                });
-
-            modelBuilder.Entity("Post.Domain.Entities.DatesBooked", b =>
-                {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("AccommodationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccommodationId");
-
-                    b.ToTable("DatesBooked");
                 });
 
             modelBuilder.Entity("Post.Domain.Entities.Facility", b =>
@@ -510,15 +515,23 @@ namespace Post.DAL.EF.Migrations
                     b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("Post.Domain.Entities.DatesBooked", b =>
+            modelBuilder.Entity("Post.Domain.Entities.Booking", b =>
                 {
                     b.HasOne("Post.Domain.Entities.Accommodation", "Accommodation")
-                        .WithMany("DatesBooked")
+                        .WithMany("Bookings")
                         .HasForeignKey("AccommodationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Post.Domain.Entities.User", "User")
+                        .WithMany("Bookings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Accommodation");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Post.Domain.Entities.Feedback<Post.Domain.Entities.Accommodation>", b =>
@@ -567,7 +580,7 @@ namespace Post.DAL.EF.Migrations
 
                     b.Navigation("AccommodationSpecificities");
 
-                    b.Navigation("DatesBooked");
+                    b.Navigation("Bookings");
 
                     b.Navigation("Feedbacks");
                 });
@@ -600,6 +613,8 @@ namespace Post.DAL.EF.Migrations
             modelBuilder.Entity("Post.Domain.Entities.User", b =>
                 {
                     b.Navigation("Accommodations");
+
+                    b.Navigation("Bookings");
 
                     b.Navigation("Feedbacks");
 

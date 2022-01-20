@@ -1,6 +1,5 @@
-﻿@page "/users/{UserId:long}"
-@using FrontEndApp.Models
-@using Newtonsoft.Json
+﻿@page "/users/{Id:long}"
+
 @inherits Components.CustomBaseComponent
 
 @if (_user == null)
@@ -21,22 +20,43 @@ else
         <li><b>Country:</b>@(_user.Country != null? _user.Country.Name:"") </li>
         <li><b>Additional information:</b> @_user.Info</li>
     </ul>
+    @if (DisplayFeedbackForm)
+    {
+        <FrontEndApp.Pages.Feedback.LeaveFeedback @ref="_feedbackComponent" UserId="(long)_user.Id"
+                                                  OnFeedbackCreated="FeedbackCreatedEvent" />
+    }
+    <FrontEndApp.Pages.Feedback.Feedbacks @ref="_feedbacksComponent" UserId="_user.Id" />
 }
 
 
 @code {
     private UserInfo _user;
+    private List<FeedbackInfo> _feedbacks = new List<FeedbackInfo>();
     [Parameter]
-    public long UserId { get; set; }
+    public long Id { get; set; }
+    [Parameter]
+    public bool DisplayFeedbackForm { get; set; } = true;
+    private FrontEndApp.Pages.Feedback.LeaveFeedback _feedbackComponent = new Feedback.LeaveFeedback();
+    private FrontEndApp.Pages.Feedback.Feedbacks _feedbacksComponent = new Feedback.Feedbacks();
     protected override async Task OnInitializedAsync()
     {
-
-        var reply = await client.GetAsync($"api/users/{UserId}");
+        await GetUser();
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        await GetUser();
+    }
+    public async Task FeedbackCreatedEvent()
+    {
+        await _feedbacksComponent.RefreshFeedbacks();
+    }
+    private async Task GetUser()
+    {
+        var reply = await client.GetAsync($"api/users/{Id}");
         if (reply.IsSuccessStatusCode)
         {
             var responseStr = await reply.Content.ReadAsStringAsync();
             _user = JsonConvert.DeserializeObject<UserInfo>(responseStr);
         }
-
     }
 }

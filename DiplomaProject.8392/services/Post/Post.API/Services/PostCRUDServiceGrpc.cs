@@ -7,6 +7,7 @@ using Grpc.Core;
 using Post.Domain.Core;
 using Post.Domain.Logic.Contracts;
 using Post.Domain.Logic.DTOs;
+using Post.Domain.Logic.Filter;
 using Post.Domain.Logic.IntegrationEvents.Events;
 using Protos.Common;
 using System;
@@ -116,31 +117,18 @@ namespace Post.API.Services
                 };
             }
             var response = _mapper.Map<PostInfoResponse>(post);
-            //if (post.AccommodationPhotos != null)
-            //{
-            //    response.AccommodationPhotos.AddRange(
-            //        _mapper.Map<ICollection<AccommodationPhotoDTO>, ICollection<AccommodationPhoto>>(post.AccommodationPhotos));
-            //}
-            //if (post.AccommodationRules!=null)
-            //{
-            //    var items = GetItemsList(post.AccommodationRules);
-            //    response.AccommodationRules.AddRange(items);
-            //}
-            //if (post.AccommodationFacilities!=null)
-            //{
-            //    response.AccommodationFacilities.AddRange(GetItemsList(post.AccommodationFacilities));
-            //}
-            //if (post.AccommodationSpecificities!=null)
-            //{
-            //    response.AccommodationSpecificities.AddRange(GetItemsList(post.AccommodationSpecificities));
-            //}
+
             return response;
         }
-        //private IEnumerable<AccommodationItem> GetItemsList(ICollection<AccommodationItemInfoDTO> items) 
-        //{
-        //    var result =  _mapper.Map<ICollection<AccommodationItemInfoDTO>, ICollection<AccommodationItem>>(items);
-        //    return result;
-        //}
+        public override async Task<PostList> GetPosts(FilterRequest request, ServerCallContext context)
+        {
+            var filter = _mapper.Map<FilterParameters>(request);
+            var posts = await _service.GetAllPostsAsync(filter);
+            var postList = _mapper.Map<ICollection<PostInfoResponse>>(posts);
+            var response = new PostList();
+            response.Items.Add(postList);
+            return response;
+        }
 
     }
    

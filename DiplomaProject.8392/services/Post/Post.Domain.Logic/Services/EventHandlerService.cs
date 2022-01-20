@@ -18,7 +18,7 @@ namespace Post.Domain.Logic.Services
     {
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<Accommodation> _accommodationRepository;
-        private readonly IRepository<DatesBooked> _bookingRepository;
+        private readonly IRepository<Booking> _bookingRepository;
         private readonly AbstractValidator<CreateUserDTO> _baseUserValidator;
         private readonly AbstractValidator<UpdateUserDTO> _updateUserValidator;
         private readonly AbstractValidator<AddBookingDTO> _bookingValidator;
@@ -26,7 +26,7 @@ namespace Post.Domain.Logic.Services
 
         public EventHandlerService(IRepository<User> userRepository,
                                    IRepository<Accommodation> accommodationRepository,
-                                   IRepository<DatesBooked> bookingRepository,
+                                   IRepository<Booking> bookingRepository,
                                    AbstractValidator<CreateUserDTO> baseUserValidator,
                                    AbstractValidator<UpdateUserDTO> updateUserValidator,
                                    AbstractValidator<AddBookingDTO> bookingValidator,
@@ -52,7 +52,7 @@ namespace Post.Domain.Logic.Services
             {
                 throw new ValidationException(result.Errors);
             }
-            var booking = _mapper.Map<DatesBooked>(bookingDTO);
+            var booking = _mapper.Map<Booking>(bookingDTO);
             await _bookingRepository.CreateAsync(booking);
         }
 
