@@ -1,0 +1,79 @@
+﻿@page "/bookings/{Id:long}"
+@inherits Components.CustomBaseComponent
+<h3>Booking details</h3>
+@if (AuthState.isAuthenticated)
+{
+    @if (_booking == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        @if (_booking.Accommodation != null)
+        {
+            <p><b>Start date:</b> @_booking.StartDate</p>
+            <p><b>End date:</b> @_booking.EndDate</p>
+            <p><b>Status:</b> @_booking.Status</p>
+            <p>Accommodation</p>
+            @if (_canLeaveFeedback)
+            {
+                <p>Rate this accommodation</p>
+                <FrontEndApp.Pages.Feedback.LeaveFeedback PostId="(long)_booking.Accommodation.Id" />
+            }
+            <ul>
+                <li><b>Title:</b> @_booking.Accommodation.Title</li>
+                <li><b>Description:</b>@_booking.Accommodation.Description</li>
+                <li>
+                    <b>Category:</b> @(_booking.Accommodation.Category == null?""
+        : _booking.Accommodation.Category.Name)
+                </li>
+                <li><b>City:</b>  @(_booking.Accommodation.City==null?"": _booking.Accommodation.City.Name)</li>
+                <li><b>Address:</b> @_booking.Accommodation.Address</li>
+                <li><b>Contact number:</b> @_booking.Accommodation.ContactNumber</li>
+                <li><b>Price:</b>  @_booking.Accommodation.Price</li>
+            </ul>
+
+        }
+        <p>Owner</p>
+        @if (_canLeaveFeedback)
+        {
+            <p>Rate this owner</p>
+            <FrontEndApp.Pages.Feedback.LeaveFeedback UserId="_owner.Id" />
+        }
+        <ul>
+            <li><b>First name:</b> @_owner.FirstName</li>
+            <li><b>Last name:</b> @_owner.LastName</li>
+            <li><b>Email:</b> @_owner.Email</li>
+        </ul>
+
+    }
+
+
+}
+
+@code {
+    [Parameter]
+    public long Id { get; set; }
+    private BookingInfo _booking = new BookingInfo();
+    private bool _canLeaveFeedback;
+    private long _ownerId;
+    private UserInfo _owner = new UserInfo();
+    protected override async Task OnInitializedAsync()
+    {
+        var bookingResponse = await client.GetAsync($"api/booking/{Id}");
+        if (bookingResponse.IsSuccessStatusCode)
+        {
+            var bookingResponseStr = await bookingResponse.Content.ReadAsStringAsync();
+            _booking = JsonConvert.DeserializeObject<BookingInfo>(bookingResponseStr);
+            _ownerId = (long)_booking.Accommodation?.OwnerId;
+            _canLeaveFeedback = _booking.EndDate < DateTime.Now && _booking.Status == Status.Accepted;
+        }
+        var ownerResponse = await client.GetAsync($"api/users/{_ownerId}");
+        if (ownerResponse.IsSuccessStatusCode)
+        {
+            var ownerResponseStr = await ownerResponse.Content.ReadAsStringAsync();
+            _owner = JsonConvert.DeserializeObject<UserInfo>(ownerResponseStr);
+
+        }
+    }
+}

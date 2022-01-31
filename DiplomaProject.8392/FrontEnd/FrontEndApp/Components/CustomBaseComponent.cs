@@ -7,6 +7,7 @@ using FrontEndApp.Services;
 using Blazored.SessionStorage;
 using System.Net.Http;
 using FrontEndApp.States;
+using Microsoft.JSInterop;
 
 namespace FrontEndApp.Components
 {

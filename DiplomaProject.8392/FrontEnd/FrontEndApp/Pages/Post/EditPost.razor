@@ -1,86 +1,120 @@
 ﻿@page "/posts/edit/{Id:long?}"
 
 @inherits Components.CustomBaseComponent
-<h3>@(Id==null?"Create post":"Edit post")</h3>
 @if (!AuthState.isAuthenticated)
 {
     <p>Sign in to manage posts</p>
 }
 else
 {
-    <EditForm Model="@_post" OnValidSubmit="@(Id==null?CreatePost:UpdatePost)">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <label for="title">Title</label>
-        <InputText @bind-Value="@_post.Title" id="title" />
-        <label for="description">Description</label>
-        <InputText @bind-Value="@_post.Description" id="description" />
-        <label for="cityId">City</label>
-        @if (_post.Cities == null)
-        {
-            <span>Loading...</span>
-        }
-        else
-        {
-            <InputSelect @bind-Value="@_post.CityId" id="cityId">
-                <option value="">Choose city</option>
-                @foreach (var city in _post.Cities)
-                        {
-                    <option value="@city.Id">@city.Name</option>
-                        }
-            </InputSelect>
-        }
-        <label for="categoryId">Category</label>
-        @if (_post.Categories == null)
-        {
-            <span>Loading...</span>
-        }
-        else
-        {
-            <InputSelect @bind-Value="@_post.CategoryId" id="categoryId">
-                <option value="">Choose category</option>
-                @foreach (var category in _post.Categories)
-                        {
-                    <option value="@category.Id">@category.Name</option>
-                        }
-            </InputSelect>
-        }
-        <label for="address">Address</label>
-        <InputText @bind-Value="@_post.Address" id="address" />
-        <label for="refPoint">Reference point</label>
-        <InputText @bind-Value="@_post.ReferencePoint" id="refPoint" />
-        <label for="contactNum">Contact number</label>
-        <InputText @bind-Value="@_post.ContactNumber" id="contactNum" />
-        <label for="rooms">Number of rooms</label>
-        <InputNumber @bind-Value="@_post.RoomsNo" id="rooms" />
-        <label for="bathrooms">Number of bathrooms</label>
-        <InputNumber @bind-Value="@_post.BathroomsNo" id="bathrooms" />
-        <label for="beds">Number of beds</label>
-        <InputNumber @bind-Value="@_post.BedsNo" id="beds" />
-        <label for="maxGuests">Maximum number of guests</label>
-        <InputNumber @bind-Value="@_post.MaxGuestsNo" id="maxGuests" />
-        <label for="squareMeters">Square meters</label>
-        <InputNumber @bind-Value="@_post.SquareMeters" id="squareMeters" />
-        <label for="price">Price in dollars</label>
-        <InputNumber @bind-Value="@_post.Price" id="price" />
-        <label for="isWholeApartment">Is entire apartment available for rent?</label>
-        <InputCheckbox @bind-Value="@_post.IsWholeApartment" id="isWholeApartment" />
-        <label for="info">Additional information</label>
-        <InputText @bind-Value="@_post.AdditionalInfo" id="info" />
-        <label for="moveIn">Moving in time</label>
-        <RadzenDatePicker TValue="DateTime?" ShowTime="true" TimeOnly="true" DateFormat="HH:mm"
-                          @bind-Value="@_post.MovingInTime" Class="w-100" id="moveIn" />
-        <label for="moveOut">Moving out time</label>
-        <RadzenDatePicker TValue="DateTime?" ShowTime="true" TimeOnly="true" DateFormat="HH:mm"
-                          @bind-Value="@_post.MovingOutTime" Class="w-100" id="moveOut" />
-        <button type="submit" class="btn btn-primary">Save changes</button>
-    </EditForm>
-    @if (Id != null)
-    {
-        <button type="submit" class="btn btn-danger" @onclick="DeletePost">Delete this post</button>
-        <a href=@($"posts/{Id}/items/add") class="btn btn-primary d-block">Edit additional post information</a>
-    }
 
+    <div class="container">
+        <div class="row justify-content-center">
+            <EditForm Model="@_post" OnValidSubmit="@(Id==null?CreatePost:UpdatePost)" class="col-lg-8 form ">
+
+                <h2 class="title">@(Id==null?"Create post":"Edit post")</h2>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <p hidden="@_post.ErrorMessage==null" class="item__text font-weight-bold error">@_post.ErrorMessage</p>
+                <label class="item__text" >
+                    Accommodation title
+                    <InputText class="input"  @bind-Value="@_post.Title" />
+                </label>
+                <label class="item__text" >
+                    Accommodation description
+                    <InputText class="input" @bind-Value="@_post.Description" />
+                </label>
+                <label class="item__text">
+                    City:
+                    @if (_post.Cities == null)
+                    {
+                        <span>Loading...</span>
+                    }
+                    else
+                    {
+                        <InputSelect class="input" @bind-Value="@_post.CityId" id="cityId">
+                            <option value="">Select city</option>
+                            @foreach (var city in _post.Cities)
+                                    {
+                                <option value="@city.Id">@city.Name</option>
+                                    }
+                        </InputSelect>
+                    }
+                </label>
+                <label class="item__text">
+                    Accommodation category:
+                    @if (_post.Categories == null)
+                    {
+                        <span>Loading...</span>
+                    }
+                    else
+                    {
+                        <InputSelect class="input" @bind-Value="@_post.CategoryId" id="categoryId">
+                            <option value="">Select category</option>
+                            @foreach (var category in _post.Categories)
+                                    {
+                                <option value="@category.Id">@category.Name</option>
+                                    }
+                        </InputSelect>
+                    }
+                </label>
+                <label class="item__text" >
+                    Accommodation address
+                    <InputText class="input"  @bind-Value="@_post.Address" />
+                </label>
+                <label class="item__text" >
+                    Reference point
+                    <InputText class="input" @bind-Value="@_post.ReferencePoint" />
+                </label>
+                <label class="item__text" >
+                    Contact number
+                    <InputText class="input"  @bind-Value="@_post.ContactNumber" />
+                </label>
+                <label class="item__text" >
+                    Number of rooms
+                    <InputNumber class="input"  @bind-Value="@_post.RoomsNo" />
+                </label>
+                <label class="item__text">
+                    Number of bathrooms
+                    <InputNumber class="input"  @bind-Value="@_post.BathroomsNo" />
+                </label>
+                <label class="item__text" >
+                    Number of beds
+                    <InputNumber class="input" @bind-Value="@_post.BedsNo" />
+                </label>
+                <label class="item__text" >
+                    Maximum number of guests
+                    <InputNumber class="input"  @bind-Value="@_post.MaxGuestsNo" />
+                </label>
+                <label class="item__text">
+                    Accommodation size (in square meters)
+                    <InputNumber class="input"  @bind-Value="@_post.SquareMeters" />
+                </label>
+                <label class="item__text" >
+                    Price (in $)
+                    <InputNumber class="input"  @bind-Value="@_post.Price" />
+                </label>
+                <label class="item__text">
+                    Is entire accommodation available for rent?
+                    <InputCheckbox @bind-Value="@_post.IsWholeApartment" />
+                </label>
+                <label class="item__text">Moving in time</label>
+
+                    <RadzenDatePicker TValue="DateTime?" ShowTime="true" TimeOnly="true" DateFormat="HH:mm"
+                                      @bind-Value="@_post.MovingInTime"  />
+
+                    <label class="item__text" > Moving out time</label>
+                    <RadzenDatePicker TValue="DateTime?" ShowTime="true" TimeOnly="true" DateFormat="HH:mm"
+                                      @bind-Value="@_post.MovingOutTime"   />
+                <label class="item__text">
+                    Additional information about accommodation
+                    <InputText class="input" @bind-Value="@_post.AdditionalInfo" />
+                </label>
+                <input type="submit" class="button" value="Save changes" />
+                <input @onclick="DeletePost" class="button btn-danger" value="Delete this post" />
+            </EditForm>
+        </div>
+    </div>
 }
 
 @code {

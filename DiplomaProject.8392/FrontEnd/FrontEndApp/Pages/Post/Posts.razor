@@ -1,25 +1,43 @@
 ﻿@page "/posts"
 
 @inherits Components.CustomBaseComponent
-<h3>Accommodations</h3>
 @if (_posts == null)
 {
-    <p><em>Loading...</em></p>
+    <p>Loading...</p>
 }
 else
 {
-    <div class="users__list">
-        @foreach (var post in _posts)
-        {
-        <div>
-            <h4>@post.Title</h4>
-            <h4>Located in @post.City?.Name</h4>
-            <h4>Posted by <a href="@($"users/{post.Owner.Id}")">@post.Owner.FirstName @post.Owner.LastName</a></h4>
-            <a href=@($"posts/{post.Id}") class="btn btn-primary d-block">View details</a>
+    <div class="products">
+        <div class="products__content">
+            @foreach (var post in _posts)
+            {
+                <div class="products__content_item">
+                    <div class="item__description">
+                        <div hidden="@(post.Category==null)" class="item_logo music_logo">@post.Category?.Name</div>
+                        <h2 class="item__title">
+                            @post.Title
+                        </h2>
+                        <h2 class="item__price">
+                            @post.Price
+                        </h2>
+                        <h2 hidden="@(post.City==null)" class="item__price">
+                            Located in @post.City?.Name
+                        </h2>
+                        <p class="item__details">
+                            Published by: <a class="text-danger" href=@($"users/{post.Owner?.Id}")>@post.Owner?.FirstName
+                            @post.Owner?.LastName</a>
+                             - @post.DatePublished
+                        </p>
+
+                    </div>
+                    <a class="button" href=@($"posts/{post.Id}")>See details</a>
+                </div>
+            }
+
         </div>
-        }
     </div>
 }
+
 
 @code {
     private List<PostInfo> _posts;

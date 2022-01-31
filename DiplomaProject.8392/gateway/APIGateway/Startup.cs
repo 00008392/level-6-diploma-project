@@ -14,7 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Post.API;
+using PostFeedback.API;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,15 +84,15 @@ namespace APIGateway
             {
                 options.Address = postUrl;
             });
-            services.AddGrpcClient<AccommodationRules.AccommodationRulesClient>((services, options) =>
+            services.AddGrpcClient<PostRules.PostRulesClient>((services, options) =>
             {
                 options.Address = postUrl;
             });
-            services.AddGrpcClient<AccommodationFacilities.AccommodationFacilitiesClient>((services, options) =>
+            services.AddGrpcClient<PostFacilities.PostFacilitiesClient>((services, options) =>
             {
                 options.Address = postUrl;
             });
-            services.AddGrpcClient<AccommodationSpecificities.AccommodationSpecificitiesClient>((services, options) =>
+            services.AddGrpcClient<PostSpecificities.PostSpecificitiesClient>((services, options) =>
             {
                 options.Address = postUrl;
             });

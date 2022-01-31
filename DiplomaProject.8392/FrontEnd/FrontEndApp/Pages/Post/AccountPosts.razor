@@ -13,23 +13,46 @@ else
     }
     else
     {
-        if (_posts.Count < 1)
-        {
-            <p>You don't have any posts</p>
-        }
-        foreach (var post in _posts)
-        {
-            <p><b>Title:</b> @post.Title</p>
-            <p><b>Description:</b>  @post.Description</p>
-            <p><b>Category:</b> @(post.Category==null?"": post.Category.Name)</p>
-            <p><b>City:</b>  @(post.City==null?"": post.City.Name)</p>
-            <p><b>Address:</b> @post.Address</p>
-            <a href=@($"posts/{post.Id}") class="btn btn-primary d-block">View details</a>
-            <a href=@($"posts/edit/{post.Id}") class="btn btn-primary d-block">Edit</a>
+        <div>
+            <h2 class="user__details_title">My posts</h2>
+            <a class="button col-md-2" href="posts/edit">Create post</a>
+            <div class="user__details_products">
+                @if (_posts.Count < 1)
+                {
+                    <p>You don't have any posts</p>
+                }
+                @foreach (var post in _posts)
+                {
+                    <div class="products__content_item details">
+                        <div class="item__description">
+                            <div hidden="@(post.Category==null)" class="item_logo music_logo">@post.Category?.Name</div>
+                            <h2 hidden="@(post.Title==null)" class="item__title">
+                                @post.Title
+                            </h2>
+                            <h2 hidden="@(post.Price==0)" class="item__price">
+                                @post.Price
+                            </h2>
+                            <p hidden="@(post.City==null)" class="item__text"><span>Location: </span> @post.City?.Name</p>
+                            <p hidden="@(post.Address==null)" class="item__text"><span>Address: </span> @post.Address</p>
+                            <p class="item__details ml-auto">
+                                Published: @post.DatePublished
+                            </p>
 
-        }
-        <a href="posts/edit" class="btn btn-primary d-block">Add new post</a>
+                        </div>
+                        <div>
+                            <a class="button" href=@($"posts/edit/{post.Id}")>Edit</a>
+                            <a class="button" href=@($"posts/{post.Id}/items")>Modify additional information</a>
+                            <a class="button" href=@($"posts/{post.Id}")>View details</a>
+
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
     }
+
+
 
 }
 

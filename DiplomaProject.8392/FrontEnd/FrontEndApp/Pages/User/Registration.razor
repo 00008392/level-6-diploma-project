@@ -2,41 +2,52 @@
 
 @inherits Components.CustomBaseComponent
 
-<h3>Registration</h3>
 @if (AuthState.isAuthenticated)
 {
-    <p>You are already signed in</p>
+    <h2 class="title">You are already signed in</h2>
 }
 else
 {
-    @if (_newUser.ErrorMessage != null)
-    {
-
-        <p>@_newUser.ErrorMessage</p>
-    }
-    <EditForm Model="@_newUser" OnValidSubmit="@CreateUser">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <label for="firstName">First name</label>
-        <InputText @bind-Value="@_newUser.FirstName" id="firstName" />
-        <label for="lastName">Last name</label>
-        <InputText @bind-Value="@_newUser.LastName" id="lastName" />
-        <label for="lastName">Email</label>
-        <InputText @bind-Value="@_newUser.Email" id="email" />
-        <label for="DOB">Date of Birth</label>
-        <InputDate @bind-Value="@_newUser.DateOfBirth" id="DOB" />
-        <label for="gender">Gender</label>
-        <InputSelect @bind-Value="@_newUser.Gender" id="gender">
-            @foreach (var gender in Enum.GetValues(typeof(Gender)))
-                {
-                <option value="@gender">@gender</option>
-                }
-        </InputSelect>
-        <label for="password">Password</label>
-        <InputText @bind-Value="@_newUser.Password" id="password" type="password" />
-
-        <button type="submit" class="btn btn-primary">Sign up</button>
-    </EditForm>
+    <div class="container">
+        <div class="row justify-content-center">
+            <EditForm Model="@_newUser" OnValidSubmit="@CreateUser" class="col-lg-8 form">
+                <h2 class="title">Registration</h2>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <p hidden="@(_newUser.ErrorMessage==null)" class="item__text font-weight-bold error">@_newUser.ErrorMessage</p>
+                <label class="item__text">
+                    First name
+                    <InputText @bind-Value="@_newUser.FirstName" class="input"  />
+                </label>
+                <label class="item__text">
+                    Last name
+                    <InputText @bind-Value="@_newUser.LastName" class="input"  />
+                </label>
+                <label class="item__text">
+                    Email
+                    <InputText @bind-Value="@_newUser.Email" class="input" />
+                </label>
+                <label class="item__text">
+                    Birthday:
+                    <InputDate @bind-Value="@_newUser.DateOfBirth" class="input" type="date" />
+                </label>
+                <label class="item__text">
+                    Gender:
+                    <InputSelect @bind-Value="@_newUser.Gender" class="input">
+                        @foreach (var gender in Enum.GetValues(typeof(Gender)))
+                            {
+                            <option value="@gender">@gender</option>
+                            }
+                    </InputSelect>
+                </label>
+                <label class="item__text">
+                    Password
+                    <InputText @bind-Value="@_newUser.Password" class="input"  type="password" />
+                </label>
+                <input type="submit" class="button" value="Sign up" />
+            </EditForm>
+        </div>
+    </div>
 }
 
 

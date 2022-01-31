@@ -5,6 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\fonts\PTSans-Bold.woff" />
+    <None Include="wwwroot\fonts\PTSans-Bold.woff2" />
+    <None Include="wwwroot\fonts\PTSans-BoldItalic.woff" />
+    <None Include="wwwroot\fonts\PTSans-BoldItalic.woff2" />
+    <None Include="wwwroot\fonts\PTSans-Italic.woff" />
+    <None Include="wwwroot\fonts\PTSans-Italic.woff2" />
+    <None Include="wwwroot\fonts\PTSans-Regular.woff" />
+    <None Include="wwwroot\fonts\PTSans-Regular.woff2" />
+    <None Include="wwwroot\fonts\stylesheet.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.1.5" />
     <PackageReference Include="Blazored.SessionStorage" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.11" />

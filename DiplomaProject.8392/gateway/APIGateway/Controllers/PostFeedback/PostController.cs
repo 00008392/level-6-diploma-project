@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Post.API;
+using PostFeedback.API;
 using Protos.Common;
 using Google.Protobuf.WellKnownTypes;
 using APIGateway.Helpers;
@@ -104,7 +104,7 @@ namespace APIGateway.Controllers.PostFeedback
             }
             return NoContent();
         }
-        private PostInfoResponse ConvertPostData(PostInfoResponse post)
+        private PostResponse ConvertPostData(PostResponse post)
         {
             post.DatePublished = (DateTime)DateTimeConversion.FromTimeStampToDateTime(post.DatePublishedTimeStamp);
             return post;

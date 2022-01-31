@@ -1,0 +1,43 @@
+﻿@page "/account/bookings"
+@inherits Components.CustomBaseComponent
+<h3>My bookings</h3>
+@if (!AuthState.isAuthenticated)
+{
+    <p>Sign in to see bookings</p>
+}
+else
+{
+        @foreach (var booking in _bookings)
+        {
+<div>
+    <p><b>Start date:</b>@booking.StartDate</p>
+    <p><b>End date:</b>@booking.EndDate</p>
+    <p><b>Status:</b>@booking.Status</p>
+    <a href=@($"bookings/{booking.Id}") class="btn btn-primary d-block">Edit</a>
+</div>
+
+        }
+
+
+}
+@code {
+    private List<BookingInfo> _bookings = new List<BookingInfo>();
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthState.isAuthenticated)
+        {
+            var userId = await storage.GetItemAsync<string>("userId");
+            var url = "https://localhost:44377/api/booking";
+            var param = new Dictionary<string, string>() { { "User", $"{userId}" } };
+
+            var newUrl = new Uri(QueryHelpers.AddQueryString(url, param));
+            var response = await client.GetAsync(newUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                var responseStr = await response.Content.ReadAsStringAsync();
+
+                _bookings = JsonConvert.DeserializeObject<List<BookingInfo>>(responseStr);
+            }
+        }
+    }
+}

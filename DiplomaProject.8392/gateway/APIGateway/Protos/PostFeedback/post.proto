@@ -4,23 +4,23 @@ import "Protos/Common/common.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-option csharp_namespace = "Post.API";
+option csharp_namespace = "PostFeedback.API";
 
 package post;
 
 service PostCRUD {
 
-  rpc CreatePost (CreatePostRequest) returns (common.Response); 
-  rpc UpdatePost (UpdatePostRequest) returns (common.Response); 
+  rpc CreatePost (CreatePostRequest) returns (common.Response);
+  rpc UpdatePost (UpdatePostRequest) returns (common.Response);
   rpc DeletePost (common.Request) returns (common.Response); 
-  rpc GetPostById (common.Request) returns (PostInfoResponse); 
-  rpc GetPosts (FilterRequest) returns (PostList);
+  rpc GetPostById (common.Request) returns (PostResponse); 
+  rpc GetPosts (FilterRequest) returns (PostList); 
 }
 
 service PostInfo {
-  rpc GetAllCities (common.Empty) returns (CityList);
-  rpc GetAllCategories (common.Empty) returns (CategoryList);
-} 
+  rpc GetAllCities (common.Empty) returns (CategoryCityList);
+  rpc GetAllCategories (common.Empty) returns (CategoryCityList);
+}
 
 message CreatePostRequest {
   google.protobuf.StringValue title = 1;
@@ -37,12 +37,10 @@ message CreatePostRequest {
   google.protobuf.Int32Value maxGuestsNo = 12;
   google.protobuf.Int32Value squareMeters = 13;
   google.protobuf.DoubleValue price = 14;
-  google.protobuf.DoubleValue latitude = 15;
-  google.protobuf.DoubleValue longitude = 16;
-  google.protobuf.BoolValue isWholeApartment = 17;
-  google.protobuf.Timestamp movingInTimeStamp = 18;
-  google.protobuf.Timestamp movingOutTimeStamp = 19;
-  google.protobuf.StringValue additionalInfo = 20;
+  google.protobuf.BoolValue isWholeApartment = 15;
+  google.protobuf.Timestamp movingInTimeStamp = 16;
+  google.protobuf.Timestamp movingOutTimeStamp = 17;
+  google.protobuf.StringValue additionalInfo = 18;
 }
 
 
@@ -62,27 +60,27 @@ int64 id = 1;
   google.protobuf.Int32Value maxGuestsNo = 13;
   google.protobuf.Int32Value squareMeters = 14;
   google.protobuf.DoubleValue price = 15;
-  google.protobuf.DoubleValue latitude = 16;
-  google.protobuf.DoubleValue longitude = 17;
-  google.protobuf.BoolValue isWholeApartment = 18;
-  google.protobuf.Timestamp movingInTimeStamp = 19;
-  google.protobuf.Timestamp movingOutTimeStamp = 20;
-  google.protobuf.StringValue additionalInfo = 21;
+  google.protobuf.BoolValue isWholeApartment = 16;
+  google.protobuf.Timestamp movingInTimeStamp = 17;
+  google.protobuf.Timestamp movingOutTimeStamp = 18;
+  google.protobuf.StringValue additionalInfo = 19;
 }
 
-message AccommodationItem {
+message User {
 int64 id = 1;
-google.protobuf.StringValue otherValue = 3;
-common.Item base = 4;
+google.protobuf.StringValue firstName = 2;
+google.protobuf.StringValue lastName = 3;
+string email = 4;
+google.protobuf.StringValue phoneNumber =5;
 }
 
-message PostInfoResponse {
+message PostResponse {
    int64 id = 1;
    string title = 2;
    google.protobuf.StringValue description = 3;
    User owner = 4;
-   Category category = 5;
-   City city = 6;
+   CategoryCity category = 5;
+   CategoryCity city = 6;
    string address = 7;
    google.protobuf.StringValue referencePoint = 8;
    string contactNumber = 9;
@@ -92,52 +90,41 @@ message PostInfoResponse {
    int32 maxGuestsNo = 13;
    google.protobuf.Int32Value squareMeters = 14;
    double price = 15;
-   google.protobuf.DoubleValue latitude = 16;
-   google.protobuf.DoubleValue longitude = 17;
-   google.protobuf.BoolValue isWholeApartment = 18;
-   google.protobuf.StringValue additionalInfo = 19;
-   google.protobuf.Timestamp datePublishedTimeStamp = 20;
-   string movingInTime = 21;
-   string movingOutTime = 22;
-   repeated AccommodationPhoto accommodationPhotos = 23;
-   repeated AccommodationItem accommodationSpecificities = 24;
-   repeated AccommodationItem accommodationRules = 25;
-   repeated AccommodationItem accommodationFacilities = 26;
-   bool NoItem = 27;
+   google.protobuf.BoolValue isWholeApartment = 16;
+   google.protobuf.StringValue additionalInfo = 17;
+   google.protobuf.Timestamp datePublishedTimeStamp = 18;
+   string movingInTime = 19;
+   string movingOutTime = 20;
+   repeated Photo photos = 21;
+   repeated PostItem specificities = 22;
+   repeated PostItem rules = 23;
+   repeated PostItem facilities = 24;
+   bool NoItem = 25;
 }
 message PostList {
-	repeated PostInfoResponse items = 1;
+	repeated PostResponse items = 1;
 }
-message User {
-int64 id = 1;
-google.protobuf.StringValue firstName = 2;
-google.protobuf.StringValue lastName = 3;
-string email = 9;
-google.protobuf.StringValue phoneNumber = 10;
+message PostItem {
+int64 itemId = 1;
+google.protobuf.StringValue otherValue = 2;
+string item = 3;
 }
 
-message Category {
+message CategoryCity {
 int64 id = 1;
 string name = 2;
 }
 
-message City {
-int64 id = 1;
-string name = 2;
+message CategoryCityList {
+repeated CategoryCity items = 1;
 }
 
-message CityList {
-repeated City cities = 1;
-}
-message CategoryList {
-repeated Category categories = 1;
+message Photo {
+int64 id = 1;
+google.protobuf.BytesValue photo = 2;
+google.protobuf.StringValue mimeType = 3;
 }
 
-message AccommodationPhoto {
-int64 id = 1;
-google.protobuf.BytesValue photo = 3;
-google.protobuf.StringValue mimeType = 4;
-}
 message FilterRequest {
 google.protobuf.StringValue searchText = 1;
 google.protobuf.Int64Value owner = 2;
@@ -152,6 +139,4 @@ google.protobuf.Int32Value minPrice = 10;
 google.protobuf.Int32Value maxPrice = 11;
 google.protobuf.BoolValue entireApartment = 12;
 }
-
-
 

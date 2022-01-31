@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+import "Protos/Common/common.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "PostFeedback.API";
+
+package post;
+
+
+service PostRules {
+	rpc GetItems (common.Empty) returns (ItemsList);  
+	rpc AddItems (AddItemsRequest) returns (common.Response); 
+	rpc RemoveItems (RemoveItemsRequest) returns (common.Response);
+}
+service PostFacilities {
+	rpc GetItems (common.Empty) returns (ItemsList);  
+	rpc AddItems (AddItemsRequest) returns (common.Response); 
+	rpc RemoveItems (RemoveItemsRequest) returns (common.Response);
+}
+service PostSpecificities {
+	rpc GetItems (common.Empty) returns (ItemsList);  
+	rpc AddItems (AddItemsRequest) returns (common.Response); 
+	rpc RemoveItems (RemoveItemsRequest) returns (common.Response);
+}
+message Item {
+int64 id = 1;
+string name = 2;
+google.protobuf.BoolValue isOther = 3;
+}
+message ItemsList {
+	repeated Item items = 1;
+}
+message AddItemsRequest {
+repeated ItemRequest items = 1;
+int64 postId = 2;
+}
+message RemoveItemsRequest {
+	repeated int64 items = 1;
+	int64 postId = 2;
+}
+message ItemRequest {
+int64 itemId = 1;
+google.protobuf.StringValue otherValue = 2;
+}

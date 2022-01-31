@@ -49,7 +49,4 @@ a, .btn-link {
         top: 0.5rem;
     }
 
-.users__list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-}
+

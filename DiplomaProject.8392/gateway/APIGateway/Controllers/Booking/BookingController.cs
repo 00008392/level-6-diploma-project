@@ -3,11 +3,13 @@ using APIGateway.Helpers;
 using APIGateway.QueryParameters;
 using Booking.API;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Protos.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -48,7 +50,7 @@ namespace APIGateway.Controllers.Booking
             }
             var reply = await _bookingClient.GetBookingsAsync(request);
             reply.Bookings.ToList().ForEach(x => ConvertBookingData(x));
-            return Ok(reply);
+            return Ok(reply.Bookings);
         }
 
         // GET api/<BookingController>/5
@@ -68,9 +70,14 @@ namespace APIGateway.Controllers.Booking
         }
 
         // POST api/<BookingController>
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post(CreateRequest request)
         {
+            if(GetLoggedUserId()!=request.GuestId)
+            {
+                return Unauthorized();
+            }
             var reply = await _bookingClient.CreateBookingRequestAsync(ConvertBookingData(request));
             if(!reply.IsSuccess)
             {
@@ -89,22 +96,41 @@ namespace APIGateway.Controllers.Booking
             return StatusCode(201);
         }
         // PUT api/<BookingController>/5
+        [Authorize]
         [HttpPatch("accept/{id}")]
         public async Task<IActionResult> AcceptBooking(long id)
         {
+            var booking = await _bookingClient.GetBookingDetailsAsync(new Request { Id = id});
+            if(booking.Accommodation?.OwnerId!=GetLoggedUserId())
+            {
+                return Unauthorized();
+            }
             return await ProcessBookingStatus(id, _bookingClient.AcceptBookingRequestAsync);
         }
+        [Authorize]
         [HttpPatch("reject/{id}")]
         public async Task<IActionResult> RejectBooking(long id)
         {
+            var booking = await _bookingClient.GetBookingDetailsAsync(new Request { Id = id });
+            if (booking.Accommodation?.OwnerId != GetLoggedUserId())
+            {
+                return Unauthorized();
+            }
             return await ProcessBookingStatus(id, _bookingClient.RejectBookingRequestAsync);
         }
+        [Authorize]
         [HttpPatch("cancel/{id}")]
         public async Task<IActionResult> CancelBooking(long id)
         {
+            var booking = await _bookingClient.GetBookingDetailsAsync(new Request { Id = id });
+            if (booking.Guest?.Id != GetLoggedUserId())
+            {
+                return Unauthorized();
+            }
             return await ProcessBookingStatus(id, _bookingClient.CancelBookingAsync);
         }
         // DELETE api/<BookingController>/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {
@@ -112,6 +138,11 @@ namespace APIGateway.Controllers.Booking
             {
                 Id = id
             };
+            var booking = await _bookingClient.GetBookingDetailsAsync(request);
+            if (booking.Guest?.Id != GetLoggedUserId())
+            {
+                return Unauthorized();
+            }
             var reply = await _bookingClient.DeleteBookingRequestAsync(request);
             if(!reply.IsSuccess)
             {
@@ -153,6 +184,10 @@ namespace APIGateway.Controllers.Booking
                 return BadRequest(reply);
             }
             return NoContent();
-        } 
+        }
+        private int GetLoggedUserId()
+        {
+            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        }
     }
 }

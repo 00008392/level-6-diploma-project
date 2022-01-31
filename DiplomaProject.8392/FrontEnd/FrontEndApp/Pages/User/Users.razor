@@ -1,10 +1,6 @@
 ﻿@page "/users"
 @inject HttpClient client
 
-<h1>Users</h1>
-
-
-
 @if (_users == null)
 {
     <p><em>Loading...</em></p>
@@ -14,12 +10,18 @@ else
 <div class="users__list">
     @foreach (UserInfo user in _users)
     {
-        <div>
-            <h4>@user.FirstName @user.LastName</h4>
-            <h4>@user.Email</h4>
-            <a href=@($"users/{user.Id}") class="btn btn-primary d-block">View details</a>
+        <div class="user__item products__content_item">
+            <div>
+                <h2 class="title">@user.FirstName @user.LastName</h2>
+                <a href=@($"mailto:{user.Email}") class="item__details">@user.Email</a>
+                <p hidden="@(user.Country==null)" class="item__details">
+                    Lives in @user.Country?.Name
+                </p>
+            </div>
+            <a class="button mb-0" href=@($"users/{user.Id}")>View details</a>
         </div>
     }
+
 </div>
 }
 

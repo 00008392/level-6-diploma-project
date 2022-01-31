@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Post.API;
+using PostFeedback.API;
 using Protos.Common;
 using System;
 using System.Collections.Generic;

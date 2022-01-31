@@ -42,13 +42,13 @@ namespace Booking.API.Mappings
                 .ConvertUsing(x => new Domain.Entities.User(x.Email, x.FirstName, x.LastName));
 
             //booking request
-            CreateMap<Domain.Entities.BookingRequest, BookingRequestInfoDTO>()
+            CreateMap<Domain.Entities.BookingRequest, BookingInfoDTO>()
                 .ConvertUsing((x, dest, context) =>
                 {
                    var coTravelers = context.Mapper.Map<ICollection<UserDTO>>(x.CoTravelers);
                     var guest = context.Mapper.Map<UserDTO>(x.Guest);
                     var accommodation = context.Mapper.Map<AccommodationDTO>(x.Accommodation);
-                    return new BookingRequestInfoDTO(x.Id, guest, accommodation, coTravelers, x.GuestNo,
+                    return new BookingInfoDTO(x.Id, guest, accommodation, coTravelers, x.GuestNo,
                         x.StartDate, x.EndDate, x.Status);
                 });
           

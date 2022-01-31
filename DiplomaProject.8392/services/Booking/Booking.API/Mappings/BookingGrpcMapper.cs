@@ -15,7 +15,7 @@ namespace Booking.API.Mappings
             CreateMap<AccommodationDTO, Accommodation>()
                 .ForMember(x => x.Price, opt => opt.MapFrom(src => (double)src.Price));
 
-            CreateMap<BookingRequestInfoDTO, BookingDetailsReply>()
+            CreateMap<BookingInfoDTO, BookingDetailsReply>()
                 .ForMember(x => x.Guest, opt => opt.MapFrom((src, dest, prop, context) =>
                     {
                         return src.Guest == null ? null : context.Mapper.Map<User>(src.Guest);

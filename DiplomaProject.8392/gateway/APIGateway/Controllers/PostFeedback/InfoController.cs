@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Post.API;
+using PostFeedback.API;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,13 +25,13 @@ namespace APIGateway.Controllers.PostFeedback
         public async Task<IActionResult> GetCities()
         {
             var reply = await _infoClient.GetAllCitiesAsync(new Protos.Common.Empty());
-            return Ok(reply.Cities);
+            return Ok(reply.Items);
         }
         [HttpGet("categories")]
         public async Task<IActionResult> GetCategories()
         {
             var reply = await _infoClient.GetAllCategoriesAsync(new Protos.Common.Empty());
-            return Ok(reply.Categories);
+            return Ok(reply.Items);
         }
     }
 }

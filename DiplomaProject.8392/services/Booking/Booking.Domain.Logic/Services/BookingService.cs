@@ -48,10 +48,14 @@ namespace Booking.Domain.Logic.Services
             {
                 throw new ForeignKeyViolationException("User");
             }
-            var accommodationExists = _accommodationRepository.DoesItemWithIdExist(requestDTO.AccommodationId);
-            if (!accommodationExists)
+            var accommodation = await _accommodationRepository.GetByIdAsync(requestDTO.AccommodationId);
+            if (accommodation==null)
             {
                 throw new ForeignKeyViolationException("Accommodation");
+            }
+            if(requestDTO.GuestId==accommodation.OwnerId)
+            {
+                throw new Exception("Accommodation cannot be booked by its owner");
             }
             if((await FindBookingForDatesAsync((DateTime)requestDTO.StartDate, 
                 (DateTime)requestDTO.EndDate, requestDTO.AccommodationId)).Any())
@@ -114,18 +118,18 @@ namespace Booking.Domain.Logic.Services
             request.SetStatus(bookingStatusDTO.BookingStatus);
             await _bookingRepository.UpdateAsync(request);
         }
-        public async Task<ICollection<BookingRequestInfoDTO>> GetBookingsAsync(BookingRequestSpecification specification)
+        public async Task<ICollection<BookingInfoDTO>> GetBookingsAsync(BookingRequestSpecification specification)
         {
             var requestsList = (await _bookingRepository.GetFilteredAsync(specification.ToExpression(), relatedEntitiesIncluded: true)).ToList();
-            var requestsDTOList = _mapper.Map<ICollection<BookingRequestInfoDTO>>(requestsList);
+            var requestsDTOList = _mapper.Map<ICollection<BookingInfoDTO>>(requestsList);
             return requestsDTOList;
         }
-        public async Task<BookingRequestInfoDTO> GetBookingDetailsAsync(long id)
+        public async Task<BookingInfoDTO> GetBookingDetailsAsync(long id)
         {
             var request = await _bookingRepository.GetByIdAsync(id, relatedEntitiesIncluded: true);
             if (request!=null)
             {
-                return _mapper.Map<BookingRequestInfoDTO>(request);
+                return _mapper.Map<BookingInfoDTO>(request);
             }
             return null;
         }

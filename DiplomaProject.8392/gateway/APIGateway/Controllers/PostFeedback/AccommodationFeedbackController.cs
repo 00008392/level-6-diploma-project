@@ -1,6 +1,6 @@
 ﻿using APIGateway.Controllers.PostFeedback.Core;
 using Microsoft.AspNetCore.Mvc;
-using Post.API;
+using PostFeedback.API;
 using System;
 using System.Collections.Generic;
 using System.Linq;

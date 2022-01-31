@@ -1,5 +1,4 @@
 ﻿using Grpc.Core;
-using Post.API;
 using Protos.Common;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Post.API
+namespace PostFeedback.API
 {
     public interface IFeedbackService
     {
@@ -15,7 +14,7 @@ namespace Post.API
             DateTime? deadline = null, CancellationToken cancellationToken = default);
         AsyncUnaryCall<Response> DeleteFeedbackAsync(Request request, Metadata headers = null,
             DateTime? deadline = null, CancellationToken cancellationToken = default);
-        AsyncUnaryCall<FeedbackInfoResponse> GetFeedbackDetailsAsync(Request request, Metadata headers = null,
+        AsyncUnaryCall<FeedbackResponse> GetFeedbackDetailsAsync(Request request, Metadata headers = null,
             DateTime? deadline = null, CancellationToken cancellationToken = default);
         AsyncUnaryCall<FeedbacksListResponse> GetFeedbacksAsync(Request request, Metadata headers = null, 
             DateTime? deadline = null, CancellationToken cancellationToken = default);

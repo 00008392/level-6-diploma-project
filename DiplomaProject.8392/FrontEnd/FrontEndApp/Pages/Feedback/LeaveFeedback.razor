@@ -11,6 +11,7 @@ else
 {
     <p>@_feedback.ErrorMessage</p>
     <h3>Leave feedback</h3>
+    <p>@_successMessage</p>
     <EditForm Model="_feedback" OnValidSubmit="CreateFeedback">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -28,12 +29,10 @@ else
     public long UserId { get; set; }
     [Parameter]
     public long PostId { get; set; }
-    [Parameter]
-    public EventCallback<int> OnFeedbackCreated { get; set; }
     private long _feedbackOwnerId;
+    private string _successMessage;
     private CreateFeedback _feedback = new CreateFeedback();
     private string _feedbackUri;
-    private string _redirectUrl;
     protected override async Task OnInitializedAsync()
     {
         if(AuthState.isAuthenticated)
@@ -44,13 +43,11 @@ else
         if(UserId!=0)
         {
             _feedbackUri = "api/feedbacks/user";
-            _redirectUrl = $"users/{UserId}";
             _feedback.ItemId = UserId;
         }
         else if(PostId!=0)
         {
             _feedbackUri = "api/feedbacks/accommodation";
-            _redirectUrl = $"posts/{PostId}";
             _feedback.ItemId = PostId;
         }
     }
@@ -59,8 +56,8 @@ else
         var reply = await client.PostAsJsonAsync<CreateFeedback>(_feedbackUri, _feedback);
         if (reply.IsSuccessStatusCode)
         {
-            await OnFeedbackCreated.InvokeAsync();
-            navManager.NavigateTo(_redirectUrl);
+            _feedback = new CreateFeedback();
+            _successMessage = "Feedback is saved";
         }
         else
         {

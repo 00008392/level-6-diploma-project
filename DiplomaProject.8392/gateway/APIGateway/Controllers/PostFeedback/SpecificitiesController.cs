@@ -1,6 +1,6 @@
 ﻿using APIGateway.Controllers.PostFeedback.Core;
 using Microsoft.AspNetCore.Mvc;
-using Post.API;
+using PostFeedback.API;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +12,9 @@ namespace APIGateway.Controllers.PostFeedback
 {
     [Route("api/post/specificities")]
     [ApiController]
-    public class SpecificitiesController : AccommodationItemsGenericController<AccommodationSpecificities.AccommodationSpecificitiesClient>
+    public class SpecificitiesController : PostItemsGenericController<PostSpecificities.PostSpecificitiesClient>
     {
-        public SpecificitiesController(AccommodationSpecificities.AccommodationSpecificitiesClient client,
+        public SpecificitiesController(PostSpecificities.PostSpecificitiesClient client,
             PostCRUD.PostCRUDClient postClient) : base(client, postClient)
         {
         }

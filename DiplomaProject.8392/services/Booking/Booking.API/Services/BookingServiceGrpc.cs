@@ -49,7 +49,7 @@ namespace Booking.API.Services
         {
             var reply = await HandleBookingStatusAsync<AcceptRejectBookingRequestSpecification>
                  (request, Domain.Enums.Status.Accepted);
-            await PublishStatusChangeEvent<AccommodationBookedIntegrationEvent>(reply, request.Id);
+            await PublishStatusChangeEvent<BookingAcceptedIntegrationEvent>(reply, request.Id);
             return reply;
         }
         public override async Task<Response> RejectBookingRequest(Request request,
@@ -63,7 +63,7 @@ namespace Booking.API.Services
         {
             var reply = await HandleBookingStatusAsync<CancelBookingRequestSpecification>
                 (request, Domain.Enums.Status.Cancelled);
-            await PublishStatusChangeEvent<AccommodationBookingCancelledIntegrationEvent>(reply, request.Id);
+            await PublishStatusChangeEvent<BookingCancelledIntegrationEvent>(reply, request.Id);
             return reply;
         }
         public override async Task<Response> AddCoTraveler(CoTravelerRequest request,

@@ -1,6 +1,6 @@
 ﻿using APIGateway.Controllers.PostFeedback.Core;
 using Microsoft.AspNetCore.Mvc;
-using Post.API;
+using PostFeedback.API;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +12,9 @@ namespace APIGateway.Controllers.PostFeedback
 {
     [Route("api/post/rules")]
     [ApiController]
-    public class RulesController : AccommodationItemsGenericController<AccommodationRules.AccommodationRulesClient>
+    public class RulesController : PostItemsGenericController<PostRules.PostRulesClient>
     {
-        public RulesController(AccommodationRules.AccommodationRulesClient client,
+        public RulesController(PostRules.PostRulesClient client,
             PostCRUD.PostCRUDClient postClient) : base(client, postClient)
         {
         }

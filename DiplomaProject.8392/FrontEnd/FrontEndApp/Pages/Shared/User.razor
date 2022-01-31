@@ -1,0 +1,41 @@
+﻿@inherits Components.CustomBaseComponent
+@if (_user == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <h2 class="product__details_title">@_user.FirstName @_user.LastName</h2>
+    <p class="item__text"><span>Email:</span> <a class="text-danger" href=@($"mailto:{_user.Email}")> @_user.Email</a></p>
+    <p class="item__text"><span>Birthday:</span> @_user.DOB</p>
+    <p class="item__text"><span>Gender:</span> @_user.Gender</p>
+    <p class="item__text"><span>Joined on:</span> @_user.RegistrationDate</p>
+    <p hidden="@(_user.PhoneNumber==null)" class="item__text"><span>Contact number:</span> <a class="text-danger" href=@($"tel:{_user.PhoneNumber}")> @_user.PhoneNumber</a></p>
+    <p hidden="@(_user.Address==null)" class="item__text"><span>Address:</span> @_user.Address</p>
+    <p hidden="@(_user.Country==null)" class="item__text"><span>Lives in:</span> @(_user.Country?.Name)</p>
+    <p hidden="@(_user.Info==null)" class="item__text"><span>Additional information:</span> @_user.Info</p>
+}
+
+@code {
+    private UserInfo _user;
+    private List<FeedbackInfo> _feedbacks = new List<FeedbackInfo>();
+    [Parameter]
+    public long Id { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUser();
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        await GetUser();
+    }
+    private async Task GetUser()
+    {
+        var reply = await client.GetAsync($"api/users/{Id}");
+        if (reply.IsSuccessStatusCode)
+        {
+            var responseStr = await reply.Content.ReadAsStringAsync();
+            _user = JsonConvert.DeserializeObject<UserInfo>(responseStr);
+        }
+    }
+}

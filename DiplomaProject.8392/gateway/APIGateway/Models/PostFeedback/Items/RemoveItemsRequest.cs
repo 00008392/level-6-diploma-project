@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Post.API
+namespace PostFeedback.API
 {
-    public partial class RemoveItemsRequest : IAccommodationItemsRequest<long>
+    public partial class RemoveItemsRequest : IPostItemsRequest<long>
     {
         public ICollection<long> ItemsJson { get ; set ; }
 

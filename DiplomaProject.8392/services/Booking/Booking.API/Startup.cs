@@ -55,7 +55,7 @@ namespace Booking.API
             services.AddScoped<AbstractValidator<UserDTO>, UpdateUserValidator>();
             services.AddScoped<IBookingService, Domain.Logic.Services.BookingService>();
             services.AddScoped<IEventHandlerService<Domain.Entities.User>, UserEventHandlerService>();
-            services.AddScoped<IEventHandlerService<Domain.Entities.Accommodation>, AccommodationEventHandlerService>();
+            services.AddScoped<IEventHandlerService<Domain.Entities.Accommodation>, PostEventHandlerService>();
             services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();
             services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>(sp => {
 
@@ -75,9 +75,9 @@ namespace Booking.API
             services.AddTransient<UserCreatedIntegrationEventHandler>();
             services.AddTransient<UserDeletedIntegrationEventHandler>();
             services.AddTransient<UserUpdatedIntegrationEventHandler>();
-            services.AddTransient<AccommodationCreatedIntegrationEventHandler>();
-            services.AddTransient<AccommodationUpdatedIntegrationEventHandler>();
-            services.AddTransient<AccommodationDeletedIntegrationEventHandler>();
+            services.AddTransient<PostCreatedIntegrationEventHandler>();
+            services.AddTransient<PostUpdatedIntegrationEventHandler>();
+            services.AddTransient<PostDeletedIntegrationEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -103,9 +103,9 @@ namespace Booking.API
             eventBus.Subscribe<UserCreatedIntegrationEvent, UserCreatedIntegrationEventHandler>();
             eventBus.Subscribe<UserUpdatedIntegrationEvent, UserUpdatedIntegrationEventHandler>();
             eventBus.Subscribe<UserDeletedIntegrationEvent, UserDeletedIntegrationEventHandler>();
-            eventBus.Subscribe<AccommodationCreatedIntegrationEvent, AccommodationCreatedIntegrationEventHandler>();
-            eventBus.Subscribe<AccommodationUpdatedIntegrationEvent, AccommodationUpdatedIntegrationEventHandler>();
-            eventBus.Subscribe<AccommodationDeletedIntegrationEvent, AccommodationDeletedIntegrationEventHandler>();
+            eventBus.Subscribe<PostCreatedIntegrationEvent, PostCreatedIntegrationEventHandler>();
+            eventBus.Subscribe<PostUpdatedIntegrationEvent, PostUpdatedIntegrationEventHandler>();
+            eventBus.Subscribe<PostDeletedIntegrationEvent, PostDeletedIntegrationEventHandler>();
         }
     }
 }

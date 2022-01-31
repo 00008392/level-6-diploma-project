@@ -5,7 +5,7 @@ import "Protos/PostFeedback/post.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-option csharp_namespace = "Post.API";
+option csharp_namespace = "PostFeedback.API";
 
 package feedback;
 
@@ -13,7 +13,7 @@ service FeedbackForUser {
 
   rpc LeaveFeedback (CreateFeedbackRequest) returns (common.Response);
   rpc DeleteFeedback (common.Request) returns (common.Response);
-  rpc GetFeedbackDetails (common.Request) returns (FeedbackInfoResponse); 
+  rpc GetFeedbackDetails (common.Request) returns (FeedbackResponse); 
   rpc GetFeedbacks (common.Request) returns (FeedbacksListResponse); 
 
 }
@@ -21,7 +21,7 @@ service FeedbackForAccommodation {
 
   rpc LeaveFeedback (CreateFeedbackRequest) returns (common.Response);
   rpc DeleteFeedback (common.Request) returns (common.Response);
-  rpc GetFeedbackDetails (common.Request) returns (FeedbackInfoResponse); 
+  rpc GetFeedbackDetails (common.Request) returns (FeedbackResponse); 
   rpc GetFeedbacks (common.Request) returns (FeedbacksListResponse); 
 
 }
@@ -31,15 +31,15 @@ message CreateFeedbackRequest {
   google.protobuf.Int32Value rating = 3;
   google.protobuf.StringValue message = 4;
 }
-message FeedbackInfoResponse {
+message FeedbackResponse {
 	int64 id = 1;
 	post.User feedbackOwner = 2;
 	post.User user = 3;
-	post.PostInfoResponse accommodation = 4;
+	post.PostResponse accommodation = 4;
 	int32 rating = 5;
 	google.protobuf.StringValue message = 6;
 	bool noFeedback = 7;
 }
 message FeedbacksListResponse {
-	repeated FeedbackInfoResponse feedbacks = 1;
+	repeated FeedbackResponse feedbacks = 1;
 }

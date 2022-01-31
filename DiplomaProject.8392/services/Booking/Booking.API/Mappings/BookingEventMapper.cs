@@ -13,14 +13,14 @@ namespace Booking.API.Mappings
         public BookingEventMapper()
         {
             //accommodation
-            CreateMap<AccommodationCreatedIntegrationEvent, AccommodationDTO>()
+            CreateMap<PostCreatedIntegrationEvent, AccommodationDTO>()
                 .ConvertUsing(x => new AccommodationDTO(x.Title, x.OwnerId, x.Address,
                 x.ContactNumber, x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo,
                 x.SquareMeters, x.Price, x.IsWholeApartment, x.MovingInTime,
                 x.MovingOutTime));
 
-            CreateMap<AccommodationUpdatedIntegrationEvent, AccommodationDTO>()
-                .ConvertUsing(x => new AccommodationDTO(x.AccommodationId, x.Title, x.OwnerId, x.Address,
+            CreateMap<PostUpdatedIntegrationEvent, AccommodationDTO>()
+                .ConvertUsing(x => new AccommodationDTO(x.PostId, x.Title, x.OwnerId, x.Address,
                 x.ContactNumber, x.RoomsNo, x.BathroomsNo, x.BedsNo, x.MaxGuestsNo,
                 x.SquareMeters, x.Price, x.IsWholeApartment, x.MovingInTime,
                 x.MovingOutTime));
@@ -34,12 +34,12 @@ namespace Booking.API.Mappings
                 x.Email, x.PhoneNumber, x.Address));
 
             // booking
-            CreateMap<BookingRequestInfoDTO, AccommodationBookedIntegrationEvent>()
-                .ConvertUsing(x => new AccommodationBookedIntegrationEvent(x.Id, x.Accommodation.Id,
+            CreateMap<BookingInfoDTO, BookingAcceptedIntegrationEvent>()
+                .ConvertUsing(x => new BookingAcceptedIntegrationEvent(x.Id, x.Accommodation.Id,
                 x.Guest.Id, x.Accommodation.OwnerId, x.StartDate, x.EndDate));
 
-            CreateMap<BookingRequestInfoDTO, AccommodationBookingCancelledIntegrationEvent>()
-              .ConvertUsing(x => new AccommodationBookingCancelledIntegrationEvent(x.Id));
+            CreateMap<BookingInfoDTO, BookingCancelledIntegrationEvent>()
+              .ConvertUsing(x => new BookingCancelledIntegrationEvent(x.Id));
         }
     }
 }

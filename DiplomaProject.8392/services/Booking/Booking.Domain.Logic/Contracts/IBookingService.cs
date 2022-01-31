@@ -16,7 +16,7 @@ namespace Booking.Domain.Logic.Contracts
         Task DeleteBookingRequestAsync(long id);
         Task HandleRequestStatusAsync(BookingStatusDTO bookingStatus);
         Task HandleCoTravelerAsync(CoTravelerDTO coTraveler);
-        Task<ICollection<BookingRequestInfoDTO>> GetBookingsAsync(BookingRequestSpecification specification);
-        Task<BookingRequestInfoDTO> GetBookingDetailsAsync(long id);
+        Task<ICollection<BookingInfoDTO>> GetBookingsAsync(BookingRequestSpecification specification);
+        Task<BookingInfoDTO> GetBookingDetailsAsync(long id);
     }
 }
