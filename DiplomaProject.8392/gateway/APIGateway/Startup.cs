@@ -1,9 +1,13 @@
 using Account.API;
 using APIGateway.Authentication;
+using APIGateway.Authorization.Handlers.User;
+using APIGateway.Authorization.Requirements.User;
+using APIGateway.Serialization;
 using Booking.API;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -17,6 +21,8 @@ using Microsoft.OpenApi.Models;
 using PostFeedback.API;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,11 +42,41 @@ namespace APIGateway
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new InterfaceContractResolver();
+                });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "APIGateway", Version = "v1" });
+                OpenApiSecurityScheme securityDefinition = new()
+                {
+                    Name = "Bearer",
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer",
+                    Description = "Specify the authorization token.",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                };
+                c.AddSecurityDefinition("jwt_auth", securityDefinition);
+
+                // Make sure swagger UI requires a Bearer token specified
+                OpenApiSecurityScheme securityScheme = new()
+                {
+                    Reference = new OpenApiReference()
+                    {
+                        Id = "jwt_auth",
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+                OpenApiSecurityRequirement securityRequirements = new()
+                {
+                    {securityScheme, Array.Empty<string>() },
+                };
+                c.AddSecurityRequirement(securityRequirements);
             });
+            services.AddSwaggerGenNewtonsoftSupport();
             //authentication
             services.AddAuthentication(x =>
             {
@@ -60,17 +96,26 @@ namespace APIGateway
                     ValidateAudience = false
                 };
             });
+            //resource based authorization
+            services.AddAuthorization(options =>
+            {
+                //policies
+                options.AddPolicy("UserUpdatePolicy", policy =>
+                    policy.Requirements.Add(new UserUpdateRequirement()));
+            });
+            //requirement handlers
+            services.AddSingleton<IAuthorizationHandler, UserUpdateAuthorizationHandler>();
             // account
             var accountUrl = new Uri(Configuration["grpcConnections:account"]);
-            services.AddGrpcClient<UserManipulation.UserManipulationClient>((services, options) =>
+            services.AddGrpcClient<UserService.UserServiceClient>((services, options) =>
             {
                 options.Address = accountUrl;
             });
-            services.AddGrpcClient<Login.LoginClient>((services, options) =>
+            services.AddGrpcClient<LoginService.LoginServiceClient>((services, options) =>
             {
                 options.Address = accountUrl;
             });
-            services.AddGrpcClient<UserInfo.UserInfoClient>((services, options) =>
+            services.AddGrpcClient<UserRelatedInfoService.UserRelatedInfoServiceClient>((services, options) =>
             {
                 options.Address = accountUrl;
             });
@@ -112,7 +157,7 @@ namespace APIGateway
             });
 
             services.AddScoped<IAuthenticationManager, AuthenticationManager>(sp =>
-            new AuthenticationManager(sp.GetRequiredService<Login.LoginClient>(),
+            new AuthenticationManager(sp.GetRequiredService<LoginService.LoginServiceClient>(),
             JWTKeyEncoder.EncodeKey(Configuration["JWTSecretKey"])));
             services.AddCors(options =>
             {
@@ -124,7 +169,7 @@ namespace APIGateway
                         .AllowAnyMethod();
                     });
             });
-
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

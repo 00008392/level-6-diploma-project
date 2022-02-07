@@ -11,18 +11,17 @@ namespace Account.API.Mappings
 {
     public class AccountEventMapper: Profile
     {
+        //class for mapping integration events to dtos and vice versa
         public AccountEventMapper()
         {
             CreateMap<UserRegistrationDTO, UserCreatedIntegrationEvent>()
-                .ConvertUsing(x => new UserCreatedIntegrationEvent(x.Email,
-                x.FirstName, x.LastName, (DateTime)x.DateOfBirth, (int)x.Gender, DateTime.Now));
+                .ConvertUsing(x => new UserCreatedIntegrationEvent(x.Email, x.FirstName, x.LastName, (DateTime)x.DateOfBirth,
+                (int)x.Gender, DateTime.Now, x.CountryId));
             CreateMap<UserUpdateDTO, UserUpdatedIntegrationEvent>()
                 .ConvertUsing(x => new UserUpdatedIntegrationEvent(x.Id, x.FirstName,
                 x.LastName, x.Email, x.PhoneNumber, (DateTime)x.DateOfBirth,
                 (int)x.Gender, x.Address,
                 x.UserInfo, x.CountryId));
-            CreateMap<AccommodationBookedIntegrationEvent, AddBookingDTO>()
-                .ConvertUsing(x => new AddBookingDTO(x.BookingId, x.GuestId, x.OwnerId));
         }
     }
 }

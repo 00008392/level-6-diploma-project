@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.IntegrationEvents.Events
 {
-    //tested
+    //this event is published by account microservice through event bus when new user is registered
     public class UserCreatedIntegrationEvent: IntegrationEvent
     {
         public string Email { get; private set; }
@@ -17,6 +17,7 @@ namespace Account.Domain.Logic.IntegrationEvents.Events
         public DateTime DateOfBirth { get; private set; }
         public int Gender { get; private set; }
         public DateTime RegistrationDate { get; private set; }
+        public long CountryId { get; private set; }
 
         public UserCreatedIntegrationEvent(
             string email,
@@ -24,7 +25,8 @@ namespace Account.Domain.Logic.IntegrationEvents.Events
             string lastName,
             DateTime dateOfBirth,
             int gender,
-            DateTime registrationDate)
+            DateTime registrationDate,
+            long countryId)
         {
             Email = email;
             FirstName = firstName;
@@ -32,6 +34,7 @@ namespace Account.Domain.Logic.IntegrationEvents.Events
             DateOfBirth = dateOfBirth;
             Gender = gender;
             RegistrationDate = registrationDate;
+            CountryId = countryId;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EventBus.Contracts;
-using ExceptionHandling;
+using ExceptionHandlingAPI;
 using FluentValidation;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;

@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace Account.DAL.EF.Repository
 {
+    //this repository extends generic repository defined in BaseClasses project
+    //therefore, it has all repository methods + method for including entities related to User
     public class AccountRepository : GenericRepositoryWithIncludes<User>
     {
         public AccountRepository(AccountDbContext context)
@@ -20,10 +22,8 @@ namespace Account.DAL.EF.Repository
         }
         public override IQueryable<User> GetDbSetWithRelatedTables()
         {
-            return _dbSet.Include(x => x.BookingsAsGuest)
-                         .Include(x => x.BookingsAsOwner)
-                         .Include(x => x.Country)
-                         .AsSplitQuery();
+            //include country entity when querying user
+            return _dbSet.Include(x => x.Country);
         }
 
        

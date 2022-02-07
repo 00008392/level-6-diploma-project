@@ -29,7 +29,7 @@ else
                 </label>
                 <label class="item__text">
                     Birthday:
-                    <InputDate @bind-Value="@_newUser.DateOfBirth" class="input" type="date" />
+                    <InputDate min="1900-01-01" @bind-Value="@_newUser.DateOfBirth" class="input" type="date" />
                 </label>
                 <label class="item__text">
                     Gender:

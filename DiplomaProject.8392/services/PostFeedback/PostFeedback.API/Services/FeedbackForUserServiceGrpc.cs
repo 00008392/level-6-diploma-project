@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using ExceptionHandling;
+using ExceptionHandlingAPI;
 using FluentValidation;
 using Grpc.Core;
 using PostFeedback.API;

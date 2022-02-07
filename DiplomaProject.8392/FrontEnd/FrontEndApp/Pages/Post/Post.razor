@@ -52,7 +52,7 @@ else
     }
     @if (_post.Rules != null && _post.Rules.Count>0)
     {
-        <div class="products__content_item details">
+        <div class="products__content_item details  justify-content-start">
             <h2 class="product__details_title">Rules</h2>
             @foreach (var rule in _post.Rules)
             {
@@ -62,7 +62,7 @@ else
     }
     @if (_post.Facilities != null && _post.Facilities.Count>0)
     {
-        <div class="products__content_item details">
+        <div class="products__content_item details  justify-content-start">
             <h2 class="product__details_title">Facilities</h2>
             @foreach (var facility in _post.Facilities)
             {
@@ -72,7 +72,7 @@ else
     }
     @if (_post.Specificities != null && _post.Specificities.Count>0)
     {
-        <div class="products__content_item details">
+        <div class="products__content_item details  justify-content-start">
             <h2 class="product__details_title">Specificities</h2>
             @foreach (var specificity in _post.Specificities)
             {

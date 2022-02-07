@@ -139,10 +139,10 @@ h1 {
 }
 
 .products {
-    display: grid;
+/*    display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 30px;
-    align-items: start;
+    align-items: start;*/
 }
 
 .products__content {

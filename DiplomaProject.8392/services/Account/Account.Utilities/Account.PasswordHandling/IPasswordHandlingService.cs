@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Account.PasswordHandling
 {
+    //this service is used by account microservice to encrypt password and verify it when user logs in
     public interface IPasswordHandlingService
     {
-        string HashPassword(byte[] saltBytes, string password);
-        bool VerifyPassword(string password, string hash, string salt);
+        string HashPassword(string salt, string password);
+        bool VerifyPassword(string password, string originalHash, string originalSalt);
         string GetSalt();
     }
 }

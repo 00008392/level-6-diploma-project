@@ -16,22 +16,25 @@ using AutoMapper;
 
 namespace Account.Domain.Logic.Services
 {
-    public class LoginService : BasePasswordService, ILoginService
+    //user login service
+    public class LoginService : BaseService, ILoginService
     {
         public LoginService(IRepositoryWithIncludes<User> repository,
             IPasswordHandlingService pwdService,
-            IMapper mapper) : base(repository, pwdService, mapper)
+            IMapper mapper) : base(repository, mapper, pwdService)
         {
         }
+        //method for logging in
         public async Task<LoggedUserDTO> LoginUserAsync(UserLoginDTO login)
         {
-
-            var usersWithEmail = await _repository.GetFilteredAsync(user => user.Email == login.Email);
-            var user = usersWithEmail.FirstOrDefault();
+            //get user with indicated email
+            var user = (await _repository.GetFilteredAsync(user => user.Email == login.Email)).FirstOrDefault();
             if (user != null)
             {
+                //if user with email exists, verify password
                 if (_pwdService.VerifyPassword(login.Password, user.PasswordHash, user.PasswordSalt))
                 {
+                    //if password is correct, map user to dto and return
                     return _mapper.Map<LoggedUserDTO>(user);
                 }
                 

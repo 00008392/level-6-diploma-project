@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.IntegrationEvents.Events
 {
-    //tested
-   public class UserDeletedIntegrationEvent: IntegrationEvent
+    //this event is published by account microservice through event bus when user is deleted
+    public class UserDeletedIntegrationEvent: IntegrationEvent
     {
-        public long UserId { get; }
+        public long UserId { get; private set; }
         public UserDeletedIntegrationEvent(long userId)
         {
             UserId = userId;

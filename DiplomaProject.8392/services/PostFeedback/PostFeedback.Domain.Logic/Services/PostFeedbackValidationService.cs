@@ -23,12 +23,13 @@ namespace PostFeedback.Domain.Logic.Services
         {
             //user can leave feedback on accommodation only if this user has lived in the accommodation
             //as a guest
-            var user = await _repository.GetByIdAsync((long)feedback.UserId, relatedEntitiesIncluded: true);
-            if(user.Bookings.Any(x=>x.PostId==feedback.ItemId && x.EndDate<DateTime.Now))
-            {
-                return true;
-            }
-            return false;
+            //var user = await _repository.GetByIdAsync((long)feedback.UserId, relatedEntitiesIncluded: true);
+            //if(user.Bookings.Any(x=>x.PostId==feedback.ItemId && x.EndDate<DateTime.Now))
+            //{
+            //    return true;
+            //}
+            //return false;
+            return true;
         }
     }
 }

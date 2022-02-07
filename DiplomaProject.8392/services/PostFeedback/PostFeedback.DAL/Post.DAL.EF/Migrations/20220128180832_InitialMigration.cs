@@ -437,22 +437,7 @@ namespace PostFeedback.DAL.EF.Migrations
                 table: "Users",
                 column: "Email",
                 unique: true);
-            migrationBuilder.Sql(@"create trigger UserDeleted
-                                    on Users
-                                    instead of delete
-                                    as
-                                    begin
-                                    set nocount on
-                                    delete UserFeedbacks from UserFeedbacks
-                                    join deleted
-                                    on UserFeedbacks.ItemId = deleted.Id;
-                                    delete Accommodations from Accommodations
-                                    join deleted
-                                    on Accommodations.OwnerId = deleted.Id;
-                                    delete Users from Users
-                                    join deleted 
-                                    on Users.Id = deleted.Id;
-                                    end");
+            
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -498,7 +483,7 @@ namespace PostFeedback.DAL.EF.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-            migrationBuilder.Sql(@"drop trigger UserDeleted");
+          
         }
     }
 }

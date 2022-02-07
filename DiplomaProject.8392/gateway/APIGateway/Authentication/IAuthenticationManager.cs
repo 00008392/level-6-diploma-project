@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace APIGateway.Authentication
 {
+    //service for user authentication
    public interface IAuthenticationManager
     {
-        Task<LoginReply> AuthenticateAsync(LoginRequest request);
+        Task<LoginResponse> AuthenticateAsync(LoginRequest request);
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Contracts
 {
+    //user login service
     public interface ILoginService
     {
         Task<LoggedUserDTO> LoginUserAsync(UserLoginDTO login);

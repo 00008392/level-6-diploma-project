@@ -111,7 +111,7 @@ else
                     <InputText class="input" @bind-Value="@_post.AdditionalInfo" />
                 </label>
                 <input type="submit" class="button" value="Save changes" />
-                <input @onclick="DeletePost" class="button btn-danger" value="Delete this post" />
+                <input hidden="@(Id==null)" @onclick="DeletePost" class="button btn-danger" value="Delete this post" />
             </EditForm>
         </div>
     </div>
@@ -164,7 +164,7 @@ else
         var reply = await client.PostAsJsonAsync<Models.EditPost>("api/posts", _post);
         if (reply.IsSuccessStatusCode)
         {
-            navManager.NavigateTo("/posts");
+            navManager.NavigateTo("/account/posts");
         }
         else
         {
@@ -176,7 +176,7 @@ else
         var reply = await client.PutAsJsonAsync<Models.EditPost>($"api/posts/{Id}", _post);
         if (reply.IsSuccessStatusCode)
         {
-            navManager.NavigateTo("/posts");
+            navManager.NavigateTo("/account/posts");
         }
         else
         {

@@ -18,8 +18,9 @@ namespace PostFeedback.Domain.Logic.Specifications
         }
         public override Expression<Func<Post, bool>> ToExpression()
         {
-            return request => (request.Title.Contains(_searchText) || 
-            request.Description != null) && request.Description.Contains(_searchText);
+            //!!!
+            return request => (request.Title.Contains(_searchText) || (
+            request.Description != null) && request.Description.Contains(_searchText));
         }
     }
 }

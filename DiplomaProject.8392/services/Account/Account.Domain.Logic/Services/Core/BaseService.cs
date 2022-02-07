@@ -1,9 +1,8 @@
-﻿
-using Account.Domain.Entities;
-using Account.Domain.Logic.Exceptions;
+﻿using Account.Domain.Entities;
 using Account.PasswordHandling;
 using AutoMapper;
 using BaseClasses.Contracts;
+using BaseClasses.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,33 +12,22 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.Services.Core
 {
-    //need this base for all services
+    //class that contains common dependencies for all services except UserRelatedInfoService
     public abstract class BaseService
     {
         protected readonly IRepositoryWithIncludes<User> _repository;
         protected readonly IMapper _mapper;
-        protected BaseService(IRepositoryWithIncludes<User> repository, IMapper mapper)
+        protected readonly IPasswordHandlingService _pwdService;
+
+        protected BaseService(
+            IRepositoryWithIncludes<User> repository,
+            IMapper mapper,
+            IPasswordHandlingService pwdService)
         {
             _repository = repository;
             _mapper = mapper;
+            _pwdService = pwdService;
         }
-        protected async Task<User> FindUserAsync(long id)
-        {
-            var user = await _repository.GetByIdAsync(id, relatedEntitiesIncluded: true);
-            if (user == null)
-            {
-                throw new NotFoundException(id, nameof(User));
-            }
-            return user;
-        }
-        protected async Task CheckUserEmailAsync(Expression<Func<User, bool>> filter, string email)
-        {
-            var userWithEmail = (await _repository.GetFilteredAsync(filter)).
-                FirstOrDefault();
-            if (userWithEmail != null)
-            {
-                throw new UniqueConstraintViolationException("Email", email);
-            }
-        }
+      
     }
 }

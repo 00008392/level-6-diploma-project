@@ -8,25 +8,25 @@ using System.Threading.Tasks;
 
 namespace Account.Domain.Logic.IntegrationEvents.Events
 {
-    //tested
-   public class UserUpdatedIntegrationEvent: IntegrationEvent
+    //this event is published by account microservice through event bus when user information is updated
+    public class UserUpdatedIntegrationEvent: IntegrationEvent
     {
-        public long UserId { get; }
-        public string FirstName { get; }
-        public string LastName { get; }
-        public string Email { get; }
-        public string PhoneNumber { get; }
-        public DateTime DateOfBirth { get; }
-        public int Gender { get; }
-        public string Address { get; }
-        public string UserInfo { get; }
-        public long? CountryId { get; }
+        public long UserId { get; private set; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
+        public string Email { get; private set; }
+        public string PhoneNumber { get; private set; }
+        public DateTime DateOfBirth { get; private set; }
+        public int Gender { get; private set; }
+        public string Address { get; private set; }
+        public string UserInfo { get; private set; }
+        public long CountryId { get; private set; }
 
         public UserUpdatedIntegrationEvent(long userId, string firstName,
             string lastName, string email,
             string phoneNumber, DateTime dateOfBirth,
             int gender, string address,
-            string userInfo, long? countryId)
+            string userInfo, long countryId)
         {
             UserId = userId;
             FirstName = firstName;

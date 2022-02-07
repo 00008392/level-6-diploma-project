@@ -1,5 +1,4 @@
-﻿
-using Account.DAL.EF.Data;
+﻿using Account.DAL.EF.Data;
 using Account.Domain.Logic.DTOs;
 using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.Services;
@@ -26,11 +25,8 @@ using Account.Domain.Logic.IntegrationEvents.Events;
 using EventBus.SubscriptionManager;
 using RabbitMQ.Client;
 using Account.API.Mappings;
-using Account.Domain.Logic.DTOs.Core;
-using Account.Domain.Logic.Validation.Core;
 using Account.DAL.EF.Repository;
 using Account.Domain.Entities;
-using Account.Domain.Logic.IntegrationEvents.EventHandlers;
 
 namespace Account.API
 {
@@ -47,22 +43,30 @@ namespace Account.API
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //enabling grpc
             services.AddGrpc();
+            //configuring automapper
             services.AddAutoMapper(typeof(Startup));
+            //enabling fluent validation
             services.AddFluentValidation();
+            //configuring db context
             services.AddDbContext<AccountDbContext>(options =>
-options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
+            options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
             services.AddScoped<DbContext, AccountDbContext>();
+            //registering repositories
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
             services.AddScoped(typeof(IRepositoryWithIncludes<User>), typeof(AccountRepository));
+            //registering validators
             services.AddScoped<AbstractValidator<IPasswordBaseDTO>, PasswordValidator>();
             services.AddScoped<AbstractValidator<UserRegistrationDTO>, UserRegistrationValidator>();
-            services.AddScoped<AbstractValidator<UserBaseDTO>, UserBaseValidator>();
-            services.AddScoped<ILoginService, LoginService>();
-            services.AddScoped<IUserManipulationService, UserManipulationService>();
-            services.AddScoped<IInfoService, InfoService>();
+            services.AddScoped<AbstractValidator<UserBaseDTO>, UserValidator>();
+            //registering business logic services
+            services.AddScoped<ILoginService, Domain.Logic.Services.LoginService>();
+            services.AddScoped<IUserService, Domain.Logic.Services.UserService>();
+            services.AddScoped<IUserRelatedInfoService, Domain.Logic.Services.UserRelatedInfoService>();
+            //registering helpers
             services.AddScoped<IPasswordHandlingService, PasswordHandlingService>();
-            services.AddScoped<IEventHandlerService, EventHandlerService>();
+            //configuring and registering event bus
             services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();
             services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>(sp => {
           
@@ -78,8 +82,6 @@ options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
                     serviceFactory, connection);
             }
             );
-            services.AddTransient<AccommodationBookedIntegrationEventHandler>();
-            services.AddTransient<AccommodationBookingCancelledIntegrationEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,21 +96,15 @@ options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
 
             app.UseEndpoints((Action<Microsoft.AspNetCore.Routing.IEndpointRouteBuilder>)(endpoints =>
             {
+                //adding grpc services
                 GrpcEndpointRouteBuilderExtensions.MapGrpcService<LoginServiceGrpc>(endpoints);
-                GrpcEndpointRouteBuilderExtensions.MapGrpcService<UserInfoServiceGrpc>(endpoints);
-                GrpcEndpointRouteBuilderExtensions.MapGrpcService<UserManipulationServiceGrpc>(endpoints);
-                
-
+                GrpcEndpointRouteBuilderExtensions.MapGrpcService<UserRelatedInfoServiceGrpc>(endpoints);
+                GrpcEndpointRouteBuilderExtensions.MapGrpcService<UserServiceGrpc>(endpoints);
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
                 });
             }));
-
-            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.Subscribe<AccommodationBookedIntegrationEvent, AccommodationBookedIntegrationEventHandler>();
-            eventBus.Subscribe<AccommodationBookingCancelledIntegrationEvent,
-                AccommodationBookingCancelledIntegrationEventHandler>();
             
         }
     }

@@ -10,32 +10,29 @@ namespace Account.PasswordHandling
 {
     public class PasswordHandlingService : IPasswordHandlingService
     {
-
-        public bool VerifyPassword(string password, string hash, string salt)
+        //to verify password, encrypt password provided for verification and compare its hash
+        //with hash of original password
+        public bool VerifyPassword(string password, string originalHash, string originalSsalt)
         {
-
-            string hashedPassword = HashPassword(Convert.FromBase64String(salt), password);
-
-            return hashedPassword == hash;
+            string hashedPassword = HashPassword(originalSsalt, password);
+            return hashedPassword == originalHash;
         }
-
+        //generate random salt
         public string GetSalt()
         {
             var saltBytes = new byte[128 / 8];
-
             using (var provider = new RNGCryptoServiceProvider())
             {
                 provider.GetNonZeroBytes(saltBytes);
             }
-
             return Convert.ToBase64String(saltBytes);
-
         }
-        public string HashPassword(byte[] saltBytes, string password)
+        //hash password using provided salt with HMACSHA1 algorithm
+        public string HashPassword(string salt, string password)
         {
             return Convert.ToBase64String(KeyDerivation.Pbkdf2(
             password: password,
-            salt: saltBytes,
+            salt: Convert.FromBase64String(salt),
             prf: KeyDerivationPrf.HMACSHA1,
             iterationCount: 10000,
             numBytesRequested: 256 / 8));

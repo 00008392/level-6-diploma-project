@@ -26,7 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\..\..\integration\RabbitMQEventBus\RabbitMQEventBus.csproj" />
-    <ProjectReference Include="..\..\..\utilities\ExceptionHandling\ExceptionHandling.csproj" />
+    <ProjectReference Include="..\..\..\utilities\ExceptionHandling\ExceptionHandlingAPI.csproj" />
     <ProjectReference Include="..\Booking.DAL\Booking.DAL.EF\Booking.DAL.EF.csproj" />
     <ProjectReference Include="..\Booking.Domain.Logic\Booking.Domain.Logic.csproj" />
     <ProjectReference Include="..\Booking.Domain\Booking.Domain.csproj" />

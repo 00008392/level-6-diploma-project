@@ -11,28 +11,31 @@ namespace APIGateway.Authentication
 {
     public class AuthenticationManager : IAuthenticationManager
     {
-        private readonly Login.LoginClient _loginClient;
+        //injecting grpc login client of account microservice
+        private readonly LoginService.LoginServiceClient _loginClient;
         private readonly byte[] _key;
 
-        public AuthenticationManager(Login.LoginClient loginClient, byte[] key)
+        public AuthenticationManager(LoginService.LoginServiceClient loginClient, byte[] key)
         {
             _loginClient = loginClient;
             _key = key;
         }
-
-        public async Task<LoginReply> AuthenticateAsync(LoginRequest request)
+        //if authentication is successful, JWT token is returned
+        public async Task<LoginResponse> AuthenticateAsync(LoginRequest request)
         {
-            var reply = await _loginClient.GetLoggedUserAsync(request);
+            //try to log in
+            var reply = await _loginClient.LoginAsync(request);
             if (reply.NoUser)
             {
                 return null;
             }
+            //if successful, generate token
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                  
+                  //add email and id as claims
                     new Claim(ClaimTypes.Name, reply.Email),
                     new Claim(ClaimTypes.NameIdentifier, reply.Id.ToString())
                 }),

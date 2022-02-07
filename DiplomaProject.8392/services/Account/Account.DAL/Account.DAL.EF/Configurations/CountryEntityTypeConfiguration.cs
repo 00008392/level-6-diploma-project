@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Account.DAL.EF.Configurations
 {
+    //configuration for country
     public class CountryEntityTypeConfiguration : IEntityTypeConfiguration<Country>
     {
         public void Configure(EntityTypeBuilder<Country> builder)

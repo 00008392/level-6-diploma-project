@@ -6,17 +6,32 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Account.API";
 
 package account;
-
+//user login service
+service LoginService {
+  rpc Login (LoginRequest) returns (LoginResponse); 
+}
+//user CRUD service
+service UserService {
+  rpc RegisterUser (RegisterRequest) returns (common.Response); 
+  rpc UpdateUser (UpdateRequest) returns (common.Response); 
+  rpc DeleteUser (common.Request) returns (common.Response); 
+  rpc ChangePassword (ChangePasswordRequest) returns (common.Response); 
+  rpc GetUserInfo (common.Request) returns (UserInfoResponse); 
+  rpc GetAllUsers (common.Empty) returns (UserList);
+}
+ //service for retrieving entities related to user and necessary for user creation and modification
+service UserRelatedInfoService {
+  rpc GetAllCountries (common.Empty) returns (CountryList);
+}
 
 message LoginRequest {
   google.protobuf.StringValue email = 1;
   google.protobuf.StringValue password = 2;
 }
 
-message LoginReply {
+message LoginResponse {
   int64 id = 1;
   string email = 2;
-  google.protobuf.Int32Value Role = 3;
   bool noUser = 4;
 }
 
@@ -25,14 +40,14 @@ message ChangePasswordRequest {
 	google.protobuf.StringValue password = 2;
 }
 
-message RegistrationRequest {
-  google.protobuf.StringValue email = 1;
-  google.protobuf.StringValue password = 2;
-  google.protobuf.Int32Value role = 3;
-  google.protobuf.StringValue firstName = 4;
-  google.protobuf.StringValue lastName = 5;
-  google.protobuf.Timestamp DateOfBirthTimeStamp = 6;
-  google.protobuf.Int32Value gender = 7;
+message RegisterRequest {
+  google.protobuf.StringValue firstName = 1;
+  google.protobuf.StringValue lastName = 2;
+  google.protobuf.StringValue email = 3;
+  google.protobuf.StringValue password = 4;
+  google.protobuf.Timestamp DateOfBirthTimeStamp = 5;
+  google.protobuf.Int32Value gender = 6;
+  google.protobuf.Int64Value countryId = 7;
 }
 message UpdateRequest {
   int64 id = 1;
@@ -46,6 +61,7 @@ message UpdateRequest {
   google.protobuf.Int64Value countryId = 9;
   google.protobuf.StringValue userInfo = 10;
 }
+
 message Country {
     int64 id = 1;
    string name = 2;
@@ -55,15 +71,16 @@ message CountryList {
 }
 message UserInfoResponse {
     int64 id = 1;
-   string firstName = 2;
-   string lastName = 3;
+    string firstName = 2;
+    string lastName = 3;
     string email = 4;
     google.protobuf.StringValue phoneNumber = 5;
     google.protobuf.Timestamp DateOfBirthTimeStamp = 6;
     google.protobuf.Timestamp RegistrationDateTimeStamp = 7;
     int32 gender = 8;
     google.protobuf.StringValue address = 9;
-    Country country = 11;
+    int64 countryId = 10;
+    string countryName = 11;
     google.protobuf.StringValue userInfo = 12;
     google.protobuf.BytesValue profilePhoto = 13;
     google.protobuf.StringValue mimeType = 14;
@@ -73,20 +90,5 @@ message UserInfoResponse {
 message UserList {
     repeated UserInfoResponse items = 1;
 }
-service Login {
-  rpc GetLoggedUser (LoginRequest) returns (LoginReply); //tested
-}
-service UserManipulation {
-  rpc RegisterUser (RegistrationRequest) returns (common.Response); //tested
-  rpc UpdateUser (UpdateRequest) returns (common.Response); //tested
-  rpc DeleteUser (common.Request) returns (common.Response); //tested
-  rpc ChangePassword (ChangePasswordRequest) returns (common.Response); //tested
-}
 
-service UserInfo {
-
-  rpc GetUserInfo (common.Request) returns (UserInfoResponse); //tested
-  rpc GetAllUsers (common.Empty) returns (UserList);
-  rpc GetAllCountries (common.Empty) returns (CountryList);
-}
 

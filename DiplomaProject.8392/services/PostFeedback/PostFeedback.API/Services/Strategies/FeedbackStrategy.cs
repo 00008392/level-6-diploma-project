@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ExceptionHandling;
+using ExceptionHandlingAPI;
 using FluentValidation;
 using PostFeedback.Domain.Entities;
 using PostFeedback.Domain.Logic.Contracts;
