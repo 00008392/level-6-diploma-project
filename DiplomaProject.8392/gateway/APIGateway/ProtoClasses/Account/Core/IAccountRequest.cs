@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Account.API
 {
-    //interface implemented by register and update request classes
-    //in order to send data in TimeStamp format instead of DateTime 
+    //this interface is needed in order to hide TimeStamp format from user in json format,
+    //since DateTime is more convenient format
+    //and in order to convert Datetime format to TimeStamp in controller methods
     public interface IAccountRequest
     {
         DateTime? DateOfBirth { get; set; }

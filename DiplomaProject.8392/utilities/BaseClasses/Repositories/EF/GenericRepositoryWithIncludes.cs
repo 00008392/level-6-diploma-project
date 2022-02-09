@@ -31,12 +31,12 @@ namespace BaseClasses.Repositories.EF
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(T entity)
+        public async Task DeleteAsync(long id)
         {
+            var entity = _dbSet.Find(id);
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
         }
-
 
         public async Task<ICollection<T>> GetAllAsync(bool relatedEntitiesIncluded = false)
         {

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.Domain.Logic.Validation
 {
+    //validation for user creation and modification
     public class UserValidator: AbstractValidator<UserDTO>
     {
         public UserValidator()

@@ -31,26 +31,27 @@ namespace BaseClasses.Repositories.EF
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(T entity)
+        public async Task DeleteAsync(long id)
         {
+            var entity = _dbSet.Find(id);
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
         }
 
 
-        public async Task<ICollection<T>> GetAllAsync()
+        public async Task<ICollection<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
         {
-            return await _dbSet.ToListAsync();
+            return await GetDbSetWithRelatedTables(includes).AsNoTracking().ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(long id)
+        public async Task<T> GetByIdAsync(long id, params Expression<Func<T, object>>[] includes)
         {
-            return await _dbSet.AsNoTracking().SingleOrDefaultAsync(t => t.Id == id);
+            return await GetDbSetWithRelatedTables(includes).AsNoTracking().SingleOrDefaultAsync(t => t.Id == id);
         }
 
-        public async Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> filter)
+        public async Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes)
         {
-            var list = await _dbSet.Where(filter).ToListAsync();
+            var list = await GetDbSetWithRelatedTables(includes).Where(filter).AsNoTracking().ToListAsync();
             return list;
         }
 
@@ -67,6 +68,17 @@ namespace BaseClasses.Repositories.EF
         {
             _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+        }
+        private IQueryable<T> GetDbSetWithRelatedTables(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbSet.AsQueryable();
+            if (includes != null)
+            {
+                query = includes.Aggregate(query,
+                  (current, include) => current.Include(include));
+            }
+
+            return query;
         }
 
     }

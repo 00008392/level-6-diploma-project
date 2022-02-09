@@ -6,56 +6,84 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.Domain.Logic.DTOs
 {
-   public class PostManipulationDTO: PostBaseDTO
+    //dto for post creation and modification
+    public class PostManipulationDTO: PostBaseDTO
     {
         public long Id { get; private set; }
-        public long OwnerId { get; protected set; }
-        public long? CategoryId { get; protected set; }
-        public long? CityId { get; protected set; }
+        public long OwnerId { get; private set; }
         public DateTime? MovingInTime { get; private set; }
         public DateTime? MovingOutTime { get; private set; }
-        public PostManipulationDTO(string title, string description,
-    long ownerId, long? categoryId, long? cityId,
-    string address, string referencePoint,
-    string contactNumber, int? roomsNo,
-    int? bathroomsNo, int? bedsNo,
-    int maxGuestsNo, int? squareMeters,
-    decimal price, 
-     bool? isWholeApartment,
-    string additionalInfo, DateTime? movingInTime,
-    DateTime? movingOutTime) : base(title, description,
-        address,
-        referencePoint, contactNumber, roomsNo,
-        bathroomsNo, bedsNo, maxGuestsNo,
-        squareMeters, price, 
-         isWholeApartment, additionalInfo)
+        //this constructor is called when new post is created
+        public PostManipulationDTO(
+            string title,
+            string description,
+            long ownerId,
+            long? categoryId,
+            long cityId,
+            string address,
+            string contactNumber,
+            int? roomsNo,
+            int? bathroomsNo,
+            int bedsNo,
+            int maxGuestsNo,
+            int? squareMeters,
+            decimal price,
+            bool isWholeApartment,
+            DateTime? movingInTime,
+            DateTime? movingOutTime) : base(
+                title,
+                description,
+                address,
+                contactNumber,
+                categoryId,
+                cityId,
+                roomsNo,
+                bathroomsNo,
+                bedsNo,
+                maxGuestsNo,
+                squareMeters,
+                price,
+                isWholeApartment)
         {
             OwnerId = ownerId;
-            CategoryId = categoryId;
-            CityId = cityId;
             MovingInTime = movingInTime;
             MovingOutTime = movingOutTime;
         }
-        public PostManipulationDTO(long id, string title, string description,
-   long ownerId, long? categoryId, long? cityId,
-   string address, string referencePoint,
-   string contactNumber, int? roomsNo,
-   int? bathroomsNo, int? bedsNo,
-   int maxGuestsNo, int? squareMeters,
-   decimal price,
-   bool? isWholeApartment,
-   string additionalInfo, DateTime? movingInTime,
-   DateTime? movingOutTime) : base(title, description,
-        address,
-       referencePoint, contactNumber, roomsNo,
-       bathroomsNo, bedsNo, maxGuestsNo,
-       squareMeters, price, 
-        isWholeApartment, additionalInfo)
+        //this constructor is called when post is updated
+        public PostManipulationDTO(
+            long id,
+            string title,
+            string description,
+            long ownerId,
+            long? categoryId,
+            long cityId,
+            string address,
+            string contactNumber,
+            int? roomsNo,
+            int? bathroomsNo,
+            int bedsNo,
+            int maxGuestsNo,
+            int? squareMeters,
+            decimal price,
+            bool isWholeApartment,
+            DateTime? movingInTime,
+            DateTime? movingOutTime) : base(
+                title,
+                description,
+                address,
+                contactNumber,
+                categoryId,
+                cityId,
+                roomsNo,
+                bathroomsNo,
+                bedsNo,
+                maxGuestsNo,
+                squareMeters,
+                price,
+                isWholeApartment)
         {
             Id = id;
             OwnerId = ownerId;
-            CategoryId = categoryId;
-            CityId = cityId;
             MovingInTime = movingInTime;
             MovingOutTime = movingOutTime;
         }

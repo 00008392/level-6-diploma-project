@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Account.API
 {
-    //IAccountRequest - in order to send data in TimeStamp format instead of DateTime 
+    //IAccountRequest - in order to send data in TimeStamp format to the service instead of DateTime 
+    //and in order to hide TimeStamp format from user
     //IUpdateRequest - necessary for resource based authorization
-
     public partial class UpdateRequest: IAccountRequest, IUpdateRequest
     {
         public DateTime? DateOfBirth { get; set; }

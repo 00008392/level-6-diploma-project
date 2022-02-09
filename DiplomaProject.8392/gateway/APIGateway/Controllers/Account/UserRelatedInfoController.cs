@@ -14,8 +14,8 @@ namespace APIGateway.Controllers.Account
     [ApiController]
     public class UserRelatedInfoController : ControllerBase
     {
+        //injecting grpc client to access services of account microservice
         private readonly UserRelatedInfoService.UserRelatedInfoServiceClient _infoClient;
-
         public UserRelatedInfoController(UserRelatedInfoService.UserRelatedInfoServiceClient infoClient)
         {
             _infoClient = infoClient;

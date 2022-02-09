@@ -10,13 +10,13 @@ namespace PostFeedback.API
 {
     public static partial class PostSpecificities
     {
-        public abstract partial class PostSpecificitiesBase
-            : PostItemsBase<PostSpecificity, Specificity>
-        {
-            protected PostSpecificitiesBase(IPostItemsStrategy<PostSpecificity, Specificity> strategy)
-                : base(strategy)
-            {
-            }
-        }
+        //public abstract partial class PostSpecificitiesBase
+        //    : PostItemsBase<PostSpecificity, Specificity>
+        //{
+        //    protected PostSpecificitiesBase(IPostItemsStrategy<PostSpecificity, Specificity> strategy)
+        //        : base(strategy)
+        //    {
+        //    }
+        //}
     }
 }

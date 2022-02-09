@@ -20,7 +20,8 @@ namespace Account.Domain.Entities
         }
         public Country(
             long id,
-            string name):base(id)
+            string name)
+            :base(id)
         {
             Name = name;
         }

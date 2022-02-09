@@ -20,7 +20,9 @@ namespace APIGateway.Controllers.Account
     [ApiController]
     public class UserController : ControllerBase
     {
+        //injecting grpc client to access services of account microservice
         private readonly UserService.UserServiceClient _userClient;
+        //injecting authorization service for resource based authorization
         private readonly IAuthorizationService _authorizationService;
         public UserController(
             UserService.UserServiceClient userClient,
@@ -126,8 +128,13 @@ namespace APIGateway.Controllers.Account
         {
             //get user id from claim 
             var id = AuthorizationHelper.GetLoggedUserId(User);
+            //check if user is logged in
+            if(id==null)
+            {
+                return Unauthorized();
+            }
             //try to delete user with id from claim
-            var reply = await _userClient.DeleteUserAsync(new Request { Id = id });
+            var reply = await _userClient.DeleteUserAsync(new Request { Id = (long)id });
             //in case of errors, return not found
             if (!reply.IsSuccess)
             {

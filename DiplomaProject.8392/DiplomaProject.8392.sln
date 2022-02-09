@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostFeedback.DAL", "PostFee
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{6E2A6B4A-96C6-416E-ACBE-1F5BFC1A3818}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExceptionHandlingAPI", "utilities\ExceptionHandling\ExceptionHandlingAPI.csproj", "{5A3BE32E-C002-4658-837C-7944A6DD21C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.ExceptionHandling", "utilities\ExceptionHandling\API.ExceptionHandling.csproj", "{5A3BE32E-C002-4658-837C-7944A6DD21C1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BaseClasses", "utilities\BaseClasses\BaseClasses.csproj", "{1A4EE7CF-97D4-4DAD-A766-E97F89A1C968}"
 EndProject

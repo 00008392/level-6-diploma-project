@@ -29,7 +29,7 @@ namespace Account.API.Services
           ServerCallContext context)
         {
             //map list of countries to grpc response
-            return await GrpcServiceHelpers.GetItems<CountryList, CountryDTO, Country>
+            return await GrpcServiceHelper.GetItems<CountryList, CountryDTO, Country>
                (_service.GetAllCountriesAsync, _mapper);
         }
 

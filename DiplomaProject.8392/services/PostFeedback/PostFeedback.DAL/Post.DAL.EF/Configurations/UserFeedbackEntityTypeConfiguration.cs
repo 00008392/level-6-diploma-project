@@ -16,8 +16,8 @@ namespace PostFeedback.DAL.EF.Configurations
             builder.HasKey(x => x.Id);
             builder.HasOne(x => x.Item).WithMany(x => x.Feedbacks)
                  .HasForeignKey(x => x.ItemId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(x => x.FeedbackOwner).WithMany(x => x.FeedbacksForUsers)
-                .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.SetNull);
+            //builder.HasOne(x => x.FeedbackOwner).WithMany(x => x.FeedbacksForUsers)
+            //    .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

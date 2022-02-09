@@ -9,26 +9,26 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.API.Services
 {
-    public class SpecificitiesServiceGrpc : PostSpecificities.PostSpecificitiesBase
-    {
-        public SpecificitiesServiceGrpc(IPostItemsStrategy<PostSpecificity, Specificity> strategy)
-            : base(strategy)
-        {
+    //public class SpecificitiesServiceGrpc : PostSpecificities.PostSpecificitiesBase
+    //{
+    //    public SpecificitiesServiceGrpc(IPostItemsStrategy<PostSpecificity, Specificity> strategy)
+    //        : base(strategy)
+    //    {
 
-        }
-        public override async Task<ItemsList> GetItems(Empty request, ServerCallContext context)
-        {
-            return await GetItems();
-        }
-        public override async Task<Response> AddItems(AddItemsRequest request, ServerCallContext context)
-        {
+    //    }
+    //    public override async Task<ItemsList> GetItems(Empty request, ServerCallContext context)
+    //    {
+    //        return await GetItems();
+    //    }
+    //    public override async Task<Response> AddItems(AddItemsRequest request, ServerCallContext context)
+    //    {
 
-            return await _strategy.AddItemsAsync(request);
-        }
-        public override async Task<Response> RemoveItems(RemoveItemsRequest request, ServerCallContext context)
-        {
+    //        return await _strategy.AddItemsAsync(request);
+    //    }
+    //    public override async Task<Response> RemoveItems(RemoveItemsRequest request, ServerCallContext context)
+    //    {
 
-            return await _strategy.RemoveItemsAsync(request);
-        }
-    }
+    //        return await _strategy.RemoveItemsAsync(request);
+    //    }
+    //}
 }

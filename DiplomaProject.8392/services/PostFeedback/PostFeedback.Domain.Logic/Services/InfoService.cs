@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.Domain.Logic.Services
 {
-    public class InfoService : IInfoService
+    public class InfoService : IPostrelatedInfoService
     {
         private readonly IMapper _mapper;
         private readonly IRepository<City> _cityRepository;

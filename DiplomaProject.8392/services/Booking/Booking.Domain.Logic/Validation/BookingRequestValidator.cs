@@ -34,7 +34,7 @@ namespace Booking.Domain.Logic.Validation
             }
             var startDate = (DateTime)request.StartDate;
             var endDate = (DateTime)request.EndDate;
-            return startDate < endDate && (endDate - startDate).Days > 3;
+            return startDate < endDate && (endDate - startDate).Days > 3 && (endDate-startDate).Days<31;
         }
     }
 }

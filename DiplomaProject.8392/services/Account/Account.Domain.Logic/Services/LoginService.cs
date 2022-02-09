@@ -19,9 +19,14 @@ namespace Account.Domain.Logic.Services
     //user login service
     public class LoginService : BaseService, ILoginService
     {
-        public LoginService(IRepositoryWithIncludes<User> repository,
+        public LoginService(
+            IRepository<User> repository,
             IPasswordHandlingService pwdService,
-            IMapper mapper) : base(repository, mapper, pwdService)
+            IMapper mapper) 
+            : base(
+                  repository,
+                  mapper,
+                  pwdService)
         {
         }
         //method for logging in

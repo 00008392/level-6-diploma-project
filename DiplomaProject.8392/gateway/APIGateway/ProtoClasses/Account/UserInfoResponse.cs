@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Account.API
 {
     //display dates in DateTime format instead of TimeStamp
-    //implement interface in order to enable JsonIgnore attributes 
+    //implement interface in order to hide TimeStamp format from user
     public partial class UserInfoResponse: IUserInfoResponse
     {
         public DateTime RegistrationDate { get; set; }

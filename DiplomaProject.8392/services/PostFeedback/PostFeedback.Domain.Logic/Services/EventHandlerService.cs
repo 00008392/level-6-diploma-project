@@ -75,7 +75,7 @@ namespace PostFeedback.Domain.Logic.Services
             {
                 throw new NotFoundException(id, nameof(User));
             }
-            await _userRepository.DeleteAsync(user);
+            await _userRepository.DeleteAsync(id);
         }
 
         public async Task RemoveBookingAsync(long id)
@@ -85,7 +85,7 @@ namespace PostFeedback.Domain.Logic.Services
             {
                 throw new NotFoundException(id, "Booking");
             }
-            await _bookingRepository.DeleteAsync(booking);
+            await _bookingRepository.DeleteAsync(id);
         }
 
         public async Task UpdateUserAsync(UserDTO userDTO)

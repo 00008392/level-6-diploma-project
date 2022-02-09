@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ExceptionHandlingAPI;
+using API.ExceptionHandling;
 using FluentValidation;
 using Grpc.Core;
 using PostFeedback.API.Services.Strategies;

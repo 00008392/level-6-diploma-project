@@ -2,7 +2,7 @@
 using Booking.Domain.Logic.Contracts;
 using Booking.Domain.Logic.DTOs;
 using EventBus.Contracts;
-using ExceptionHandlingAPI;
+using API.ExceptionHandling;
 using FluentValidation;
 using Grpc.Core;
 using Protos.Common;

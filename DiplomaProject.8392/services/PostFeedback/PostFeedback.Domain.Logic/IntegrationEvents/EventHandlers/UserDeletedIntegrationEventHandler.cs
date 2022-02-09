@@ -11,16 +11,21 @@ using AutoMapper;
 
 namespace PostFeedback.Domain.Logic.IntegrationEvents.EventHandlers
 {
-   public class UserDeletedIntegrationEventHandler: BaseIntegrationEventHandler, IIntegrationEventHandler<UserDeletedIntegrationEvent>
+    //event handler that reacts when user is deleted
+    public class UserDeletedIntegrationEventHandler: BaseIntegrationEventHandler, IIntegrationEventHandler<UserDeletedIntegrationEvent>
     {
-        //tested
-        public UserDeletedIntegrationEventHandler(IEventHandlerService service, IMapper mapper)
-            :base(service, mapper)
+        public UserDeletedIntegrationEventHandler(
+            IEventHandlerService service,
+            IMapper mapper)
+            :base(
+                 service,
+                 mapper)
         {
 
         }
         public async Task Handle(UserDeletedIntegrationEvent @event)
         {
+            //call service to delete user from this microservice
             await _service.DeleteUserAsync(@event.UserId);
         }
     }

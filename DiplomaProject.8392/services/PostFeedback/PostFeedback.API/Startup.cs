@@ -48,22 +48,22 @@ namespace PostFeedback.API
 options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             services.AddScoped<DbContext, PostDbContext>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
-            services.AddScoped<IRepositoryWithIncludes<Post>, PostRepository>();
-            services.AddScoped<IRepositoryWithIncludes<Domain.Entities.User>, UserRepository>();
-            services.AddScoped<IRepositoryWithIncludes<Feedback<Domain.Entities.User>>, FeedbackRepository<Domain.Entities.User>>();
-            services.AddScoped<IRepositoryWithIncludes<Feedback<Post>>, FeedbackRepository<Post>>();
+            //services.AddScoped<IRepositoryWithIncludes<Post>, PostRepository>();
+            //services.AddScoped<IRepositoryWithIncludes<Domain.Entities.User>, UserRepository>();
+            //services.AddScoped<IRepositoryWithIncludes<Feedback<Domain.Entities.User>>, FeedbackRepository<Domain.Entities.User>>();
+            //services.AddScoped<IRepositoryWithIncludes<Feedback<Post>>, FeedbackRepository<Post>>();
             services.AddScoped<AbstractValidator<PostManipulationDTO>, PostValidator>();
             services.AddScoped<AbstractValidator<UserDTO>, UserValidator>();
             services.AddScoped<AbstractValidator<AddBookingDTO>, BookingValidator>();
             services.AddScoped<AbstractValidator<FeedbackDTO>, FeedbackValidator>();
-            services.AddScoped<IPostCRUDService, PostCRUDService>();
-            services.AddScoped<IInfoService, InfoService>();
-            services.AddScoped(typeof(IFeedbackService<,>), typeof(FeedbackService<,>));
-            services.AddScoped<IFeedbackValidationService<Domain.Entities.User>, UserFeedbackValidationService>();
+            //services.AddScoped<IPostService, PostCRUDService>();
+            services.AddScoped<IPostrelatedInfoService, InfoService>();
+            //services.AddScoped(typeof(IFeedbackService<,>), typeof(FeedbackService<,>));
+            //services.AddScoped<IFeedbackValidationService<Domain.Entities.User>, UserFeedbackValidationService>();
             services.AddScoped<IFeedbackValidationService<Post>, PostFeedbackValidationService>();
             services.AddScoped<IEventHandlerService, EventHandlerService>();
             services.AddScoped(typeof(IPostItemsStrategy<,>), typeof(PostItemsStrategy<,>));
-            services.AddScoped(typeof(IFeedbackStrategy<,>), typeof(FeedbackStrategy<,>));
+            //services.AddScoped(typeof(IFeedbackStrategy<,>), typeof(FeedbackStrategy<,>));
             services.AddScoped(typeof(IPostItemsService<,>), typeof(PostItemsService<,>));
             services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();
             services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>(sp => {
@@ -99,11 +99,11 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<PostCRUDServiceGrpc>();
-                endpoints.MapGrpcService<PostInfoServiceGrpc>();
+                //endpoints.MapGrpcService<PostCRUDServiceGrpc>();
+                //endpoints.MapGrpcService<PostInfoServiceGrpc>();
                 endpoints.MapGrpcService<RulesServiceGrpc>();
                 endpoints.MapGrpcService<FacilitiesServiceGrpc>();
-                endpoints.MapGrpcService<SpecificitiesServiceGrpc>();
+                //endpoints.MapGrpcService<SpecificitiesServiceGrpc>();
                 endpoints.MapGrpcService<FeedbackForUserServiceGrpc>();
                 endpoints.MapGrpcService<FeedbackForAccommodationServiceGrpc>();
 

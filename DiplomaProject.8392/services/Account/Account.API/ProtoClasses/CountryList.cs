@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Account.API
 {
+    //need to implement interface for method that maps collection of dtos to grpc generated objects and adds it to grpc reponse
     public partial class CountryList: IItemList<Country>
     {
     }

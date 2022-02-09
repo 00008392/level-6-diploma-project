@@ -7,7 +7,8 @@ using EventBus.Events;
 
 namespace PostFeedback.Domain.Logic.IntegrationEvents.Events
 {
-    //tested
+    //this event is published by account microservice
+    //when new user is registered and consumed by post microservice
     public class UserCreatedIntegrationEvent: IntegrationEvent
     {
         public string Email { get; private set; }

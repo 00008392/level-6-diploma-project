@@ -55,7 +55,7 @@ namespace Booking.Domain.Logic.Services
             {
                 throw new NotFoundException(id, nameof(User));
             }
-            await _repository.DeleteAsync(user);
+            await _repository.DeleteAsync(id);
 
         }
 

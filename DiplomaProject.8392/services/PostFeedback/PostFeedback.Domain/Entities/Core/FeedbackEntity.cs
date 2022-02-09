@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.Domain.Entities
 {
+    //need this base class for entities on which feedback can be left (user and accommodation)
     public abstract class FeedbackEntity : BaseEntity
     {
         protected FeedbackEntity()
         {
         }
 
-        protected FeedbackEntity(long id) : base(id)
+        protected FeedbackEntity(long id)
+            : base(id)
         {
         }
     }

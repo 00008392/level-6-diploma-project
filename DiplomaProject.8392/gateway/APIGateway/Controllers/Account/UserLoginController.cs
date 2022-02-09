@@ -16,7 +16,6 @@ namespace APIGateway.Controllers.Account
     public class UserLoginController : ControllerBase
     {
         private readonly IAuthenticationManager _authManager;
-
         public UserLoginController(IAuthenticationManager authManager)
         {
             _authManager = authManager;

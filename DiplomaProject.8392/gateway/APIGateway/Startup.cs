@@ -41,14 +41,17 @@ namespace APIGateway
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            //enabling Newtonsoft Json
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
+                    //set custom resolver that allows to ignore properties with JsonIgnore attribute defined in interfaces
                     options.SerializerSettings.ContractResolver = new InterfaceContractResolver();
                 });
+            //enabling Swagger
             services.AddSwaggerGen(c =>
             {
+                //enabling authorization in swagger with JWT token
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "APIGateway", Version = "v1" });
                 OpenApiSecurityScheme securityDefinition = new()
                 {
@@ -76,8 +79,9 @@ namespace APIGateway
                 };
                 c.AddSecurityRequirement(securityRequirements);
             });
+            //Add Newtonsoft Json support for Swagger
             services.AddSwaggerGenNewtonsoftSupport();
-            //authentication
+            //enable authentication with JWT token
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -96,25 +100,32 @@ namespace APIGateway
                     ValidateAudience = false
                 };
             });
-            //resource based authorization
+            services.AddScoped<IAuthenticationManager, AuthenticationManager>(sp =>
+           new AuthenticationManager(sp.GetRequiredService<LoginService.LoginServiceClient>(),
+           JWTKeyEncoder.EncodeKey(Configuration["JWTSecretKey"])));
+            //enable resource based authorization
             services.AddAuthorization(options =>
             {
                 //policies
                 options.AddPolicy("UserUpdatePolicy", policy =>
                     policy.Requirements.Add(new UserUpdateRequirement()));
             });
-            //requirement handlers
+            //requirement handlers for resource based authorization
             services.AddSingleton<IAuthorizationHandler, UserUpdateAuthorizationHandler>();
+            //registering grpc services
             // account
             var accountUrl = new Uri(Configuration["grpcConnections:account"]);
+            //user CRUD servicee
             services.AddGrpcClient<UserService.UserServiceClient>((services, options) =>
             {
                 options.Address = accountUrl;
             });
+            //user login service
             services.AddGrpcClient<LoginService.LoginServiceClient>((services, options) =>
             {
                 options.Address = accountUrl;
             });
+            //user related info service
             services.AddGrpcClient<UserRelatedInfoService.UserRelatedInfoServiceClient>((services, options) =>
             {
                 options.Address = accountUrl;
@@ -156,9 +167,7 @@ namespace APIGateway
                 options.Address = bookingUrl;
             });
 
-            services.AddScoped<IAuthenticationManager, AuthenticationManager>(sp =>
-            new AuthenticationManager(sp.GetRequiredService<LoginService.LoginServiceClient>(),
-            JWTKeyEncoder.EncodeKey(Configuration["JWTSecretKey"])));
+            //enable cors for Blazor app
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
@@ -181,19 +190,11 @@ namespace APIGateway
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIGateway v1"));
             }
-
-
             app.UseHttpsRedirection();
-
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
-
-
-
-            app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

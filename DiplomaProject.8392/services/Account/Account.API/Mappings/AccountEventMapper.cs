@@ -1,4 +1,5 @@
-﻿using Account.Domain.Logic.DTOs;
+﻿using Account.Domain.Entities;
+using Account.Domain.Logic.DTOs;
 using Account.Domain.Logic.IntegrationEvents.Events;
 using AutoMapper;
 using System;
@@ -11,7 +12,7 @@ namespace Account.API.Mappings
 {
     public class AccountEventMapper: Profile
     {
-        //class for mapping integration events to dtos and vice versa
+        //class for mapping dtos to integration events and events to domain entities
         public AccountEventMapper()
         {
             CreateMap<UserRegistrationDTO, UserCreatedIntegrationEvent>()
@@ -22,6 +23,8 @@ namespace Account.API.Mappings
                 x.LastName, x.Email, x.PhoneNumber, (DateTime)x.DateOfBirth,
                 (int)x.Gender, x.Address,
                 x.UserInfo, x.CountryId));
+            CreateMap<BookingAcceptedIntegrationEvent, Booking>()
+                .ConvertUsing(x => new Booking(x.BookingId, x.GuestId, x.OwnerId, x.StartDate, x.EndDate));
         }
     }
 }

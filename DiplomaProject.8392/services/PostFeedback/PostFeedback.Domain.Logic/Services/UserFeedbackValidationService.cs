@@ -10,29 +10,29 @@ using BaseClasses.Contracts;
 
 namespace PostFeedback.Domain.Logic.Services
 {
-    public class UserFeedbackValidationService : IFeedbackValidationService<User>
-    {
-        private readonly IRepositoryWithIncludes<User> _userRepository;
+    //public class UserFeedbackValidationService : IFeedbackValidationService<User>
+    //{
+    //    private readonly IRepositoryWithIncludes<User> _userRepository;
 
-        public UserFeedbackValidationService(
-            IRepositoryWithIncludes<User> userRepository)
-        {
-            _userRepository = userRepository;
-        }
+    //    public UserFeedbackValidationService(
+    //        IRepositoryWithIncludes<User> userRepository)
+    //    {
+    //        _userRepository = userRepository;
+    //    }
 
-        public async Task<bool> CanLeaveFeedback(FeedbackDTO feedback)
-        {
-            //user can leave feedback on other user only as on accommodation owner or as on guest
+    //    public async Task<bool> CanLeaveFeedback(FeedbackDTO feedback)
+    //    {
+    //        //user can leave feedback on other user only as on accommodation owner or as on guest
 
-            var user = await _userRepository.GetByIdAsync((long)feedback.UserId,
-                relatedEntitiesIncluded: true);
-            if (user.Bookings.Any(x => x.Post.OwnerId == feedback.ItemId && x.EndDate < DateTime.Now)
-             || user.Posts.Any(x=>x.Bookings.Any(y=>y.UserId==feedback.ItemId && y.EndDate < DateTime.Now)))
-            {
+    //        var user = await _userRepository.GetByIdAsync((long)feedback.UserId,
+    //            relatedEntitiesIncluded: true);
+    //        if (user.Bookings.Any(x => x.Post.OwnerId == feedback.ItemId && x.EndDate < DateTime.Now)
+    //         || user.Posts.Any(x=>x.Bookings.Any(y=>y.UserId==feedback.ItemId && y.EndDate < DateTime.Now)))
+    //        {
 
-                return true;
-            }
-            return false;
-        }
-    }
+    //            return true;
+    //        }
+    //        return false;
+    //    }
+    //}
 }

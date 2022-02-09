@@ -9,9 +9,13 @@ namespace APIGateway.Authorization.Helpers
     public static class AuthorizationHelper
     {
         //gets the id of logged in user from provided token
-        public static int GetLoggedUserId(ClaimsPrincipal user)
+        public static long? GetLoggedUserId(ClaimsPrincipal user)
         {
-            return int.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);
+           if(user.FindFirst(ClaimTypes.NameIdentifier)==null)
+            {
+                return null;
+            }
+            return long.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }

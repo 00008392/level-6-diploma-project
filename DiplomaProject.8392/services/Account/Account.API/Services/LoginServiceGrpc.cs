@@ -23,7 +23,9 @@ namespace Account.API.Services
             _mapper = mapper;
         }
 
-        public override async Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
+        public override async Task<LoginResponse> Login(
+            LoginRequest request,
+            ServerCallContext context)
         {
             //map request to dto
             var loginDTO = _mapper.Map<UserLoginDTO>(request);
@@ -33,9 +35,7 @@ namespace Account.API.Services
             {
                 //if successful, map dto to response and return
                 var loginReply = _mapper.Map<LoginResponse>(loggedUser);
-
                 return loginReply;
-
             }
             //if not successful, notify that no user is returned
             return new LoginResponse

@@ -72,7 +72,7 @@ namespace Booking.Domain.Logic.Services
             {
                 throw new DeleteBookingRequestException();
             }
-            await _bookingRepository.DeleteAsync(request);
+            await _bookingRepository.DeleteAsync(id);
         }
         public async Task HandleCoTravelerAsync(CoTravelerDTO coTravelerDTO)
         {

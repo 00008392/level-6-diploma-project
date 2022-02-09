@@ -19,6 +19,32 @@ namespace Account.DAL.EF.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Account.Domain.Entities.Booking", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("GuestId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GuestId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Bookings");
+                });
+
             modelBuilder.Entity("Account.Domain.Entities.Country", b =>
                 {
                     b.Property<long>("Id")
@@ -99,6 +125,25 @@ namespace Account.DAL.EF.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Account.Domain.Entities.Booking", b =>
+                {
+                    b.HasOne("Account.Domain.Entities.User", "Guest")
+                        .WithMany("BookingsAsGuest")
+                        .HasForeignKey("GuestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Account.Domain.Entities.User", "Owner")
+                        .WithMany("BookingsAsOwner")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Guest");
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("Account.Domain.Entities.User", b =>
                 {
                     b.HasOne("Account.Domain.Entities.Country", "Country")
@@ -113,6 +158,13 @@ namespace Account.DAL.EF.Migrations
             modelBuilder.Entity("Account.Domain.Entities.Country", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Account.Domain.Entities.User", b =>
+                {
+                    b.Navigation("BookingsAsGuest");
+
+                    b.Navigation("BookingsAsOwner");
                 });
 #pragma warning restore 612, 618
         }

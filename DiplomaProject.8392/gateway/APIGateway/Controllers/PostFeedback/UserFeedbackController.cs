@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace APIGateway.Controllers.PostFeedback
 {
-    [Route("api/feedbacks/user")]
-    [ApiController]
-    public class UserFeedbackController : FeedbackGenericController<FeedbackForUser.FeedbackForUserClient>
-    {
-        public UserFeedbackController(FeedbackForUser.FeedbackForUserClient client):base(client)
-        {
+    //[Route("api/feedbacks/user")]
+    //[ApiController]
+    //public class UserFeedbackController : FeedbackGenericController<FeedbackForUser.FeedbackForUserClient>
+    //{
+    //    public UserFeedbackController(FeedbackForUser.FeedbackForUserClient client):base(client)
+    //    {
 
-        }
+    //    }
         
-    }
+    //}
 }

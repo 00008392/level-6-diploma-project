@@ -58,7 +58,7 @@ namespace Booking.Domain.Logic.Services
             {
                 throw new NotFoundException(id, nameof(Accommodation));
             }
-            await _repository.DeleteAsync(accommodation);
+            await _repository.DeleteAsync(id);
         }
 
         public async Task UpdateEntityAsync(IEntityDTO entityDTO)

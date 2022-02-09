@@ -2,6 +2,7 @@
 using Account.Domain.Enums;
 using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.DTOs;
+using Account.Domain.Logic.Exceptions;
 using Account.Domain.Logic.IntegrationEvents.Events;
 using Account.Domain.Logic.Services.Core;
 using Account.PasswordHandling;
@@ -28,7 +29,7 @@ namespace Account.Domain.Logic.Services
         private readonly AbstractValidator<IPasswordBaseDTO> _passwordValidator;
         private readonly IEventBus _eventBus;
         public UserService(
-            IRepositoryWithIncludes<User> repository,
+            IRepository<User> repository,
             AbstractValidator<UserRegistrationDTO> registrationValidator,
             IPasswordHandlingService pwdService,
             IRepository<Country> countryRepository,
@@ -74,9 +75,17 @@ namespace Account.Domain.Logic.Services
         public async Task DeleteUserAsync(long id)
         {
             //find user in the database and throw exception if does not exist
-            var user = await FindUserAsync(id);
-            //if exists, delete user
-            await _repository.DeleteAsync(user);
+            //include user bookings to check whether this user can be deleted
+            var user = await FindUserAsync(id, x=>x.BookingsAsGuest, x=>x.BookingsAsOwner);
+            //check if user has active bookings as owner or guest (active - booking which has not expired yet)
+            //if user has active bookings, account cannot be deleted
+            if ((user.BookingsAsGuest?.Any(x => x.EndDate > DateTime.Now) ?? false) ||
+               (user.BookingsAsOwner?.Any(x => x.EndDate > DateTime.Now) ?? false))
+            {
+                throw new DeleteUserException();
+            }
+            //delete user
+            await _repository.DeleteAsync(id);
             //if user is deleted successfully and no exception is thrown, publish event that user is deleted
             var integrationEvent = new UserDeletedIntegrationEvent(id);
             _eventBus.Publish(integrationEvent);
@@ -140,14 +149,14 @@ namespace Account.Domain.Logic.Services
         //method for retrieving all users including related entitites (country)
         public async Task<ICollection<UserInfoDTO>> GetAllUsersAsync()
         {
-            var users = (await _repository.GetAllAsync(relatedEntitiesIncluded: true)).ToList();
+            var users = (await _repository.GetAllAsync(x=>x.Country)).ToList();
             //map domain entities to dtos
             return _mapper.Map<ICollection<User>, ICollection<UserInfoDTO>>(users);
         }
         //method for retrieving user information by id including related entitites (country)
         public async Task<UserInfoDTO> GetUserInfoAsync(long id)
         {
-            var user = await _repository.GetByIdAsync(id, relatedEntitiesIncluded:true);
+            var user = await _repository.GetByIdAsync(id, x=>x.Country);
             //if user exists, map domain entity to dto and return it
             if (user != null)
             {
@@ -158,10 +167,10 @@ namespace Account.Domain.Logic.Services
         }
 
         //method for finding user, called within password change, user update and user delete methods
-        private async Task<User> FindUserAsync(long id)
+        private async Task<User> FindUserAsync(long id, params Expression<Func<User, object>>[] includes)
         {
             //get user by id
-            var user = await _repository.GetByIdAsync(id);
+            var user = await _repository.GetByIdAsync(id, includes);
             if (user == null)
             {
                 //if user does not exist, throw exception

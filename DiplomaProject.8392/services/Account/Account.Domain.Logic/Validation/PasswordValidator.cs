@@ -15,10 +15,9 @@ namespace Account.Domain.Logic.Validation
         public PasswordValidator()
         {
             RuleFor(u => u.Password)
-                //password is required
                 .NotEmpty().WithMessage("Password is required")
                 //password should be minimum 10 characters long
-                .MinimumLength(10).WithMessage("Length of password is minimum 10 symbols")
+                .MinimumLength(10).WithMessage("Length of password should be minimum 10 symbols")
                 //password should contain digits
                 .Must(ContainsDigit).WithMessage("Password shoud contain at least 1 digit")
                 //password should contain lower case and upper case letters

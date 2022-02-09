@@ -8,17 +8,21 @@ using EventBus.Events;
 
 namespace PostFeedback.Domain.Logic.IntegrationEvents.Events
 {
-    //tested
-   public class UserUpdatedIntegrationEvent: IntegrationEvent
+    //this event is published by account microservice
+    //when user information is updated and consumed by post microservice
+    public class UserUpdatedIntegrationEvent: IntegrationEvent
     {
-        public long UserId { get;}
-        public string FirstName { get; }
-        public string LastName { get;  }
-        public string Email { get; }
-        public string PhoneNumber { get; }
+        public long UserId { get; private set; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
+        public string Email { get; private set; }
+        public string PhoneNumber { get; private set; }
 
-        public UserUpdatedIntegrationEvent(long userId, string firstName, 
-            string lastName, string email, 
+        public UserUpdatedIntegrationEvent(
+            long userId,
+            string firstName,
+            string lastName,
+            string email,
             string phoneNumber)
         {
             UserId = userId;

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ExceptionHandlingAPI;
+using API.ExceptionHandling;
 using FluentValidation;
 using PostFeedback.Domain.Entities;
 using PostFeedback.Domain.Logic.Contracts;
@@ -12,87 +12,87 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.API.Services.Strategies
 {
-    public class FeedbackStrategy<T, E> : IFeedbackStrategy<T, E> where T : FeedbackEntity
-                                                                  where E: IFeedbackEntityDTO
-    {
-        private readonly IMapper _mapper;
-        private readonly IFeedbackService<T, E> _service;
+    //public class FeedbackStrategy<T, E> : IFeedbackStrategy<T, E> where T : FeedbackEntity
+    //                                                              where E: IFeedbackEntityDTO
+    //{
+    //    private readonly IMapper _mapper;
+    //    private readonly IFeedbackService<T, E> _service;
 
-        public FeedbackStrategy(IMapper mapper, IFeedbackService<T, E> service)
-        {
-            _mapper = mapper;
-            _service = service;
-        }
+    //    public FeedbackStrategy(IMapper mapper, IFeedbackService<T, E> service)
+    //    {
+    //        _mapper = mapper;
+    //        _service = service;
+    //    }
 
-        public async Task<Response> DeleteFeedbackAsync(Request request)
-        {
-            var response = new Response();
-            try
-            {
-                await _service.DeleteFeedbackAsync(request.Id);
-                response.IsSuccess = true;
-            }
-            catch (Exception ex)
-            {
-                response.HandleException(ex);
-            }
-            return response;
-        }
+    //    public async Task<Response> DeleteFeedbackAsync(Request request)
+    //    {
+    //        var response = new Response();
+    //        try
+    //        {
+    //            await _service.DeleteFeedbackAsync(request.Id);
+    //            response.IsSuccess = true;
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            response.HandleException(ex);
+    //        }
+    //        return response;
+    //    }
 
-        public async Task<FeedbackResponse> GetFeedbackDetailsAsync(Request request)
-        {
-            var feedback = await _service.GetFeedbackDetailsAsync(request.Id);
+    //    public async Task<FeedbackResponse> GetFeedbackDetailsAsync(Request request)
+    //    {
+    //        var feedback = await _service.GetFeedbackDetailsAsync(request.Id);
 
-            if (feedback == null)
-            {
-                return new FeedbackResponse
-                {
-                    NoFeedback = true
-                };
-            }
-            var response = _mapper.Map<FeedbackResponse>(feedback);
-            return response;
-        }
+    //        if (feedback == null)
+    //        {
+    //            return new FeedbackResponse
+    //            {
+    //                NoFeedback = true
+    //            };
+    //        }
+    //        var response = _mapper.Map<FeedbackResponse>(feedback);
+    //        return response;
+    //    }
 
-        public async Task<FeedbacksListResponse> GetFeedbacksAsync(Request request)
-        {
-            var reply = new FeedbacksListResponse();
-            var feedbacksDTO = await _service.GetFeedbacksAsync(request.Id);
-            if (feedbacksDTO != null)
-            {
-                var feedbacks = _mapper.Map<ICollection<FeedbackResponse>>(feedbacksDTO);
-                reply.Feedbacks.AddRange(feedbacks);
-            }
-            return reply;
-        }
+    //    public async Task<FeedbacksListResponse> GetFeedbacksAsync(Request request)
+    //    {
+    //        var reply = new FeedbacksListResponse();
+    //        var feedbacksDTO = await _service.GetFeedbacksAsync(request.Id);
+    //        if (feedbacksDTO != null)
+    //        {
+    //            var feedbacks = _mapper.Map<ICollection<FeedbackResponse>>(feedbacksDTO);
+    //            reply.Feedbacks.AddRange(feedbacks);
+    //        }
+    //        return reply;
+    //    }
 
-        public async Task<Response> LeaveFeedbackAsync(CreateFeedbackRequest request)
-        {
-            if (request == null)
-            {
-                return new Response
-                {
-                    Message = "Empty request"
-                };
-            }
-            var createFeedbackDTO = _mapper.Map<FeedbackDTO>(request);
+    //    public async Task<Response> LeaveFeedbackAsync(CreateFeedbackRequest request)
+    //    {
+    //        if (request == null)
+    //        {
+    //            return new Response
+    //            {
+    //                Message = "Empty request"
+    //            };
+    //        }
+    //        var createFeedbackDTO = _mapper.Map<FeedbackDTO>(request);
 
-            var response = new Response();
-            try
-            {
-                await _service.LeaveFeedbackAsync(createFeedbackDTO);
-                response.IsSuccess = true;
+    //        var response = new Response();
+    //        try
+    //        {
+    //            await _service.LeaveFeedbackAsync(createFeedbackDTO);
+    //            response.IsSuccess = true;
 
-            }
-            catch (ValidationException ex)
-            {
-                response.HandleValidationException(ex);
-            }
-            catch (Exception ex)
-            {
-                response.HandleException(ex);
-            }
-            return response;
-        }
-    }
+    //        }
+    //        catch (ValidationException ex)
+    //        {
+    //            response.HandleValidationException(ex);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            response.HandleException(ex);
+    //        }
+    //        return response;
+    //    }
+    //}
 }

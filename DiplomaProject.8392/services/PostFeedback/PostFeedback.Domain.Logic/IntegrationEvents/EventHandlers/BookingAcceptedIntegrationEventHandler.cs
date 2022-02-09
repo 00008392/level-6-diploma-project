@@ -13,18 +13,22 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.Domain.Logic.IntegrationEvents.EventHandlers
 {
+    //event handler that reacts when booking request is accepted
     public class BookingAcceptedIntegrationEventHandler : BaseIntegrationEventHandler,
         IIntegrationEventHandler<BookingAcceptedIntegrationEvent>
     {
         public BookingAcceptedIntegrationEventHandler(
             IEventHandlerService service,
-            IMapper mapper) : base(service, mapper)
+            IMapper mapper) : base(
+                service,
+                mapper)
         {
         }
 
         public async Task Handle(BookingAcceptedIntegrationEvent @event)
         {
             var booking = _mapper.Map<AddBookingDTO>(@event);
+            //call necessary service to create booking in this microservice
             await _service.AddBookingAsync(booking);
         }
     }

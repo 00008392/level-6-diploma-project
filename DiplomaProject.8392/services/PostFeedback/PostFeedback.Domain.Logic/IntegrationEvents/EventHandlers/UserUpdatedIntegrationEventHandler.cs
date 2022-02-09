@@ -12,17 +12,21 @@ using AutoMapper;
 
 namespace PostFeedback.Domain.Logic.IntegrationEvents.EventHandlers
 {
-    //tested
+    //event handler that reacts when user information is updated
     public class UserUpdatedIntegrationEventHandler: BaseIntegrationEventHandler, IIntegrationEventHandler<UserUpdatedIntegrationEvent>
     {
-        public UserUpdatedIntegrationEventHandler(IEventHandlerService service,
+        public UserUpdatedIntegrationEventHandler(
+            IEventHandlerService service,
             IMapper mapper)
-            :base(service, mapper)
+            :base(
+                 service,
+                 mapper)
         {
         }
         public async Task Handle(UserUpdatedIntegrationEvent @event)
         {
             var userDTO = _mapper.Map<UserDTO>(@event);
+            //call service to update user in this microservice
             await _service.UpdateUserAsync(userDTO);
         }
 

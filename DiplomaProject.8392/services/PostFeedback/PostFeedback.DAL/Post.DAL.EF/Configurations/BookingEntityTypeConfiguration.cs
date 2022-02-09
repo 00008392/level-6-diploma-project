@@ -14,11 +14,18 @@ namespace PostFeedback.DAL.EF.Configurations
         public void Configure(EntityTypeBuilder<Booking> builder)
         {
             builder.HasKey(x => x.Id);
+            //disable auto increment of PK, since it will be received from integration event
             builder.Property(x => x.Id).ValueGeneratedNever();
+            //if accommodation has active bookings (end date > datetime.now,
+            //it cannot be deleted
+            //required delete behavior is enabled through business logic and through trigger
             builder.HasOne(x => x.Post).WithMany(x => x.Bookings)
                 .HasForeignKey(x => x.PostId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(x => x.User).WithMany(x => x.Bookings)
-              .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+            //if guest has active bookings (end date > datetime.now,
+            //it cannot be deleted
+            //required delete behavior is enabled through business logic and through trigger
+            builder.HasOne(x => x.Guest).WithMany(x => x.Bookings)
+              .HasForeignKey(x => x.GuestId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

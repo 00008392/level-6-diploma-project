@@ -28,7 +28,7 @@
     <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\..\..\integration\RabbitMQEventBus\RabbitMQEventBus.csproj" />
     <ProjectReference Include="..\..\..\utilities\BaseClasses\BaseClasses.csproj" />
-    <ProjectReference Include="..\..\..\utilities\ExceptionHandling\ExceptionHandlingAPI.csproj" />
+    <ProjectReference Include="..\..\..\utilities\ExceptionHandling\API.ExceptionHandling.csproj" />
     <ProjectReference Include="..\PostFeedback.DAL\Post.DAL.EF\PostFeedback.DAL.EF.csproj" />
     <ProjectReference Include="..\PostFeedback.Domain.Logic\PostFeedback.Domain.Logic.csproj" />
     <ProjectReference Include="..\PostFeedback.Domain\PostFeedback.Domain.csproj" />

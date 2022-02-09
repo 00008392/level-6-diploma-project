@@ -13,7 +13,7 @@ namespace BaseClasses.Contracts
     {
         Task CreateAsync(T entity);
         Task UpdateAsync(T entity);
-        Task DeleteAsync(T entity);
+        Task DeleteAsync(long id);
         Task AddRangeAsync(ICollection<T> items);
         Task RemoveRangeAsync(ICollection<T> items);
         bool DoesItemWithIdExist(long id);

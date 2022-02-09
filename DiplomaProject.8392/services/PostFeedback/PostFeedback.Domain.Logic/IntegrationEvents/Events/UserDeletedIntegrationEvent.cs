@@ -7,7 +7,8 @@ using EventBus.Events;
 
 namespace PostFeedback.Domain.Logic.IntegrationEvents.Events
 {
-    //tested
+    //this event is published by account microservice
+    //when user is deleted and consumed by post microservice
     public class UserDeletedIntegrationEvent: IntegrationEvent
     {
         public long UserId { get;}

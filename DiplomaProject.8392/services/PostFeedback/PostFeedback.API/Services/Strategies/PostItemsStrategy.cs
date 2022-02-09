@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ExceptionHandlingAPI;
+using API.ExceptionHandling;
 using PostFeedback.Domain.Entities;
 using PostFeedback.Domain.Logic.Contracts;
 using PostFeedback.Domain.Logic.DTOs;

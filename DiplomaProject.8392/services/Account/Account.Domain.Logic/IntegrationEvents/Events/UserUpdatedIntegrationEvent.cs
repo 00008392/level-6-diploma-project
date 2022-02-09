@@ -22,11 +22,17 @@ namespace Account.Domain.Logic.IntegrationEvents.Events
         public string UserInfo { get; private set; }
         public long CountryId { get; private set; }
 
-        public UserUpdatedIntegrationEvent(long userId, string firstName,
-            string lastName, string email,
-            string phoneNumber, DateTime dateOfBirth,
-            int gender, string address,
-            string userInfo, long countryId)
+        public UserUpdatedIntegrationEvent(
+            long userId,
+            string firstName,
+            string lastName,
+            string email,
+            string phoneNumber,
+            DateTime dateOfBirth,
+            int gender,
+            string address,
+            string userInfo,
+            long countryId)
         {
             UserId = userId;
             FirstName = firstName;

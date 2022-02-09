@@ -6,16 +6,22 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.Domain.Logic.DTOs
 {
+    //dto for feedback manipulation 
     public class FeedbackDTO
     {
-        public long? UserId { get; private set; }
+        public long? CreatorId { get; private set; }
+        //accommodation or user on which feedback is left
         public long ItemId { get; private set; }
         public int Rating { get; private set; }
         public string Message { get; private set; }
 
-        public FeedbackDTO(long? userId, long itemId, int rating, string message)
+        public FeedbackDTO(
+            long? creatorId,
+            long itemId,
+            int rating,
+            string message)
         {
-            UserId = userId;
+            CreatorId = creatorId;
             ItemId = itemId;
             Rating = rating;
             Message = message;

@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace APIGateway.Controllers.PostFeedback
 {
-    [Route("api/post/facilities")]
-    [ApiController]
-    public class FacilitiesController : PostItemsGenericController<PostFacilities.PostFacilitiesClient>
-    {
-        public FacilitiesController(PostFacilities.PostFacilitiesClient client,
-            PostCRUD.PostCRUDClient postClient) : base(client, postClient)
-        {
-        }
-    }
+    //[Route("api/post/facilities")]
+    //[ApiController]
+    //public class FacilitiesController : PostItemsGenericController<PostFacilities.PostFacilitiesClient>
+    //{
+    //    public FacilitiesController(PostFacilities.PostFacilitiesClient client,
+    //        PostCRUD.PostCRUDClient postClient) : base(client, postClient)
+    //    {
+    //    }
+    //}
 }

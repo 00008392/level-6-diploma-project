@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace APIGateway.Helpers
 {
+    //helper class to convert DateTime to TimeStamp and vice versa
     public static class DateTimeConversion
     {
         public static Timestamp FromDateTimeToTimeStamp(DateTime? time)

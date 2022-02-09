@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExceptionHandlingAPI
+namespace API.ExceptionHandling
 {
     public static class ResponseExtensions
     {

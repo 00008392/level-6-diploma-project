@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.Domain.Logic.DTOs
 {
+    //dto for operations related to user
     public class UserDTO: IFeedbackEntityDTO
     {
         public long Id { get; private set; }
@@ -13,9 +14,13 @@ namespace PostFeedback.Domain.Logic.DTOs
         public string LastName { get; private set; }
         public string Email { get; private set; }
         public string PhoneNumber { get; private set; }
-
-        public UserDTO(long id, string firstName, 
-            string lastName, string email, string phoneNumber)
+        //this constructor is called when user is updated
+        public UserDTO(
+            long id,
+            string firstName,
+            string lastName,
+            string email,
+            string phoneNumber)
         {
             Id = id;
             FirstName = firstName;
@@ -23,7 +28,11 @@ namespace PostFeedback.Domain.Logic.DTOs
             Email = email;
             PhoneNumber = phoneNumber;
         }
-        public UserDTO(string email, string firstName, string lastName)
+        //this constructor is called when new user is created
+        public UserDTO(
+            string email,
+            string firstName,
+            string lastName)
         {
             Email = email;
             FirstName = firstName;

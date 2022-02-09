@@ -13,7 +13,9 @@ namespace Account.Domain.Logic.DTOs
         public long Id { get; private set; }
         public string Email { get;private set; }
 
-        public LoggedUserDTO(long id, string email)
+        public LoggedUserDTO(
+            long id,
+            string email)
         {
             Id = id;
             Email = email;

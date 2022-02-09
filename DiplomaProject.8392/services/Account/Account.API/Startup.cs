@@ -25,8 +25,8 @@ using Account.Domain.Logic.IntegrationEvents.Events;
 using EventBus.SubscriptionManager;
 using RabbitMQ.Client;
 using Account.API.Mappings;
-using Account.DAL.EF.Repository;
 using Account.Domain.Entities;
+using Account.Domain.Logic.IntegrationEvents.EventHandlers;
 
 namespace Account.API
 {
@@ -49,17 +49,20 @@ namespace Account.API
             services.AddAutoMapper(typeof(Startup));
             //enabling fluent validation
             services.AddFluentValidation();
-            //configuring db context
+            //configuring and registering db context
             services.AddDbContext<AccountDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext")));
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext"));
+                options.EnableSensitiveDataLogging();
+            }) ;
             services.AddScoped<DbContext, AccountDbContext>();
             //registering repositories
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
-            services.AddScoped(typeof(IRepositoryWithIncludes<User>), typeof(AccountRepository));
             //registering validators
             services.AddScoped<AbstractValidator<IPasswordBaseDTO>, PasswordValidator>();
             services.AddScoped<AbstractValidator<UserRegistrationDTO>, UserRegistrationValidator>();
             services.AddScoped<AbstractValidator<UserBaseDTO>, UserValidator>();
+            services.AddScoped<AbstractValidator<BookingAcceptedIntegrationEvent>, BookingValidator>();
             //registering business logic services
             services.AddScoped<ILoginService, Domain.Logic.Services.LoginService>();
             services.AddScoped<IUserService, Domain.Logic.Services.UserService>();
@@ -82,6 +85,9 @@ namespace Account.API
                     serviceFactory, connection);
             }
             );
+            //registering event handlers
+            services.AddTransient<BookingAcceptedIntegrationEventHandler>();
+            services.AddTransient<BookingCancelledIntegrationEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,7 +111,12 @@ namespace Account.API
                     await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
                 });
             }));
-            
+            //subscribing to events from other microservices
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<BookingAcceptedIntegrationEvent,
+                BookingAcceptedIntegrationEventHandler>();
+            eventBus.Subscribe<BookingCancelledIntegrationEvent,
+                BookingCancelledIntegrationEventHandler>();
         }
     }
 }

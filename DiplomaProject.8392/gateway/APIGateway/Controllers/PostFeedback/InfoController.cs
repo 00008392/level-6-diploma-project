@@ -9,29 +9,29 @@ using System.Threading.Tasks;
 
 namespace APIGateway.Controllers.PostFeedback
 {
-    [Route("api/info")]
-    [ApiController]
-    public class InfoController : ControllerBase
-    {
-        private readonly PostInfo.PostInfoClient _infoClient;
+    //[Route("api/info")]
+    //[ApiController]
+    //public class InfoController : ControllerBase
+    //{
+    //    private readonly PostInfo.PostInfoClient _infoClient;
 
-        public InfoController(PostInfo.PostInfoClient infoClient)
-        {
-            _infoClient = infoClient;
-        }
+    //    public InfoController(PostInfo.PostInfoClient infoClient)
+    //    {
+    //        _infoClient = infoClient;
+    //    }
 
-        // GET: api/<CityController>
-        [HttpGet("cities")]
-        public async Task<IActionResult> GetCities()
-        {
-            var reply = await _infoClient.GetAllCitiesAsync(new Protos.Common.Empty());
-            return Ok(reply.Items);
-        }
-        [HttpGet("categories")]
-        public async Task<IActionResult> GetCategories()
-        {
-            var reply = await _infoClient.GetAllCategoriesAsync(new Protos.Common.Empty());
-            return Ok(reply.Items);
-        }
-    }
+    //    // GET: api/<CityController>
+    //    [HttpGet("cities")]
+    //    public async Task<IActionResult> GetCities()
+    //    {
+    //        var reply = await _infoClient.GetAllCitiesAsync(new Protos.Common.Empty());
+    //        return Ok(reply.Items);
+    //    }
+    //    [HttpGet("categories")]
+    //    public async Task<IActionResult> GetCategories()
+    //    {
+    //        var reply = await _infoClient.GetAllCategoriesAsync(new Protos.Common.Empty());
+    //        return Ok(reply.Items);
+    //    }
+    //}
 }

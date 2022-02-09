@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace Account.API
 {
-    //need this iterface to set properties that should be ignored by json
+    //this interface is needed in order to hide TimeStamp format from user in json format
+    //since DateTime is more convenient format
     public interface IUserInfoResponse
     {
         [JsonIgnore]

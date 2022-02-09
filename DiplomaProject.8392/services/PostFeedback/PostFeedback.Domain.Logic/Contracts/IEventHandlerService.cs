@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.Domain.Logic.Contracts
 {
+    //service responsible for handling events published by Account and Booking microservices
     public interface IEventHandlerService
     {
         Task CreateUserAsync(UserDTO user);

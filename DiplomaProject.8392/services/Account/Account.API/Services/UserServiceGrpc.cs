@@ -4,7 +4,7 @@ using Account.Domain.Logic.DTOs;
 using Account.Domain.Logic.IntegrationEvents.Events;
 using AutoMapper;
 using EventBus.Contracts;
-using ExceptionHandlingAPI;
+using API.ExceptionHandling;
 using FluentValidation;
 using Grpc.Core;
 using Protos.Common;
@@ -34,25 +34,8 @@ namespace Account.API.Services
         {
             //map grpc request to dto
             var passwordDTO = _mapper.Map<ChangePasswordDTO>(request);
-            var response = new Response();
-            try
-            {
-                //try to change password
-                await _service.ChangePasswordAsync(passwordDTO);
-                //if successful, indicate it in response
-                response.IsSuccess = true;
-            }
-            catch (ValidationException ex)
-            {
-                //if validation fails, add validation errors to the response
-                response.HandleValidationException(ex);
-            }
-            catch (Exception ex)
-            {
-                //in case of other error, indicate it in response
-                response.HandleException(ex);
-            }
-            return response;
+            //try to change password
+            return await HandleActionAsync(passwordDTO, _service.ChangePasswordAsync);
         }
 
         public override async Task<Response> DeleteUser(Request request, ServerCallContext context)
@@ -77,53 +60,16 @@ namespace Account.API.Services
         {
             //map grpc request to dto
             var userDTO = _mapper.Map<UserRegistrationDTO>(request);
-            var response = new Response();
-            try
-            {
-                //try to register user
-                await _service.RegisterUserAsync(userDTO);
-                //if successful, indicate it in response
-                response.IsSuccess = true;
-               
-            }
-            catch (ValidationException ex)
-            {
-                //if validation fails, add validation errors to the response
-                response.HandleValidationException(ex);
-            }
-            catch (Exception ex)
-            {
-                //in case of other error, indicate it in response
-                response.HandleException(ex);
-            }
-            return response;
+            //try to register user
+            return await HandleActionAsync(userDTO, _service.RegisterUserAsync);
         }
 
         public override async Task<Response> UpdateUser(UpdateRequest request, ServerCallContext context)
         {
             //map grpc request to dto
             var updateDTO = _mapper.Map<UserUpdateDTO>(request);
-            var response = new Response();
-            try
-            {
-                //try to update user
-                await _service.UpdateUserAsync(updateDTO);
-                //if successful, indicate it in response
-                response.IsSuccess = true;
-                
-
-            }
-            catch (ValidationException ex)
-            {
-                //if validation fails, add validation errors to the response
-                response.HandleValidationException(ex);
-            }
-            catch (Exception ex)
-            {
-                //in case of other error, indicate it in response
-                response.HandleException(ex);
-            }
-            return response;
+            //try to update user
+            return await HandleActionAsync(updateDTO, _service.UpdateUserAsync);
         }
         public override async Task<UserInfoResponse> GetUserInfo(Request request,
             ServerCallContext context)
@@ -140,15 +86,38 @@ namespace Account.API.Services
             }
             //if exists, map dto to grpc response
             var response = _mapper.Map<UserInfoResponse>(user);
-
             return response;
         }
         public override async Task<UserList> GetAllUsers(Empty request,
            ServerCallContext context)
         {
             //map list of users to grpc response
-            return await GrpcServiceHelpers.GetItems<UserList, UserInfoDTO, UserInfoResponse>
+            return await GrpcServiceHelper.GetItems<UserList, UserInfoDTO, UserInfoResponse>
                 (_service.GetAllUsersAsync, _mapper);
+        }
+        //method with common logic for user update, registration and password change
+        private async Task<Response> HandleActionAsync<T>
+            (T DTO, Func<T, Task> action) 
+        {
+            var response = new Response();
+            try
+            {
+                //try to perform action
+                await action(DTO);
+                //if successful, indicate it in response
+                response.IsSuccess = true;
+            }
+            catch (ValidationException ex)
+            {
+                //if validation fails, add validation errors to the response
+                response.HandleValidationException(ex);
+            }
+            catch (Exception ex)
+            {
+                //in case of other error, indicate it in response
+                response.HandleException(ex);
+            }
+            return response;
         }
     }
 }
