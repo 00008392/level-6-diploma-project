@@ -26,5 +26,10 @@ namespace PostFeedback.Domain.Logic.Filter
         public int? MinPrice { get; set; }
         public int? MaxPrice { get; set; }
         public bool? EntireApartment { get; set; }
+        //accommodations can be filtered out by availability
+        //if user specifies date range when accommodation is going to be occupied,
+        //then only accommodations that are not booked for this period of time will be retrieved
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
 }

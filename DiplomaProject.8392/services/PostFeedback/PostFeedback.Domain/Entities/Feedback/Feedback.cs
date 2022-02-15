@@ -37,7 +37,8 @@ namespace PostFeedback.Domain.Entities
            long itemId,
            long? creatorId,
            int rating,
-           string message):base(id)
+           string message)
+            :base(id)
         {
             ItemId = itemId;
             CreatorId = creatorId;

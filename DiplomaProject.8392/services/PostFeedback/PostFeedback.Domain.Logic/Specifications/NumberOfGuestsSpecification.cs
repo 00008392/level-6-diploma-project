@@ -11,6 +11,7 @@ namespace PostFeedback.Domain.Logic.Specifications
 {
     public class NumberOfGuestsSpecification : Specification<Post>
     {
+        //specification that filters posts by number of guests that accommodation can have 
         private readonly int _guestNumber;
 
         public NumberOfGuestsSpecification(int guestNumber)
@@ -20,6 +21,7 @@ namespace PostFeedback.Domain.Logic.Specifications
 
         public override Expression<Func<Post, bool>> ToExpression()
         {
+            //get all posts where maximum number of guests is equal to or greater than specified number
             return request => request.MaxGuestsNo >= _guestNumber;
         }
     }

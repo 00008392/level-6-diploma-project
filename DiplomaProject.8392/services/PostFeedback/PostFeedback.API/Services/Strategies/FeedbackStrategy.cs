@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using API.ExceptionHandling;
+using Grpc.Helpers;
 using FluentValidation;
 using PostFeedback.Domain.Entities;
 using PostFeedback.Domain.Logic.Contracts;
@@ -12,87 +12,57 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.API.Services.Strategies
 {
-    //public class FeedbackStrategy<T, E> : IFeedbackStrategy<T, E> where T : FeedbackEntity
-    //                                                              where E: IFeedbackEntityDTO
-    //{
-    //    private readonly IMapper _mapper;
-    //    private readonly IFeedbackService<T, E> _service;
+    //generic strategy for feedback handling
+    //needed for user feedback and post feedback handling to reduce code duplication
+    public class FeedbackStrategy<TEntity, TDTO> : IFeedbackStrategy<TEntity, TDTO> where TEntity : FeedbackEntity
+                                                                  where TDTO : IFeedbackEntityDTO
+    {
+        private readonly IMapper _mapper;
+        //inject service from domain logic layer
+        private readonly IFeedbackService<TEntity, TDTO> _service;
 
-    //    public FeedbackStrategy(IMapper mapper, IFeedbackService<T, E> service)
-    //    {
-    //        _mapper = mapper;
-    //        _service = service;
-    //    }
-
-    //    public async Task<Response> DeleteFeedbackAsync(Request request)
-    //    {
-    //        var response = new Response();
-    //        try
-    //        {
-    //            await _service.DeleteFeedbackAsync(request.Id);
-    //            response.IsSuccess = true;
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            response.HandleException(ex);
-    //        }
-    //        return response;
-    //    }
-
-    //    public async Task<FeedbackResponse> GetFeedbackDetailsAsync(Request request)
-    //    {
-    //        var feedback = await _service.GetFeedbackDetailsAsync(request.Id);
-
-    //        if (feedback == null)
-    //        {
-    //            return new FeedbackResponse
-    //            {
-    //                NoFeedback = true
-    //            };
-    //        }
-    //        var response = _mapper.Map<FeedbackResponse>(feedback);
-    //        return response;
-    //    }
-
-    //    public async Task<FeedbacksListResponse> GetFeedbacksAsync(Request request)
-    //    {
-    //        var reply = new FeedbacksListResponse();
-    //        var feedbacksDTO = await _service.GetFeedbacksAsync(request.Id);
-    //        if (feedbacksDTO != null)
-    //        {
-    //            var feedbacks = _mapper.Map<ICollection<FeedbackResponse>>(feedbacksDTO);
-    //            reply.Feedbacks.AddRange(feedbacks);
-    //        }
-    //        return reply;
-    //    }
-
-    //    public async Task<Response> LeaveFeedbackAsync(CreateFeedbackRequest request)
-    //    {
-    //        if (request == null)
-    //        {
-    //            return new Response
-    //            {
-    //                Message = "Empty request"
-    //            };
-    //        }
-    //        var createFeedbackDTO = _mapper.Map<FeedbackDTO>(request);
-
-    //        var response = new Response();
-    //        try
-    //        {
-    //            await _service.LeaveFeedbackAsync(createFeedbackDTO);
-    //            response.IsSuccess = true;
-
-    //        }
-    //        catch (ValidationException ex)
-    //        {
-    //            response.HandleValidationException(ex);
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            response.HandleException(ex);
-    //        }
-    //        return response;
-    //    }
-    //}
+        public FeedbackStrategy(
+            IMapper mapper,
+            IFeedbackService<TEntity, TDTO> service)
+        {
+            _mapper = mapper;
+            _service = service;
+        }
+        //delete feedback
+        public async Task<Response> DeleteFeedbackAsync(Request request)
+        {
+            //call helper method that handles delete grpc action
+            return await GrpcServiceHelper.HandleDeleteActionAsync<Response>
+                 (request.Id, _service.DeleteFeedbackAsync);
+        }
+        //retrieve feedback information by id
+        public async Task<FeedbackResponse> GetFeedbackDetailsAsync(Request request)
+        {
+            //call helper method that handles retrieval by id grpc action
+            return await GrpcServiceHelper.HandleRetrievalByIdAsync<FeedbackResponse, FeedbackInfoDTO<TDTO>>
+                  (request.Id, _service.GetFeedbackDetailsAsync, _mapper);
+        }
+        //retrieve feedbacks by id of item on which feedback is left
+        public async Task<FeedbackListResponse> GetFeedbacksForItemAsync(Request request)
+        {
+            var reply = new FeedbackListResponse();
+            //get feedbacks
+            var feedbacksDTO = await _service.GetFeedbacksForItemAsync(request.Id);
+            if (feedbacksDTO != null)
+            {
+                //map dtos to grpc objects if not null
+                var feedbacks = _mapper.Map<ICollection<FeedbackResponse>>(feedbacksDTO);
+                //add listof objects to grpc response
+                reply.Feedbacks.AddRange(feedbacks);
+            }
+            return reply;
+        }
+        //create new feedback
+        public async Task<Response> LeaveFeedbackAsync(CreateFeedbackRequest request)
+        {
+            //call helper method that handles create and update grpc actions
+            return await GrpcServiceHelper.HandleCreateUpdateActionAsync<FeedbackDTO, Response,
+                CreateFeedbackRequest>(_service.LeaveFeedbackAsync, _mapper, request);
+        }
+    }
 }

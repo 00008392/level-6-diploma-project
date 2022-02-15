@@ -10,7 +10,7 @@ namespace Account.Domain.Logic.DTOs
     //dto for user registration
     public class UserRegistrationDTO: UserBaseDTO, IPasswordBaseDTO
     {
-        public string Password { get ; set ; }
+        public string Password { get ;private set ; }
 
         public UserRegistrationDTO(
             string email,

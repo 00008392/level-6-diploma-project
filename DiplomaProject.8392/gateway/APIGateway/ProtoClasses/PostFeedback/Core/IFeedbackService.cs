@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.API
 {
+    //interface needed for generic feedback controller and generic authorization handlers
+    //implemented by grpc feedback services (for user and for post)
     public interface IFeedbackService
     {
         AsyncUnaryCall<Response> LeaveFeedbackAsync(CreateFeedbackRequest request, Metadata headers = null, 
@@ -16,7 +18,7 @@ namespace PostFeedback.API
             DateTime? deadline = null, CancellationToken cancellationToken = default);
         AsyncUnaryCall<FeedbackResponse> GetFeedbackDetailsAsync(Request request, Metadata headers = null,
             DateTime? deadline = null, CancellationToken cancellationToken = default);
-        AsyncUnaryCall<FeedbacksListResponse> GetFeedbacksAsync(Request request, Metadata headers = null, 
+        AsyncUnaryCall<FeedbackListResponse> GetFeedbacksForItemAsync(Request request, Metadata headers = null, 
             DateTime? deadline = null, CancellationToken cancellationToken = default);
     }
 }

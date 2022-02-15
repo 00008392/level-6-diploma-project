@@ -13,8 +13,8 @@
     <Protobuf Include="Protos\Common\common.proto" GrpcServices="Client" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.39.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
@@ -28,7 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\..\..\integration\RabbitMQEventBus\RabbitMQEventBus.csproj" />
-    <ProjectReference Include="..\..\..\utilities\ExceptionHandling\API.ExceptionHandling.csproj" />
+    <ProjectReference Include="..\..\..\utilities\ExceptionHandling\Grpc.Helpers.csproj" />
     <ProjectReference Include="..\Account.DAL\Account.DAL.EF\Account.DAL.EF.csproj" />
     <ProjectReference Include="..\Account.Domain.Logic\Account.Domain.Logic.csproj" />
     <ProjectReference Include="..\Account.Domain\Account.Domain.csproj" />

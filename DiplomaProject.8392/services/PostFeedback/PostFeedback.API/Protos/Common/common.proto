@@ -6,7 +6,7 @@ import "google/protobuf/wrappers.proto";
 option csharp_namespace = "Protos.Common";
 
 package common;
-
+// messages that are common for all proto files
 message Empty {
 
 }

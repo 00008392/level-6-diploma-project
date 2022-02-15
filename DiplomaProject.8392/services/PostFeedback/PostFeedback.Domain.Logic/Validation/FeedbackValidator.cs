@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.Domain.Logic.Validation
 {
-    //validation for feedback creation
+    //validation for feedback creation 
     public class FeedbackValidator: AbstractValidator<FeedbackDTO>
     {
         public FeedbackValidator()

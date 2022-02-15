@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\..\..\utilities\BaseClasses\BaseClasses.csproj" />
+    <ProjectReference Include="..\..\..\utilities\Helpers\Domain.Helpers.csproj" />
     <ProjectReference Include="..\Account.DAL\Account.DAL.EF\Account.DAL.EF.csproj" />
     <ProjectReference Include="..\Account.Domain\Account.Domain.csproj" />
     <ProjectReference Include="..\Account.Utilities\Account.PasswordHandling\Account.PasswordHandling.csproj" />

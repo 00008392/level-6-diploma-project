@@ -1,6 +1,10 @@
 using Account.API;
 using APIGateway.Authentication;
+using APIGateway.Authorization.Handlers.Feedback;
+using APIGateway.Authorization.Handlers.Post;
 using APIGateway.Authorization.Handlers.User;
+using APIGateway.Authorization.Requirements.Feedback;
+using APIGateway.Authorization.Requirements.Post;
 using APIGateway.Authorization.Requirements.User;
 using APIGateway.Serialization;
 using Booking.API;
@@ -47,6 +51,8 @@ namespace APIGateway
                 {
                     //set custom resolver that allows to ignore properties with JsonIgnore attribute defined in interfaces
                     options.SerializerSettings.ContractResolver = new InterfaceContractResolver();
+                    //ignore serialization of properties with null values
+                    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
                 });
             //enabling Swagger
             services.AddSwaggerGen(c =>
@@ -109,9 +115,21 @@ namespace APIGateway
                 //policies
                 options.AddPolicy("UserUpdatePolicy", policy =>
                     policy.Requirements.Add(new UserUpdateRequirement()));
+                options.AddPolicy("PostUpdatePolicy", policy =>
+                    policy.Requirements.Add(new PostUpdateRequirement()));
+                options.AddPolicy("PostDeletePolicy", policy =>
+                    policy.Requirements.Add(new PostDeleteRequirement()));
+                options.AddPolicy("UserFeedbackDeletePolicy", policy =>
+                   policy.Requirements.Add(new FeedbackDeleteRequirement<FeedbackForUser.FeedbackForUserClient>()));
+                options.AddPolicy("PostFeedbackDeletePolicy", policy =>
+                  policy.Requirements.Add(new FeedbackDeleteRequirement<FeedbackForPost.FeedbackForPostClient>()));
             });
             //requirement handlers for resource based authorization
             services.AddSingleton<IAuthorizationHandler, UserUpdateAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, PostUpdateAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, PostDeleteAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, FeedbackDeleteAuthorizationHandler<FeedbackForUser.FeedbackForUserClient>>();
+            services.AddSingleton<IAuthorizationHandler, FeedbackDeleteAuthorizationHandler<FeedbackForPost.FeedbackForPostClient>>();
             //registering grpc services
             // account
             var accountUrl = new Uri(Configuration["grpcConnections:account"]);
@@ -132,23 +150,11 @@ namespace APIGateway
             });
             //post
             var postUrl = new Uri(Configuration["grpcConnections:post"]);
-            services.AddGrpcClient<PostCRUD.PostCRUDClient>((services, options) =>
+            services.AddGrpcClient<PostService.PostServiceClient>((services, options) =>
             {
                 options.Address = postUrl;
             });
-            services.AddGrpcClient<PostInfo.PostInfoClient>((services, options) =>
-            {
-                options.Address = postUrl;
-            });
-            services.AddGrpcClient<PostRules.PostRulesClient>((services, options) =>
-            {
-                options.Address = postUrl;
-            });
-            services.AddGrpcClient<PostFacilities.PostFacilitiesClient>((services, options) =>
-            {
-                options.Address = postUrl;
-            });
-            services.AddGrpcClient<PostSpecificities.PostSpecificitiesClient>((services, options) =>
+            services.AddGrpcClient<PostRelatedInfoService.PostRelatedInfoServiceClient>((services, options) =>
             {
                 options.Address = postUrl;
             });
@@ -156,7 +162,7 @@ namespace APIGateway
             {
                 options.Address = postUrl;
             });
-            services.AddGrpcClient<FeedbackForAccommodation.FeedbackForAccommodationClient>((services, options) =>
+            services.AddGrpcClient<FeedbackForPost.FeedbackForPostClient>((services, options) =>
             {
                 options.Address = postUrl;
             });

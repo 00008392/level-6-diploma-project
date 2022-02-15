@@ -100,7 +100,7 @@ namespace Account.API
 
             app.UseRouting();
 
-            app.UseEndpoints((Action<Microsoft.AspNetCore.Routing.IEndpointRouteBuilder>)(endpoints =>
+            app.UseEndpoints(endpoints =>
             {
                 //adding grpc services
                 GrpcEndpointRouteBuilderExtensions.MapGrpcService<LoginServiceGrpc>(endpoints);
@@ -110,7 +110,7 @@ namespace Account.API
                 {
                     await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
                 });
-            }));
+            });
             //subscribing to events from other microservices
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             eventBus.Subscribe<BookingAcceptedIntegrationEvent,

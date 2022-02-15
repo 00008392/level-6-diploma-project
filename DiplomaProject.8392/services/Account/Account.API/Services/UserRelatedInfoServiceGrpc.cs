@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Account.API.Helpers;
+using Grpc.Helpers;
 
 namespace Account.API.Services
 {
@@ -24,12 +24,12 @@ namespace Account.API.Services
             _service = service;
             _mapper = mapper;
         }
-     
+        //retrieve list of countries
         public override async Task<CountryList> GetAllCountries(Empty request,
           ServerCallContext context)
         {
-            //map list of countries to grpc response
-            return await GrpcServiceHelper.GetItems<CountryList, CountryDTO, Country>
+            //call helper method that handles retrieval of items and maps them to grpc response
+            return await GrpcServiceHelper.GetItemsAsync<CountryList, CountryDTO, Country>
                (_service.GetAllCountriesAsync, _mapper);
         }
 

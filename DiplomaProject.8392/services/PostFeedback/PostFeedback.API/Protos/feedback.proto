@@ -9,37 +9,36 @@ option csharp_namespace = "PostFeedback.API";
 
 package feedback;
 
+//service for leaving feedback on user
 service FeedbackForUser {
-
   rpc LeaveFeedback (CreateFeedbackRequest) returns (common.Response);
   rpc DeleteFeedback (common.Request) returns (common.Response);
   rpc GetFeedbackDetails (common.Request) returns (FeedbackResponse); 
-  rpc GetFeedbacks (common.Request) returns (FeedbacksListResponse); 
-
+  rpc GetFeedbacksForItem (common.Request) returns (FeedbackListResponse); 
 }
-service FeedbackForAccommodation {
-
+//service for leaving feedback on accommodation indicated in post
+service FeedbackForPost {
   rpc LeaveFeedback (CreateFeedbackRequest) returns (common.Response);
   rpc DeleteFeedback (common.Request) returns (common.Response);
   rpc GetFeedbackDetails (common.Request) returns (FeedbackResponse); 
-  rpc GetFeedbacks (common.Request) returns (FeedbacksListResponse); 
-
+  rpc GetFeedbacksForItem (common.Request) returns (FeedbackListResponse); 
 }
+
 message CreateFeedbackRequest {
-  google.protobuf.Int64Value userId = 1;
+  google.protobuf.Int64Value creatorId = 1;
   google.protobuf.Int64Value itemId = 2;
   google.protobuf.Int32Value rating = 3;
   google.protobuf.StringValue message = 4;
 }
 message FeedbackResponse {
 	int64 id = 1;
-	post.User feedbackOwner = 2;
+	post.User feedbackCreator = 2;
 	post.User user = 3;
 	post.PostResponse accommodation = 4;
 	int32 rating = 5;
 	google.protobuf.StringValue message = 6;
-	bool noFeedback = 7;
+	bool noItem = 7;
 }
-message FeedbacksListResponse {
+message FeedbackListResponse {
 	repeated FeedbackResponse feedbacks = 1;
 }

@@ -8,25 +8,27 @@ using System.Text;
 using System.Threading.Tasks;
 using EventBus.Contracts;
 using AutoMapper;
+using BaseClasses.Contracts;
+using PostFeedback.Domain.Entities;
+using Domain.Helpers;
 
 namespace PostFeedback.Domain.Logic.IntegrationEvents.EventHandlers
 {
-    //event handler that reacts when user is deleted
-    public class UserDeletedIntegrationEventHandler: BaseIntegrationEventHandler, IIntegrationEventHandler<UserDeletedIntegrationEvent>
+    //event handler that fires when user is deleted
+    public class UserDeletedIntegrationEventHandler: UserBaseIntegrationEventHandler,
+        IIntegrationEventHandler<UserDeletedIntegrationEvent>
     {
-        public UserDeletedIntegrationEventHandler(
-            IEventHandlerService service,
-            IMapper mapper)
-            :base(
-                 service,
-                 mapper)
+        public UserDeletedIntegrationEventHandler(IRepository<User> userRepository)
+            :base(userRepository)
         {
-
         }
+        //delete user
         public async Task Handle(UserDeletedIntegrationEvent @event)
         {
-            //call service to delete user from this microservice
-            await _service.DeleteUserAsync(@event.UserId);
+            //check if user exists in the database
+            ServiceHelper.CheckIfRelatedEntityExists(@event.UserId, _userRepository);
+            //if exists, delete user
+            await _userRepository.DeleteAsync(@event.UserId);
         }
     }
 }

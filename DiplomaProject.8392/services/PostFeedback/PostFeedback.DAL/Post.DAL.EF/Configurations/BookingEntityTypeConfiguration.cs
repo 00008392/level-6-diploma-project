@@ -11,6 +11,7 @@ namespace PostFeedback.DAL.EF.Configurations
 {
     public class BookingEntityTypeConfiguration : IEntityTypeConfiguration<Booking>
     {
+        //configuration for booking
         public void Configure(EntityTypeBuilder<Booking> builder)
         {
             builder.HasKey(x => x.Id);

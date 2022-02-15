@@ -11,6 +11,7 @@ using BaseClasses.Contracts;
 using BaseClasses.Exceptions;
 using EventBus.Contracts;
 using FluentValidation;
+using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,30 +95,22 @@ namespace Account.Domain.Logic.Services
         public async Task RegisterUserAsync(UserRegistrationDTO userDTO)
         {
             //validate new user
-            var result = _registrationValidator.Validate(userDTO);
-            if (result.IsValid)
-            {
-                //if validation is successful, check if user with the same email exists
-                //if exists, throw exception
-                await CheckUserEmailAsync(userDTO.Email);
-                //check if indicated country exists in the database
-                CheckCountry(userDTO.CountryId);
-                //encrypt password for user
-                string salt = _pwdService.GetSalt();
-                string hashedPassword = _pwdService.HashPassword(salt, userDTO.Password);
-                var user = _mapper.Map<User>(userDTO);
-                user.SetPassword(hashedPassword, salt);
-                //create user
-                await _repository.CreateAsync(user);
-                //if user is registered successfully and no exception is thrown, publish event that user is registered
-                var integrationEvent = _mapper.Map<UserCreatedIntegrationEvent>(userDTO);
-                _eventBus.Publish(integrationEvent);
-            }
-            else
-            {
-                //show validation errors in the exception if registration info is not valid
-                throw new ValidationException(result.Errors);
-            }
+            ServiceHelper.ValidateItem(_registrationValidator, userDTO);
+            //if validation is successful, check if user with the same email exists
+            //if exists, throw exception
+            await CheckUserEmailAsync(userDTO.Email);
+            //check if indicated country exists in the database
+            ServiceHelper.CheckIfRelatedEntityExists(userDTO.CountryId, _countryRepository);
+            //encrypt password for user
+            string salt = _pwdService.GetSalt();
+            string hashedPassword = _pwdService.HashPassword(salt, userDTO.Password);
+            var user = _mapper.Map<User>(userDTO);
+            user.SetPassword(hashedPassword, salt);
+            //create user
+            await _repository.CreateAsync(user);
+            //if user is registered successfully and no exception is thrown, publish event that user is registered
+            var integrationEvent = _mapper.Map<UserCreatedOrUpdatedIntegrationEvent>(user);
+            _eventBus.Publish(integrationEvent);
         }
         //method for updating account information
         public async Task UpdateUserAsync(UserUpdateDTO userDTO)
@@ -125,17 +118,12 @@ namespace Account.Domain.Logic.Services
             //find user in the database and throw exception if does not exist
             var user = await FindUserAsync(userDTO.Id);
             //validate user
-            var result = _userValidator.Validate(userDTO);
-            if (!result.IsValid)
-            {
-                //show validation errors in the exception if user modification info is not valid
-                throw new ValidationException(result.Errors);
-            }
+            ServiceHelper.ValidateItem(_userValidator, userDTO);
             //if validation is successful, check if user with the same email exists (except email of user who updates information)
             //if exists, throw exception
             await CheckUserEmailAsync(userDTO.Email, userDTO.Id);
             //check if indicated country exists in the database
-            CheckCountry(userDTO.CountryId);
+            ServiceHelper.CheckIfRelatedEntityExists(userDTO.CountryId, _countryRepository);
             //if all correct, update user entity and save in the database
             user.UpdateInfo(userDTO.FirstName, userDTO.LastName,
                 userDTO.Email, userDTO.PhoneNumber, (DateTime)userDTO.DateOfBirth,
@@ -143,7 +131,7 @@ namespace Account.Domain.Logic.Services
                 userDTO.CountryId, userDTO.UserInfo);
             await _repository.UpdateAsync(user);
             //if user is updated successfully and no exception is thrown, publish event that user is updated
-            var integrationEvent = _mapper.Map<UserUpdatedIntegrationEvent>(userDTO);
+            var integrationEvent = _mapper.Map<UserCreatedOrUpdatedIntegrationEvent>(user);
             _eventBus.Publish(integrationEvent);
         }
         //method for retrieving all users including related entitites (country)
@@ -206,15 +194,6 @@ namespace Account.Domain.Logic.Services
                 throw new UniqueConstraintViolationException("Email", email);
             }
         }
-        //method for checking if indicated country exists in the database
-        private void CheckCountry(long countryId)
-        {
-            //check if indicated country exists 
-            if (!_countryRepository.DoesItemWithIdExist(countryId))
-            {
-                //otherwise, throw exception
-                throw new ForeignKeyViolationException(nameof(Country));
-            }
-        }
+       
     }
 }

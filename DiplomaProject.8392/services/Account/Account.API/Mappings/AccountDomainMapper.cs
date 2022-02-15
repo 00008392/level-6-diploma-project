@@ -15,17 +15,20 @@ namespace Account.API.Mappings
         //class for mapping domain entities to dtos and vice versa
         public AccountDomainMapper()
         {
+            //user
             CreateMap<User, LoggedUserDTO>()
                 .ConvertUsing(x => new LoggedUserDTO(x.Id, x.Email));
-            CreateMap<Domain.Entities.Country, CountryDTO>()
-                .ConvertUsing(x => new CountryDTO(x.Id, x.Name));
             CreateMap<User, UserInfoDTO>()
                 .ConvertUsing((x, dest, context) => new UserInfoDTO(x.Id, x.FirstName, x.LastName, x.Email, x.PhoneNumber,
-                x.DateOfBirth, x.Gender, x.Address, x.UserInfo, x.RegistrationDate, x.Country?.Name, x.Country?.Id??0, 
+                x.DateOfBirth, x.Gender, x.Address, x.UserInfo, x.RegistrationDate, x.Country?.Name, x.Country?.Id ?? 0,
                 x.ProfilePhoto, x.MimeType));
             CreateMap<UserRegistrationDTO, User>()
                 .ConvertUsing(x => new User(x.FirstName, x.LastName, x.Email, DateTime.Now,
                 (DateTime)x.DateOfBirth, (Gender)x.Gender, x.CountryId));
+            //country
+            CreateMap<Domain.Entities.Country, CountryDTO>()
+                .ConvertUsing(x => new CountryDTO(x.Id, x.Name));
+
         }
     }
 }

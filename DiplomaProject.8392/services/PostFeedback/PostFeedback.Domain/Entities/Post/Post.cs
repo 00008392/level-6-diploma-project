@@ -33,31 +33,32 @@ namespace PostFeedback.Domain.Entities
         public string MovingInTime { get; private set; }
         public string MovingOutTime { get; private set; }
         public ICollection<Photo> Photos { get; private set; }
-        public ICollection<PostRule> Rules { get; private set; }
-        public ICollection<PostFacility> Facilities { get; private set; }
+        public ICollection<Rule> Rules { get; private set; }
+        public ICollection<Facility> Facilities { get; private set; }
         public ICollection<Booking> Bookings { get; private set; }
         public ICollection<Feedback<Post>> Feedbacks { get; private set; }
         
-        //constructor that is called when new post is created
         public Post(
-            string title,
-            string description,
-            long ownerId,
-            DateTime datePublished,
-            long? categoryId,
-            long cityId,
-            string address,
-            string contactNumber,
-            int? roomsNo,
-            int? bathroomsNo,
-            int bedsNo,
-            int maxGuestsNo,
-            int? squareMeters,
-            decimal price,
-            bool isWholeApartment,
-            string movingInTime,
-            string movingOutTime)
+          long id,
+          string title,
+          string description,
+          long ownerId,
+          DateTime datePublished,
+          long? categoryId,
+          long cityId,
+          string address,
+          string contactNumber,
+          int? roomsNo,
+          int? bathroomsNo,
+          int bedsNo,
+          int maxGuestsNo,
+          int? squareMeters,
+          decimal price,
+          bool isWholeApartment,
+          string movingInTime,
+          string movingOutTime)
         {
+            Id = id;
             Title = title;
             Description = description;
             OwnerId = ownerId;
@@ -75,8 +76,10 @@ namespace PostFeedback.Domain.Entities
             IsWholeApartment = isWholeApartment;
             MovingInTime = movingInTime;
             MovingOutTime = movingOutTime;
+            Rules = new List<Rule>();
+            Facilities = new List<Facility>();
         }
-       //method that is called when post information is updated
+        //method that is called when post information is updated
         public void UpdateInfo(string title,
                                string description,
                                long ownerId,
@@ -110,6 +113,16 @@ namespace PostFeedback.Domain.Entities
             IsWholeApartment = isWholeApartment;
             MovingInTime = movingInTime;
             MovingOutTime = movingOutTime;
+        }
+        //this method attaches rules to post
+        public void SetRules(ICollection<Rule> rules)
+        {
+            Rules = rules;
+        }
+        //this method attaches facilities to post
+        public void SetFacilities(ICollection<Facility> facilities)
+        {
+            Facilities = facilities;
         }
     }
 

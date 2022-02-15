@@ -11,7 +11,7 @@ namespace Account.Domain.Logic.DTOs
     public class ChangePasswordDTO: IPasswordBaseDTO
     {
         public long UserId { get; private set; }
-        public string Password { get; set; }
+        public string Password { get; private set; }
 
         public ChangePasswordDTO(
             long userId,

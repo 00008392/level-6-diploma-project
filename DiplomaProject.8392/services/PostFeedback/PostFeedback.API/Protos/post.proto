@@ -8,18 +8,21 @@ option csharp_namespace = "PostFeedback.API";
 
 package post;
 
-service PostCRUD {
+//post CRUD service
+service PostService {
 
   rpc CreatePost (CreatePostRequest) returns (common.Response);
   rpc UpdatePost (UpdatePostRequest) returns (common.Response);
   rpc DeletePost (common.Request) returns (common.Response); 
   rpc GetPostById (common.Request) returns (PostResponse); 
-  rpc GetPosts (FilterRequest) returns (PostList); 
+  rpc GetPosts (FilterRequest) returns (PostListResponse); 
 }
-
-service PostInfo {
-  rpc GetAllCities (common.Empty) returns (CategoryCityList);
-  rpc GetAllCategories (common.Empty) returns (CategoryCityList);
+ //service for retrieving entities related to post and necessary for post creation and modification
+service PostRelatedInfoService {
+  rpc GetAllCities (common.Empty) returns (ItemListResponse);
+  rpc GetAllCategories (common.Empty) returns (ItemListResponse);
+  rpc GetAllRules (common.Empty) returns (ItemListResponse);
+  rpc GetAllFacilities (common.Empty) returns (ItemListResponse);
 }
 
 message CreatePostRequest {
@@ -29,18 +32,18 @@ message CreatePostRequest {
   google.protobuf.Int64Value categoryId = 4;
   google.protobuf.Int64Value cityId = 5;
   google.protobuf.StringValue address = 6;
-  google.protobuf.StringValue referencePoint = 7;
-  google.protobuf.StringValue contactNumber = 8;
-  google.protobuf.Int32Value roomsNo = 9;
-  google.protobuf.Int32Value bathroomsNo = 10;
-  google.protobuf.Int32Value bedsNo = 11;
-  google.protobuf.Int32Value maxGuestsNo = 12;
-  google.protobuf.Int32Value squareMeters = 13;
-  google.protobuf.DoubleValue price = 14;
-  google.protobuf.BoolValue isWholeApartment = 15;
-  google.protobuf.Timestamp movingInTimeStamp = 16;
-  google.protobuf.Timestamp movingOutTimeStamp = 17;
-  google.protobuf.StringValue additionalInfo = 18;
+  google.protobuf.StringValue contactNumber = 7;
+  google.protobuf.Int32Value roomsNo = 8;
+  google.protobuf.Int32Value bathroomsNo = 9;
+  google.protobuf.Int32Value bedsNo = 10;
+  google.protobuf.Int32Value maxGuestsNo = 11;
+  google.protobuf.Int32Value squareMeters = 12;
+  google.protobuf.DoubleValue price = 13;
+  google.protobuf.BoolValue isWholeApartment = 14;
+  google.protobuf.Timestamp movingInTimeStamp = 15;
+  google.protobuf.Timestamp movingOutTimeStamp = 16;
+  repeated int64 rules = 17;
+  repeated int64 facilities = 18;
 }
 
 
@@ -52,18 +55,18 @@ int64 id = 1;
   google.protobuf.Int64Value categoryId = 5;
   google.protobuf.Int64Value cityId = 6;
   google.protobuf.StringValue address = 7;
-  google.protobuf.StringValue referencePoint = 8;
-  google.protobuf.StringValue contactNumber = 9;
-  google.protobuf.Int32Value roomsNo = 10;
-  google.protobuf.Int32Value bathroomsNo = 11;
-  google.protobuf.Int32Value bedsNo = 12;
-  google.protobuf.Int32Value maxGuestsNo = 13;
-  google.protobuf.Int32Value squareMeters = 14;
-  google.protobuf.DoubleValue price = 15;
-  google.protobuf.BoolValue isWholeApartment = 16;
-  google.protobuf.Timestamp movingInTimeStamp = 17;
-  google.protobuf.Timestamp movingOutTimeStamp = 18;
-  google.protobuf.StringValue additionalInfo = 19;
+  google.protobuf.StringValue contactNumber = 8;
+  google.protobuf.Int32Value roomsNo = 9;
+  google.protobuf.Int32Value bathroomsNo = 10;
+  google.protobuf.Int32Value bedsNo = 11;
+  google.protobuf.Int32Value maxGuestsNo = 12;
+  google.protobuf.Int32Value squareMeters = 13;
+  google.protobuf.DoubleValue price = 14;
+  google.protobuf.BoolValue isWholeApartment = 15;
+  google.protobuf.Timestamp movingInTimeStamp = 16;
+  google.protobuf.Timestamp movingOutTimeStamp = 17;
+  repeated int64 rules = 18;
+  repeated int64 facilities = 19;
 }
 
 message User {
@@ -71,7 +74,6 @@ int64 id = 1;
 google.protobuf.StringValue firstName = 2;
 google.protobuf.StringValue lastName = 3;
 string email = 4;
-google.protobuf.StringValue phoneNumber =5;
 }
 
 message PostResponse {
@@ -79,44 +81,37 @@ message PostResponse {
    string title = 2;
    google.protobuf.StringValue description = 3;
    User owner = 4;
-   CategoryCity category = 5;
-   CategoryCity city = 6;
-   string address = 7;
-   google.protobuf.StringValue referencePoint = 8;
-   string contactNumber = 9;
-   google.protobuf.Int32Value roomsNo = 10;
-   google.protobuf.Int32Value bathroomsNo = 11;
-   google.protobuf.Int32Value bedsNo = 12;
-   int32 maxGuestsNo = 13;
-   google.protobuf.Int32Value squareMeters = 14;
-   double price = 15;
-   google.protobuf.BoolValue isWholeApartment = 16;
-   google.protobuf.StringValue additionalInfo = 17;
+   google.protobuf.Int64Value categoryId = 5;
+   google.protobuf.StringValue category = 6;
+   int64 cityId = 7;
+   google.protobuf.StringValue city = 8;
+   string address = 9;
+   string contactNumber = 10;
+   google.protobuf.Int32Value roomsNo = 11;
+   google.protobuf.Int32Value bathroomsNo = 12;
+   int32 bedsNo = 13;
+   int32 maxGuestsNo = 14;
+   google.protobuf.Int32Value squareMeters = 15;
+   double price = 16;
+   bool isWholeApartment = 17;
    google.protobuf.Timestamp datePublishedTimeStamp = 18;
    string movingInTime = 19;
    string movingOutTime = 20;
    repeated Photo photos = 21;
-   repeated PostItem specificities = 22;
-   repeated PostItem rules = 23;
-   repeated PostItem facilities = 24;
-   bool NoItem = 25;
+   repeated Item rules = 22;
+   repeated Item facilities = 23;
+   bool NoItem = 24;
 }
-message PostList {
+message PostListResponse {
 	repeated PostResponse items = 1;
 }
-message PostItem {
-int64 itemId = 1;
-google.protobuf.StringValue otherValue = 2;
-string item = 3;
-}
-
-message CategoryCity {
+//category, city, rule, facility
+message Item {
 int64 id = 1;
 string name = 2;
 }
-
-message CategoryCityList {
-repeated CategoryCity items = 1;
+message ItemListResponse {
+	repeated Item items = 1;
 }
 
 message Photo {
@@ -138,6 +133,8 @@ google.protobuf.Int32Value guests = 9;
 google.protobuf.Int32Value minPrice = 10;
 google.protobuf.Int32Value maxPrice = 11;
 google.protobuf.BoolValue entireApartment = 12;
+google.protobuf.Timestamp startDateTimeStamp = 13;
+google.protobuf.Timestamp endDateTimeStamp = 14;
 }
 
 

@@ -11,6 +11,7 @@ namespace PostFeedback.DAL.EF.Configurations
 {
     public class PhotoEntityTypeConfiguration : IEntityTypeConfiguration<Photo>
     {
+        //configuration fo photo
         public void Configure(EntityTypeBuilder<Photo> builder)
         {
             builder.HasKey(i => i.Id);

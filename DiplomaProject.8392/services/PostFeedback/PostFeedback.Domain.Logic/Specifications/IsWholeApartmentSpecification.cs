@@ -11,6 +11,8 @@ namespace PostFeedback.Domain.Logic.Specifications
 {
     public class IsWholeApartmentSpecification : Specification<Post>
     {
+        //specification that filter posts by availability type
+        //(is whole accommodation available or only its part)
         private readonly bool _isWholeApartment;
         public IsWholeApartmentSpecification(bool isWholeApartment)
         {

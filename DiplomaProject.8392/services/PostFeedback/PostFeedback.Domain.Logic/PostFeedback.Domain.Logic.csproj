@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
+    <ProjectReference Include="..\..\..\utilities\Helpers\Domain.Helpers.csproj" />
     <ProjectReference Include="..\PostFeedback.Domain\PostFeedback.Domain.csproj" />
   </ItemGroup>
 

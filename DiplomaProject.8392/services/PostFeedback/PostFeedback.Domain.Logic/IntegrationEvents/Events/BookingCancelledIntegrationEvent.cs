@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.Domain.Logic.IntegrationEvents.Events
 {
-    //this event is published by booking microservice when booking request on accommodation
+    //this event is published by booking microservice when booking on accommodation
     //is cancelled and consumed by this microservice
     public class BookingCancelledIntegrationEvent: IntegrationEvent
     {

@@ -11,6 +11,7 @@ namespace PostFeedback.Domain.Logic.Specifications
 {
     public class SearchPostSpecification : Specification<Post>
     {
+        //specification that searches for posts that contain specified search text
         private readonly string _searchText;
         public SearchPostSpecification(string searchText)
         {
@@ -18,9 +19,13 @@ namespace PostFeedback.Domain.Logic.Specifications
         }
         public override Expression<Func<Post, bool>> ToExpression()
         {
-            //!!!
-            return request => (request.Title.Contains(_searchText) || (
-            request.Description != null) && request.Description.Contains(_searchText));
+            //get all posts where search text is included in either title, description, 
+            //owner first name, owner last name or owner email
+            return request => request.Title.Contains(_searchText)
+            || (request.Description!=null&&request.Description.Contains(_searchText))
+            ||(request.Owner!=null&&(request.Owner.FirstName.Contains(_searchText)
+                                       || request.Owner.LastName.Contains(_searchText)
+                                       || request.Owner.Email.Contains(_searchText)));
         }
     }
 }

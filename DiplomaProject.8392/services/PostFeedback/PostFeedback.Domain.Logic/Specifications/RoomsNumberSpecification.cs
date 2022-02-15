@@ -12,7 +12,7 @@ namespace PostFeedback.Domain.Logic.Specifications
 {
     public class RoomsNumberSpecification : MinMaxSpecification
     {
-
+        //specification that filters posts by number of rooms range
         public RoomsNumberSpecification(int? minNumber=null, int? maxNumber=null)
             :base(minNumber, maxNumber)
         {
@@ -20,8 +20,11 @@ namespace PostFeedback.Domain.Logic.Specifications
 
         public override Expression<Func<Post, bool>> ToExpression()
         {
-            return request => (_maxNumber == null || request.RoomsNo <= _maxNumber)
+            //get all posts where number of rooms is greater than or equal to specified minimum
+            //and smaller than or equal to specified maximum
+            Expression<Func<Post, bool>> response = request => (_maxNumber == null || request.RoomsNo <= _maxNumber)
             && (_minNumber == null || request.RoomsNo >= _minNumber);
+            return response;
         }
     }
 }

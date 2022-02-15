@@ -9,7 +9,7 @@ namespace Account.Domain.Logic.DTOs
     //need this base for fluent validation
    public interface IPasswordBaseDTO
     {
-         string Password { get; set; }
+         string Password { get;  }
         
     }
 }

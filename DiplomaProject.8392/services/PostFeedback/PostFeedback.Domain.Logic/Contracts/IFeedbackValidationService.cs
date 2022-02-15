@@ -15,5 +15,5 @@ namespace PostFeedback.Domain.Logic.Contracts
     public interface IFeedbackValidationService<T> where T: FeedbackEntity
     {
         Task<bool> CanLeaveFeedback(FeedbackDTO feedback);
-    }
+    } 
 }

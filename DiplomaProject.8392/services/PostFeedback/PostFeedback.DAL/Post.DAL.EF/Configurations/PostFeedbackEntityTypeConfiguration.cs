@@ -10,15 +10,19 @@ using System.Threading.Tasks;
 namespace PostFeedback.DAL.EF.Configurations
 {
     public class PostFeedbackEntityTypeConfiguration :
-         IEntityTypeConfiguration<Feedback<Domain.Entities.Post>>
+         IEntityTypeConfiguration<Feedback<Post>>
     {
-        public void Configure(EntityTypeBuilder<Feedback<Domain.Entities.Post>> builder)
+        //configuration for feedback on accommodation specified in post
+        public void Configure(EntityTypeBuilder<Feedback<Post>> builder)
         {
             builder.HasKey(x => x.Id);
+            //when post is deleted, related feedbacks are deleted
             builder.HasOne(x => x.Item).WithMany(x => x.Feedbacks)
                 .HasForeignKey(x => x.ItemId).OnDelete(DeleteBehavior.Cascade);
-            //builder.HasOne(x => x.FeedbackOwner).WithMany(x => x.FeedbacksForAccommodations)
-            //    .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.SetNull);
+            //relationship between feedback and creator is not required
+            //after user deletion feedback is not removed, so creator id is set to null
+            builder.HasOne(x => x.Creator).WithMany(x => x.FeedbacksForAccommodations)
+                .HasForeignKey(x => x.CreatorId).OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

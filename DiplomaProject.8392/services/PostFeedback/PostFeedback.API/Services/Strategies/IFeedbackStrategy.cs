@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.API.Services.Strategies
 {
-    public interface IFeedbackStrategy<T, E> where T: FeedbackEntity
-                                             where E: IFeedbackEntityDTO
+    //generic strategy for feedback handling
+    //needed for user feedback and post feedback handling to reduce code duplication
+    public interface IFeedbackStrategy<TEntity, TDTO> where TEntity : FeedbackEntity
+                                             where TDTO : IFeedbackEntityDTO
     {
         Task<Response> LeaveFeedbackAsync(CreateFeedbackRequest request);
         Task<Response> DeleteFeedbackAsync(Request request);
         Task<FeedbackResponse> GetFeedbackDetailsAsync(Request request);
-        Task<FeedbacksListResponse> GetFeedbacksAsync(Request request);
+        Task<FeedbackListResponse> GetFeedbacksForItemAsync(Request request);
     }
 }

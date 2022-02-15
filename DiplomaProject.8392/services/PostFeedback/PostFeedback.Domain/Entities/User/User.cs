@@ -13,7 +13,6 @@ namespace PostFeedback.Domain.Entities
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public string Email { get; private set; }
-        public string PhoneNumber { get; private set; }
         //for posts the user is owner
         public ICollection<Post> Posts { get; private set; }
         //for bookings the user is guest who books accommodation
@@ -23,28 +22,15 @@ namespace PostFeedback.Domain.Entities
         //feedbacks left by this user
         public ICollection<Feedback<User>> FeedbacksForUsers { get; private set; }
         public ICollection<Feedback<Post>> FeedbacksForAccommodations { get; private set; }
-        //constructor that is called when user is updated
         public User(
             long id,
             string firstName,
             string lastName,
-            string email,
-            string phoneNumber) :base(id)
+            string email) :base(id)
         {
             FirstName = firstName;
             LastName = lastName;
             Email = email;
-            PhoneNumber = phoneNumber;
-        }
-        //constructor that is called when new user is created
-        public User(
-            string email,
-            string firstName,
-            string lastName)
-        {
-            Email = email;
-            FirstName = firstName;
-            LastName = lastName;
         }
 
     }

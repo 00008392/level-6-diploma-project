@@ -1,4 +1,5 @@
 ﻿using APIGateway.Controllers.PostFeedback.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PostFeedback.API;
 using System;
@@ -10,14 +11,22 @@ using System.Threading.Tasks;
 
 namespace APIGateway.Controllers.PostFeedback
 {
-    //[Route("api/feedbacks/user")]
-    //[ApiController]
-    //public class UserFeedbackController : FeedbackGenericController<FeedbackForUser.FeedbackForUserClient>
-    //{
-    //    public UserFeedbackController(FeedbackForUser.FeedbackForUserClient client):base(client)
-    //    {
+    //child feedback controller for manipulation of feedbacks for users
+    [Route("api/user-feedbacks")]
+    [ApiController]
+    public class UserFeedbackController : FeedbackGenericController<FeedbackForUser.FeedbackForUserClient>
+    {
+        public UserFeedbackController(
+            //passing concrete client
+            FeedbackForUser.FeedbackForUserClient client,
+            IAuthorizationService authorizationService)
+            : base(
+                  client,
+                  authorizationService,
+                  //policy specific to user feedbacks
+                  "UserFeedbackDeletePolicy")
+        {
+        }
 
-    //    }
-        
-    //}
+    }
 }

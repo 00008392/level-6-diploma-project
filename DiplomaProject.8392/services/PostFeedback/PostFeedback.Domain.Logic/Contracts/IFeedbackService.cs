@@ -9,15 +9,17 @@ using PostFeedback.Domain.Entities;
 namespace PostFeedback.Domain.Logic.Contracts
 {
     //service for feedback manipulations and retrieval
-    public interface IFeedbackService<T, E> where T: FeedbackEntity
-                                            where E: IFeedbackEntityDTO
+    //TEntity - user/post
+    //TDTO - userDTO, postDetailsDTO
+    public interface IFeedbackService<TEntity, TDTO> where TEntity : FeedbackEntity
+                                            where TDTO : IFeedbackEntityDTO
     {
         Task LeaveFeedbackAsync(FeedbackDTO feedback);
         Task DeleteFeedbackAsync(long id);
         //retrieve feedbacks for specific user/accommodation
         //(itemId - id of user/accommodation)
-        Task<ICollection<FeedbackInfoDTO<E>>> GetFeedbacksForItemAsync(long itemId);
+        Task<ICollection<FeedbackInfoDTO<TDTO>>> GetFeedbacksForItemAsync(long itemId);
         //retrieve specific feedback by id
-        Task<FeedbackInfoDTO<E>> GetFeedbackDetailsAsync(long id);
+        Task<FeedbackInfoDTO<TDTO>> GetFeedbackDetailsAsync(long id);
     }
 }

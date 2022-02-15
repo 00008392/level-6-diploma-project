@@ -14,7 +14,7 @@ namespace PostFeedback.Domain.Logic.Contracts
         Task CreatePostAsync(PostManipulationDTO item);
         Task UpdatePostAsync(PostManipulationDTO item);
         Task DeletePostAsync(long id);
-        Task<PostDetailsDTO> GetPostByIdAsync(long id);
+        Task<PostDetailsDTO> GetPostByIdAsync(long id); 
         Task<ICollection<PostDetailsDTO>> GetPostsAsync(FilterParameters filter);
     }
 }

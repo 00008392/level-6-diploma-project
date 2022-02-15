@@ -147,7 +147,7 @@ namespace Booking.Domain.Logic.Services
         {
             var accommodations = await _bookingRepository.GetFilteredAsync(x => x.AccommodationId == accommodationId &&
               ((startDate >= x.StartDate && startDate <= x.EndDate) ||
-              (endDate >= x.EndDate && endDate <= x.EndDate)) && x.Status == Status.Accepted);
+              (endDate >= x.StartDate && endDate <= x.EndDate)) && x.Status == Status.Accepted);
 
             return accommodations;
         }

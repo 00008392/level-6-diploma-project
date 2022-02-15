@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace PostFeedback.Domain.Entities
 {
     //city where accommodation is located
-   public class City: PostRelatedInfoItem
+   public class City: Item
     {
         public City(
             long id,

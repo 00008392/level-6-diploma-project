@@ -27,7 +27,6 @@
     <Protobuf Include="Protos\Account\account.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\Booking\booking.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\Common\common.proto" GrpcServices="Client" />
-    <Protobuf Include="Protos\PostFeedback\postItems.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\PostFeedback\feedback.proto" GrpcServices="Client" />
     <Protobuf Include="Protos\PostFeedback\post.proto" GrpcServices="Client" />
   </ItemGroup>

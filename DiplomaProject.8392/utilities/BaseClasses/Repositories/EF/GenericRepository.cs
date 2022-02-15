@@ -51,8 +51,7 @@ namespace BaseClasses.Repositories.EF
 
         public async Task<ICollection<T>> GetFilteredAsync(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] includes)
         {
-            var list = await GetDbSetWithRelatedTables(includes).Where(filter).AsNoTracking().ToListAsync();
-            return list;
+            return await GetDbSetWithRelatedTables(includes).Where(filter).AsNoTracking().ToListAsync();
         }
 
         public bool DoesItemWithIdExist(long id)

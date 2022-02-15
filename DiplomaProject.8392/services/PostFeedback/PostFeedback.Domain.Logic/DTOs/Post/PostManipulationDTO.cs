@@ -13,6 +13,9 @@ namespace PostFeedback.Domain.Logic.DTOs
         public long OwnerId { get; private set; }
         public DateTime? MovingInTime { get; private set; }
         public DateTime? MovingOutTime { get; private set; }
+        //rules and facilities that are associated with the post
+        public ICollection<long> Rules { get; private set; }
+        public ICollection<long> Facilities { get; private set; }
         //this constructor is called when new post is created
         public PostManipulationDTO(
             string title,
@@ -30,7 +33,9 @@ namespace PostFeedback.Domain.Logic.DTOs
             decimal price,
             bool isWholeApartment,
             DateTime? movingInTime,
-            DateTime? movingOutTime) : base(
+            DateTime? movingOutTime,
+            ICollection<long> rules,
+            ICollection<long> facilities) : base(
                 title,
                 description,
                 address,
@@ -48,6 +53,8 @@ namespace PostFeedback.Domain.Logic.DTOs
             OwnerId = ownerId;
             MovingInTime = movingInTime;
             MovingOutTime = movingOutTime;
+            Rules = rules;
+            Facilities = facilities;
         }
         //this constructor is called when post is updated
         public PostManipulationDTO(
@@ -67,7 +74,9 @@ namespace PostFeedback.Domain.Logic.DTOs
             decimal price,
             bool isWholeApartment,
             DateTime? movingInTime,
-            DateTime? movingOutTime) : base(
+            DateTime? movingOutTime,
+            ICollection<long> rules,
+            ICollection<long> facilities) : base(
                 title,
                 description,
                 address,
@@ -86,6 +95,8 @@ namespace PostFeedback.Domain.Logic.DTOs
             OwnerId = ownerId;
             MovingInTime = movingInTime;
             MovingOutTime = movingOutTime;
+            Rules = rules;
+            Facilities = facilities;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using PostFeedback.Domain.Logic.DTOs;
+using PostFeedback.Domain.Logic.IntegrationEvents.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace PostFeedback.Domain.Logic.Validation
 {
     //validation for user creation and modification
-    public class UserValidator: AbstractValidator<UserDTO>
+    public class UserValidator: AbstractValidator<UserCreatedOrUpdatedIntegrationEvent>
     {
         public UserValidator()
         {

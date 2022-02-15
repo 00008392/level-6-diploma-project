@@ -11,6 +11,7 @@ namespace PostFeedback.Domain.Logic.Specifications.Core
 {
     public abstract class MinMaxSpecification : Specification<Post>
     {
+        //base class for specifications that filter posts by range
         protected readonly int? _minNumber;
         protected readonly int? _maxNumber;
 

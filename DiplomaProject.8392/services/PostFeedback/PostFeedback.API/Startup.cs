@@ -13,7 +13,6 @@ using Microsoft.Extensions.Hosting;
 using PostFeedback.API.Services;
 using PostFeedback.API.Services.Strategies;
 using PostFeedback.DAL.EF.Data;
-using PostFeedback.DAL.EF.Repositories;
 using PostFeedback.Domain.Entities;
 using PostFeedback.Domain.Logic.Contracts;
 using PostFeedback.Domain.Logic.DTOs;
@@ -27,6 +26,7 @@ using PostFeedback.Domain.Logic.IntegrationEvents.Events;
 using PostFeedback.Domain.Logic.IntegrationEvents.EventHandlers;
 using EventBus.SubscriptionManager;
 using RabbitMQ.Client;
+using PostFeedback.DAL.EF.Repositories;
 
 namespace PostFeedback.API
 {
@@ -41,30 +41,33 @@ namespace PostFeedback.API
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //enabling grpc
             services.AddGrpc();
+            //enabling fluent validation
             services.AddFluentValidation();
+            //configuring automapper
             services.AddAutoMapper(typeof(Startup));
+            //configuring and registering db context
             services.AddDbContext<PostDbContext>(options =>
-options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
+                options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
             services.AddScoped<DbContext, PostDbContext>();
+            //registering repositories
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
-            //services.AddScoped<IRepositoryWithIncludes<Post>, PostRepository>();
-            //services.AddScoped<IRepositoryWithIncludes<Domain.Entities.User>, UserRepository>();
-            //services.AddScoped<IRepositoryWithIncludes<Feedback<Domain.Entities.User>>, FeedbackRepository<Domain.Entities.User>>();
-            //services.AddScoped<IRepositoryWithIncludes<Feedback<Post>>, FeedbackRepository<Post>>();
+            services.AddScoped<IRepository<Post>, PostRepository>();
+            //registering validators
             services.AddScoped<AbstractValidator<PostManipulationDTO>, PostValidator>();
-            services.AddScoped<AbstractValidator<UserDTO>, UserValidator>();
-            services.AddScoped<AbstractValidator<AddBookingDTO>, BookingValidator>();
+            services.AddScoped<AbstractValidator<UserCreatedOrUpdatedIntegrationEvent>, UserValidator>();
+            services.AddScoped<AbstractValidator<BookingAcceptedIntegrationEvent>, BookingValidator>();
             services.AddScoped<AbstractValidator<FeedbackDTO>, FeedbackValidator>();
-            //services.AddScoped<IPostService, PostCRUDService>();
-            services.AddScoped<IPostrelatedInfoService, InfoService>();
-            //services.AddScoped(typeof(IFeedbackService<,>), typeof(FeedbackService<,>));
-            //services.AddScoped<IFeedbackValidationService<Domain.Entities.User>, UserFeedbackValidationService>();
+            //registering business logic services
+            services.AddScoped<IPostService, Domain.Logic.Services.PostService>();
+            services.AddScoped(typeof(IPostRelatedInfoService<>), typeof(PostRelatedInfoService<>));
+            services.AddScoped(typeof(IFeedbackService<,>), typeof(FeedbackService<,>));
+            services.AddScoped<IFeedbackValidationService<Domain.Entities.User>, UserFeedbackValidationService>();
             services.AddScoped<IFeedbackValidationService<Post>, PostFeedbackValidationService>();
-            services.AddScoped<IEventHandlerService, EventHandlerService>();
-            services.AddScoped(typeof(IPostItemsStrategy<,>), typeof(PostItemsStrategy<,>));
-            //services.AddScoped(typeof(IFeedbackStrategy<,>), typeof(FeedbackStrategy<,>));
-            services.AddScoped(typeof(IPostItemsService<,>), typeof(PostItemsService<,>));
+            //registering grpc strategies
+            services.AddScoped(typeof(IFeedbackStrategy<,>), typeof(FeedbackStrategy<,>));
+            //configuring and registering event bus
             services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();
             services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>(sp => {
 
@@ -80,9 +83,9 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
                     serviceFactory, connection);
             }
           );
+            //registering event handlers
             services.AddTransient<UserDeletedIntegrationEventHandler>();
-            services.AddTransient<UserUpdatedIntegrationEventHandler>();
-            services.AddTransient<UserCreatedIntegrationEventHandler>();
+            services.AddTransient<UserCreatedOrUpdatedIntegrationEventHandler>();
             services.AddTransient<BookingAcceptedIntegrationEventHandler>();
             services.AddTransient<BookingCancelledIntegrationEventHandler>();
         }
@@ -99,24 +102,21 @@ options.UseSqlServer(Configuration.GetConnectionString("PostDbContext")));
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapGrpcService<PostCRUDServiceGrpc>();
-                //endpoints.MapGrpcService<PostInfoServiceGrpc>();
-                endpoints.MapGrpcService<RulesServiceGrpc>();
-                endpoints.MapGrpcService<FacilitiesServiceGrpc>();
-                //endpoints.MapGrpcService<SpecificitiesServiceGrpc>();
+                //adding grpc services
+                endpoints.MapGrpcService<PostServiceGrpc>();
+                endpoints.MapGrpcService<PostRelatedInfoServiceGrpc>();
                 endpoints.MapGrpcService<FeedbackForUserServiceGrpc>();
-                endpoints.MapGrpcService<FeedbackForAccommodationServiceGrpc>();
+                endpoints.MapGrpcService<FeedbackForPostServiceGrpc>();
 
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
                 });
             });
-
+            //subscribing to events from other microservices
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.Subscribe<UserCreatedIntegrationEvent, UserCreatedIntegrationEventHandler>();
             eventBus.Subscribe<UserDeletedIntegrationEvent, UserDeletedIntegrationEventHandler>();
-            eventBus.Subscribe<UserUpdatedIntegrationEvent, UserUpdatedIntegrationEventHandler>();
+            eventBus.Subscribe<UserCreatedOrUpdatedIntegrationEvent, UserCreatedOrUpdatedIntegrationEventHandler>();
             eventBus.Subscribe<BookingAcceptedIntegrationEvent, 
                 BookingAcceptedIntegrationEventHandler>();
             eventBus.Subscribe<BookingCancelledIntegrationEvent,

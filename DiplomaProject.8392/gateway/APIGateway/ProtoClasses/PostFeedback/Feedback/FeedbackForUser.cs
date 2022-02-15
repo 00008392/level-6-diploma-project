@@ -7,6 +7,7 @@ namespace PostFeedback.API
 {
     public partial class FeedbackForUser
     {
+        //implements IFeedbackService interface for generic feedback controller and generic authorization handlers
         public partial class FeedbackForUserClient: IFeedbackService
         {
 

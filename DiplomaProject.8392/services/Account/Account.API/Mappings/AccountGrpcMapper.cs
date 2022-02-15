@@ -2,6 +2,7 @@
 using Account.Domain.Logic.DTOs;
 using AutoMapper;
 using Google.Protobuf.WellKnownTypes;
+using Grpc.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,28 +15,24 @@ namespace Account.API.Mappings
         //class for mapping grpc generated classes to dtos and vice versa
         public AccountGrpcMapper()
         {
-            //login
+            //user
             CreateMap<LoggedUserDTO, LoginResponse>()
                 .ForMember(u => u.NoUser, opt => opt.Ignore());
             CreateMap<LoginRequest, UserLoginDTO>()
                 .ConvertUsing(x => new UserLoginDTO(x.Password, x.Email));
-            //register
             CreateMap<RegisterRequest, UserRegistrationDTO>()
                 .ConvertUsing((x, context) => new UserRegistrationDTO(x.Email, x.FirstName, x.LastName, x.DateOfBirthTimeStamp?.ToDateTime(),
                 (Gender?)x.Gender, x.CountryId??0, x.Password));
-            //change password
             CreateMap<ChangePasswordRequest, ChangePasswordDTO>()
                 .ConvertUsing(x => new ChangePasswordDTO(x.Id, x.Password));
-            //update user
             CreateMap<UpdateRequest, UserUpdateDTO>()
                 .ConvertUsing((x, context) => new UserUpdateDTO(x.Id, x.FirstName,
                 x.LastName, x.Email, x.PhoneNumber, x.DateOfBirthTimeStamp?.ToDateTime(), (Gender?)x.Gender,
                 x.Address, x.UserInfo, x.CountryId??0));
-            //user info
             CreateMap<UserInfoDTO, UserInfoResponse>()
-                 .ForMember(x => x.DateOfBirthTimeStamp, opt => opt.MapFrom(src => FromDateTimeToTimeStamp(src.DateOfBirth)))
+                 .ForMember(x => x.DateOfBirthTimeStamp, opt => opt.MapFrom(src => GrpcServiceHelper.ConvertDateTimeToTimeStamp(src.DateOfBirth)))
                  .ForMember(x => x.RegistrationDateTimeStamp, opt => opt.MapFrom(src =>
-                     FromDateTimeToTimeStamp(src.RegistrationDate)))
+                     GrpcServiceHelper.ConvertDateTimeToTimeStamp(src.RegistrationDate)))
                  .ForMember(x => x.ProfilePhoto, opt =>
                  {
                      opt.PreCondition(src => src.ProfilePhoto != null);
@@ -44,11 +41,6 @@ namespace Account.API.Mappings
                  });
             //country
             CreateMap<CountryDTO, Country>();
-        }
-        //convert DateTime value to TimeStamp
-        private Timestamp FromDateTimeToTimeStamp(DateTime? time)
-        {
-            return time == null ? null : Timestamp.FromDateTime(DateTime.SpecifyKind((DateTime)time, DateTimeKind.Utc));
         }
     }
 }

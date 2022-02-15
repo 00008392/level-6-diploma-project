@@ -7,7 +7,7 @@ using EventBus.Events;
 
 namespace PostFeedback.Domain.Logic.IntegrationEvents.Events
 {
-    //this event is published by post microservice through event bus when post is deleted
+    //this event is published by post microservice through event bus when post is deleted 
     public class PostDeletedIntegrationEvent: IntegrationEvent
     {
         public long PostId { get; }

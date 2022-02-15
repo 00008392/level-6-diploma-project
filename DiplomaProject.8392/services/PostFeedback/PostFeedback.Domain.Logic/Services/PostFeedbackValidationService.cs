@@ -10,25 +10,24 @@ using PostFeedback.Domain.Logic.DTOs;
 
 namespace PostFeedback.Domain.Logic.Services
 {
-    public class PostFeedbackValidationService : IFeedbackValidationService<Entities.Post>
+    //this service checks whether specific user can leave feedback on specific accommodation
+    public class PostFeedbackValidationService : IFeedbackValidationService<Post>
     {
-        private readonly IRepositoryWithIncludes<User> _repository;
+        private readonly IRepository<User> _repository;
 
-        public PostFeedbackValidationService(IRepositoryWithIncludes<User> repository)
+        public PostFeedbackValidationService(IRepository<User> repository)
         {
             _repository = repository;
         }
 
         public async Task<bool> CanLeaveFeedback(FeedbackDTO feedback)
         {
-            //user can leave feedback on accommodation only if this user has lived in the accommodation
-            //as a guest
-            //var user = await _repository.GetByIdAsync((long)feedback.UserId, relatedEntitiesIncluded: true);
-            //if(user.Bookings.Any(x=>x.PostId==feedback.ItemId && x.EndDate<DateTime.Now))
-            //{
-            //    return true;
-            //}
-            //return false;
+            //user can leave feedback on accommodation specified in post
+            //only if this user lived in the accommodation as a guest
+            //in list of bookings, find booking on specified accommodation where end date already passed
+            // var user = await _repository.GetByIdAsync((long)feedback.CreatorId, x=>x.Bookings);
+            //return user.Bookings.Any(x => x.PostId == feedback.ItemId && x.EndDate < DateTime.Now);
+
             return true;
         }
     }

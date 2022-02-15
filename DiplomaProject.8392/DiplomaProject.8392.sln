@@ -27,7 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostFeedback.DAL", "PostFee
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{6E2A6B4A-96C6-416E-ACBE-1F5BFC1A3818}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.ExceptionHandling", "utilities\ExceptionHandling\API.ExceptionHandling.csproj", "{5A3BE32E-C002-4658-837C-7944A6DD21C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grpc.Helpers", "utilities\ExceptionHandling\Grpc.Helpers.csproj", "{5A3BE32E-C002-4658-837C-7944A6DD21C1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BaseClasses", "utilities\BaseClasses\BaseClasses.csproj", "{1A4EE7CF-97D4-4DAD-A766-E97F89A1C968}"
 EndProject
@@ -64,6 +64,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostFeedback.Domain", "services\PostFeedback\PostFeedback.Domain\PostFeedback.Domain.csproj", "{8A3E9BD9-1840-48E3-9468-DF89FBEB7683}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostFeedback.Domain.Logic", "services\PostFeedback\PostFeedback.Domain.Logic\PostFeedback.Domain.Logic.csproj", "{EAB5BF00-37BC-4E81-8DF7-30DC328460EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Helpers", "utilities\Helpers\Domain.Helpers.csproj", "{1F04067A-8152-480C-B618-07ADD0BBB25A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -147,6 +149,10 @@ Global
 		{EAB5BF00-37BC-4E81-8DF7-30DC328460EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAB5BF00-37BC-4E81-8DF7-30DC328460EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAB5BF00-37BC-4E81-8DF7-30DC328460EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F04067A-8152-480C-B618-07ADD0BBB25A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F04067A-8152-480C-B618-07ADD0BBB25A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F04067A-8152-480C-B618-07ADD0BBB25A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F04067A-8152-480C-B618-07ADD0BBB25A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -178,6 +184,7 @@ Global
 		{61290928-86BF-4128-AF82-2E960CF76CDD} = {0BCA365D-B509-4FF2-BEE4-78DA69D0956A}
 		{8A3E9BD9-1840-48E3-9468-DF89FBEB7683} = {0BCA365D-B509-4FF2-BEE4-78DA69D0956A}
 		{EAB5BF00-37BC-4E81-8DF7-30DC328460EB} = {0BCA365D-B509-4FF2-BEE4-78DA69D0956A}
+		{1F04067A-8152-480C-B618-07ADD0BBB25A} = {6E2A6B4A-96C6-416E-ACBE-1F5BFC1A3818}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E5F12852-0C37-489B-8CB9-48ADED5F8F8C}

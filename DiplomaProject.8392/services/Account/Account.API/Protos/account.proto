@@ -80,11 +80,11 @@ message UserInfoResponse {
     int32 gender = 8;
     google.protobuf.StringValue address = 9;
     int64 countryId = 10;
-    string countryName = 11;
+    google.protobuf.StringValue countryName = 11;
     google.protobuf.StringValue userInfo = 12;
     google.protobuf.BytesValue profilePhoto = 13;
     google.protobuf.StringValue mimeType = 14;
-    bool NoUser = 15;
+    bool NoItem = 15;
 }
 
 message UserList {

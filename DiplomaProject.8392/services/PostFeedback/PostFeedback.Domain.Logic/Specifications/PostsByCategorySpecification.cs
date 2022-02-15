@@ -12,11 +12,13 @@ namespace PostFeedback.Domain.Logic.Specifications
 {
     public class PostsByCategorySpecification : PostsByItemSpecification
     {
+        //specification that filters posts by category id
         public PostsByCategorySpecification(long categoryId):base(categoryId)
         {
         }
         public override Expression<Func<Post, bool>> ToExpression()
         {
+            //get all posts with specified category id
             return request => request.CategoryId == _itemId;
         }
     }

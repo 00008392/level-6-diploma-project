@@ -12,11 +12,13 @@ namespace PostFeedback.Domain.Logic.Specifications
 {
     public class PostsByUserSpecification: PostsByItemSpecification
     {
+        //specification that filters posts by owner id
         public PostsByUserSpecification(long userId):base(userId)
         {
         }
         public override Expression<Func<Post, bool>> ToExpression()
         {
+            //get all posts with specified owner id
             return request => request.OwnerId == _itemId;
         }
     }

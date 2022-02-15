@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace PostFeedback.Domain.Entities
 {
     //category of accommodation indicated in post
-    public class Category: PostRelatedInfoItem
+    public class Category: Item
     {
         public Category(
            long id,

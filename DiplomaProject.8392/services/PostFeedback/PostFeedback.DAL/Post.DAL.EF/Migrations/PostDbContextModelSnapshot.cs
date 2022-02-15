@@ -19,6 +19,21 @@ namespace PostFeedback.DAL.EF.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("FacilityPost", b =>
+                {
+                    b.Property<long>("FacilitiesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PostsId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("FacilitiesId", "PostsId");
+
+                    b.HasIndex("PostsId");
+
+                    b.ToTable("FacilityPost");
+                });
+
             modelBuilder.Entity("PostFeedback.Domain.Entities.Booking", b =>
                 {
                     b.Property<long>("Id")
@@ -27,20 +42,20 @@ namespace PostFeedback.DAL.EF.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<long>("GuestId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("PostId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("GuestId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("PostId");
 
                     b.ToTable("Bookings");
                 });
@@ -84,9 +99,6 @@ namespace PostFeedback.DAL.EF.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool?>("IsOther")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -103,6 +115,9 @@ namespace PostFeedback.DAL.EF.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<long?>("CreatorId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("ItemId")
                         .HasColumnType("bigint");
 
@@ -112,14 +127,11 @@ namespace PostFeedback.DAL.EF.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("CreatorId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ItemId");
 
                     b.ToTable("PostFeedbacks");
                 });
@@ -131,6 +143,9 @@ namespace PostFeedback.DAL.EF.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<long?>("CreatorId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("ItemId")
                         .HasColumnType("bigint");
 
@@ -140,16 +155,38 @@ namespace PostFeedback.DAL.EF.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<long?>("UserId")
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("UserFeedbacks");
+                });
+
+            modelBuilder.Entity("PostFeedback.Domain.Entities.Photo", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("PhotoBytes")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<long>("PostId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemId");
+                    b.HasIndex("PostId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserFeedbacks");
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("PostFeedback.Domain.Entities.Post", b =>
@@ -159,9 +196,6 @@ namespace PostFeedback.DAL.EF.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AdditionalInfo")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -169,13 +203,13 @@ namespace PostFeedback.DAL.EF.Migrations
                     b.Property<int?>("BathroomsNo")
                         .HasColumnType("int");
 
-                    b.Property<int?>("BedsNo")
+                    b.Property<int>("BedsNo")
                         .HasColumnType("int");
 
                     b.Property<long?>("CategoryId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("CityId")
+                    b.Property<long>("CityId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("ContactNumber")
@@ -188,16 +222,16 @@ namespace PostFeedback.DAL.EF.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsWholeApartment")
+                    b.Property<bool>("IsWholeApartment")
                         .HasColumnType("bit");
 
                     b.Property<int>("MaxGuestsNo")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan?>("MovingInTime")
+                    b.Property<TimeSpan>("MovingInTime")
                         .HasColumnType("time");
 
-                    b.Property<TimeSpan?>("MovingOutTime")
+                    b.Property<TimeSpan>("MovingOutTime")
                         .HasColumnType("time");
 
                     b.Property<long>("OwnerId")
@@ -205,9 +239,6 @@ namespace PostFeedback.DAL.EF.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ReferencePoint")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("RoomsNo")
                         .HasColumnType("int");
@@ -230,133 +261,12 @@ namespace PostFeedback.DAL.EF.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("PostFeedback.Domain.Entities.PostFacility", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("ItemId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("OtherValue")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<long>("PostId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("ItemId", "PostId")
-                        .IsUnique()
-                        .HasFilter("OtherValue is null");
-
-                    b.HasIndex("ItemId", "PostId", "OtherValue")
-                        .IsUnique()
-                        .HasFilter("[OtherValue] IS NOT NULL");
-
-                    b.ToTable("PostFacilities");
-                });
-
-            modelBuilder.Entity("PostFeedback.Domain.Entities.PostPhoto", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("MimeType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Photo")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<long>("PostId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("PostPhotos");
-                });
-
-            modelBuilder.Entity("PostFeedback.Domain.Entities.PostRule", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("ItemId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("OtherValue")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<long>("PostId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("ItemId", "PostId")
-                        .IsUnique()
-                        .HasFilter("OtherValue is null");
-
-                    b.HasIndex("ItemId", "PostId", "OtherValue")
-                        .IsUnique()
-                        .HasFilter("[OtherValue] IS NOT NULL");
-
-                    b.ToTable("PostRules");
-                });
-
-            modelBuilder.Entity("PostFeedback.Domain.Entities.PostSpecificity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("ItemId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("OtherValue")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<long>("PostId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("ItemId", "PostId")
-                        .IsUnique()
-                        .HasFilter("OtherValue is null");
-
-                    b.HasIndex("ItemId", "PostId", "OtherValue")
-                        .IsUnique()
-                        .HasFilter("[OtherValue] IS NOT NULL");
-
-                    b.ToTable("PostSpecificities");
-                });
-
             modelBuilder.Entity("PostFeedback.Domain.Entities.Rule", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool?>("IsOther")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -367,31 +277,10 @@ namespace PostFeedback.DAL.EF.Migrations
                     b.ToTable("Rules");
                 });
 
-            modelBuilder.Entity("PostFeedback.Domain.Entities.Specificity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool?>("IsOther")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Specificities");
-                });
-
             modelBuilder.Entity("PostFeedback.Domain.Entities.User", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -405,9 +294,6 @@ namespace PostFeedback.DAL.EF.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -416,59 +302,100 @@ namespace PostFeedback.DAL.EF.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("PostRule", b =>
+                {
+                    b.Property<long>("PostsId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("RulesId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("PostsId", "RulesId");
+
+                    b.HasIndex("RulesId");
+
+                    b.ToTable("PostRule");
+                });
+
+            modelBuilder.Entity("FacilityPost", b =>
+                {
+                    b.HasOne("PostFeedback.Domain.Entities.Facility", null)
+                        .WithMany()
+                        .HasForeignKey("FacilitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PostFeedback.Domain.Entities.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PostFeedback.Domain.Entities.Booking", b =>
                 {
+                    b.HasOne("PostFeedback.Domain.Entities.User", "Guest")
+                        .WithMany("Bookings")
+                        .HasForeignKey("GuestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("PostFeedback.Domain.Entities.Post", "Post")
                         .WithMany("Bookings")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PostFeedback.Domain.Entities.User", "User")
-                        .WithMany("Bookings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("Guest");
 
                     b.Navigation("Post");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PostFeedback.Domain.Entities.Feedback<PostFeedback.Domain.Entities.Post>", b =>
                 {
+                    b.HasOne("PostFeedback.Domain.Entities.User", "Creator")
+                        .WithMany("FeedbacksForAccommodations")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("PostFeedback.Domain.Entities.Post", "Item")
                         .WithMany("Feedbacks")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PostFeedback.Domain.Entities.User", "FeedbackOwner")
-                        .WithMany("FeedbacksForAccommodations")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("FeedbackOwner");
+                    b.Navigation("Creator");
 
                     b.Navigation("Item");
                 });
 
             modelBuilder.Entity("PostFeedback.Domain.Entities.Feedback<PostFeedback.Domain.Entities.User>", b =>
                 {
+                    b.HasOne("PostFeedback.Domain.Entities.User", "Creator")
+                        .WithMany("FeedbacksForUsers")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("PostFeedback.Domain.Entities.User", "Item")
                         .WithMany("Feedbacks")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("PostFeedback.Domain.Entities.User", "FeedbackOwner")
-                        .WithMany("FeedbacksForUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("FeedbackOwner");
+                    b.Navigation("Creator");
 
                     b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("PostFeedback.Domain.Entities.Photo", b =>
+                {
+                    b.HasOne("PostFeedback.Domain.Entities.Post", "Post")
+                        .WithMany("Photos")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("PostFeedback.Domain.Entities.Post", b =>
@@ -481,7 +408,8 @@ namespace PostFeedback.DAL.EF.Migrations
                     b.HasOne("PostFeedback.Domain.Entities.City", "City")
                         .WithMany("Posts")
                         .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("PostFeedback.Domain.Entities.User", "Owner")
                         .WithMany("Posts")
@@ -496,72 +424,19 @@ namespace PostFeedback.DAL.EF.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("PostFeedback.Domain.Entities.PostFacility", b =>
+            modelBuilder.Entity("PostRule", b =>
                 {
-                    b.HasOne("PostFeedback.Domain.Entities.Facility", "Item")
-                        .WithMany("PostItems")
-                        .HasForeignKey("ItemId")
+                    b.HasOne("PostFeedback.Domain.Entities.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PostFeedback.Domain.Entities.Post", "Post")
-                        .WithMany("Facilities")
-                        .HasForeignKey("PostId")
+                    b.HasOne("PostFeedback.Domain.Entities.Rule", null)
+                        .WithMany()
+                        .HasForeignKey("RulesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Item");
-
-                    b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("PostFeedback.Domain.Entities.PostPhoto", b =>
-                {
-                    b.HasOne("PostFeedback.Domain.Entities.Post", "Post")
-                        .WithMany("Photos")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("PostFeedback.Domain.Entities.PostRule", b =>
-                {
-                    b.HasOne("PostFeedback.Domain.Entities.Rule", "Item")
-                        .WithMany("PostItems")
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PostFeedback.Domain.Entities.Post", "Post")
-                        .WithMany("Rules")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Item");
-
-                    b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("PostFeedback.Domain.Entities.PostSpecificity", b =>
-                {
-                    b.HasOne("PostFeedback.Domain.Entities.Specificity", "Item")
-                        .WithMany("PostItems")
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PostFeedback.Domain.Entities.Post", "Post")
-                        .WithMany("Specificities")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Item");
-
-                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("PostFeedback.Domain.Entities.Category", b =>
@@ -574,34 +449,13 @@ namespace PostFeedback.DAL.EF.Migrations
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("PostFeedback.Domain.Entities.Facility", b =>
-                {
-                    b.Navigation("PostItems");
-                });
-
             modelBuilder.Entity("PostFeedback.Domain.Entities.Post", b =>
                 {
                     b.Navigation("Bookings");
 
-                    b.Navigation("Facilities");
-
                     b.Navigation("Feedbacks");
 
                     b.Navigation("Photos");
-
-                    b.Navigation("Rules");
-
-                    b.Navigation("Specificities");
-                });
-
-            modelBuilder.Entity("PostFeedback.Domain.Entities.Rule", b =>
-                {
-                    b.Navigation("PostItems");
-                });
-
-            modelBuilder.Entity("PostFeedback.Domain.Entities.Specificity", b =>
-                {
-                    b.Navigation("PostItems");
                 });
 
             modelBuilder.Entity("PostFeedback.Domain.Entities.User", b =>

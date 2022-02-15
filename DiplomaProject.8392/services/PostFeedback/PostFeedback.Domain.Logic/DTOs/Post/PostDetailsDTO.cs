@@ -18,8 +18,9 @@ namespace PostFeedback.Domain.Logic.DTOs
         public string MovingInTime { get; private set; }
         public string MovingOutTime { get; private set; }
         public ICollection<PhotoDTO> Photos { get; private set; }
-        public ICollection<PostItemInfoDTO> Rules { get; private set; }
-        public ICollection<PostItemInfoDTO> Facilities { get; private set; }
+        public ICollection<ItemDTO> Rules { get; private set; }
+        public ICollection<ItemDTO> Facilities { get; private set; }
+        public ICollection<DatesBookedDTO> DatesBooked { get; private set; }
         public PostDetailsDTO(
             long id,
             string title,
@@ -42,8 +43,9 @@ namespace PostFeedback.Domain.Logic.DTOs
             string movingInTime,
             string movingOutTime,
             ICollection<PhotoDTO> photos,
-            ICollection<PostItemInfoDTO> rules,
-            ICollection<PostItemInfoDTO> facilities) : base(
+            ICollection<ItemDTO> rules,
+            ICollection<ItemDTO> facilities, 
+            ICollection<DatesBookedDTO> datesBooked) : base(
                 title,
                 description,
                 address,
@@ -68,6 +70,7 @@ namespace PostFeedback.Domain.Logic.DTOs
             Photos = photos;
             Rules = rules;
             Facilities = facilities;
+            DatesBooked = datesBooked;
         }
 
     }

@@ -11,7 +11,7 @@ namespace PostFeedback.Domain.Logic.IntegrationEvents.Events
     //when user is deleted and consumed by post microservice
     public class UserDeletedIntegrationEvent: IntegrationEvent
     {
-        public long UserId { get;}
+        public long UserId { get; private set; }
 
         public UserDeletedIntegrationEvent(long userId)
         {

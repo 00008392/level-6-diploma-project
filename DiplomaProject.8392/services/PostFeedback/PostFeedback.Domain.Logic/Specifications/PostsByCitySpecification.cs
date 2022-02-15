@@ -12,11 +12,13 @@ namespace PostFeedback.Domain.Logic.Specifications
 {
     public class PostsByCitySpecification : PostsByItemSpecification
     {
+        //specification that filters posts by city id
         public PostsByCitySpecification(long cityId):base(cityId)
         {
         }
         public override Expression<Func<Post, bool>> ToExpression()
         {
+            //get all posts with specified city id
             return request => request.CityId == _itemId;
         }
     }
