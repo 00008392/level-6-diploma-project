@@ -21,7 +21,7 @@ namespace PostFeedback.Domain.Entities
         public long CityId { get; private set; } 
         public City City { get; private set; }
         public string ContactNumber { get; private set; }
-        public int? RoomsNo { get; private set; }
+        public int RoomsNo { get; private set; }
         public int? BathroomsNo { get; private set; }
         public int BedsNo { get; private set; } 
         public int MaxGuestsNo { get; private set; } 
@@ -48,7 +48,7 @@ namespace PostFeedback.Domain.Entities
           long cityId,
           string address,
           string contactNumber,
-          int? roomsNo,
+          int roomsNo,
           int? bathroomsNo,
           int bedsNo,
           int maxGuestsNo,
@@ -87,7 +87,7 @@ namespace PostFeedback.Domain.Entities
                                long cityId,
                                string address,
                                string contactNumber,
-                               int? roomsNo,
+                               int roomsNo,
                                int? bathroomsNo,
                                int bedsNo,
                                int maxGuestsNo,

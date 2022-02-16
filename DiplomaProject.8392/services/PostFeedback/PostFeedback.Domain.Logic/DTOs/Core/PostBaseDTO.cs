@@ -16,7 +16,7 @@ namespace PostFeedback.Domain.Logic.DTOs
         public string Address { get; protected set; }
         public long CityId { get; protected set; }
         public string ContactNumber { get; protected set; }
-        public int? RoomsNo { get; protected set; }
+        public int RoomsNo { get; protected set; }
         public int? BathroomsNo { get; protected set; }
         public int BedsNo { get; protected set; }
         public int MaxGuestsNo { get; protected set; }
@@ -31,7 +31,7 @@ namespace PostFeedback.Domain.Logic.DTOs
             string contactNumber,
             long? categoryId,
             long cityId,
-            int? roomsNo,
+            int roomsNo,
             int? bathroomsNo,
             int bedsNo,
             int maxGuestsNo,

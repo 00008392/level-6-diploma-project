@@ -87,7 +87,7 @@ message PostResponse {
    google.protobuf.StringValue city = 8;
    string address = 9;
    string contactNumber = 10;
-   google.protobuf.Int32Value roomsNo = 11;
+   int32 roomsNo = 11;
    google.protobuf.Int32Value bathroomsNo = 12;
    int32 bedsNo = 13;
    int32 maxGuestsNo = 14;
@@ -100,7 +100,8 @@ message PostResponse {
    repeated Photo photos = 21;
    repeated Item rules = 22;
    repeated Item facilities = 23;
-   bool NoItem = 24;
+   repeated DatesBooked datesBooked = 24;
+   bool NoItem = 25;
 }
 message PostListResponse {
 	repeated PostResponse items = 1;
@@ -113,7 +114,10 @@ string name = 2;
 message ItemListResponse {
 	repeated Item items = 1;
 }
-
+message DatesBooked {
+	google.protobuf.Timestamp startDateTimeStamp = 1;
+	google.protobuf.Timestamp endDateTimeStamp = 2;
+}
 message Photo {
 int64 id = 1;
 google.protobuf.BytesValue photo = 2;

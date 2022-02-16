@@ -29,7 +29,7 @@ namespace PostFeedback.Domain.Logic.DTOs
             string contactNumber,
             long? categoryId,
             long cityId,
-            int? roomsNo,
+            int roomsNo,
             int? bathroomsNo,
             int bedsNo,
             int maxGuestsNo,

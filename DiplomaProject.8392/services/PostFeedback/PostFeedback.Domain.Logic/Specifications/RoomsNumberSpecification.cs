@@ -22,9 +22,8 @@ namespace PostFeedback.Domain.Logic.Specifications
         {
             //get all posts where number of rooms is greater than or equal to specified minimum
             //and smaller than or equal to specified maximum
-            Expression<Func<Post, bool>> response = request => (_maxNumber == null || request.RoomsNo <= _maxNumber)
+           return request => (_maxNumber == null || request.RoomsNo <= _maxNumber)
             && (_minNumber == null || request.RoomsNo >= _minNumber);
-            return response;
         }
     }
 }

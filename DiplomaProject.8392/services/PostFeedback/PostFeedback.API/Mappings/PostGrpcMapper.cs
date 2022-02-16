@@ -20,7 +20,7 @@ namespace PostFeedback.API.Mappings
             CreateMap<CreatePostRequest, PostManipulationDTO>()
                  .ConvertUsing((x, context) => new PostManipulationDTO(x.Title, x.Description,
                 x.OwnerId ?? 0, x.CategoryId, x.CityId ?? 0, x.Address, x.ContactNumber,
-                x.RoomsNo, x.BathroomsNo, x.BedsNo ?? 0, x.MaxGuestsNo ?? 0, x.SquareMeters,
+                x.RoomsNo??0, x.BathroomsNo, x.BedsNo ?? 0, x.MaxGuestsNo ?? 0, x.SquareMeters,
                 (decimal)(x.Price ?? 0), x.IsWholeApartment ?? false,
                 x.MovingInTimeStamp?.ToDateTime(), x.MovingOutTimeStamp?.ToDateTime(),
                 x.Rules, x.Facilities));
@@ -29,7 +29,7 @@ namespace PostFeedback.API.Mappings
                 {
                     return new PostManipulationDTO(x.Id, x.Title, x.Description,
                     x.OwnerId ?? 0, x.CategoryId, x.CityId ?? 0, x.Address, x.ContactNumber,
-                    x.RoomsNo, x.BathroomsNo, x.BedsNo ?? 0, x.MaxGuestsNo ?? 0, x.SquareMeters,
+                    x.RoomsNo??0, x.BathroomsNo, x.BedsNo ?? 0, x.MaxGuestsNo ?? 0, x.SquareMeters,
                     (decimal)(x.Price ?? 0), x.IsWholeApartment ?? false,
                     x.MovingInTimeStamp?.ToDateTime(), x.MovingOutTimeStamp?.ToDateTime(),
                     x.Rules, x.Facilities);
@@ -46,10 +46,15 @@ namespace PostFeedback.API.Mappings
             //post related info
             CreateMap<UserDTO, User>();
             CreateMap<ItemDTO, Item>();
+            CreateMap<DatesBookedDTO, DatesBooked>()
+                .ForMember(x => x.StartDateTimeStamp, opt => opt.MapFrom(src => GrpcServiceHelper.ConvertDateTimeToTimeStamp(src.StartDate)))
+                .ForMember(x => x.EndDateTimeStamp, opt => opt.MapFrom(src => GrpcServiceHelper.ConvertDateTimeToTimeStamp(src.EndDate)));
             CreateMap<PhotoDTO, Photo>()
                 .ForMember(x => x.Photo_, opt => opt.MapFrom(src => src.Photo == null ? null : Google.Protobuf.ByteString.CopyFrom(src.Photo)));
             //filter
-            CreateMap<FilterRequest, FilterParameters>();
+            CreateMap<FilterRequest, FilterParameters>()
+                .ForMember(x => x.StartDate, opt => opt.MapFrom(src => src.StartDateTimeStamp.ToDateTime()))
+                .ForMember(x => x.EndDate, opt => opt.MapFrom(src => src.EndDateTimeStamp.ToDateTime()));
             //feedback
             CreateMap<FeedbackInfoDTO<UserDTO>, FeedbackResponse>()
                 .ForMember(x => x.User, opt => opt.MapFrom((src, dest, prop, context) =>

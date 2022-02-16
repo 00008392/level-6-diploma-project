@@ -18,7 +18,7 @@ namespace PostFeedback.Domain.Logic.IntegrationEvents.Events
         public long CityId { get; private set; }
         public string Address { get; private set; }
         public string ContactNumber { get; private set; }
-        public int? RoomsNo { get; private set; }
+        public int RoomsNo { get; private set; }
         public int? BathroomsNo { get; private set; }
         public int BedsNo { get; private set; }
         public int MaxGuestsNo { get; private set; }
@@ -37,7 +37,7 @@ namespace PostFeedback.Domain.Logic.IntegrationEvents.Events
             long cityId,
             string address,
             string contactNumber,
-            int? roomsNo,
+            int roomsNo,
             int? bathroomsNo,
             int bedsNo,
             int maxGuestsNo,

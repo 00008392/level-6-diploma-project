@@ -28,7 +28,7 @@ namespace PostFeedback.Domain.Logic.Specifications
             //get all posts where booked dates do not overlap with specified range
             //in other words, get all available accommodations for specified date range
             return request => request.Bookings != null ?
-                              !request.Bookings.Any(x=>x.StartDate<=_endDate&&_startDate<=x.EndDate)
+                              !request.Bookings.Any(x=>x.StartDate.Date<=_endDate.Date&&_startDate.Date<=x.EndDate.Date)
                               : true;
         }
     }

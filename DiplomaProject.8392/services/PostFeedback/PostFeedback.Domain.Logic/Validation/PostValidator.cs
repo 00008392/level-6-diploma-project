@@ -26,6 +26,8 @@ namespace PostFeedback.Domain.Logic.Validation
                 .NotEmpty().WithMessage("Contact number is required");
             RuleFor(p => p.BedsNo)
                 .NotEmpty().WithMessage("Number of beds is required");
+            RuleFor(p => p.RoomsNo)
+                .NotEmpty().WithMessage("Number of rooms is required");
             RuleFor(p => p.MaxGuestsNo)
                 .NotEmpty().WithMessage("Maximum guest number is required");
             RuleFor(p => p.Price)

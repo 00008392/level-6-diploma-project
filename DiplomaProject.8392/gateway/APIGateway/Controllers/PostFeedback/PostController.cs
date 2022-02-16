@@ -140,6 +140,14 @@ namespace APIGateway.Controllers.PostFeedback
         {
             //convert from TimeStamp to DateTime
             post.DatePublished = (DateTime)DateTimeConversion.FromTimeStampToDateTime(post.DatePublishedTimeStamp);
+            if(post.DatesBooked!=null)
+            {
+                post.DatesBooked.ToList().ForEach(x =>
+                {
+                    x.StartDate = (DateTime)DateTimeConversion.FromTimeStampToDateTime(x.StartDateTimeStamp);
+                    x.EndDate = (DateTime)DateTimeConversion.FromTimeStampToDateTime(x.EndDateTimeStamp);
+                });
+            }
             return post;
         }
         private IPostRequest ConvertPostData(IPostRequest post)

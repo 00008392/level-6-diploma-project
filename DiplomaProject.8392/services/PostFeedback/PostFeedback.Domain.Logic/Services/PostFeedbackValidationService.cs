@@ -22,13 +22,12 @@ namespace PostFeedback.Domain.Logic.Services
 
         public async Task<bool> CanLeaveFeedback(FeedbackDTO feedback)
         {
-            //user can leave feedback on accommodation specified in post
-            //only if this user lived in the accommodation as a guest
-            //in list of bookings, find booking on specified accommodation where end date already passed
-            // var user = await _repository.GetByIdAsync((long)feedback.CreatorId, x=>x.Bookings);
-            //return user.Bookings.Any(x => x.PostId == feedback.ItemId && x.EndDate < DateTime.Now);
+           // user can leave feedback on accommodation specified in post
+           // only if this user lived in the accommodation as a guest
+           // in list of bookings, find booking on specified accommodation where end date already passed
+             var user = await _repository.GetByIdAsync((long)feedback.CreatorId, x => x.Bookings);
+            return user.Bookings.Any(x => x.PostId == feedback.ItemId && x.EndDate.Date < DateTime.Now.Date);
 
-            return true;
         }
     }
 }
