@@ -135,10 +135,10 @@ namespace APIGateway.Controllers.Account
             }
             //try to delete user with id from claim
             var reply = await _userClient.DeleteUserAsync(new Request { Id = (long)id });
-            //in case of errors, return not found
+            //in case of errors, return bad drequest
             if (!reply.IsSuccess)
             {
-                return NotFound(reply);
+                return BadRequest(reply);
             }
             return NoContent();
         }

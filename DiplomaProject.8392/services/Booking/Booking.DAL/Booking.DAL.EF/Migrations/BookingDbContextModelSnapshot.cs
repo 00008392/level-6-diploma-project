@@ -19,71 +19,12 @@ namespace Booking.DAL.EF.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Booking.Domain.Entities.Accommodation", b =>
+            modelBuilder.Entity("Booking.Domain.Entities.Booking", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BathroomsNo")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BedsNo")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ContactNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("IsWholeApartment")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("MaxGuestsNo")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan?>("MovingInTime")
-                        .HasColumnType("time");
-
-                    b.Property<TimeSpan?>("MovingOutTime")
-                        .HasColumnType("time");
-
-                    b.Property<long>("OwnerId")
-                        .HasColumnType("bigint");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("RoomsNo")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SquareMeters")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("Accommodations");
-                });
-
-            modelBuilder.Entity("Booking.Domain.Entities.BookingRequest", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("AccommodationId")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -94,6 +35,9 @@ namespace Booking.DAL.EF.Migrations
                     b.Property<int>("GuestNo")
                         .HasColumnType("int");
 
+                    b.Property<long>("PostId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -102,65 +46,64 @@ namespace Booking.DAL.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccommodationId");
-
                     b.HasIndex("GuestId");
 
-                    b.ToTable("BookingRequests");
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("Booking.Domain.Entities.Post", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("MaxGuestsNo")
+                        .HasColumnType("int");
+
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.User", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("BookingRequestUser", b =>
+            modelBuilder.Entity("Booking.Domain.Entities.Booking", b =>
                 {
-                    b.Property<long>("BookingRequestsAsCoTravelerId")
-                        .HasColumnType("bigint");
+                    b.HasOne("Booking.Domain.Entities.User", "Guest")
+                        .WithMany("Bookings")
+                        .HasForeignKey("GuestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Property<long>("CoTravelersId")
-                        .HasColumnType("bigint");
+                    b.HasOne("Booking.Domain.Entities.Post", "Post")
+                        .WithMany("Bookings")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasKey("BookingRequestsAsCoTravelerId", "CoTravelersId");
+                    b.Navigation("Guest");
 
-                    b.HasIndex("CoTravelersId");
-
-                    b.ToTable("BookingRequestUser");
+                    b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Booking.Domain.Entities.Accommodation", b =>
+            modelBuilder.Entity("Booking.Domain.Entities.Post", b =>
                 {
                     b.HasOne("Booking.Domain.Entities.User", "Owner")
-                        .WithMany("Accommodations")
+                        .WithMany("Posts")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -168,50 +111,16 @@ namespace Booking.DAL.EF.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Booking.Domain.Entities.BookingRequest", b =>
+            modelBuilder.Entity("Booking.Domain.Entities.Post", b =>
                 {
-                    b.HasOne("Booking.Domain.Entities.Accommodation", "Accommodation")
-                        .WithMany("BookingRequests")
-                        .HasForeignKey("AccommodationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Booking.Domain.Entities.User", "Guest")
-                        .WithMany("BookingRequestsAsMainGuest")
-                        .HasForeignKey("GuestId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Accommodation");
-
-                    b.Navigation("Guest");
-                });
-
-            modelBuilder.Entity("BookingRequestUser", b =>
-                {
-                    b.HasOne("Booking.Domain.Entities.BookingRequest", null)
-                        .WithMany()
-                        .HasForeignKey("BookingRequestsAsCoTravelerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Booking.Domain.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("CoTravelersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Booking.Domain.Entities.Accommodation", b =>
-                {
-                    b.Navigation("BookingRequests");
+                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.User", b =>
                 {
-                    b.Navigation("Accommodations");
+                    b.Navigation("Bookings");
 
-                    b.Navigation("BookingRequestsAsMainGuest");
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

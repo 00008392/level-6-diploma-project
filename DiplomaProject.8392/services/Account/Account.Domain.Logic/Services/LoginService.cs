@@ -11,7 +11,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using BaseClasses.Contracts;
+using DAL.Base.Contracts;
 using AutoMapper;
 
 namespace Account.Domain.Logic.Services

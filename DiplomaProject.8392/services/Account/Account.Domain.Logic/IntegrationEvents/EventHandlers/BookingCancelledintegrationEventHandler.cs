@@ -1,8 +1,7 @@
 ﻿using Account.Domain.Entities;
 using Account.Domain.Logic.IntegrationEvents.EventHandlers.Core;
 using Account.Domain.Logic.IntegrationEvents.Events;
-using BaseClasses.Contracts;
-using BaseClasses.Exceptions;
+using DAL.Base.Contracts;
 using EventBus.Contracts;
 using System;
 using System.Collections.Generic;
@@ -25,12 +24,11 @@ namespace Account.Domain.Logic.IntegrationEvents.EventHandlers
         public async Task Handle(BookingCancelledIntegrationEvent @event)
         {
             //ensure that booking exists
-            if (!_repository.DoesItemWithIdExist(@event.BookingId))
+            if (_repository.DoesItemWithIdExist(@event.BookingId))
             {
-                throw new NotFoundException(@event.BookingId, nameof(Booking));
+                //delete booking
+                await _repository.DeleteAsync(@event.BookingId);
             }
-            //delete booking
-            await _repository.DeleteAsync(@event.BookingId);
         }
     }
 }

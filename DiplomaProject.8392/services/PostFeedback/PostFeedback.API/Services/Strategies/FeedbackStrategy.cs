@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Grpc.Helpers;
-using FluentValidation;
 using PostFeedback.Domain.Entities;
 using PostFeedback.Domain.Logic.Contracts;
 using PostFeedback.Domain.Logic.DTOs;
@@ -9,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grpc.Base.Helpers;
 
 namespace PostFeedback.API.Services.Strategies
 {
@@ -45,17 +44,11 @@ namespace PostFeedback.API.Services.Strategies
         //retrieve feedbacks by id of item on which feedback is left
         public async Task<FeedbackListResponse> GetFeedbacksForItemAsync(Request request)
         {
-            var reply = new FeedbackListResponse();
             //get feedbacks
             var feedbacksDTO = await _service.GetFeedbacksForItemAsync(request.Id);
-            if (feedbacksDTO != null)
-            {
-                //map dtos to grpc objects if not null
-                var feedbacks = _mapper.Map<ICollection<FeedbackResponse>>(feedbacksDTO);
-                //add listof objects to grpc response
-                reply.Feedbacks.AddRange(feedbacks);
-            }
-            return reply;
+            //map to response
+            return GrpcServiceHelper.MapItems<FeedbackListResponse, FeedbackInfoDTO<TDTO>,
+                FeedbackResponse>(_mapper, feedbacksDTO);
         }
         //create new feedback
         public async Task<Response> LeaveFeedbackAsync(CreateFeedbackRequest request)

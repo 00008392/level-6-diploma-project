@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using BaseClasses.Entities;
+using Grpc.Base.Helpers;
 using Grpc.Core;
-using Grpc.Helpers;
 using PostFeedback.Domain.Entities;
 using PostFeedback.Domain.Logic.Contracts;
 using PostFeedback.Domain.Logic.DTOs;

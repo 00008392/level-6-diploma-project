@@ -1,6 +1,5 @@
-﻿
-using Account.Domain.Enums;
-using BaseClasses.Entities;
+﻿using Account.Domain.Enums;
+using DAL.Base.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -15,8 +15,8 @@ namespace Booking.DAL.EF.Data
           : base(options)
         {
         }
-        public DbSet<Accommodation> Accommodations { get; set; }
-        public DbSet<BookingRequest> BookingRequests { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Domain.Entities.Booking> Bookings { get; set; }
         public DbSet<User> Users { get; set; }
 
 
@@ -25,7 +25,7 @@ namespace Booking.DAL.EF.Data
 
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new BookingRequestEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new AccommodationEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PostEntityTypeConfiguration());
         }
     }
 }

@@ -2,7 +2,7 @@
 using Account.Domain.Logic.Contracts;
 using Account.Domain.Logic.DTOs;
 using AutoMapper;
-using BaseClasses.Contracts;
+using DAL.Base.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

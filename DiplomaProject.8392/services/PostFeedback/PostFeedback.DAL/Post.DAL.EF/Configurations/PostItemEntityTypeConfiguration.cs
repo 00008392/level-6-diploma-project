@@ -15,8 +15,8 @@ namespace PostFeedback.DAL.EF.Configurations
     {
         public void Configure(EntityTypeBuilder<T> builder)
         {
-            builder.HasKey(c => c.Id);
-            builder.Property(c => c.Name).IsRequired(true);
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Name).IsRequired(true);
         }
     }
 }

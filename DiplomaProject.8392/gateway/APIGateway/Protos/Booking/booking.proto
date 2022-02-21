@@ -7,73 +7,45 @@ option csharp_namespace = "Booking.API";
 
 package booking;
 
+//booking manipulation grpc service
 service BookingService {
-
-  rpc CreateBookingRequest (CreateRequest) returns (common.Response);
-  rpc DeleteBookingRequest (common.Request) returns (common.Response);
-  rpc AcceptBookingRequest (common.Request) returns (common.Response);
-  rpc RejectBookingRequest (common.Request) returns (common.Response);
+  rpc CreateBooking (CreateRequest) returns (common.Response);
+  rpc DeleteBooking (common.Request) returns (common.Response);
+  //handle booking statuses
+  rpc AcceptBooking (common.Request) returns (common.Response);
+  rpc RejectBooking (common.Request) returns (common.Response);
   rpc CancelBooking (common.Request) returns (common.Response);
-  rpc AddCoTraveler (CoTravelerRequest) returns (common.Response);
-  rpc RemoveCoTraveler (CoTravelerRequest) returns (common.Response);
-  rpc GetBookings (GetBookingsRequest) returns (BookingsReply);
-  rpc GetBookingDetails (common.Request) returns (BookingDetailsReply);
+  //handle booking retrieval
+  rpc GetBookingsForGuest (common.Request) returns (BookingListResponse);
+  rpc GetBookingsForPost (common.Request) returns (BookingListResponse);
+  rpc GetBookingDetails (common.Request) returns (BookingInfoResponse);
 }
 
 message CreateRequest {
 	google.protobuf.Int64Value guestId = 1;
-	google.protobuf.Int64Value accommodationId = 2;
+	google.protobuf.Int64Value postId = 2;
 	google.protobuf.Int32Value guestNo = 3;
 	google.protobuf.Timestamp startDateTimeStamp = 4;
-	google.protobuf.Timestamp endDateTimeStamp= 5;
+	google.protobuf.Timestamp endDateTimeStamp = 5;
 }
-message CoTravelerRequest {
- int64 bookingId = 1;
- int64 coTravelerId = 2;
+
+message BookingInfoResponse {
+ int64 id=1;
+ int64 guestId=2;
+ Post post =3;
+ int32 guestNo = 4;
+ google.protobuf.Timestamp startDateTimeStamp = 5;
+ google.protobuf.Timestamp endDateTimeStamp = 6;
+ int32 status = 7;
+ bool noItem = 8;
+
 }
-message GetBookingsRequest {
-	int64 id = 1;
-	enum ForAction {
-		forUser = 0;
-		forAccommodation = 1;
-	}
-	ForAction forAction = 2;
+message BookingListResponse {
+repeated BookingInfoResponse items = 1;
 }
-message BookingDetailsReply {	
- User guest = 1;
- Accommodation accommodation = 2;
- int32 guestNo = 3;
- google.protobuf.Timestamp startDateTimeStamp = 4;
- google.protobuf.Timestamp endDateTimeStamp = 5;
- int32 status = 6;
- repeated User coTravelers = 7;
- bool noBooking = 8;
- int64 id=9;
-}
-message BookingsReply {
-repeated BookingDetailsReply bookings = 1;
-}
-message User {
-	int64 id = 1;
-	string firstName = 2;
-	string lastName = 3;
-	string email = 4;
-	google.protobuf.StringValue phoneNumber =5;
-	google.protobuf.StringValue address = 6;
-}
-message Accommodation {
+
+message Post {
    int64 id = 1;
-   string title = 2;
-   int64 ownerId = 3;
-   string address = 4;
-   string contactNumber = 5;
-   google.protobuf.Int32Value roomsNo = 6;
-   google.protobuf.Int32Value bathroomsNo = 7;
-   google.protobuf.Int32Value bedsNo = 8;
-   int32 maxGuestsNo = 9;
-   google.protobuf.Int32Value squareMeters = 10;
-   double price = 11;
-   google.protobuf.BoolValue isWholeApartment = 12;
-   string movingInTime = 13;
-   string movingOutTime = 14;
-   }
+   int64 ownerId = 2;
+   int32 maxGuestsNo = 3;
+}

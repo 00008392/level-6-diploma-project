@@ -7,11 +7,11 @@ using Account.Domain.Logic.IntegrationEvents.Events;
 using Account.Domain.Logic.Services.Core;
 using Account.PasswordHandling;
 using AutoMapper;
-using BaseClasses.Contracts;
-using BaseClasses.Exceptions;
+using DAL.Base.Contracts;
+using Domain.Logic.Base.Exceptions;
 using EventBus.Contracts;
 using FluentValidation;
-using Domain.Helpers;
+using Domain.Logic.Base.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,8 +80,8 @@ namespace Account.Domain.Logic.Services
             var user = await FindUserAsync(id, x=>x.BookingsAsGuest, x=>x.BookingsAsOwner);
             //check if user has active bookings as owner or guest (active - booking which has not expired yet)
             //if user has active bookings, account cannot be deleted
-            if ((user.BookingsAsGuest?.Any(x => x.EndDate > DateTime.Now) ?? false) ||
-               (user.BookingsAsOwner?.Any(x => x.EndDate > DateTime.Now) ?? false))
+            if ((user.BookingsAsGuest?.Any(x => x.EndDate.Date > DateTime.Now.Date) ?? false) ||
+               (user.BookingsAsOwner?.Any(x => x.EndDate.Date > DateTime.Now.Date) ?? false))
             {
                 throw new DeleteUserException();
             }

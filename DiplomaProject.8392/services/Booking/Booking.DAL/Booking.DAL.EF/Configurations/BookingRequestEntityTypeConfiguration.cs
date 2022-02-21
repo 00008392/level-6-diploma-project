@@ -10,16 +10,17 @@ using System.Threading.Tasks;
 namespace Booking.DAL.EF.Configurations
 {
     public class BookingRequestEntityTypeConfiguration :
-          IEntityTypeConfiguration<BookingRequest>
+          IEntityTypeConfiguration<Domain.Entities.Booking>
     {
-        public void Configure(EntityTypeBuilder<BookingRequest> builder)
+        //configuration for booking entity
+        public void Configure(EntityTypeBuilder<Domain.Entities.Booking> builder)
         {
-            builder.HasKey(r => r.Id);
-            builder.HasOne(r => r.Guest).WithMany(g => g.BookingRequestsAsMainGuest)
-                .HasForeignKey(r => r.GuestId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne(r => r.Accommodation).WithMany(a => a.BookingRequests)
-                .HasForeignKey(r => r.AccommodationId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasMany(r => r.CoTravelers).WithMany(x => x.BookingRequestsAsCoTraveler);
+            builder.HasKey(x => x.Id);
+            //to avoid multiple cascade delete paths, required delete behavior is achieved through trigger
+            builder.HasOne(x => x.Guest).WithMany(x => x.Bookings)
+                .HasForeignKey(x => x.GuestId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Post).WithMany(x => x.Bookings)
+                .HasForeignKey(x => x.PostId).OnDelete(DeleteBehavior.Restrict);
            
         }
     }

@@ -1,13 +1,7 @@
 ﻿using AutoMapper;
-using BaseClasses.Contracts;
-using BaseClasses.Entities;
-using BaseClasses.Exceptions;
-using BaseClasses.Specifications;
-using BaseClasses.Specifications.Composite;
 using EventBus.Contracts;
 using EventBus.Events;
 using FluentValidation;
-using Domain.Helpers;
 using PostFeedback.Domain.Entities;
 using PostFeedback.Domain.Logic.Contracts;
 using PostFeedback.Domain.Logic.DTOs;
@@ -22,6 +16,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using DAL.Base.Contracts;
+using Domain.Logic.Base.Exceptions;
+using Domain.Logic.Base.Specifications;
+using Domain.Logic.Base.Helpers;
 
 namespace PostFeedback.Domain.Logic.Services
 {

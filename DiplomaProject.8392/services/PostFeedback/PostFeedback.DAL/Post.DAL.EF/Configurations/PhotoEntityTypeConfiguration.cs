@@ -14,12 +14,12 @@ namespace PostFeedback.DAL.EF.Configurations
         //configuration fo photo
         public void Configure(EntityTypeBuilder<Photo> builder)
         {
-            builder.HasKey(i => i.Id);
+            builder.HasKey(x => x.Id);
             //when post is deleted, all photos related to it are deleted
-            builder.HasOne(i => i.Post).WithMany(a => a.Photos)
-                .HasForeignKey(i => i.PostId).OnDelete(DeleteBehavior.Cascade);
-            builder.Property(i => i.PhotoBytes).IsRequired(true);
-            builder.Property(i => i.MimeType).IsRequired(true);
+            builder.HasOne(x => x.Post).WithMany(x => x.Photos)
+                .HasForeignKey(x => x.PostId).OnDelete(DeleteBehavior.Cascade);
+            builder.Property(x => x.PhotoBytes).IsRequired(true);
+            builder.Property(x => x.MimeType).IsRequired(true);
         }
     }
 }

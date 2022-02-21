@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 
 namespace Booking.API
 {
-    public partial class CreateRequest
+    //implements IBooking for proper display of dates
+    //and ICreateRequest to hide guest id property
+    public partial class CreateRequest: IBooking, ICreateRequest
     {
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        
     }
 }

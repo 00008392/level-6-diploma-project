@@ -14,13 +14,9 @@ namespace PostFeedback.DAL.EF.Configurations
         //configuration for user
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(u => u.Id);
+            builder.HasKey(x => x.Id);
             //disable auto increment of PK, since it will be retrieved from integration event
             builder.Property(x => x.Id).ValueGeneratedNever();
-            builder.HasIndex(u => u.Email).IsUnique(true);
-            builder.Property(u => u.Email).IsRequired(true);
-            builder.Property(u => u.FirstName).IsRequired(true);
-            builder.Property(u => u.LastName).IsRequired(true);
         }
     }
 }

@@ -8,32 +8,33 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.DTOs
 {
+    //dto that holds information about booking
     public class BookingInfoDTO
     {
         public long Id { get;private set; }
-        public UserDTO Guest { get; private set; }
-        public AccommodationDTO Accommodation { get; private set; }
-        public ICollection<UserDTO> CoTravelers { get; private set; }
+        public long GuestId { get; private set; }
+        public PostDTO Post { get; private set; }
         public int GuestNo { get;private set; }
         public DateTime StartDate { get; private set; }
         public DateTime EndDate { get; private set; }
         public Status Status { get; private set; }
 
-        public BookingInfoDTO(long id,
-            UserDTO guest, AccommodationDTO accommodation,
-            ICollection<UserDTO> coTravelers,
+        public BookingInfoDTO(
+            long id,
+            long guestId,
+            PostDTO post,
             int guestNo,
-            DateTime startDate, DateTime endDate, Status status)
+            DateTime startDate,
+            DateTime endDate,
+            Status status)
         {
             Id = id;
-            Guest = guest;
-            Accommodation = accommodation;
-            CoTravelers = coTravelers;
+            GuestId = guestId;
+            Post = post;
             GuestNo = guestNo;
             StartDate = startDate;
             EndDate = endDate;
             Status = status;
         }
-
     }
 }

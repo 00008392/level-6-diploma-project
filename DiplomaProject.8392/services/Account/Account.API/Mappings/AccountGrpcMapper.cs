@@ -2,7 +2,7 @@
 using Account.Domain.Logic.DTOs;
 using AutoMapper;
 using Google.Protobuf.WellKnownTypes;
-using Grpc.Helpers;
+using Grpc.Base.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

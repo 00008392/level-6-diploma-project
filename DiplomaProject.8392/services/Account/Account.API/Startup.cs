@@ -18,8 +18,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Account.API.Services;
-using BaseClasses.Contracts;
-using BaseClasses.Repositories.EF;
+using DAL.Base.Contracts;
+using DAL.Base.Repositories;
 using EventBus.Contracts;
 using Account.Domain.Logic.IntegrationEvents.Events;
 using EventBus.SubscriptionManager;
@@ -53,7 +53,6 @@ namespace Account.API
             services.AddDbContext<AccountDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("AccountDbContext"));
-                options.EnableSensitiveDataLogging();
             }) ;
             services.AddScoped<DbContext, AccountDbContext>();
             //registering repositories
@@ -62,7 +61,6 @@ namespace Account.API
             services.AddScoped<AbstractValidator<IPasswordBaseDTO>, PasswordValidator>();
             services.AddScoped<AbstractValidator<UserRegistrationDTO>, UserRegistrationValidator>();
             services.AddScoped<AbstractValidator<UserBaseDTO>, UserValidator>();
-            services.AddScoped<AbstractValidator<BookingAcceptedIntegrationEvent>, BookingValidator>();
             //registering business logic services
             services.AddScoped<ILoginService, Domain.Logic.Services.LoginService>();
             services.AddScoped<IUserService, Domain.Logic.Services.UserService>();

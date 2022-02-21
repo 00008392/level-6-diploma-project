@@ -7,22 +7,28 @@ using Booking.Domain.Entities;
 using Booking.Domain.Logic.Contracts;
 using Booking.Domain.Logic.IntegrationEvents.EventHandlers.Core;
 using Booking.Domain.Logic.IntegrationEvents.Events;
+using DAL.Base.Contracts;
 using EventBus.Contracts;
 
 namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 {
-    //tested
-    public class PostDeletedIntegrationEventHandler : BaseIntegrationEventHandler<Accommodation>,
+    //event handler that fires when post is deleted
+    public class PostDeletedIntegrationEventHandler : PostBaseIntegrationEventHandler,
         IIntegrationEventHandler<PostDeletedIntegrationEvent>
     {
-        public PostDeletedIntegrationEventHandler(IEventHandlerService<Accommodation> service)
-            : base(service)
+
+        public PostDeletedIntegrationEventHandler(IRepository<Post> postRepository)
+            :base(postRepository)
         {
         }
-
         public async Task Handle(PostDeletedIntegrationEvent @event)
         {
-            await _service.DeleteEntityAsync(@event.PostId);
+            //ensure that post exists in the DB
+            if(_postRepository.DoesItemWithIdExist(@event.PostId))
+            {
+                //delete post
+                await _postRepository.DeleteAsync(@event.PostId);
+            }
         }
     }
 }

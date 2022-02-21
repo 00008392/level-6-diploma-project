@@ -3,7 +3,7 @@ syntax = "proto3";
 option csharp_namespace = "Protos.Common";
 
 package common;
-
+// messages that are common for all proto files
 message Error {
 string propertyName = 1;
 string message = 2;

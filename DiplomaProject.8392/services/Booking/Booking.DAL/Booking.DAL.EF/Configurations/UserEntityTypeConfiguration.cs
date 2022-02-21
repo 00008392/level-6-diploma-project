@@ -12,13 +12,12 @@ namespace Booking.DAL.EF.Configurations
     public class UserEntityTypeConfiguration :
           IEntityTypeConfiguration<User>
     {
+        //configuration for user entity
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(u => u.Id);
-            builder.HasIndex(u => u.Email).IsUnique(true);
-            builder.Property(u => u.Email).IsRequired(true);
-            builder.Property(u => u.FirstName).IsRequired(true);
-            builder.Property(u => u.LastName).IsRequired(true);
+            builder.HasKey(x => x.Id);
+            //disable auto increment of PK, since it will be received from integration event
+            builder.Property(x => x.Id).ValueGeneratedNever();
         }
     }
 }

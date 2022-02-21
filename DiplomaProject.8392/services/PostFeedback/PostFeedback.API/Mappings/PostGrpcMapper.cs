@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Google.Protobuf.WellKnownTypes;
-using Grpc.Helpers;
+using Grpc.Base.Helpers;
 using PostFeedback.Domain.Logic.DTOs;
 using PostFeedback.Domain.Logic.Filter;
 using Protos.Common;

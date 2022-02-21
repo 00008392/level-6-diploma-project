@@ -1,11 +1,16 @@
 ﻿using AutoMapper;
-using BaseClasses.Contracts;
 using Booking.Domain.Entities;
 using Booking.Domain.Enums;
 using Booking.Domain.Logic.Contracts;
 using Booking.Domain.Logic.DTOs;
 using Booking.Domain.Logic.Exceptions;
-using Booking.Domain.Logic.Specification;
+using Booking.Domain.Logic.IntegrationEvents.Events;
+using Booking.Domain.Logic.Specifications;
+using DAL.Base.Contracts;
+using Domain.Logic.Base.Exceptions;
+using Domain.Logic.Base.Helpers;
+using Domain.Logic.Base.Specifications;
+using EventBus.Contracts;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -16,141 +21,151 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.Services
 {
+    //service for booking manipulation
     public class BookingService : IBookingService
     {
-        private readonly IRepositoryWithIncludes<BookingRequest> _bookingRepository;
+        private readonly IRepository<Entities.Booking> _bookingRepository;
         private readonly IRepository<User> _userRepository;
-        private readonly IRepository<Accommodation> _accommodationRepository;
-        private readonly AbstractValidator<CreateBookingRequestDTO> _validator;
+        private readonly IRepository<Post> _postRepository;
+        private readonly AbstractValidator<CreateBookingDTO> _validator;
         private readonly IMapper _mapper;
+        private readonly IEventBus _eventBus;
 
-        public BookingService(IRepositoryWithIncludes<BookingRequest> repository,
-            IRepository<User> userRepository, IRepository<Accommodation> accommodationRepository,
-            AbstractValidator<CreateBookingRequestDTO> validator,
-            IMapper mapper)
+        public BookingService(
+            IRepository<Entities.Booking> repository,
+            IRepository<User> userRepository,
+            IRepository<Post> postRepository,
+            AbstractValidator<CreateBookingDTO> validator,
+            IMapper mapper,
+            IEventBus eventBus)
         {
             _bookingRepository = repository;
             _userRepository = userRepository;
-            _accommodationRepository = accommodationRepository;
+            _postRepository = postRepository;
             _validator = validator;
             _mapper = mapper;
+            _eventBus = eventBus;
         }
-
-        public async Task CreateBookingRequestAsync(CreateBookingRequestDTO requestDTO)
+        //create booking request on accommodation
+        public async Task CreateBookingAsync(CreateBookingDTO requestDTO)
         {
-            var validationResult = _validator.Validate(requestDTO);
-            if (!validationResult.IsValid)
+            //validate dto
+            ServiceHelper.ValidateItem(_validator, requestDTO);
+            //ensure that related entities exist in the DB
+            //check that guest exists
+            ServiceHelper.CheckIfRelatedEntityExists(requestDTO.GuestId, _userRepository);
+            //check that post exists
+            ServiceHelper.CheckIfRelatedEntityExists(requestDTO.PostId, _postRepository);
+            //accommodation (post) owner cannot book his own accommodation
+            var post = await _postRepository.GetByIdAsync(requestDTO.PostId);
+            //ensure that guest is not the same as owner
+            if (requestDTO.GuestId==post.OwnerId)
             {
-                throw new ValidationException(validationResult.Errors);
+                throw new AccommodationBookedByOwnerException();
             }
-            var userExists = _userRepository.DoesItemWithIdExist(requestDTO.GuestId);
-            if (!userExists)
+            //ensure that number of guests indicated in booking is not greater than
+            //maximum number of guests that accommdoation can have
+            if(requestDTO.GuestNo>post.MaxGuestsNo)
             {
-                throw new ForeignKeyViolationException("User");
+                throw new InvalidGuestNumberException();
             }
-            var accommodation = await _accommodationRepository.GetByIdAsync(requestDTO.AccommodationId);
-            if (accommodation==null)
+            //ensure that accommodation is not booked for specified period of time
+            //find booking for the same accommodation and the same period of time
+            //if such booking exists, accommodation cannot be booked
+            var booking = (await _bookingRepository.GetFilteredAsync(new BookingsByPostAndDatesSpecification(
+                (DateTime)requestDTO.StartDate, (DateTime)requestDTO.EndDate, requestDTO.PostId)
+                .ToExpression())).FirstOrDefault();
+            if (booking !=null)
             {
-                throw new ForeignKeyViolationException("Accommodation");
+                throw new AccommodationBookedException(requestDTO.PostId);
             }
-            if(requestDTO.GuestId==accommodation.OwnerId)
-            {
-                throw new Exception("Accommodation cannot be booked by its owner");
-            }
-            if((await FindBookingForDatesAsync((DateTime)requestDTO.StartDate, 
-                (DateTime)requestDTO.EndDate, requestDTO.AccommodationId)).Any())
-            {
-                throw new AccommodationBookedException(requestDTO.AccommodationId);
-            }
-            var request = _mapper.Map<BookingRequest>(requestDTO);
+            //if all correct, map dto to domain entity
+            var request = _mapper.Map<Entities.Booking>(requestDTO);
+            //create booking
             await _bookingRepository.CreateAsync(request);
         }
-        public async Task DeleteBookingRequestAsync(long id)
+        //delete booking
+        //can be deleted by the user who requested it until not accepted or if rejected/cancelled
+        public async Task DeleteBookingAsync(long id)
         {
+            //find booking in the DB and throw exception if does not exist
             var request = await FindRequestAsync(id);
+            //booking cannot be deleted if it is accepted
             if(request.Status == Status.Accepted)
             {
-                throw new DeleteBookingRequestException();
+                throw new DeleteBookingException();
             }
+            //if all correct, delete booking
             await _bookingRepository.DeleteAsync(id);
         }
-        public async Task HandleCoTravelerAsync(CoTravelerDTO coTravelerDTO)
+        //update booking status
+        //can be accepted/rejected by accommodation owner, can be cancelled by both guest and owner
+        public async Task HandleBookingStatusAsync(UpdateBookingStatusDTO bookingStatusDTO)
         {
-            var coTraveler = await _userRepository.GetByIdAsync(coTravelerDTO.CoTravelerId);
-            if (coTraveler == null)
+            //find booking in the DB and throw exception if does not exist
+            var booking = await FindRequestAsync(bookingStatusDTO.BookingId, x=>x.Post);
+            //ensure that booking status can be changed to indicated status through specification
+            bool isSatisfied = bookingStatusDTO.BookingSpecification.IsSatisfiedBy(booking);
+            //if user sets the same status or if condition in specification is not met, throw exception
+            if (booking.Status==bookingStatusDTO.Status || !isSatisfied)
             {
-                throw new NotFoundException(coTravelerDTO.CoTravelerId, "Co traveler");
+                throw new UpdateBookingStatusException(bookingStatusDTO.Status);
             }
-            // co traveler can be added/removed only if booking request is not accepted yet
-            var bookingRequest = (await _bookingRepository.GetFilteredAsync(
-                x => x.Id == coTravelerDTO.BookingId && x.Status == (int)Status.Pending, 
-                relatedEntitiesIncluded: true))
-                .SingleOrDefault();
-            if (bookingRequest==null)
-            {
-                throw new NotFoundException(coTravelerDTO.CoTravelerId, "Booking request");
-            }
-            if(coTravelerDTO.Action==Enums.CoTravelerAction.Remove)
-            {
-                var coTravelerToDelete = bookingRequest.CoTravelers.Where(x => x.Id == coTraveler.Id).SingleOrDefault();
-                    if (coTravelerToDelete!=null)
-                    {
-                        bookingRequest.RemoveCotraveler(coTravelerToDelete);
-                    }
-            }
-            else
-            {
-                if (!bookingRequest.CoTravelers.Where(x => x.Id == coTraveler.Id).Any())
-                {
-                    bookingRequest.AddCotraveler(coTraveler);
-                }
-            }
-            await _bookingRepository.UpdateAsync(bookingRequest);
+            //if all correct, set status
+            booking.SetStatus(bookingStatusDTO.Status);
+            //update booking
+            await _bookingRepository.UpdateAsync(booking);
+            //booking microservice publishes integration event in case if 
+            //booking is accepted by accommodation owner or if accepted booking is cancelled
+            //by either guest or owner
+            PublishIntegrationEvent(booking);
         }
-        public async Task HandleRequestStatusAsync(BookingStatusDTO bookingStatusDTO)
+        //get bookings either by guest or by post
+        //guest can view bookings created by him/her and owner can view bookings made on his/her accommodations
+        public async Task<ICollection<BookingInfoDTO>> GetBookingsAsync(Specification<Entities.Booking> specification)
         {
-            var request = await FindRequestAsync(bookingStatusDTO.BookingId);
-            bool isSatisfied = bookingStatusDTO.BookingSpecification.IsSatisfiedBy(request);
-            if (request.Status== bookingStatusDTO.BookingStatus || !isSatisfied)
-            {
-                throw new BookingRequestStatusException(bookingStatusDTO.BookingStatus);
-            }
-            request.SetStatus(bookingStatusDTO.BookingStatus);
-            await _bookingRepository.UpdateAsync(request);
+            //filter bookings by specification
+            var bookingList = (await _bookingRepository.
+                GetFilteredAsync(specification.ToExpression(), x=>x.Post)).ToList();
+            //map entities to dtos
+            var bookingDTOList = _mapper.Map<ICollection<BookingInfoDTO>>(bookingList);
+            return bookingDTOList;
         }
-        public async Task<ICollection<BookingInfoDTO>> GetBookingsAsync(BookingRequestSpecification specification)
-        {
-            var requestsList = (await _bookingRepository.GetFilteredAsync(specification.ToExpression(), relatedEntitiesIncluded: true)).ToList();
-            var requestsDTOList = _mapper.Map<ICollection<BookingInfoDTO>>(requestsList);
-            return requestsDTOList;
-        }
+        //get booking details by id
         public async Task<BookingInfoDTO> GetBookingDetailsAsync(long id)
         {
-            var request = await _bookingRepository.GetByIdAsync(id, relatedEntitiesIncluded: true);
-            if (request!=null)
+            var booking = await _bookingRepository.GetByIdAsync(id, x=>x.Post);
+            if (booking != null)
             {
-                return _mapper.Map<BookingInfoDTO>(request);
+                //map domain entity to dto
+                return _mapper.Map<BookingInfoDTO>(booking);
             }
             return null;
         }
-        private async Task<BookingRequest> FindRequestAsync(long id)
+        //method that finds booking by id in the DB and throws exception if it does not exist
+        private async Task<Entities.Booking> FindRequestAsync(
+            long id,
+            params Expression<Func<Entities.Booking, object>>[] includes)
         {
-            var request = await _bookingRepository.GetByIdAsync(id);
-            if (request == null)
+            var booking = await _bookingRepository.GetByIdAsync(id, includes);
+            if (booking == null)
             {
-                throw new NotFoundException("Booking request");
+                throw new NotFoundException(id,nameof(Entities.Booking));
             }
-            return request;
+            return booking;
         }
-        private async Task<ICollection<BookingRequest>> FindBookingForDatesAsync(DateTime startDate, DateTime endDate,
-            long accommodationId)
+        //method that publishes integration event through event bus when booking is accepted/cancelled
+        private void PublishIntegrationEvent(Entities.Booking booking)
         {
-            var accommodations = await _bookingRepository.GetFilteredAsync(x => x.AccommodationId == accommodationId &&
-              ((startDate >= x.StartDate && startDate <= x.EndDate) ||
-              (endDate >= x.StartDate && endDate <= x.EndDate)) && x.Status == Status.Accepted);
-
-            return accommodations;
+            if (booking.Status == Status.Accepted)
+            {
+                var integrationEvent = _mapper.Map<BookingAcceptedIntegrationEvent>(booking);
+                _eventBus.Publish(integrationEvent);
+            }
+            else if (booking.Status == Status.Cancelled)
+            {
+                _eventBus.Publish(new BookingCancelledIntegrationEvent(booking.Id));
+            }
         }
-
     }
 }

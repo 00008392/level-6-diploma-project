@@ -1,4 +1,5 @@
-﻿using BaseClasses.Contracts;
+﻿
+using DAL.Base.Contracts;
 using Microsoft.EntityFrameworkCore;
 using PostFeedback.DAL.EF.Data;
 using PostFeedback.Domain.Entities;

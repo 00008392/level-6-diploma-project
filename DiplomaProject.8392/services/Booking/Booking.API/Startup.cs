@@ -1,6 +1,4 @@
-﻿using BaseClasses.Contracts;
-using BaseClasses.Repositories.EF;
-using Booking.DAL.EF.Data;
+﻿using Booking.DAL.EF.Data;
 using Booking.Domain.Logic.Contracts;
 using Booking.Domain.Logic.DTOs;
 using Booking.Domain.Logic.Services;
@@ -25,7 +23,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Booking.API.Services;
-using Booking.DAL.EF.Repositories;
+using DAL.Base.Contracts;
+using DAL.Base.Repositories;
 
 namespace Booking.API
 {
@@ -41,21 +40,23 @@ namespace Booking.API
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //enabling grpc
             services.AddGrpc();
+            //enabling fluent validation
             services.AddFluentValidation();
+            //configuring automapper
             services.AddAutoMapper(typeof(Startup));
+            //configuring and registering db context
             services.AddDbContext<BookingDbContext>(options =>
-        options.UseSqlServer(Configuration.GetConnectionString("BookingDbContext")));
+            options.UseSqlServer(Configuration.GetConnectionString("BookingDbContext")));
             services.AddScoped<DbContext, BookingDbContext>();
-            services.AddScoped(typeof(IRepositoryWithIncludes<Domain.Entities.BookingRequest>), typeof(BookingRepository));
+            //registering repositories
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
-            services.AddScoped<AbstractValidator<AccommodationDTO>, AccommodationValidator>();
-            services.AddScoped<AbstractValidator<CreateBookingRequestDTO>, BookingRequestValidator>();
-            services.AddScoped<AbstractValidator<CreateUserDTO>, CreateUserValidator>();
-            services.AddScoped<AbstractValidator<UserDTO>, UpdateUserValidator>();
+            //registering validators
+            services.AddScoped<AbstractValidator<CreateBookingDTO>, BookingValidator>();
+            //registering business logic services
             services.AddScoped<IBookingService, Domain.Logic.Services.BookingService>();
-            services.AddScoped<IEventHandlerService<Domain.Entities.User>, UserEventHandlerService>();
-            services.AddScoped<IEventHandlerService<Domain.Entities.Accommodation>, PostEventHandlerService>();
+            //configuring and registering event bus
             services.AddSingleton<ISubscriptionManager, EventBusSubscriptionManager>();
             services.AddSingleton<IEventBus, RabbitMQEventBus.EventBus.RabbitMQEventBus>(sp => {
 
@@ -72,11 +73,10 @@ namespace Booking.API
                     serviceFactory, connection);
             }
             );
-            services.AddTransient<UserCreatedIntegrationEventHandler>();
+            //registering event handlers
             services.AddTransient<UserDeletedIntegrationEventHandler>();
-            services.AddTransient<UserUpdatedIntegrationEventHandler>();
-            services.AddTransient<PostCreatedIntegrationEventHandler>();
-            services.AddTransient<PostUpdatedIntegrationEventHandler>();
+            services.AddTransient<UserCreatedOrUpdatedIntegrationEventHandler>();
+            services.AddTransient<PostCreatedOrUpdatedIntegrationEventHandler>();
             services.AddTransient<PostDeletedIntegrationEventHandler>();
         }
 
@@ -92,6 +92,7 @@ namespace Booking.API
 
             app.UseEndpoints(endpoints =>
             {
+                //adding grpc services
                 endpoints.MapGrpcService<BookingServiceGrpc>();
 
                 endpoints.MapGet("/", async context =>
@@ -99,12 +100,11 @@ namespace Booking.API
                     await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
                 });
             });
+            //subscribing to events from other microservices
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.Subscribe<UserCreatedIntegrationEvent, UserCreatedIntegrationEventHandler>();
-            eventBus.Subscribe<UserUpdatedIntegrationEvent, UserUpdatedIntegrationEventHandler>();
+            eventBus.Subscribe<UserCreatedOrUpdatedIntegrationEvent, UserCreatedOrUpdatedIntegrationEventHandler>();
             eventBus.Subscribe<UserDeletedIntegrationEvent, UserDeletedIntegrationEventHandler>();
-            eventBus.Subscribe<PostCreatedIntegrationEvent, PostCreatedIntegrationEventHandler>();
-            eventBus.Subscribe<PostUpdatedIntegrationEvent, PostUpdatedIntegrationEventHandler>();
+            eventBus.Subscribe<PostCreatedOrUpdatedIntegrationEvent, PostCreatedOrUpdatedIntegrationEventHandler>();
             eventBus.Subscribe<PostDeletedIntegrationEvent, PostDeletedIntegrationEventHandler>();
         }
     }

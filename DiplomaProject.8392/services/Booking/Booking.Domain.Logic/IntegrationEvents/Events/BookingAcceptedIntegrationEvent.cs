@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.IntegrationEvents.Events
 {
+    //event raised when booking is accepted by accommodation owner (booking status changed to Accepted)
+    //published by this microservice thhrough event bus
     public class BookingAcceptedIntegrationEvent: IntegrationEvent
     {
         public long BookingId { get; private set; }

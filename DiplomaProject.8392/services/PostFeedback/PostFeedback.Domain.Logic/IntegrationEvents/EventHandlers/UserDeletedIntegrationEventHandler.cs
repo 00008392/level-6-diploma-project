@@ -8,9 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using EventBus.Contracts;
 using AutoMapper;
-using BaseClasses.Contracts;
 using PostFeedback.Domain.Entities;
-using Domain.Helpers;
+using DAL.Base.Contracts;
 
 namespace PostFeedback.Domain.Logic.IntegrationEvents.EventHandlers
 {
@@ -26,9 +25,11 @@ namespace PostFeedback.Domain.Logic.IntegrationEvents.EventHandlers
         public async Task Handle(UserDeletedIntegrationEvent @event)
         {
             //check if user exists in the database
-            ServiceHelper.CheckIfRelatedEntityExists(@event.UserId, _userRepository);
-            //if exists, delete user
-            await _userRepository.DeleteAsync(@event.UserId);
+            if(_userRepository.DoesItemWithIdExist(@event.UserId))
+            {
+                //if exists, delete user
+                await _userRepository.DeleteAsync(@event.UserId);
+            }
         }
     }
 }

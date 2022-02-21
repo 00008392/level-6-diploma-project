@@ -1,4 +1,5 @@
-﻿using BaseClasses.Contracts;
+﻿
+using DAL.Base.Contracts;
 using PostFeedback.Domain.Entities;
 using System;
 using System.Collections.Generic;

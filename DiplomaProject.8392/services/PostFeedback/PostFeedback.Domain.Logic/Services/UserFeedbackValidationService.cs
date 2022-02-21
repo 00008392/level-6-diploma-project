@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using PostFeedback.Domain.Entities;
 using PostFeedback.Domain.Logic.Contracts;
 using PostFeedback.Domain.Logic.DTOs;
-using BaseClasses.Contracts;
+using DAL.Base.Contracts;
 
 namespace PostFeedback.Domain.Logic.Services
 {

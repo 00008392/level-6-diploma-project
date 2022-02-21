@@ -24,10 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BaseLibraries\DAL.Base\DAL.Base.csproj" />
+    <ProjectReference Include="..\..\..\BaseLibraries\Grpc.Base\Grpc.Base.csproj" />
     <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\..\..\integration\RabbitMQEventBus\RabbitMQEventBus.csproj" />
-    <ProjectReference Include="..\..\..\utilities\BaseClasses\BaseClasses.csproj" />
-    <ProjectReference Include="..\..\..\utilities\ExceptionHandling\Grpc.Helpers.csproj" />
     <ProjectReference Include="..\PostFeedback.DAL\Post.DAL.EF\PostFeedback.DAL.EF.csproj" />
     <ProjectReference Include="..\PostFeedback.Domain.Logic\PostFeedback.Domain.Logic.csproj" />
     <ProjectReference Include="..\PostFeedback.Domain\PostFeedback.Domain.csproj" />

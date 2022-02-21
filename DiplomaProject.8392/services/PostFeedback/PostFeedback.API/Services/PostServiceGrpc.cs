@@ -1,8 +1,4 @@
 ﻿using AutoMapper;
-using EventBus.Contracts;
-using Grpc.Helpers;
-using FluentValidation;
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using PostFeedback.Domain.Logic.Contracts;
 using PostFeedback.Domain.Logic.DTOs;
@@ -13,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grpc.Base.Helpers;
 
 namespace PostFeedback.API.Services
 {
@@ -66,12 +63,9 @@ namespace PostFeedback.API.Services
             var filter = _mapper.Map<FilterParameters>(request);
             //get posts by filter criteria
             var posts = await _service.GetPostsAsync(filter);
-            //map dtos to list of grpc objects
-            var postList = _mapper.Map<ICollection<PostResponse>>(posts);
-            //add list of objects to grpc response
-            var response = new PostListResponse();
-            response.Items.Add(postList);
-            return response;
+            //map to response
+            return GrpcServiceHelper.MapItems<PostListResponse, PostDetailsDTO, PostResponse>
+                (_mapper, posts);
         }
     }
 

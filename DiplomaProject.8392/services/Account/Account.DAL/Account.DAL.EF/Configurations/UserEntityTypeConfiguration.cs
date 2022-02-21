@@ -14,17 +14,17 @@ namespace Account.DAL.EF.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(u => u.Id);
+            builder.HasKey(x => x.Id);
             //email is unique for each user, since it is a part of user credentials
-            builder.HasIndex(u => u.Email).IsUnique(true);
-            builder.Property(u => u.Email).IsRequired(true);
-            builder.Property(u => u.FirstName).IsRequired(true);
-            builder.Property(u => u.LastName).IsRequired(true);
-            builder.Property(u => u.PasswordSalt).IsRequired(true);
-            builder.Property(u => u.PasswordHash).IsRequired(true);
-            builder.HasOne(u => u.Country).WithMany(c => c.Users).
-                HasForeignKey(u => u.CountryId).OnDelete(DeleteBehavior.Restrict);
-            builder.Property(u => u.ProfilePhoto).IsRequired(false);
+            builder.HasIndex(x => x.Email).IsUnique(true);
+            builder.Property(x => x.Email).IsRequired(true);
+            builder.Property(x => x.FirstName).IsRequired(true);
+            builder.Property(x => x.LastName).IsRequired(true);
+            builder.Property(x => x.PasswordSalt).IsRequired(true);
+            builder.Property(x => x.PasswordHash).IsRequired(true);
+            builder.HasOne(x => x.Country).WithMany(x => x.Users).
+                HasForeignKey(x => x.CountryId).OnDelete(DeleteBehavior.Restrict);
+            builder.Property(x => x.ProfilePhoto).IsRequired(false);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BaseClasses.Entities;
+﻿
+using DAL.Base.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,33 +8,17 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Entities
 {
+    //user domain entity
+    //booking microservice needs only id of user to handle booking logic
+    //id value is received from account microservice
     public class User: BaseEntity
     {
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string Email { get; private set; }
-        public string PhoneNumber { get; private set; }
-        public string Address { get; private set; }
-        public ICollection<BookingRequest> BookingRequestsAsMainGuest { get; }
-        public ICollection<BookingRequest> BookingRequestsAsCoTraveler { get; }
-        public ICollection<Accommodation> Accommodations { get; }
-
-
-        public User(string email, string firstName, string lastName)
+        public User(long id) 
+            : base(id)
         {
-            Email = email;
-            FirstName = firstName;
-            LastName = lastName;
         }
-        public User(long id, string firstName, string lastName,
-           string email, string phoneNumber,
-           string address):base(id)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            Email = email;
-            PhoneNumber = phoneNumber;
-            Address = address;
-        }
+        public ICollection<Booking> Bookings { get; private set; }
+        public ICollection<Post> Posts { get; private set; }
+        
     }
 }

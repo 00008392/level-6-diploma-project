@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
-using BaseClasses.Contracts;
-using BaseClasses.Exceptions;
 using FluentValidation;
-using Domain.Helpers;
 using PostFeedback.Domain.Entities;
 using PostFeedback.Domain.Logic.Contracts;
 using PostFeedback.Domain.Logic.DTOs;
@@ -12,6 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Base.Contracts;
+using Domain.Logic.Base.Exceptions;
+using Domain.Logic.Base.Helpers;
 
 namespace PostFeedback.Domain.Logic.Services
 {

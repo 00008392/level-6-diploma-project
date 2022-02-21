@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\utilities\BaseClasses\BaseClasses.csproj" />
+    <ProjectReference Include="..\..\..\BaseLibraries\DAL.Base\DAL.Base.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.IntegrationEvents.Events
 {
-    //tested
+    //event raised by post microservice when post is deleted
+    //consumed by this microservice through event bus
     public class PostDeletedIntegrationEvent : IntegrationEvent
     {
         public long PostId { get; private set; }

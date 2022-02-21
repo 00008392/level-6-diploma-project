@@ -40,5 +40,5 @@ message FeedbackResponse {
 	bool noItem = 7;
 }
 message FeedbackListResponse {
-	repeated FeedbackResponse feedbacks = 1;
+	repeated FeedbackResponse items = 1;
 }

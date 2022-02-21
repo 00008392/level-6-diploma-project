@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.IntegrationEvents.Events
 {
-    //tested
+    //event raised by account microservice when user is deleted
+    //consumed by this microservice through event bus
     public class UserDeletedIntegrationEvent: IntegrationEvent
     {
         public long UserId { get; private set; }

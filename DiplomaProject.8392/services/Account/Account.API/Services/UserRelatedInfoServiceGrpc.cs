@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Grpc.Helpers;
+using Grpc.Base.Helpers;
 
 namespace Account.API.Services
 {

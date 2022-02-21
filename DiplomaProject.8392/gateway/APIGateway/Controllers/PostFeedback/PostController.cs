@@ -129,10 +129,10 @@ namespace APIGateway.Controllers.PostFeedback
             //try to delete post
             var request = new Request { Id = id };
             var reply = await _postClient.DeletePostAsync(request);
-            //in case of errors, return not found
+            //in case of errors, return bad request
             if (!reply.IsSuccess)
             {
-                return NotFound(reply);
+                return BadRequest(reply);
             }
             return NoContent();
         }

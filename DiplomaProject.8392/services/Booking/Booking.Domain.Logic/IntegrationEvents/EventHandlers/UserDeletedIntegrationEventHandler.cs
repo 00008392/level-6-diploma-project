@@ -7,22 +7,29 @@ using Booking.Domain.Entities;
 using Booking.Domain.Logic.Contracts;
 using Booking.Domain.Logic.IntegrationEvents.EventHandlers.Core;
 using Booking.Domain.Logic.IntegrationEvents.Events;
+using DAL.Base.Contracts;
 using EventBus.Contracts;
 
 namespace Booking.Domain.Logic.IntegrationEvents.EventHandlers
 {
-    //tested
-    public class UserDeletedIntegrationEventHandler : BaseIntegrationEventHandler<User>,
+    //event handler that fires when user is deleted
+    public class UserDeletedIntegrationEventHandler : UserBaseIntegrationEventHandler,
         IIntegrationEventHandler<UserDeletedIntegrationEvent>
     {
-        public UserDeletedIntegrationEventHandler(IEventHandlerService<User> service)
-            : base(service)
+
+        public UserDeletedIntegrationEventHandler(IRepository<User> userRepository)
+            :base(userRepository)
         {
         }
 
         public async Task Handle(UserDeletedIntegrationEvent @event)
         {
-            await _service.DeleteEntityAsync(@event.UserId);
+            //ensure that user exists in the DB
+            if(_userRepository.DoesItemWithIdExist(@event.UserId))
+            {
+                //delete user
+                await _userRepository.DeleteAsync(@event.UserId);
+            }
         }
     }
 }

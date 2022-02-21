@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Logic.IntegrationEvents.Events
 {
-   public class BookingCancelledIntegrationEvent: IntegrationEvent
+    //event raised when accepted booking is cancelled 
+    //published by this microservice thhrough event bus
+    public class BookingCancelledIntegrationEvent: IntegrationEvent
     {
         public long BookingId { get;private set; }
 

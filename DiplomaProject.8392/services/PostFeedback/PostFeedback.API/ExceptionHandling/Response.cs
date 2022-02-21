@@ -1,4 +1,4 @@
-﻿using Grpc.Helpers;
+﻿using Grpc.Base.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

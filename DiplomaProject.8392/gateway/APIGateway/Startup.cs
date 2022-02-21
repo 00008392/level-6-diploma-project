@@ -3,9 +3,11 @@ using APIGateway.Authentication;
 using APIGateway.Authorization.Handlers.Feedback;
 using APIGateway.Authorization.Handlers.Post;
 using APIGateway.Authorization.Handlers.User;
+using APIGateway.Authorization.Handlers.Booking;
 using APIGateway.Authorization.Requirements.Feedback;
 using APIGateway.Authorization.Requirements.Post;
 using APIGateway.Authorization.Requirements.User;
+using APIGateway.Authorization.Requirements.Booking;
 using APIGateway.Serialization;
 using Booking.API;
 using Grpc.Net.Client;
@@ -120,9 +122,19 @@ namespace APIGateway
                 options.AddPolicy("PostDeletePolicy", policy =>
                     policy.Requirements.Add(new PostDeleteRequirement()));
                 options.AddPolicy("UserFeedbackDeletePolicy", policy =>
-                   policy.Requirements.Add(new FeedbackDeleteRequirement<FeedbackForUser.FeedbackForUserClient>()));
+                    policy.Requirements.Add(new FeedbackDeleteRequirement<FeedbackForUser.FeedbackForUserClient>()));
                 options.AddPolicy("PostFeedbackDeletePolicy", policy =>
-                  policy.Requirements.Add(new FeedbackDeleteRequirement<FeedbackForPost.FeedbackForPostClient>()));
+                    policy.Requirements.Add(new FeedbackDeleteRequirement<FeedbackForPost.FeedbackForPostClient>()));
+                options.AddPolicy("GetBookingsByGuestPolicy", policy =>
+                    policy.Requirements.Add(new GetBookingsByGuestRequirement()));
+                options.AddPolicy("GetBookingsByPostPolicy", policy =>
+                    policy.Requirements.Add(new GetBookingsByPostRequirement()));
+                options.AddPolicy("GetByIdCancelBookingPolicy", policy =>
+                    policy.Requirements.Add(new GetByIdCancelBookingRequirement()));
+                options.AddPolicy("AcceptRejectBookingPolicy", policy =>
+                    policy.Requirements.Add(new AcceptRejectBookingRequirement()));
+                options.AddPolicy("DeleteBookingPolicy", policy =>
+                   policy.Requirements.Add(new DeleteBookingRequirement()));
             });
             //requirement handlers for resource based authorization
             services.AddSingleton<IAuthorizationHandler, UserUpdateAuthorizationHandler>();
@@ -130,6 +142,11 @@ namespace APIGateway
             services.AddSingleton<IAuthorizationHandler, PostDeleteAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, FeedbackDeleteAuthorizationHandler<FeedbackForUser.FeedbackForUserClient>>();
             services.AddSingleton<IAuthorizationHandler, FeedbackDeleteAuthorizationHandler<FeedbackForPost.FeedbackForPostClient>>();
+            services.AddSingleton<IAuthorizationHandler, GetBookingsByGuestAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, GetBookingsByPostAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, AcceptRejectBookingAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, GetByIdCancelBookingAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, DeleteBookingAuthorizationHandler>();
             //registering grpc services
             // account
             var accountUrl = new Uri(Configuration["grpcConnections:account"]);

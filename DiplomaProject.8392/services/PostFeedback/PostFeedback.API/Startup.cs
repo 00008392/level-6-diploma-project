@@ -1,5 +1,4 @@
-﻿using BaseClasses.Contracts;
-using BaseClasses.Repositories.EF;
+﻿
 using EventBus.Contracts;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -27,6 +26,8 @@ using PostFeedback.Domain.Logic.IntegrationEvents.EventHandlers;
 using EventBus.SubscriptionManager;
 using RabbitMQ.Client;
 using PostFeedback.DAL.EF.Repositories;
+using DAL.Base.Contracts;
+using DAL.Base.Repositories;
 
 namespace PostFeedback.API
 {
@@ -56,8 +57,6 @@ namespace PostFeedback.API
             services.AddScoped<IRepository<Post>, PostRepository>();
             //registering validators
             services.AddScoped<AbstractValidator<PostManipulationDTO>, PostValidator>();
-            services.AddScoped<AbstractValidator<UserCreatedOrUpdatedIntegrationEvent>, UserValidator>();
-            services.AddScoped<AbstractValidator<BookingAcceptedIntegrationEvent>, BookingValidator>();
             services.AddScoped<AbstractValidator<FeedbackDTO>, FeedbackValidator>();
             //registering business logic services
             services.AddScoped<IPostService, Domain.Logic.Services.PostService>();

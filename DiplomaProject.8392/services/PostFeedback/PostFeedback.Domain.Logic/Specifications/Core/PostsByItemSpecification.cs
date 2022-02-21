@@ -1,4 +1,5 @@
-﻿using BaseClasses.Specifications;
+﻿
+using Domain.Logic.Base.Specifications;
 using PostFeedback.Domain.Entities;
 using System;
 using System.Collections.Generic;

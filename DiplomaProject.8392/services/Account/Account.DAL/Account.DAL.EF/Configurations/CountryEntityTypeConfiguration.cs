@@ -14,8 +14,8 @@ namespace Account.DAL.EF.Configurations
     {
         public void Configure(EntityTypeBuilder<Country> builder)
         {
-            builder.HasKey(c => c.Id);
-            builder.Property(c => c.Name).IsRequired(true);
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Name).IsRequired(true);
         }
     }
 }

@@ -2,7 +2,6 @@
 using Booking.Domain.Logic.Contracts;
 using Booking.Domain.Logic.DTOs;
 using EventBus.Contracts;
-using Grpc.Helpers;
 using FluentValidation;
 using Grpc.Core;
 using Protos.Common;
@@ -10,145 +9,111 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Booking.Domain.Logic.Enums;
-using Booking.Domain.Logic.Specification;
+using Booking.Domain.Logic.Specifications;
 using Booking.Domain.Enums;
 using Booking.Domain.Logic.IntegrationEvents.Events;
 using EventBus.Events;
+using Grpc.Base.Helpers;
+using Domain.Logic.Base.Specifications;
 
 namespace Booking.API.Services
 {
+    //booking grpc service
     public class BookingServiceGrpc: BookingService.BookingServiceBase
     {
+        //inject service from domain logic layer
         private readonly IBookingService _service;
         private readonly IMapper _mapper;
-        private readonly IEventBus _eventBus;
 
-        public BookingServiceGrpc(IBookingService service,
-            IMapper mapper, IEventBus eventBus)
+        public BookingServiceGrpc(
+            IBookingService service,
+            IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
-            _eventBus = eventBus;
         }
-
-        public override async Task<Response> CreateBookingRequest(CreateRequest request,
+        //create booking
+        public override async Task<Response> CreateBooking(CreateRequest request,
             ServerCallContext context)
         {
-            var createRequestDTO = _mapper.Map<CreateBookingRequestDTO>(request);
-
-            return await HandleRequestAsync(_service.CreateBookingRequestAsync, createRequestDTO);
+            //call helper method that handles create and update grpc actions
+            return await GrpcServiceHelper.HandleCreateUpdateActionAsync<CreateBookingDTO,
+                Response, CreateRequest>(_service.CreateBookingAsync, _mapper, request);
         }
-        public override async Task<Response> DeleteBookingRequest(Request request,
+        //delete booking
+        public override async Task<Response> DeleteBooking(Request request,
           ServerCallContext context)
         {
-            return await HandleRequestAsync(_service.DeleteBookingRequestAsync, request.Id);
+            //call helper method that handles delete grpc action
+            return await GrpcServiceHelper.HandleDeleteActionAsync<Response>
+                (request.Id, _service.DeleteBookingAsync);
         }
-        public override async Task<Response> AcceptBookingRequest(Request request,
+        //update booking status to Accepted
+        public override async Task<Response> AcceptBooking(Request request,
          ServerCallContext context)
         {
-            var reply = await HandleBookingStatusAsync<AcceptRejectBookingRequestSpecification>
-                 (request, Domain.Enums.Status.Accepted);
-            await PublishStatusChangeEvent<BookingAcceptedIntegrationEvent>(reply, request.Id);
-            return reply;
+            return await HandleBookingStatusAsync<AcceptRejectBookingSpecification>
+                (request, Domain.Enums.Status.Accepted);
         }
-        public override async Task<Response> RejectBookingRequest(Request request,
+        //update booking status to Rejected
+        public override async Task<Response> RejectBooking(Request request,
          ServerCallContext context)
         {
-            return await HandleBookingStatusAsync<AcceptRejectBookingRequestSpecification>
-                (request, Domain.Enums.Status.Rejected);
+            return await HandleBookingStatusAsync<AcceptRejectBookingSpecification>
+                 (request, Domain.Enums.Status.Rejected);
         }
+        //update booking status to Cancelled
         public override async Task<Response> CancelBooking(Request request,
          ServerCallContext context)
         {
-            var reply = await HandleBookingStatusAsync<CancelBookingRequestSpecification>
+            return await HandleBookingStatusAsync<CancelBookingSpecification>
                 (request, Domain.Enums.Status.Cancelled);
-            await PublishStatusChangeEvent<BookingCancelledIntegrationEvent>(reply, request.Id);
-            return reply;
         }
-        public override async Task<Response> AddCoTraveler(CoTravelerRequest request,
+        //retrieve bookings created by user (guest)
+        public override async Task<BookingListResponse> GetBookingsForGuest(Request request,
             ServerCallContext context)
         {
-            return await HandleCoTravelerAsync(request, CoTravelerAction.Add);
+            return await HandleBookingsRetrieval<BookingsByUserSpecification>
+                (request);
         }
-        public override async Task<Response> RemoveCoTraveler(CoTravelerRequest request,
-           ServerCallContext context)
-        {
-            return await HandleCoTravelerAsync(request, CoTravelerAction.Remove);
-        }
-        public override async Task<BookingsReply> GetBookings(GetBookingsRequest request,
+        //retrieve bookings for accommodation (indicated in post)
+        public override async Task<BookingListResponse> GetBookingsForPost(Request request,
             ServerCallContext context)
         {
-            var reply = new BookingsReply();
-            BookingRequestSpecification specification = null;
-            if (request.ForAction == GetBookingsRequest.Types.ForAction.ForUser)
-            {
-                specification = new BookingsByUserSpecification(request.Id);
-            }
-            else if (request.ForAction == GetBookingsRequest.Types.ForAction.ForAccommodation)
-            {
-                specification = new BookingsByAccommodationSpecification(request.Id);
-            } 
-            if(specification != null)
-            {
-                var bookings =_mapper.Map<ICollection<BookingDetailsReply>>(await _service.GetBookingsAsync(specification));
-                reply.Bookings.AddRange(bookings);
-            }
-            return reply;
-            
+            return await HandleBookingsRetrieval<BookingsByPostSpecification>
+                 (request);
         }
-        public override async Task<BookingDetailsReply> GetBookingDetails(Request request,
+        //retrieve booking details by id
+        public override async Task<BookingInfoResponse> GetBookingDetails(Request request,
             ServerCallContext context)
         {
-            var bookingDetails = await _service.GetBookingDetailsAsync(request.Id);
-            if(bookingDetails!=null)
-            {
-                return _mapper.Map<BookingDetailsReply>(bookingDetails);
-            }
-            return new BookingDetailsReply
-            {
-                NoBooking = true
-            };
+            //call helper method that handles retrieval by id grpc action
+            return await GrpcServiceHelper.HandleRetrievalByIdAsync<BookingInfoResponse,
+                 BookingInfoDTO>(request.Id, _service.GetBookingDetailsAsync, _mapper);
         }
-        private async Task PublishStatusChangeEvent<T>(Response reply, long bookingId) where T: IntegrationEvent
+        //method that handles update of booking status
+        private async Task<Response> HandleBookingStatusAsync<T>(
+            Request request,
+            Domain.Enums.Status status) where T: Specification<Domain.Entities.Booking>, new()
         {
-            if (reply.IsSuccess)
-            {
-                var bookingStatusEvent = _mapper.Map<T>(
-                    await _service.GetBookingDetailsAsync(bookingId)
-                    );
-                _eventBus.Publish(bookingStatusEvent);
-            }
-        }
-        private async Task<Response> HandleCoTravelerAsync(CoTravelerRequest request, CoTravelerAction action)
-        {
-            var coTravelerDTO = new CoTravelerDTO(request.BookingId, request.CoTravelerId, action);
-            return await HandleRequestAsync(_service.HandleCoTravelerAsync, coTravelerDTO);
-        }
-        private async Task<Response> HandleRequestAsync<T>(Func<T, Task> action, T parameter)
-        {
-            var response = new Response();
-            try
-            {
-                await action(parameter);
-                response.IsSuccess = true;
-            }
-            catch (ValidationException ex)
-            {
-                response.HandleValidationException(ex);
-            }
-            catch (Exception ex)
-            {
-                response.HandleException(ex);
-            }
-            return response;
-        }
-        private async Task<Response> HandleBookingStatusAsync<T>(Request request,
-            Domain.Enums.Status status) where T: BookingRequestSpecification, new()
-        {
+            //create necessary specification
             var specification = new T();
-            var bookingStatusDTO = new BookingStatusDTO(request.Id, specification, status);
-            return await HandleRequestAsync(_service.HandleRequestStatusAsync, bookingStatusDTO);
+            var bookingStatusDTO = new UpdateBookingStatusDTO(request.Id, specification, status);
+            //call helper method that handles create and update grpc actions
+            return await GrpcServiceHelper.HandleCreateUpdateActionAsync<UpdateBookingStatusDTO,
+                 Response>(_service.HandleBookingStatusAsync, bookingStatusDTO);
+        }
+        //method that handles retrieval of bookings either by user or post
+        private async Task<BookingListResponse> HandleBookingsRetrieval<T>
+            (Request request) where T: Specification<Domain.Entities.Booking>
+        {
+            //create necessary specification
+            var specification = (T)Activator.CreateInstance(typeof(T), request.Id);
+            //get dtos from domain logic layer
+            var bookings = await _service.GetBookingsAsync(specification);
+            //map to response
+            return GrpcServiceHelper.MapItems<BookingListResponse, BookingInfoDTO,
+                BookingInfoResponse>(_mapper, bookings);
         }
     }
 }

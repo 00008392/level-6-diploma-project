@@ -10,8 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BaseLibraries\DAL.Base\DAL.Base.csproj" />
+    <ProjectReference Include="..\..\..\BaseLibraries\Domain.Logic.Base\Domain.Logic.Base.csproj" />
     <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
-    <ProjectReference Include="..\..\..\utilities\BaseClasses\BaseClasses.csproj" />
     <ProjectReference Include="..\Booking.Domain\Booking.Domain.csproj" />
   </ItemGroup>
 

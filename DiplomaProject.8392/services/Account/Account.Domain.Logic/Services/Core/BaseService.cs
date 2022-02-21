@@ -1,8 +1,7 @@
 ﻿using Account.Domain.Entities;
 using Account.PasswordHandling;
 using AutoMapper;
-using BaseClasses.Contracts;
-using BaseClasses.Exceptions;
+using DAL.Base.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

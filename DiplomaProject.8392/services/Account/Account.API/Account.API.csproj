@@ -26,9 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BaseLibraries\Grpc.Base\Grpc.Base.csproj" />
     <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\..\..\integration\RabbitMQEventBus\RabbitMQEventBus.csproj" />
-    <ProjectReference Include="..\..\..\utilities\ExceptionHandling\Grpc.Helpers.csproj" />
     <ProjectReference Include="..\Account.DAL\Account.DAL.EF\Account.DAL.EF.csproj" />
     <ProjectReference Include="..\Account.Domain.Logic\Account.Domain.Logic.csproj" />
     <ProjectReference Include="..\Account.Domain\Account.Domain.csproj" />

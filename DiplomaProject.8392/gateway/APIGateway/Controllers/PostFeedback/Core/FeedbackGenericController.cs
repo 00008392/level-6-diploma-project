@@ -66,7 +66,7 @@ namespace APIGateway.Controllers.PostFeedback.Core
             };
             //get feedbacks
             var reply = await _client.GetFeedbacksForItemAsync(request);
-            return Ok(reply.Feedbacks);
+            return Ok(reply.Items);
         }
 
         // POST api/<FeedbackGenericController>
@@ -115,10 +115,10 @@ namespace APIGateway.Controllers.PostFeedback.Core
                 Id = id
             };
             var reply = await _client.DeleteFeedbackAsync(request);
-            //in case of errors, return not found
+            //in case of errors, return bad request
             if (!reply.IsSuccess)
             {
-                return NotFound(reply);
+                return BadRequest(reply);
             }
             return NoContent();
         }

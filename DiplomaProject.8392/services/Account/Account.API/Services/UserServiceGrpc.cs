@@ -2,8 +2,6 @@
 using Account.Domain.Logic.DTOs;
 using Account.Domain.Logic.IntegrationEvents.Events;
 using AutoMapper;
-using EventBus.Contracts;
-using Grpc.Helpers;
 using FluentValidation;
 using Grpc.Core;
 using Protos.Common;
@@ -11,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Grpc.Base.Helpers;
 
 namespace Account.API.Services
 {

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -24,9 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BaseLibraries\Grpc.Base\Grpc.Base.csproj" />
     <ProjectReference Include="..\..\..\integration\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\..\..\integration\RabbitMQEventBus\RabbitMQEventBus.csproj" />
-    <ProjectReference Include="..\..\..\utilities\ExceptionHandling\Grpc.Helpers.csproj" />
     <ProjectReference Include="..\Booking.DAL\Booking.DAL.EF\Booking.DAL.EF.csproj" />
     <ProjectReference Include="..\Booking.Domain.Logic\Booking.Domain.Logic.csproj" />
     <ProjectReference Include="..\Booking.Domain\Booking.Domain.csproj" />

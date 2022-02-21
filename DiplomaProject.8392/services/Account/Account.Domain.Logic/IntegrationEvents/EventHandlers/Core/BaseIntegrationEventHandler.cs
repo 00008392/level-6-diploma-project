@@ -1,6 +1,6 @@
 ﻿using Account.Domain.Entities;
 using AutoMapper;
-using BaseClasses.Contracts;
+using DAL.Base.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

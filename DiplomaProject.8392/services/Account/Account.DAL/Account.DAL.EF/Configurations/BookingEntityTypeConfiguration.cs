@@ -14,7 +14,7 @@ namespace Account.DAL.EF.Configurations
         //configuration for booking
         public void Configure(EntityTypeBuilder<Booking> builder)
         {
-            builder.HasKey(u => u.Id);
+            builder.HasKey(x => x.Id);
             //disable auto increment of PK, since it will be received from integration event
             builder.Property(x => x.Id).ValueGeneratedNever();
             //if user has active bookings as guest (end date > datetime.now,

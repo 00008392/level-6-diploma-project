@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using BaseClasses.Contracts;
 using EventBus.Contracts;
-using Domain.Helpers;
 using PostFeedback.Domain.Entities;
 using PostFeedback.Domain.Logic.Contracts;
 using PostFeedback.Domain.Logic.IntegrationEvents.EventHandlers.Core;
@@ -11,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DAL.Base.Contracts;
 
 namespace PostFeedback.Domain.Logic.IntegrationEvents.EventHandlers
 {
@@ -27,9 +26,11 @@ namespace PostFeedback.Domain.Logic.IntegrationEvents.EventHandlers
         public async Task Handle(BookingCancelledIntegrationEvent @event)
         {
             //check if booking exists in the database
-            ServiceHelper.CheckIfRelatedEntityExists(@event.BookingId, _bookingRepository);
-            //if exists, delete booking
-            await _bookingRepository.DeleteAsync(@event.BookingId);
+            if(_bookingRepository.DoesItemWithIdExist(@event.BookingId))
+            {
+                //if exists, delete booking
+                await _bookingRepository.DeleteAsync(@event.BookingId);
+            }
         }
     }
 }
