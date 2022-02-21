@@ -25,6 +25,12 @@ service PostRelatedInfoService {
   rpc GetAllFacilities (common.Empty) returns (ItemListResponse);
 }
 
+service PostPhotoService {
+	rpc AddPhotosToPost(AddPhotosRequest) returns (common.Response);
+	rpc RemovePhotosFromPost(RemovePhotosRequest) returns (common.Response);
+	rpc GetPhotosForPost(common.Request) returns (PhotoListResponse);
+}
+
 message CreatePostRequest {
   google.protobuf.StringValue title = 1;
   google.protobuf.StringValue description = 2;
@@ -97,11 +103,10 @@ message PostResponse {
    google.protobuf.Timestamp datePublishedTimeStamp = 18;
    string movingInTime = 19;
    string movingOutTime = 20;
-   repeated Photo photos = 21;
-   repeated Item rules = 22;
-   repeated Item facilities = 23;
-   repeated DatesBooked datesBooked = 24;
-   bool NoItem = 25;
+   repeated Item rules = 21;
+   repeated Item facilities = 22;
+   repeated DatesBooked datesBooked = 23;
+   bool NoItem = 24;
 }
 message PostListResponse {
 	repeated PostResponse items = 1;
@@ -120,10 +125,20 @@ message DatesBooked {
 }
 message Photo {
 int64 id = 1;
-google.protobuf.BytesValue photo = 2;
+google.protobuf.BytesValue photoByteStr = 2;
 google.protobuf.StringValue mimeType = 3;
 }
-
+message PhotoListResponse {
+	repeated Photo items =1;
+}
+message AddPhotosRequest {
+repeated Photo photos = 1;
+int64 postId = 2;
+}
+message RemovePhotosRequest {
+repeated int64 photos = 1;
+int64 postId = 2;
+}
 message FilterRequest {
 google.protobuf.StringValue searchText = 1;
 google.protobuf.Int64Value owner = 2;
@@ -140,3 +155,5 @@ google.protobuf.BoolValue entireApartment = 12;
 google.protobuf.Timestamp startDateTimeStamp = 13;
 google.protobuf.Timestamp endDateTimeStamp = 14;
 }
+
+

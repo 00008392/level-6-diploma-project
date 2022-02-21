@@ -17,7 +17,6 @@ namespace PostFeedback.Domain.Logic.DTOs
         public string City { get; private set; }
         public string MovingInTime { get; private set; }
         public string MovingOutTime { get; private set; }
-        public ICollection<PhotoDTO> Photos { get; private set; }
         public ICollection<ItemDTO> Rules { get; private set; }
         public ICollection<ItemDTO> Facilities { get; private set; }
         public ICollection<DatesBookedDTO> DatesBooked { get; private set; }
@@ -42,7 +41,6 @@ namespace PostFeedback.Domain.Logic.DTOs
             string city,
             string movingInTime,
             string movingOutTime,
-            ICollection<PhotoDTO> photos,
             ICollection<ItemDTO> rules,
             ICollection<ItemDTO> facilities, 
             ICollection<DatesBookedDTO> datesBooked) : base(
@@ -67,7 +65,6 @@ namespace PostFeedback.Domain.Logic.DTOs
             City = city;
             MovingInTime = movingInTime;
             MovingOutTime = movingOutTime;
-            Photos = photos;
             Rules = rules;
             Facilities = facilities;
             DatesBooked = datesBooked;

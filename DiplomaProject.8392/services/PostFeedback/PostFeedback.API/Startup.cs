@@ -62,6 +62,7 @@ namespace PostFeedback.API
             services.AddScoped<IPostService, Domain.Logic.Services.PostService>();
             services.AddScoped(typeof(IPostRelatedInfoService<>), typeof(PostRelatedInfoService<>));
             services.AddScoped(typeof(IFeedbackService<,>), typeof(FeedbackService<,>));
+            services.AddScoped(typeof(IPostPhotoService), typeof(Domain.Logic.Services.PostPhotoService));
             services.AddScoped<IFeedbackValidationService<Domain.Entities.User>, UserFeedbackValidationService>();
             services.AddScoped<IFeedbackValidationService<Post>, PostFeedbackValidationService>();
             //registering grpc strategies
@@ -103,6 +104,7 @@ namespace PostFeedback.API
             {
                 //adding grpc services
                 endpoints.MapGrpcService<PostServiceGrpc>();
+                endpoints.MapGrpcService<PostPhotoServiceGrpc>();
                 endpoints.MapGrpcService<PostRelatedInfoServiceGrpc>();
                 endpoints.MapGrpcService<FeedbackForUserServiceGrpc>();
                 endpoints.MapGrpcService<FeedbackForPostServiceGrpc>();

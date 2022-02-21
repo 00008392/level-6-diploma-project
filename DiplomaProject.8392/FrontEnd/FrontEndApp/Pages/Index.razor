@@ -1,5 +1,30 @@
 ﻿@page "/"
-
+@inherits Components.CustomBaseComponent
 @using FrontEndApp.Pages.Post
 
-<Posts /> 
+@foreach (var image in _images)
+{
+<img src="@image" />
+}
+@code {
+    private List<Models.Photo> _photos = new List<Models.Photo>();
+    private List<string> _images = new List<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await client.GetAsync("api/post-photos/26");
+        if (response.IsSuccessStatusCode)
+        {
+            var responseStr = await response.Content.ReadAsStringAsync();
+
+            _photos = JsonConvert.DeserializeObject<List<Photo>>(responseStr);
+        }
+        foreach (var photo in _photos)
+        {
+            var imgSrc = String.Format("data:image/gif;base64,{0}",
+           Convert.ToBase64String(photo.FileContent));
+            _images.Add(imgSrc);
+        }
+
+    }
+}

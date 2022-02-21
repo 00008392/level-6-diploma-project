@@ -171,6 +171,10 @@ namespace APIGateway
             {
                 options.Address = postUrl;
             });
+            services.AddGrpcClient<PostPhotoService.PostPhotoServiceClient>((services, options) =>
+            {
+                options.Address = postUrl;
+            });
             services.AddGrpcClient<PostRelatedInfoService.PostRelatedInfoServiceClient>((services, options) =>
             {
                 options.Address = postUrl;

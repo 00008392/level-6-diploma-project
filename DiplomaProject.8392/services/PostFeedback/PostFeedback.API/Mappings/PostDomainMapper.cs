@@ -30,7 +30,6 @@ namespace PostFeedback.API.Mappings
                 x.IsWholeApartment, x.Owner == null ? null : context.Mapper.Map<UserDTO>(x.Owner),
                 x.DatePublished, x.Category?.Name, x.City?.Name,
                 x.MovingInTime, x.MovingOutTime,
-                MapCollection<Domain.Entities.Photo, PhotoDTO>(x.Photos, context),
                 MapCollection<Rule, ItemDTO>(x.Rules, context),
                 MapCollection<Facility, ItemDTO>(x.Facilities, context),
                 MapCollection<Booking, DatesBookedDTO>(x.Bookings, context)
