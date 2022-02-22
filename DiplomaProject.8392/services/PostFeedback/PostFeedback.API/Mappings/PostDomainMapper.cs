@@ -49,7 +49,7 @@ namespace PostFeedback.API.Mappings
             CreateMap<Booking, DatesBookedDTO>()
                 .ConvertUsing(x => new DatesBookedDTO(x.StartDate, x.EndDate));
             CreateMap<Domain.Entities.Photo, PhotoDTO>()
-                .ConvertUsing(x => new PhotoDTO(x.Id, x.PhotoBytes, x.MimeType));
+                .ConvertUsing(x => new PhotoDTO(x.Id, x.PhotoBytes));
             //feedback
             FeedbackMapToDTO<Domain.Entities.User, UserDTO>();
             FeedbackMapToDTO<Post, PostDetailsDTO>();

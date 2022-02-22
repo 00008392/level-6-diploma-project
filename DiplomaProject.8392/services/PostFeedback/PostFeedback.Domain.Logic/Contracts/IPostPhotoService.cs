@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.Domain.Logic.Contracts
 {
+    //service that manipulates photos of accommodation attached to post
     public interface IPostPhotoService
     {
         Task AddPhotosToPost(long postId, ICollection<PhotoDTO> photos);

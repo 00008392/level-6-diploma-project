@@ -32,6 +32,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using APIGateway.Services.Contracts;
+using APIGateway.Services;
 
 namespace APIGateway
 {
@@ -119,8 +121,6 @@ namespace APIGateway
                     policy.Requirements.Add(new UserUpdateRequirement()));
                 options.AddPolicy("PostUpdatePolicy", policy =>
                     policy.Requirements.Add(new PostUpdateRequirement()));
-                options.AddPolicy("PostDeletePolicy", policy =>
-                    policy.Requirements.Add(new PostDeleteRequirement()));
                 options.AddPolicy("UserFeedbackDeletePolicy", policy =>
                     policy.Requirements.Add(new FeedbackDeleteRequirement<FeedbackForUser.FeedbackForUserClient>()));
                 options.AddPolicy("PostFeedbackDeletePolicy", policy =>
@@ -139,7 +139,6 @@ namespace APIGateway
             //requirement handlers for resource based authorization
             services.AddSingleton<IAuthorizationHandler, UserUpdateAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, PostUpdateAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler, PostDeleteAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, FeedbackDeleteAuthorizationHandler<FeedbackForUser.FeedbackForUserClient>>();
             services.AddSingleton<IAuthorizationHandler, FeedbackDeleteAuthorizationHandler<FeedbackForPost.FeedbackForPostClient>>();
             services.AddSingleton<IAuthorizationHandler, GetBookingsByGuestAuthorizationHandler>();
@@ -147,6 +146,8 @@ namespace APIGateway
             services.AddSingleton<IAuthorizationHandler, AcceptRejectBookingAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, GetByIdCancelBookingAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, DeleteBookingAuthorizationHandler>();
+            //registering gateway services
+            services.AddScoped<IFileConverter, ImageFileConverter>();
             //registering grpc services
             // account
             var accountUrl = new Uri(Configuration["grpcConnections:account"]);

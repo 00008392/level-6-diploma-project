@@ -58,6 +58,7 @@ namespace PostFeedback.API
             //registering validators
             services.AddScoped<AbstractValidator<PostManipulationDTO>, PostValidator>();
             services.AddScoped<AbstractValidator<FeedbackDTO>, FeedbackValidator>();
+            services.AddScoped<AbstractValidator<PhotoDTO>, PhotoValidator>();
             //registering business logic services
             services.AddScoped<IPostService, Domain.Logic.Services.PostService>();
             services.AddScoped(typeof(IPostRelatedInfoService<>), typeof(PostRelatedInfoService<>));

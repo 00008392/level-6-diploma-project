@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.API
 {
+    //interface to byte string property of classes that implement this interface
+    //implemented by grpc generated Photo class
     public interface IPhoto
     {
         [JsonIgnore]

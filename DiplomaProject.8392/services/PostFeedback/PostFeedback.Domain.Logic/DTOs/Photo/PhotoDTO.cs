@@ -11,24 +11,19 @@ namespace PostFeedback.Domain.Logic.DTOs
     {
         public long Id { get; private set; }
         public byte[] Photo { get; private set; }
-        public string MimeType { get; private set; }
-
+        //to create photo
         public PhotoDTO(
-            byte[] photo,
-            string mimeType)
+            byte[] photo)
         {
             Photo = photo;
-            MimeType = mimeType;
         }
-
+        //to retrieve photo
         public PhotoDTO(
             long id,
-            byte[] photo,
-            string mimeType)
+            byte[] photo)
         {
             Id = id;
             Photo = photo;
-            MimeType = mimeType;
         }
     }
 }

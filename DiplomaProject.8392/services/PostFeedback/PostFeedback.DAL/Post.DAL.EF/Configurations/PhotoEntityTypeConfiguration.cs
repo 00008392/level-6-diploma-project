@@ -19,7 +19,6 @@ namespace PostFeedback.DAL.EF.Configurations
             builder.HasOne(x => x.Post).WithMany(x => x.Photos)
                 .HasForeignKey(x => x.PostId).OnDelete(DeleteBehavior.Cascade);
             builder.Property(x => x.PhotoBytes).IsRequired(true);
-            builder.Property(x => x.MimeType).IsRequired(true);
         }
     }
 }

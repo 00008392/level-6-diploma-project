@@ -12,8 +12,8 @@ namespace APIGateway.Authorization.Handlers.Post
 {
     //necessary for implementation of resource-based authorization
     //checks if post update requirement is met
-    //applies to update post action
-    public class PostUpdateAuthorizationHandler : AuthorizationHandler<PostUpdateRequirement, UpdatePostRequest>
+    //applies to update post, delete post, add photos to post and remove photos from post actions
+    public class PostUpdateAuthorizationHandler : AuthorizationHandler<PostUpdateRequirement, long>
     {
         //inject grpc service to retrieve post
         private readonly PostService.PostServiceClient _postClient;
@@ -26,12 +26,12 @@ namespace APIGateway.Authorization.Handlers.Post
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
             PostUpdateRequirement requirement,
-            UpdatePostRequest resource)
+            long resource)
         {
-            //post can be modified only by its owner
-            //if id of logged user (in request it is set to owner id) and id of post owner are the same, then owner can access update action
-            var post = await _postClient.GetPostByIdAsync(new Request { Id = resource.Id } );
-            if (post?.Owner?.Id == resource.OwnerId)
+            //post can be manipulated only by its owner
+            //if id of logged user (in request it is set to owner id) and id of post owner are the same, then owner can access actions
+            var post = await _postClient.GetPostByIdAsync(new Request { Id = resource } );
+            if (post?.Owner?.Id == AuthorizationHelper.GetLoggedUserId(context.User))
             {
                 context.Succeed(requirement);
             }

@@ -52,7 +52,7 @@ namespace PostFeedback.API.Mappings
             CreateMap<PhotoDTO, Photo>()
                 .ForMember(x => x.PhotoByteStr, opt => opt.MapFrom(src => src.Photo == null ? null : Google.Protobuf.ByteString.CopyFrom(src.Photo)));
             CreateMap<Photo, PhotoDTO>()
-                .ConvertUsing(x => new PhotoDTO(x.PhotoByteStr.ToByteArray(), x.MimeType));
+                .ConvertUsing(x => new PhotoDTO(x.PhotoByteStr.ToByteArray()));
             //filter
             CreateMap<FilterRequest, FilterParameters>()
                 .ForMember(x => x.StartDate, opt => opt.MapFrom(src => src.StartDateTimeStamp.ToDateTime()))

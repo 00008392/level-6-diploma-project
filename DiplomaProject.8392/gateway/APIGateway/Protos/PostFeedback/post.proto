@@ -24,7 +24,7 @@ service PostRelatedInfoService {
   rpc GetAllRules (common.Empty) returns (ItemListResponse);
   rpc GetAllFacilities (common.Empty) returns (ItemListResponse);
 }
-
+//service for manipulation of photos attached to post
 service PostPhotoService {
 	rpc AddPhotosToPost(AddPhotosRequest) returns (common.Response);
 	rpc RemovePhotosFromPost(RemovePhotosRequest) returns (common.Response);
@@ -126,7 +126,6 @@ message DatesBooked {
 message Photo {
 int64 id = 1;
 google.protobuf.BytesValue photoByteStr = 2;
-google.protobuf.StringValue mimeType = 3;
 }
 message PhotoListResponse {
 	repeated Photo items =1;

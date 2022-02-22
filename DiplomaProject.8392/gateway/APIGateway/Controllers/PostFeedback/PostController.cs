@@ -99,7 +99,7 @@ namespace APIGateway.Controllers.PostFeedback
             //assign id of logged user to post owner
             request.OwnerId = AuthorizationHelper.GetLoggedUserId(User);
             //check if user is authorized to update post
-            var authorizationResult = await _authorizationService.AuthorizeAsync(User, request, "PostUpdatePolicy");
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, request.Id, "PostUpdatePolicy");
             if (!authorizationResult.Succeeded)
             {
                 return Unauthorized();
@@ -122,7 +122,7 @@ namespace APIGateway.Controllers.PostFeedback
         public async Task<IActionResult> DeletePost(long id)
         {
             //check if user is authorized to delete post
-            var authorizationResult = await _authorizationService.AuthorizeAsync(User, id, "PostDeletePolicy");
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, id, "PostUpdatePolicy");
             if (!authorizationResult.Succeeded)
             {
                 return Unauthorized();
