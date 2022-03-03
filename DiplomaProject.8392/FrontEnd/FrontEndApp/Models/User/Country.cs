@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FrontEndApp.Models
+namespace FrontEndApp.Models.User
 {
     public class Country
     {

@@ -1,22 +1,20 @@
-﻿@page "/users/{Id:long}"
-@using FrontEndApp.Pages.Shared
-@inherits Components.CustomBaseComponent
-@if (Id ==0)
-{
-    <p>Loading...</p>
-}
-else
-{
-<div class="d-flex flex-column align-items-center">
-    <div class="products__content_item user__details details col-lg-8">
-        <User Id="Id" />
+﻿@inject AppState _appState
+@page "/users/{Id:long}"
+<section class="account__details">
+    <div class="container ">
+        <div class="row d-flex justify-content-center">
+            <div class="account__details_left col-md-5">
+            <User Id="Id" />
+            </div>
+        </div>
     </div>
-    @*<div class="products__content_item user__details details col-lg-8">
-        <FrontEndApp.Pages.Shared.Feedbacks UserId="Id" />
-    </div>*@
-</div>
-}
+    <Posts Filter="new Filter { Owner = Id}" Title="My posts" />
+</section>
 @code {
     [Parameter]
     public long Id { get; set; }
+    protected override void OnInitialized()
+    {
+        _appState.SetPageTitle("User details");
+    }
 }

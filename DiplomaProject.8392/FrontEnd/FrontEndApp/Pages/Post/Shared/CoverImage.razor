@@ -1,0 +1,21 @@
+﻿@inject IPhotoService _photoService
+@inherits Components.PostBaseComponent
+    <img class="image" src=@(_photoStr==null?"img/loading_img.gif":_photoStr==""?
+                               "img/no_img.jpg": $"{_photoStr}") alt="img">
+@code {
+    [Parameter]
+    public long PostId { get; set; }
+    private string _photoStr;
+    protected override async Task OnInitializedAsync()
+    {
+        var photo = await _photoService.GetCoverPhotoAsync(PostId);
+        if(photo!=null)
+        {
+            _photoStr = (await _photoService.GetCoverPhotoAsync(PostId)).FileContentStr;
+        } else
+        {
+            _photoStr = "";
+        }
+
+    }
+}

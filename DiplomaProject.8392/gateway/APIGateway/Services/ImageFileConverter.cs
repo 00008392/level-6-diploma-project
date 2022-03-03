@@ -14,6 +14,7 @@ namespace APIGateway.Services
     {
         public byte[] ConvertFile(IFormFile file)
         {
+            byte[] photoBytes = null;
             //check that file is not empty
             if (file != null)
             {
@@ -23,15 +24,13 @@ namespace APIGateway.Services
                     throw new FileContentTypeException();
                 }
                 //if correct format, convert to bytes
-                byte[] photoBytes = null;
                 using (var memory = new MemoryStream())
                 {
                     file.CopyTo(memory);
                     photoBytes = memory.ToArray();
                 }
-                return photoBytes;
             }
-            throw new EmptyFileException();
+            return photoBytes;
         }
         //check if file is image with jpg/jpeg/png format
         private bool IsImage(IFormFile file)

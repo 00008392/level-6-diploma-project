@@ -56,7 +56,7 @@ namespace PostFeedback.Domain.Entities
           decimal price,
           bool isWholeApartment,
           string movingInTime,
-          string movingOutTime)
+          string movingOutTime) 
         {
             Id = id;
             Title = title;

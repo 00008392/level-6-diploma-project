@@ -57,7 +57,6 @@ message UpdateRequest {
   google.protobuf.StringValue phoneNumber = 5;
   google.protobuf.Timestamp DateOfBirthTimeStamp = 6;
   google.protobuf.Int32Value gender = 7;
-  google.protobuf.StringValue address = 8;
   google.protobuf.Int64Value countryId = 9;
   google.protobuf.StringValue userInfo = 10;
 }
@@ -78,12 +77,9 @@ message UserInfoResponse {
     google.protobuf.Timestamp DateOfBirthTimeStamp = 6;
     google.protobuf.Timestamp RegistrationDateTimeStamp = 7;
     int32 gender = 8;
-    google.protobuf.StringValue address = 9;
     int64 countryId = 10;
     google.protobuf.StringValue countryName = 11;
     google.protobuf.StringValue userInfo = 12;
-    google.protobuf.BytesValue profilePhoto = 13;
-    google.protobuf.StringValue mimeType = 14;
     bool NoItem = 15;
 }
 

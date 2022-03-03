@@ -18,7 +18,6 @@ namespace Account.Domain.Logic.IntegrationEvents.Events
         public string PhoneNumber { get; private set; }
         public DateTime DateOfBirth { get; private set; }
         public int Gender { get; private set; }
-        public string Address { get; private set; }
         public string UserInfo { get; private set; }
         public long CountryId { get; private set; }
 
@@ -30,7 +29,6 @@ namespace Account.Domain.Logic.IntegrationEvents.Events
             string phoneNumber,
             DateTime dateOfBirth,
             int gender,
-            string address,
             string userInfo,
             long countryId)
         {
@@ -41,7 +39,6 @@ namespace Account.Domain.Logic.IntegrationEvents.Events
             PhoneNumber = phoneNumber;
             DateOfBirth = dateOfBirth;
             Gender = gender;
-            Address = address;
             UserInfo = userInfo;
             CountryId = countryId;
         }

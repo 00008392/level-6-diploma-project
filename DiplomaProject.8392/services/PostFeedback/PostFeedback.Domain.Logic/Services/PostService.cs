@@ -91,49 +91,52 @@ namespace PostFeedback.Domain.Logic.Services
             //and composite specification is formed from list of specifications
             List<Specification<Post>> specifications = new();
             //filter posts by search input if present
-            if (filter.SearchText != null)
+            if (!string.IsNullOrWhiteSpace(filter.SearchText))
             {
                 var specification = new SearchPostSpecification(filter.SearchText);
                 specifications.Add(specification);
             }
             //filter posts by owner id if present
-            if (filter.Owner != null)
+            if (filter.Owner != null&&filter.Owner!=0)
             {
                 var specification = new PostsByUserSpecification((long)filter.Owner);
                 specifications.Add(specification);
             }
             //filter posts by category if present
-            if (filter.Category != null)
+            if (filter.Category != null&&filter.Category!=0)
             {
                 var specification = new PostsByCategorySpecification((long)filter.Category);
                 specifications.Add(specification);
             }
             //filter posts by city if present
-            if (filter.City != null)
+            if (filter.City != null && filter.City != 0)
             {
                 var specification = new PostsByCitySpecification((long)filter.City);
                 specifications.Add(specification);
             }
             //filter posts by number of rooms range if present
-            if (filter.MinRooms != null || filter.MaxRooms != null)
+            if ((filter.MinRooms != null && filter.MinRooms != 0) ||
+                (filter.MaxRooms != null && filter.MaxRooms != 0))
             {
                 var specification = new RoomsNumberSpecification(filter.MinRooms, filter.MaxRooms);
                 specifications.Add(specification);
             }
             //filter posts by number of beds range if present
-            if (filter.MinBeds != null || filter.MaxBeds != null)
+            if ((filter.MinBeds != null && filter.MinBeds != 0) 
+                ||( filter.MaxBeds != null && filter.MaxBeds != 0))
             {
                 var specification = new BedsNumberSpecification(filter.MinBeds, filter.MaxBeds);
                 specifications.Add(specification);
             }
             //filter posts by number of guests if present
-            if (filter.Guests != null)
+            if (filter.Guests != null && filter.Guests != 0)
             {
                 var specification = new NumberOfGuestsSpecification((int)filter.Guests);
                 specifications.Add(specification);
             }
             //filter posts by price range if present
-            if (filter.MinPrice != null || filter.MaxPrice != null)
+            if ((filter.MinPrice != null && filter.MinPrice != 0) 
+                || (filter.MaxPrice != null && filter.MaxPrice != 0))
             {
                 var specification = new PriceSpecification(filter.MinPrice, filter.MaxPrice);
                 specifications.Add(specification);
@@ -186,7 +189,7 @@ namespace PostFeedback.Domain.Logic.Services
         {
             //get post by id including related entities
             var post = await _repository.GetByIdAsync(id, x=>x.Category, x=>x.City,
-                x=>x.Owner, x=>x.Rules, x=>x.Facilities, x=>x.Photos, x=>x.Bookings);
+                x=>x.Owner, x=>x.Rules, x=>x.Facilities, x=>x.Bookings);
             //map to dto if post exists
             if (post != null)
             {

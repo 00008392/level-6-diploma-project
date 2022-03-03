@@ -1,119 +1,135 @@
 ﻿@page "/account/edit"
+@layout UserFormLayout
+@inject IUserRelatedInfoService _infoService
+@inject IMapper _mapper 
+@inject AppState _appState
+@inherits Components.UserBaseComponent
 
-@inherits Components.CustomBaseComponent
+<EditForm Model="_updateUser" OnValidSubmit="@UpdateUser" class="contactform">
+    <DataAnnotationsValidator />
+    @if (_response != null)
+    {
+        <p class="font-weight-bold text-danger">@_response.Message</p>
+        @if (_response.Errors != null && _response.Errors.Length != 0)
+        {
+            @foreach (var error in _response.Errors)
+            {
+                <p class="font-weight-bold text-danger">@error.Message</p>
+            }
+        }
 
-@if (AuthState.isAuthenticated)
-{
-    
-    <div class="container">
-        <div class="row justify-content-center">
-            <EditForm Model="@_editUser" OnValidSubmit="@UpdateUser" class="col-lg-8 form">
-                <h2 class="title">Edit account</h2>
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <p hidden="@(_editUser.ErrorMessage==null)" class="item__text font-weight-bold error">@_editUser.ErrorMessage</p>
-                <label class="item__text">
-                    First name
-                    <InputText @bind-Value="@_editUser.FirstName" class="input" />
-                </label>
-                <label class="item__text">
-                    Last name
-                    <InputText @bind-Value="@_editUser.LastName" class="input" />
-                </label>
-                <label class="item__text">
-                    Email
-                    <InputText @bind-Value="@_editUser.Email" class="input" />
-                </label>
-                <label class="item__text">
-                    Birthday:
-                    <InputDate @bind-Value="@_editUser.DateOfBirth" class="input" type="date" />
-                </label>
-                <label class="item__text">
-                    Gender:
-                    <InputSelect @bind-Value="@_editUser.Gender" class="input">
-                        @foreach (var gender in Enum.GetValues(typeof(Gender)))
-                            {
-                            <option value="@gender">@gender</option>
-                            }
-                    </InputSelect>
-                </label>
-                <label class="item__text">
-                    Phone number
-                    <InputText @bind-Value="@_editUser.PhoneNumber" class="input" />
-                </label>
-                <label class="item__text">
-                    Address
-                    <InputText @bind-Value="@_editUser.Address" class="input" />
-                </label>
-                <label class="item__text">
-                    Country:
-                    @if (_editUser.CountryList == null)
-                    {
-                        <span>Loading...</span>
-                    }
-                    else
-                    {
-                        <InputSelect @bind-Value="@_editUser.CountryId" class="input">
-                            <option value="">Choose country</option>
-                            @foreach (var country in _editUser.CountryList)
-                                    {
-                                <option value="@country.Id">@country.Name</option>
-                                    }
-                        </InputSelect>
-                    }
-                </label>
-                <label class="item__text">
-                    Additional information
-                    <InputText @bind-Value="@_editUser.UserInfo" class="input" />
-                </label>
-                <input type="submit" class="button" value="Save changes" />
-            </EditForm>
+    }
+    <div class="aa-single-field">
+        <label>First name <span class="required">*</span></label>
+        <InputText @bind-Value="_updateUser.FirstName" class="form__input" type="text"
+                   aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _updateUser.FirstName" />
         </div>
     </div>
-}
-else
-{
-    <p>Sign in to modify account</p>
-}
-
+    <div class="aa-single-field">
+        <label>Last name <span class="required">*</span></label>
+        <InputText @bind-Value="_updateUser.LastName" class="form__input" type="text"
+                   aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _updateUser.LastName" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Email <span class="required">*</span></label>
+        <InputText @bind-Value="_updateUser.Email" class="form__input" type="email"
+                   aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _updateUser.Email" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Date of birth <span class="required">*</span></label>
+        <RadzenDatePicker TValue="DateTime?" Class="w-100" DateFormat="d"
+                          @bind-Value="_updateUser.DateOfBirth" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _updateUser.DateOfBirth" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Gender <span class="required">*</span></label>
+        <InputSelect class="form__input" @bind-Value="@_updateUser.Gender">
+            @foreach (var gender in Enum.GetValues(typeof(Gender)))
+            {
+                <option value="@gender">@gender</option>
+            }
+        </InputSelect>
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _updateUser.Gender" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Country <span class="required">*</span></label>
+        <InputSelect class="form__input" @bind-Value="_updateUser.CountryId">
+            @if (_countries == null)
+            {
+                <option value="">No countries found</option>
+            }
+            else if (_countries.Count == 0)
+            {
+                <option value="">Loading countries...</option>
+            }
+            else
+            {
+                <option value="">Country</option>
+                @foreach (var country in _countries)
+                {
+                    <option value="@country.Id">@country.Name</option>
+                }
+            }
+        </InputSelect>
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _updateUser.CountryId" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Phone number </label>
+        <InputText @bind-Value="_updateUser.PhoneNumber" type="text" class="form__input"/>
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _updateUser.PhoneNumber" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Additional information about you </label>
+        <InputTextArea @bind-Value="_updateUser.UserInfo" type="text" class="form__input" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _updateUser.UserInfo" />
+        </div>
+    </div>
+    <div class="aa-single-submit">
+        <input type="submit" value="Update Account">
+    </div>
+</EditForm>
 
 @code {
 
-    private EditUser _editUser = new EditUser();
+    private UpdateUser _updateUser = new UpdateUser();
+    private Response _response;
+    private ICollection<Country> _countries = new List<Country>();
 
     protected override async Task OnInitializedAsync()
     {
-        if (AuthState.isAuthenticated)
+        _appState.SetPageTitle("Update account information");
+        if(!_authState.isAuthenticated)
         {
-            var id = long.Parse(await storage.GetItemAsync<string>("userId"));
-            var userResponse = await client.GetAsync($"api/users/{id}");
-            if (userResponse.IsSuccessStatusCode)
-            {
-                var responseStr = await userResponse.Content.ReadAsStringAsync();
-
-                _editUser = JsonConvert.DeserializeObject<EditUser>(responseStr);
-                _editUser.CountryId = _editUser.Country?.Id;
-            }
-            var countryResponse = await client.GetAsync("api/info/countries");
-            if (countryResponse.IsSuccessStatusCode)
-            {
-                var responseStr = await countryResponse.Content.ReadAsStringAsync();
-
-                _editUser.CountryList = JsonConvert.DeserializeObject<List<Country>>(responseStr);
-            }
+            _navManager.NavigateTo("/login");
+        } else
+        {
+            var userId = (long)(await _authService.GetLoggedUserId());
+            var userInfo = await _service.GetUserAsync(userId, ()=>_navManager.NavigateTo("/404"));
+            _updateUser = _mapper.Map<UpdateUser>(userInfo);
+            _countries = await _infoService.GetCountriesAsync();
         }
     }
     private async Task UpdateUser()
     {
-        var reply = await client.PutAsJsonAsync<EditUser>($"api/users/account", _editUser);
-        if (reply.IsSuccessStatusCode)
-        {
-            navManager.NavigateTo("/account");
-        }
-        else
-        {
-            _editUser.ErrorMessage = reply.Content.ReadAsStringAsync().Result;
-        }
+        _response = await _service.
+            UpdateAccountAsync(_updateUser, ()=> _navManager.NavigateTo("/account"));
     }
 
 }

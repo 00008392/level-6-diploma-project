@@ -1,0 +1,41 @@
+﻿@inject IPhotoService _service
+@inherits CustomBaseComponent
+
+<section>
+    <div class="container">
+        <div class="row flex-column">
+                    @if (_photos == null)
+                    {
+                        <p>No photos to show</p>
+                    }
+                    else if (_photos.Count == 0)
+                    {
+                        <p>Loading photos</p>
+                    }
+                    else
+                    {
+                        <div class="aa-title">
+                            <h2>Photos of accommodation</h2>
+                            <span></span>
+                        </div>
+                        <div class="gallery__content">
+                            @foreach (var photo in _photos)
+                            {
+                                <div class="gallery__content_item image__wrapper">
+                                    <img src=@($"{photo.FileContentStr}") class="image"/>
+                                </div>
+                            }
+                        </div>
+                    }
+        </div>
+    </div>
+</section>
+@code {
+    [Parameter]
+    public long PostId { get; set; }
+    private ICollection<Photo> _photos = new List<Photo>();
+    protected override async Task OnInitializedAsync()
+    {
+        _photos = await _service.GetPhotosAsync(PostId);
+    }
+}

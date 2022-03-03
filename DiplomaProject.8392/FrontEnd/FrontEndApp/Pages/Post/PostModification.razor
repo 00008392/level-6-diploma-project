@@ -1,0 +1,236 @@
+﻿@page "/posts/edit/{Id:long?}"
+@layout UserFormLayout
+@inject IPostRelatedInfoService _infoService
+@inject IMapper _mapper
+@inject AppState _appState
+@inherits Components.PostBaseComponent
+
+<EditForm Model="_editPost" OnValidSubmit="@(Id==null?CreatePost:UpdatePost)" class="contactform">
+    <DataAnnotationsValidator />
+    @if (_response != null)
+    {
+        <p class="font-weight-bold text-danger">@_response.Message</p>
+        @if (_response.Errors != null && _response.Errors.Length != 0)
+        {
+            @foreach (var error in _response.Errors)
+            {
+                <p class="font-weight-bold text-danger">@error.Message</p>
+            }
+        }
+
+    }
+    <div class="aa-single-field">
+        <label>Title <span class="required">*</span></label>
+        <InputText @bind-Value="_editPost.Title" class="form__input" type="text"
+                   aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.Title" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Descriptioon </label>
+        <InputTextArea @bind-Value="_editPost.Description" class="form__input" type="text"
+                       aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.Description" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Category </label>
+        <InputSelect class="form__input" @bind-Value="@_editPost.CategoryId">
+            @foreach (var category in _categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </InputSelect>
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.CategoryId" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>City </label>
+        <InputSelect class="form__input" @bind-Value="@_editPost.CityId">
+            @foreach (var city in _cities)
+            {
+                <option value="@city.Id">@city.Name</option>
+            }
+        </InputSelect>
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.CityId" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Address <span class="required">*</span></label>
+        <InputText @bind-Value="_editPost.Address" class="form__input" type="text"
+                   aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.Address" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Contact number <span class="required">*</span></label>
+        <InputText @bind-Value="_editPost.ContactNumber" class="form__input" type="text"
+                   aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.ContactNumber" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Number of rooms <span class="required">*</span></label>
+        <InputNumber @bind-Value="_editPost.RoomsNo" class="form__input" max="20"
+                     aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.RoomsNo" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Number of beds <span class="required">*</span></label>
+        <InputNumber @bind-Value="_editPost.BedsNo" class="form__input" max="20"
+                     aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.BedsNo" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Number of bathrooms</label>
+        <InputNumber @bind-Value="_editPost.BathroomsNo" class="form__input" max="20"
+                     aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.BathroomsNo" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Maximum number of guests <span class="required">*</span></label>
+        <InputNumber @bind-Value="_editPost.MaxGuestsNo" class="form__input" max="20"
+                     aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.MaxGuestsNo" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Accommodation size in square meters</label>
+        <InputNumber @bind-Value="_editPost.SquareMeters" class="form__input"
+                     aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.SquareMeters" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Price ($ per night) <span class="required">*</span></label>
+        <InputNumber @bind-Value="_editPost.Price" class="form__input" step="any" max="5000"
+                     aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.Price" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Is entire accommodation available for rent? </label>
+        <RadzenCheckBox @bind-Value=@_editPost.IsWholeApartment  TValue="bool" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.IsWholeApartment" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Moving in time <span class="required">*</span> </label>
+        <RadzenDatePicker Class="w-100" TValue="DateTime?" ShowTime="true" TimeOnly="true" DateFormat="HH:mm"
+                          @bind-Value="@_editPost.MovingInTime" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.MovingInTime" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Moving out time <span class="required">*</span> </label>
+        <RadzenDatePicker Class="w-100" TValue="DateTime?" ShowTime="true" TimeOnly="true" DateFormat="HH:mm"
+                          @bind-Value="@_editPost.MovingOutTime" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _editPost.MovingOutTime" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Select rules applicable to your accommodation </label>
+        <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                        @bind-Value=@_editPost.Rules Multiple="true" Placeholder="Select..." Data=@_rules TextProperty="Name" ValueProperty="Id"
+                        Class="w-100" />
+    </div>
+    <div class="aa-single-field">
+        <label>Select facilities applicable to your accommodation </label>
+        <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                        @bind-Value=@_editPost.Facilities Multiple="true" Placeholder="Select..." Data=@_facilities TextProperty="Name" ValueProperty="Id"
+                        Class="w-100" />
+    </div>
+    <div class="aa-single-submit d-flex justify-content-center">
+        <input type="submit" value="@(Id==null?"Create post": "Save changes")">
+        <button type="button" hidden="@(Id==null)" class="submit__btn submit__btn-danger w-auto"
+                @onclick="async ()=> await DeletePost((long)Id)">Delete this post</button>
+    </div>
+</EditForm>
+@code {
+    [Parameter]
+    public long? Id { get; set; }
+    private Response _response;
+    private EditPost _editPost = new EditPost();
+    private PostResponse _postInfo = new PostResponse();
+    private ICollection<Item> _cities = new List<Item>();
+    private ICollection<Item> _categories = new List<Item>();
+    private ICollection<Item> _rules = new List<Item>();
+    private ICollection<Item> _facilities = new List<Item>();
+    protected override async Task OnInitializedAsync()
+    {
+        if (!_authState.isAuthenticated)
+        {
+            _navManager.NavigateTo("/login");
+        }
+        else
+        {
+            if (Id == null)
+            {
+                _appState.SetPageTitle("Create post");
+            }
+            else
+            {
+                _appState.SetPageTitle("Edit post");
+                var postInfo = await _service.GetPostAsync((long)Id,
+                    ()=>_navManager.NavigateTo("/404"));
+                var userId = await _authService.GetLoggedUserId();
+                if(postInfo?.Owner?.Id!=userId)
+                {
+                    _navManager.NavigateTo("/login");
+                }
+                _editPost = _mapper.Map<EditPost>(postInfo);
+
+            }
+            await LoadPostRelatedItems();
+        }
+    }
+
+    private async Task CreatePost()
+    {
+        _response = await ManipulatePost(_editPost, _service.CreatePostAsync);
+    }
+    private async Task UpdatePost()
+    {
+        _response = await ManipulatePost(_editPost, _service.UpdatePostAsync);
+    }
+    private async Task<Response> ManipulatePost(EditPost post, Func<EditPost,
+        Action, Action, Task<Response>> action)
+    {
+        return await action(post, () => _navManager.NavigateTo("/account"), null);
+    }
+    private async Task LoadPostRelatedItems()
+    {
+        var cityTask = _infoService.GetCitiesAsync();
+        var categoryTask = _infoService.GetCategoriesAsync();
+        var rulesTask = _infoService.GetRulesAsync();
+        var facilitiesTask = _infoService.GetFacilitiesAsync();
+        await Task.WhenAll(cityTask, categoryTask,
+            rulesTask, facilitiesTask);
+        _cities = await cityTask;
+        _categories = await categoryTask;
+        _rules = await rulesTask;
+        _facilities = await facilitiesTask;
+    }
+    private async Task DeletePost(long id)
+    {
+        _response = await _service.DeletePostAsync(id, ()=>_navManager.NavigateTo("/account"));
+    }
+}

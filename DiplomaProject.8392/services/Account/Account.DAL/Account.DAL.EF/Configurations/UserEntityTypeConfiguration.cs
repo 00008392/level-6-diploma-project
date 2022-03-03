@@ -24,7 +24,6 @@ namespace Account.DAL.EF.Configurations
             builder.Property(x => x.PasswordHash).IsRequired(true);
             builder.HasOne(x => x.Country).WithMany(x => x.Users).
                 HasForeignKey(x => x.CountryId).OnDelete(DeleteBehavior.Restrict);
-            builder.Property(x => x.ProfilePhoto).IsRequired(false);
         }
     }
 }

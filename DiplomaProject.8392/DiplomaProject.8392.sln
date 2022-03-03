@@ -61,11 +61,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostFeedback.Domain.Logic",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BaseLibraries", "BaseLibraries", "{2F368B2E-E5C7-4C6D-AC82-AA72EF2FEB96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL.Base", "BaseLibraries\DAL.Base\DAL.Base.csproj", "{28DF96E7-A920-4F3E-96DF-F0C1CAEE93AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL.Base", "BaseLibraries\DAL.Base\DAL.Base.csproj", "{28DF96E7-A920-4F3E-96DF-F0C1CAEE93AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Logic.Base", "BaseLibraries\Domain.Logic.Base\Domain.Logic.Base.csproj", "{3A3BEAD5-1B8B-4416-B10B-19EEE5FBF92B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Logic.Base", "BaseLibraries\Domain.Logic.Base\Domain.Logic.Base.csproj", "{3A3BEAD5-1B8B-4416-B10B-19EEE5FBF92B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grpc.Base", "BaseLibraries\Grpc.Base\Grpc.Base.csproj", "{A76828A0-71BF-4858-A8CB-C803135E7963}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grpc.Base", "BaseLibraries\Grpc.Base\Grpc.Base.csproj", "{A76828A0-71BF-4858-A8CB-C803135E7963}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -153,15 +153,15 @@ namespace APIGateway.Controllers.Booking
         //convert time stamp to date time in booking
         private BookingInfoResponse ConvertBookingData(BookingInfoResponse booking)
         {
-            booking.StartDate = (DateTime)DateTimeConversion.FromTimeStampToDateTime(booking.StartDateTimeStamp);
-            booking.EndDate = (DateTime)DateTimeConversion.FromTimeStampToDateTime(booking.EndDateTimeStamp);
+            booking.StartDate = (DateTime)GrpcConversion.FromTimeStampToDateTime(booking.StartDateTimeStamp);
+            booking.EndDate = (DateTime)GrpcConversion.FromTimeStampToDateTime(booking.EndDateTimeStamp);
             return booking;
         }
         //convert date time to time stamp in booking
         private CreateRequest ConvertBookingData(CreateRequest booking)
         {
-            booking.StartDateTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(booking.StartDate);
-            booking.EndDateTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(booking.EndDate);
+            booking.StartDateTimeStamp = GrpcConversion.FromDateTimeToTimeStamp(booking.StartDate);
+            booking.EndDateTimeStamp = GrpcConversion.FromDateTimeToTimeStamp(booking.EndDate);
             return booking;
         }
         //method for booking status change and booking deletion

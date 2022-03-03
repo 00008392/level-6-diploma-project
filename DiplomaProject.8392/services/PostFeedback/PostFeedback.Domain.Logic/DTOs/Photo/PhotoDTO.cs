@@ -10,10 +10,18 @@ namespace PostFeedback.Domain.Logic.DTOs
     public class PhotoDTO
     {
         public long Id { get; private set; }
+        public long PostId { get; private set; }
         public byte[] Photo { get; private set; }
         //to create photo
         public PhotoDTO(
-            byte[] photo)
+            byte[] photo,
+            long postId)
+        {
+            Photo = photo;
+            PostId = postId;
+        }
+        public PhotoDTO(
+           byte[] photo)
         {
             Photo = photo;
         }
@@ -23,6 +31,16 @@ namespace PostFeedback.Domain.Logic.DTOs
             byte[] photo)
         {
             Id = id;
+            Photo = photo;
+        }
+
+        public PhotoDTO(
+            long id,
+            long postId,
+            byte[] photo)
+        {
+            Id = id;
+            PostId = postId;
             Photo = photo;
         }
     }

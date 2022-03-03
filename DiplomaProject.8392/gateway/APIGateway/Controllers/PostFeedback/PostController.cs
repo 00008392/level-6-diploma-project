@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using APIGateway.Authorization.Helpers;
 using Microsoft.AspNetCore.Http;
+using APIGateway.Services.Contracts;
+using Google.Protobuf;
+using AutoMapper;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -41,7 +44,7 @@ namespace APIGateway.Controllers.PostFeedback
             //get posts
             var reply = await _postClient.GetPostsAsync(ConvertFilterData(request));
             //convert post data to proper dislay format
-            reply.Items.ToList().ForEach(x => ConvertPostData(x));
+            reply.Items.ToList().ForEach(x => ConvertPostResponse(x));
             //return list of posts
             return Ok(reply.Items);
         }
@@ -59,7 +62,7 @@ namespace APIGateway.Controllers.PostFeedback
                 return NotFound("Post not found");
             }
             //convert post data to proper dislay format (TimeStamp -> DateTime) and return it
-            return Ok(ConvertPostData(reply));
+            return Ok(ConvertPostResponse(reply));
         }
 
         //POST api/<PostController>
@@ -78,8 +81,8 @@ namespace APIGateway.Controllers.PostFeedback
             }
             //assign id of logged user to post owner
             request.OwnerId = id;
-            //convert post data to proper format (DateTime -> TimeStamp) and try to create
-            var reply = await _postClient.CreatePostAsync((CreatePostRequest)ConvertPostData(request));
+            // try to create post
+            var reply = await _postClient.CreatePostAsync(ConvertPostRequest(request));
             //in case of errors, return bad request
             if (!reply.IsSuccess)
             {
@@ -104,8 +107,8 @@ namespace APIGateway.Controllers.PostFeedback
             {
                 return Unauthorized();
             }
-            //convert post data to proper format (DateTime -> TimeStamp) and try to udate
-            var reply = await _postClient.UpdatePostAsync((UpdatePostRequest)ConvertPostData(request));
+            //try to update post
+            var reply = await _postClient.UpdatePostAsync(ConvertPostRequest(request));
             //in case of errors, return bad request
             if (!reply.IsSuccess)
             {
@@ -137,32 +140,32 @@ namespace APIGateway.Controllers.PostFeedback
             }
             return NoContent();
         }
-        private PostResponse ConvertPostData(PostResponse post)
+        private T ConvertPostRequest<T>(T post) where T: IPostRequest
+        {
+            //convert from DateTime to TimeStamp  
+            post.MovingInTimeStamp = GrpcConversion.FromDateTimeToTimeStamp(post.MovingInTime);
+            post.MovingOutTimeStamp = GrpcConversion.FromDateTimeToTimeStamp(post.MovingOutTime);
+            return post;
+        }
+        private PostResponse ConvertPostResponse(PostResponse post)
         {
             //convert from TimeStamp to DateTime
-            post.DatePublished = (DateTime)DateTimeConversion.FromTimeStampToDateTime(post.DatePublishedTimeStamp);
-            if(post.DatesBooked!=null)
+            post.DatePublished = (DateTime)GrpcConversion.FromTimeStampToDateTime(post.DatePublishedTimeStamp);
+            if (post.DatesBooked != null)
             {
                 post.DatesBooked.ToList().ForEach(x =>
                 {
-                    x.StartDate = (DateTime)DateTimeConversion.FromTimeStampToDateTime(x.StartDateTimeStamp);
-                    x.EndDate = (DateTime)DateTimeConversion.FromTimeStampToDateTime(x.EndDateTimeStamp);
+                    x.StartDate = (DateTime)GrpcConversion.FromTimeStampToDateTime(x.StartDateTimeStamp);
+                    x.EndDate = (DateTime)GrpcConversion.FromTimeStampToDateTime(x.EndDateTimeStamp);
                 });
             }
-            return post;
-        }
-        private IPostRequest ConvertPostData(IPostRequest post)
-        {
-            //convert from DateTime to TimeStamp  
-            post.MovingInTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(post.MovingInTime);
-            post.MovingOutTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(post.MovingOutTime);
             return post;
         }
         private FilterRequest ConvertFilterData(FilterRequest request)
         {
             //convert from date time to time stamp
-            request.StartDateTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(request.StartDate);
-            request.EndDateTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(request.EndDate);
+            request.StartDateTimeStamp = GrpcConversion.FromDateTimeToTimeStamp(request.StartDate);
+            request.EndDateTimeStamp = GrpcConversion.FromDateTimeToTimeStamp(request.EndDate);
             return request;
         }
     }

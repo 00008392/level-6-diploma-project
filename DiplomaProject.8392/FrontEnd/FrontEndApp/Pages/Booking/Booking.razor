@@ -1,4 +1,4 @@
-﻿@page "/bookings/{Id:long}"
+﻿@*@page "/bookings/{Id:long}"
 @inherits Components.CustomBaseComponent
 <h3>Booking details</h3>
 @if (AuthState.isAuthenticated)
@@ -75,5 +75,5 @@
             _owner = JsonConvert.DeserializeObject<UserInfo>(ownerResponseStr);
 
         }
-    }
+    }*@
 }

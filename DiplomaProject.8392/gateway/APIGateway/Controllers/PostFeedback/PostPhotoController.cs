@@ -1,5 +1,7 @@
 ﻿using APIGateway.Exceptions;
+using APIGateway.Helpers;
 using APIGateway.Services.Contracts;
+using Google.Protobuf;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +40,7 @@ namespace APIGateway.Controllers.PostFeedback
         }
 
         //retrieve photos by post
-        [HttpGet("{postId}")]
+        [HttpGet("post/{postId}")]
         public async Task<IActionResult> GetPhotos(long postId)
         {
             //call grpc service
@@ -46,10 +48,40 @@ namespace APIGateway.Controllers.PostFeedback
             //convert byte string to byte array
             foreach (var item in reply.Items)
             {
-                item.FileContent = item.PhotoByteStr.ToByteArray();
+                item.FileContent = item.PhotoByteStr?.ToByteArray();
             }
             //return photos in byte array format
             return Ok(reply.Items);
+        }
+        //retrieve cover photo by post
+        [HttpGet("cover/{postId}")]
+        public async Task<IActionResult> GetCoverPhoto(long postId)
+        {
+            //call grpc service
+            var reply = await _photoClient.GetCoverPhotoForPostAsync(new Request { Id = postId });
+            if(reply.NoItem)
+            {
+                return NotFound("Photo not found");
+            }
+            //convert byte string to byte array
+            reply.FileContent = reply.PhotoByteStr?.ToByteArray();
+            //return photo in byte array format
+            return Ok(reply);
+        }
+        //retrieve photo by id
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetPhoto(long id)
+        {
+            //call grpc service
+            var reply = await _photoClient.GetPhotoAsync(new Request { Id = id });
+            if (reply.NoItem)
+            {
+                return NotFound("Photo not found");
+            }
+            //convert byte string to byte array
+            reply.FileContent = reply.PhotoByteStr?.ToByteArray();
+            //return photo in byte array format
+            return Ok(reply);
         }
         //only authorized access
         //attach photos to post
@@ -64,6 +96,7 @@ namespace APIGateway.Controllers.PostFeedback
             {
                 return Unauthorized();
             }
+            var reply = new Response();
             var request = new AddPhotosRequest
             {
                 PostId = postId
@@ -71,19 +104,16 @@ namespace APIGateway.Controllers.PostFeedback
             //try to transform each photo into stream of bytes and add photos to post
             try
             {
-                foreach (var file in files)
+                //check that there are files
+                if(files==null||files.Length==0)
                 {
-                    //convert file to image
-                    var bytes = _imageConverter.ConvertFile(file);
-                    //prepare grpc request
-                    var photo = new Photo
-                    {
-                        PhotoByteStr = Google.Protobuf.ByteString.CopyFrom(bytes)
-                    };
-                    request.Photos.Add(photo);
+                    reply.Message = "No files submitted";
+                    return BadRequest(reply);
                 }
+                //convert image file to byte array and prepare grpc request
+                request = PreparePhotoCollectionRequest(files, request);
                 //try to add photos
-                var reply = await _photoClient.AddPhotosToPostAsync(request);
+                reply = await _photoClient.AddPhotosToPostAsync(request);
                 if (!reply.IsSuccess)
                 {
                     //in case of errors, indicate it in response
@@ -91,37 +121,78 @@ namespace APIGateway.Controllers.PostFeedback
                 }
                 return StatusCode(201);
             }
-            //catch exception if file is empty or not an image and return bad request
-            catch(Exception ex)
+            //catch exception if file is not an image and return bad request
+            catch(FileContentTypeException ex)
             {
-                if (ex is EmptyFileException || ex is FileContentTypeException)
-                {
-                    return BadRequest(ex.Message);
-                }
-                throw;
+                reply.Message = ex.Message;
+               return BadRequest(reply);
             }
         }
         //only authorized access
-        //remove photos from post
+        //add cover photo to po9st
         [Authorize]
-        [HttpDelete("{postId}")]
-        public async Task<IActionResult> DeletePostPhotos(ICollection<long> photos,
+        [HttpPost("cover/{postId}")]
+        public async Task<IActionResult> UploadCoverPhoto(IFormFile file,
             long postId)
         {
-            //check if user is authorized to remove photos
+            //check if user is authorized to add cover photo
             var authorizationResult = await _authorizationService.AuthorizeAsync(User, postId, "PostUpdatePolicy");
             if (!authorizationResult.Succeeded)
             {
                 return Unauthorized();
             }
-            //prepare grpc request
-            var request = new RemovePhotosRequest
+            var reply = new Response();
+            var request = new Photo
             {
                 PostId = postId
             };
-            request.Photos.AddRange(photos);
+            //try to transform photo into stream of bytes and add to post
+            try
+            {
+                //check that there are files
+                if (file == null)
+                {
+                    reply.Message = "No file submitted";
+                    return BadRequest(reply);
+                }
+                //convert image file to byte array and prepare grpc request
+                request.PhotoByteStr = PreparePhotoRequest(file);
+                //try to add photo
+                reply = await _photoClient.AddCoverPhotoToPostAsync(request);
+                if (!reply.IsSuccess)
+                {
+                    //in case of errors, indicate it in response
+                    return BadRequest(reply);
+                }
+                return StatusCode(201);
+            }
+            //catch exception if file is not an image and return bad request
+            catch (FileContentTypeException ex)
+            {
+                reply.Message = ex.Message;
+                return BadRequest(reply);
+            }
+        }
+
+        //only authorized access
+        //remove photo from post
+        [Authorize]
+        [HttpDelete("{Id}")]
+        public async Task<IActionResult> DeletePostPhoto(long id)
+        {
+            //check if user is authorized to remove photos
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, id, "PhotoDeletePolicy");
+            if (!authorizationResult.Succeeded)
+            {
+                return Unauthorized();
+            }
+            //prepare grpc request
+            var request = new Request
+            {
+                Id = id
+            };
             //call grpc service to remove photos
-            var reply = await _photoClient.RemovePhotosFromPostAsync(request);
+            var reply = await _photoClient.RemovePhotoFromPostAsync(request);
             if (!reply.IsSuccess)
             {
                 //in case of errors, indicate it in response
@@ -129,5 +200,24 @@ namespace APIGateway.Controllers.PostFeedback
             }
             return NoContent();
         }
+        //converts image file to byte array and prepares grpc request
+        private AddPhotosRequest PreparePhotoCollectionRequest(
+            IFormFile[] files,
+            AddPhotosRequest request)
+        {
+            foreach (var file in files)
+            {
+                request.PhotoByteStr.Add(PreparePhotoRequest(file));
+            }
+            return request;
+        }
+        private ByteString PreparePhotoRequest(IFormFile file)
+        {
+            //convert file to image
+            var bytes = _imageConverter.ConvertFile(file);
+            //prepare grpc request
+            return GrpcConversion.FromByteArrayToByteString(bytes);
+        }
+
     }
 }

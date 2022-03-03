@@ -1,30 +1,186 @@
 ﻿@page "/"
-@inherits Components.CustomBaseComponent
+@using System.Linq.Expressions
+@using System.Reflection 
+@layout IndexLayout
+@inject IPostRelatedInfoService _service
 @using FrontEndApp.Pages.Post
-
-@foreach (var image in _images)
-{
-<img src="@image" />
-}
+<section id="aa-advance-search">
+    <div class="container">
+        <div class="aa-advance-search-area">
+            <EditForm Model="_filter" class="form">
+                <div class="aa-advance-search-top">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="aa-single-advance-search">
+                                <InputText class="search__input" @bind-Value="_filter.SearchText" placeholder="Search for accommodations..." />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="aa-single-advance-search">
+                                <InputSelect @bind-Value="_filter.Category">
+                                    @if (_categories == null)
+                                    {
+                                        <option value="">No categories found</option>
+                                    }
+                                    else if (_categories.Count == 0)
+                                    {
+                                        <option value="">Loading categories...</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="">Category</option>
+                                        @foreach (var category in _categories)
+                                        {
+                                            <option value="@category.Id">@category.Name</option>
+                                        }
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="aa-single-advance-search">
+                                <InputSelect @bind-Value="_filter.City">
+                                    @if (_cities == null)
+                                    {
+                                        <option value="">No cities found</option>
+                                    }
+                                    else if (_cities.Count == 0)
+                                    {
+                                        <option value="">Loading cities...</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="">City</option>
+                                        @foreach (var city in _cities)
+                                        {
+                                            <option value="@city.Id">@city.Name</option>
+                                        }
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="aa-single-advance-search">
+                                <input type="number" @bind-value="_filter.Guests" placeholder="Number of guests" max="20" class="search__input" />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="aa-single-advance-search">
+                                <input class="aa-search-btn" type="submit" @onclick="async ()=>await SearchBtnClicked()" value="Search">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="aa-advance-search-bottom">
+                    <div class="row align-items-end">
+                        <div class="col-md-4">
+                            <div class="aa-single-filter-search">
+                                <span>Number of rooms from @_filter.MinRooms to @_filter.MaxRooms</span>
+                                <RadzenSlider Range="true" Min="0" Max="20"
+                                              @bind-Value="_roomsRange" TValue="IEnumerable<int>"
+                                              Change=@(args => OnRangeChange(args, _filter, x=>x.MinRooms, x=>x.MaxRooms)) Class="w-100" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="aa-single-filter-search">
+                                <span>Number of beds from @_filter.MinBeds to @_filter.MaxBeds</span>
+                                <RadzenSlider Range="true" Min="0" Max="20"
+                                              @bind-Value="_bedsRange" TValue="IEnumerable<int>"
+                                              Change=@(args => OnRangeChange(args,_filter, x=>x.MinBeds, x=>x.MaxBeds)) Class="w-100" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="aa-single-filter-search">
+                                <span>
+                                    Price (in $) from  <input type="number" @bind-value="_filter.MinPrice" max="5000" class="w-25" />
+                                    to <input type="number" @bind-value="_filter.MaxPrice" max="5000" class="w-25" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="aa-advance-search-bottom">
+                    <div class="row align-items-end">
+                        <div class="col-md-4">
+                            <div class="aa-single-filter-search">
+                                <span>
+                                    Should entire accommodation be available?
+                                    <RadzenSelectBar @bind-Value="_filter.EntireApartment" TValue="bool?">
+                                        <Items>
+                                            <RadzenSelectBarItem Text="Yes" Value="true" />
+                                            <RadzenSelectBarItem Text="No" Value="false" />
+                                        </Items>
+                                    </RadzenSelectBar>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="aa-single-filter-search">
+                                <span>
+                                    Start date:
+                                    <RadzenDatePicker TValue="DateTime?"
+                                                      DateRender=@DateRender @bind-Value="_filter.StartDate" />
+                                    End date:
+                                    <RadzenDatePicker TValue="DateTime?"
+                                                      DateRender=@DateRender @bind-Value="_filter.EndDate" />
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="aa-single-advance-search">
+                                <input class="aa-search-btn" type="button" @onclick="async ()=>await ClearBtnClicked()" value="Clear filters">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</section>
+<Posts @ref="_postsComponent" Filter="_filter" Title="Available accommodation options" />
 @code {
-    private List<Models.Photo> _photos = new List<Models.Photo>();
-    private List<string> _images = new List<string>();
-
+    private Filter _filter = new Filter();
+    private ICollection<Item> _cities = new List<Item>();
+    private ICollection<Item> _categories = new List<Item>();
+    private IEnumerable<int> _roomsRange = GetInitialRangeValues();
+    private IEnumerable<int> _bedsRange = GetInitialRangeValues();
+    private Posts _postsComponent;
     protected override async Task OnInitializedAsync()
     {
-        var response = await client.GetAsync("api/post-photos/26");
-        if (response.IsSuccessStatusCode)
-        {
-            var responseStr = await response.Content.ReadAsStringAsync();
-
-            _photos = JsonConvert.DeserializeObject<List<Photo>>(responseStr);
-        }
-        foreach (var photo in _photos)
-        {
-            var imgSrc = String.Format("data:image/gif;base64,{0}",
-           Convert.ToBase64String(photo.FileContent));
-            _images.Add(imgSrc);
-        }
-
+        var cityTask = _service.GetCitiesAsync();
+        var categoryTask = _service.GetCategoriesAsync();
+        await Task.WhenAll(cityTask, categoryTask);
+        _cities = await cityTask;
+        _categories = await categoryTask;
+    }
+    public void OnRangeChange(IEnumerable<int> range, Filter target,
+        Expression<Func<Filter, int?>> minValueExpr, Expression<Func<Filter, int?>> maxValueExpr)
+    {
+        var minExpr = (MemberExpression)minValueExpr.Body;
+        var minProp = (PropertyInfo)minExpr.Member;
+        minProp.SetValue(target, range.ElementAt(0), null);
+        var maxExpr = (MemberExpression)maxValueExpr.Body;
+        var maxProp = (PropertyInfo)maxExpr.Member;
+        maxProp.SetValue(target, range.ElementAt(1), null);
+    }
+    private void DateRender(DateRenderEventArgs args)
+    {
+        args.Disabled = args.Date.Date < DateTime.Now.Date;
+    }
+    private async Task SearchBtnClicked()
+    {
+        await _postsComponent.RefreshComponent();
+    }
+    private async Task ClearBtnClicked()
+    {
+        _filter = new Filter();
+        _roomsRange = GetInitialRangeValues();
+        _bedsRange = GetInitialRangeValues();
+        _postsComponent.SetFilter(_filter);
+        await _postsComponent.RefreshComponent();
+    }
+    private static IEnumerable<int> GetInitialRangeValues()
+    {
+        return new int[] { 1, 6 };
     }
 }

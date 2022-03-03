@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Google.Protobuf;
 using Grpc.Base.Extensions;
 using Grpc.Base.Helpers;
 using Grpc.Core;
@@ -33,11 +34,13 @@ namespace PostFeedback.API.Services
         {
             var response = new Response();
             //map grpc objects to dtos
-            var photos = _mapper.Map<ICollection<PhotoDTO>>(request.Photos);
+            ICollection<PhotoDTO> photos = new List<PhotoDTO>();
+            request.PhotoByteStr.ToList().ForEach(x => photos.Add(new PhotoDTO(
+                x?.ToByteArray())));
             try
             {
                 //try to attach photos
-                await _service.AddPhotosToPost(request.PostId, photos);
+                await _service.AddPhotosToPostAsync(request.PostId, photos);
                 //if successful, indicate it in response
                 response.IsSuccess = true;
             }
@@ -53,34 +56,43 @@ namespace PostFeedback.API.Services
             }
             return response;
         }
-        //remove photos from post
-        public override async Task<Response> RemovePhotosFromPost(RemovePhotosRequest request,
+        //add cover photo to post
+        public override async Task<Response> AddCoverPhotoToPost(Photo request,
             ServerCallContext context)
         {
-            var response = new Response();
-            try
-            {
-                //try to remove photos
-                await _service.RemovePhotosFromPost(request.PostId, request.Photos);
-                //if successful, indicate it in response
-                response.IsSuccess = true;
-            }
-            catch (Exception ex)
-            {
-                //in case of other error, indicate it in response
-                response.HandleException(ex);
-            }
-            return response;
+            return await GrpcServiceHelper.HandleCreateUpdateActionAsync<PhotoDTO,
+                Response, Photo>(_service.AddCoverPhotoToPostAsync, _mapper, request); 
+        }
+        //remove photo 
+        public override async Task<Response> RemovePhotoFromPost(Request request,
+            ServerCallContext context)
+        {
+            return await GrpcServiceHelper.HandleDeleteActionAsync<Response>(
+                request.Id, _service.RemovePhotoFromPostAsync);
         }
         //retrieve photos for post
         public override async Task<PhotoListResponse> GetPhotosForPost(Request request,
             ServerCallContext context)
         {
             //get photos
-            var photos = await _service.GetPhotosForPost(request.Id);
+            var photos = await _service.GetPhotosForPostAsync(request.Id);
             //map to response
             return GrpcServiceHelper.MapItems<PhotoListResponse, PhotoDTO,
                 Photo>(_mapper, photos);
+        }
+        //retrieve cover photo for post
+        public override async Task<Photo> GetCoverPhotoForPost(Request request,
+            ServerCallContext context)
+        {
+            return await GrpcServiceHelper.HandleRetrievalByIdAsync<Photo, PhotoDTO>(request.Id,
+                _service.GetCoverPhotoForPostAsync, _mapper);
+        }
+        //retrieve photo by id
+        public override async Task<Photo> GetPhoto(Request request,
+            ServerCallContext context)
+        {
+            return await GrpcServiceHelper.HandleRetrievalByIdAsync<Photo, PhotoDTO>(request.Id,
+                _service.GetPhotoAsync, _mapper);
         }
     }
 }

@@ -12,7 +12,6 @@ namespace Account.Domain.Logic.DTOs
     {
         public long Id { get; private set; }
         public string PhoneNumber { get; private set; }
-        public string Address { get; private set; }
         public string UserInfo { get; private set; }
         public UserUpdateDTO(
             long id,
@@ -22,7 +21,6 @@ namespace Account.Domain.Logic.DTOs
             string phoneNumber,
             DateTime? dateOfBirth,
             Gender? gender,
-            string address,
             string userInfo,
             long countryId) :base(
                 firstName,
@@ -34,7 +32,6 @@ namespace Account.Domain.Logic.DTOs
         {
             Id = id;
             PhoneNumber = phoneNumber;
-            Address = address;
             UserInfo = userInfo;
         }
     }

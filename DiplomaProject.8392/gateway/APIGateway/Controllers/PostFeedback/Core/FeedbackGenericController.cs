@@ -68,7 +68,18 @@ namespace APIGateway.Controllers.PostFeedback.Core
             var reply = await _client.GetFeedbacksForItemAsync(request);
             return Ok(reply.Items);
         }
-
+        //get average rating for item (user/accommodation)
+        [HttpGet("rating/{itemId}")]
+        public async Task<IActionResult> GetAverageRating(long itemId)
+        {
+            var request = new Request
+            {
+                Id = itemId
+            };
+            //get feedbacks
+            var reply = await _client.GetAverageRatingAsync(request);
+            return Ok(reply);
+        }
         // POST api/<FeedbackGenericController>
         //Create new feedback
         //Only authorized access

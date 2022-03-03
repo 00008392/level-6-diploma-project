@@ -60,7 +60,7 @@ namespace APIGateway.Controllers.Account
             //convert user data to proper dislay format (TimeStamp -> DateTime) and return it
             return Ok(ConvertUserData(reply));
         }
-        // POST api/account
+
         //Register new user
         [HttpPost]
         public async Task<IActionResult> Register(RegisterRequest request)
@@ -146,14 +146,14 @@ namespace APIGateway.Controllers.Account
         private UserInfoResponse ConvertUserData(UserInfoResponse user)
         {
             //convert from TimeStamp to DateTime
-            user.DateOfBirth = (DateTime)DateTimeConversion.FromTimeStampToDateTime(user.DateOfBirthTimeStamp);
-            user.RegistrationDate = (DateTime)DateTimeConversion.FromTimeStampToDateTime(user.RegistrationDateTimeStamp);
+            user.DateOfBirth = (DateTime)GrpcConversion.FromTimeStampToDateTime(user.DateOfBirthTimeStamp);
+            user.RegistrationDate = (DateTime)GrpcConversion.FromTimeStampToDateTime(user.RegistrationDateTimeStamp);
             return user;
         }
         private IAccountRequest ConvertUserData(IAccountRequest user)
         {
             //convert from DateTime to TimeStamp  
-            user.DateOfBirthTimeStamp = DateTimeConversion.FromDateTimeToTimeStamp(user.DateOfBirth);
+            user.DateOfBirthTimeStamp = GrpcConversion.FromDateTimeToTimeStamp(user.DateOfBirth);
             return user;
         }
     }

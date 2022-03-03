@@ -171,6 +171,9 @@ namespace PostFeedback.DAL.EF.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool?>("IsCover")
+                        .HasColumnType("bit");
+
                     b.Property<byte[]>("PhotoBytes")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");

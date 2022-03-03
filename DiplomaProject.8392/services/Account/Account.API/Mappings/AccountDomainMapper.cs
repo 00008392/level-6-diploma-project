@@ -20,8 +20,7 @@ namespace Account.API.Mappings
                 .ConvertUsing(x => new LoggedUserDTO(x.Id, x.Email));
             CreateMap<User, UserInfoDTO>()
                 .ConvertUsing((x, dest, context) => new UserInfoDTO(x.Id, x.FirstName, x.LastName, x.Email, x.PhoneNumber,
-                x.DateOfBirth, x.Gender, x.Address, x.UserInfo, x.RegistrationDate, x.Country?.Name, x.Country?.Id ?? 0,
-                x.ProfilePhoto, x.MimeType));
+                x.DateOfBirth, x.Gender, x.UserInfo, x.RegistrationDate, x.Country?.Name, x.Country?.Id ?? 0));
             CreateMap<UserRegistrationDTO, User>()
                 .ConvertUsing(x => new User(x.FirstName, x.LastName, x.Email, DateTime.Now,
                 (DateTime)x.DateOfBirth, (Gender)x.Gender, x.CountryId));

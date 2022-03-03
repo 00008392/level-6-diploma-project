@@ -12,12 +12,9 @@ namespace Account.Domain.Logic.DTOs
     {
         public long Id { get; private set; }
         public string PhoneNumber { get; private set; }
-        public string Address { get; private set; }
         public string UserInfo { get; private set; }
         public DateTime RegistrationDate { get; private set; }
         public string CountryName { get; private set; }
-        public byte[] ProfilePhoto { get; private set; }
-        public string MimeType { get; private set; }
         public UserInfoDTO(
             long id,
             string firstName,
@@ -26,13 +23,10 @@ namespace Account.Domain.Logic.DTOs
             string phoneNumber,
             DateTime? dateOfBirth,
             Gender? gender,
-            string address,
             string userInfo,
             DateTime registrationDate,
             string countryName,
-            long countryId,
-            byte[] profilePhoto,
-            string mimeType) : base(
+            long countryId) : base(
                 firstName,
                 lastName,
                 email,
@@ -42,12 +36,9 @@ namespace Account.Domain.Logic.DTOs
         {
             Id = id;
             PhoneNumber = phoneNumber;
-            Address = address;
             RegistrationDate = registrationDate;
             CountryName = countryName;
             UserInfo = userInfo;
-            ProfilePhoto = profilePhoto;
-            MimeType = mimeType;
         }
     }
 }

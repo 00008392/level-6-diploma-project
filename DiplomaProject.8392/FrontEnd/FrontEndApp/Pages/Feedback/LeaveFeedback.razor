@@ -1,4 +1,4 @@
-﻿@page "/user/feedbacks/create/{UserId:long}"
+﻿@*@page "/user/feedbacks/create/{UserId:long}"
 @page "/post/feedbacks/create/{PostId:long}"
 
 @inherits Components.CustomBaseComponent
@@ -64,4 +64,4 @@ else
             _feedback.ErrorMessage = reply.Content.ReadAsStringAsync().Result;
         }
     }
-}
+}*@

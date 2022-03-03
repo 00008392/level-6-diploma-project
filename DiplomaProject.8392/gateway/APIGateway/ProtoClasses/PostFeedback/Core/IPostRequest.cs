@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,20 +8,14 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.API
 {
-    //implemented by create and update post requests
-    //this interface is needed in order to hide owner id and TimeStamp format from user in json format,
-    //since DateTime is more convenient format
-    //and in order to convert Datetime format to TimeStamp in controller methods
-
+    //interface to hide time stamp properties in post requests
     public interface IPostRequest
     {
-         DateTime? MovingInTime { get; set; }
         [JsonIgnore]
-         Timestamp MovingInTimeStamp { get; set; }
-         DateTime? MovingOutTime { get; set; }
+        Timestamp MovingInTimeStamp { get; set; }
         [JsonIgnore]
-         Timestamp MovingOutTimeStamp { get; set; }
-        [JsonIgnore]
-         long? OwnerId { get; set; }
+        Timestamp MovingOutTimeStamp { get; set; }
+        DateTime? MovingInTime { get; set; }
+        DateTime? MovingOutTime { get; set; }
     }
 }

@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace PostFeedback.API
 {
-    //IPostRequest - in order to send data in TimeStamp format to the service instead of DateTime 
-    //and in order to hide properties from user indicated in the interface
-    public partial class UpdatePostRequest: PostRequestBase, IPostRequest
+    //implements interface in order to be used in controller method 
+    public partial class UpdatePostRequest : BasePostRequest, IPostRequest
     {
     }
 }

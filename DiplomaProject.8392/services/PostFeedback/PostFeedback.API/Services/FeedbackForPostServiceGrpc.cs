@@ -47,6 +47,11 @@ namespace PostFeedback.API.Services
         {
             return await _strategy.GetFeedbacksForItemAsync(request);
         }
-
+        //get average rating for post
+        public override async Task<AverageRatingResponse> GetAverageRating(Request request,
+         ServerCallContext context)
+        {
+            return await _strategy.GetAverageRatingAsync(request);
+        }
     }
 }

@@ -10,8 +10,11 @@ namespace PostFeedback.Domain.Logic.Contracts
     //service that manipulates photos of accommodation attached to post
     public interface IPostPhotoService
     {
-        Task AddPhotosToPost(long postId, ICollection<PhotoDTO> photos);
-        Task RemovePhotosFromPost(long postId, ICollection<long> photos);
-        Task<ICollection<PhotoDTO>> GetPhotosForPost(long postId);
+        Task AddPhotosToPostAsync(long postId, ICollection<PhotoDTO> photos);
+        Task AddCoverPhotoToPostAsync(PhotoDTO photo);
+        Task RemovePhotoFromPostAsync(long photoId);
+        Task<PhotoDTO> GetPhotoAsync(long photoId);
+        Task<ICollection<PhotoDTO>> GetPhotosForPostAsync(long postId);
+        Task<PhotoDTO> GetCoverPhotoForPostAsync(long postId);
     }
 }

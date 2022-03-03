@@ -8,22 +8,18 @@ using Blazored.SessionStorage;
 using System.Net.Http;
 using FrontEndApp.States;
 using Microsoft.JSInterop;
+using FrontEndApp.Services.Authentication;
 
 namespace FrontEndApp.Components
 {
     public class CustomBaseComponent: ComponentBase
     {
-        //protected bool _isAuthenticated = false;
         [Inject]
-        protected HttpClient client { get; set; }
+        protected NavigationManager _navManager { get; set; }
         [Inject]
-        protected NavigationManager navManager { get; set; }
+        protected IAuthenticationService _authService { get; set; }
         [Inject]
-        protected IAuthenticationService authService { get; set; }
-        [Inject]
-        protected ISessionStorageService storage { get; set; }
-        [Inject]
-        protected LoggedInState AuthState { get; set; }
+        protected LoggedInState _authState { get; set; }
 
     }
 }

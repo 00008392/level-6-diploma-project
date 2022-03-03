@@ -43,6 +43,7 @@ namespace PostFeedback.API.Mappings
                 .ForMember(x => x.DatePublishedTimeStamp, opt => opt.MapFrom(src =>
                     GrpcServiceHelper.ConvertDateTimeToTimeStamp(src.DatePublished)
                   ));
+                
             //post related info
             CreateMap<UserDTO, User>();
             CreateMap<ItemDTO, Item>();
@@ -52,7 +53,8 @@ namespace PostFeedback.API.Mappings
             CreateMap<PhotoDTO, Photo>()
                 .ForMember(x => x.PhotoByteStr, opt => opt.MapFrom(src => src.Photo == null ? null : Google.Protobuf.ByteString.CopyFrom(src.Photo)));
             CreateMap<Photo, PhotoDTO>()
-                .ConvertUsing(x => new PhotoDTO(x.PhotoByteStr.ToByteArray()));
+                .ConvertUsing((x, dest) => new PhotoDTO(x.PhotoByteStr?.ToByteArray(),
+                x.PostId??0));
             //filter
             CreateMap<FilterRequest, FilterParameters>()
                 .ForMember(x => x.StartDate, opt => opt.MapFrom(src => src.StartDateTimeStamp.ToDateTime()))

@@ -54,6 +54,21 @@ namespace PostFeedback.Domain.Logic.Services
             //if exists, delete it from database
             await _feedbackRepository.DeleteAsync(id);
         }
+        //get average rating for feedback item
+        public async Task<double?> GetAverageRating(long itemId)
+        {
+            //get all feedbacks for item
+            var feedbacks = await _feedbackRepository.GetFilteredAsync(x => x.ItemId == itemId);
+            //if no feedbacks are left for item, no average rating is returned
+            if(feedbacks==null||feedbacks.Count==0)
+            {
+                return null;
+            }
+            //calculate average rating
+            var rating = feedbacks.Select(x => x.Rating).Average();
+            return rating;
+        }
+
         //this method retrieves feedback by id with related entities
         public async Task<FeedbackInfoDTO<TDTO>> GetFeedbackDetailsAsync(long id)
         {

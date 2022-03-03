@@ -1,55 +1,102 @@
 ﻿@page "/posts"
-
-@inherits Components.CustomBaseComponent
-@if (_posts == null)
-{
-    <p>Loading...</p>
-}
-else
-{
-    <div class="products">
-        <div class="products__content">
-            @foreach (var post in _posts)
+@using FrontEndApp.Pages.Post.Shared
+@inject IPhotoService _photoService
+@inherits Components.PostBaseComponent
+<section id="aa-latest-property">
+    <div class="container">
+        <div class="aa-latest-property-area">
+            <div class="aa-title">
+                <h2>@Title</h2>
+                <span></span>
+            </div>
+            @if (_posts == null)
             {
-                <div class="products__content_item">
-                    <div class="item__description">
-                        <div hidden="@(post.Category==null)" class="item_logo music_logo">@post.Category?.Name</div>
-                        <h2 class="item__title">
-                            @post.Title
-                        </h2>
-                        <h2 class="item__price">
-                            @post.Price $
-                        </h2>
-                        <h2 hidden="@(post.City==null)" class="item__price">
-                            Located in @post.City?.Name
-                        </h2>
-                        <p class="item__details">
-                            Published by: <a class="text-danger" href=@($"users/{post.Owner?.Id}")>@post.Owner?.FirstName
-                            @post.Owner?.LastName</a>
-                             - @post.DatePublished
-                        </p>
+                <p>No posts to show</p>
+            }
+            else if (_posts.Count == 0)
+            {
+                <p>Loading posts...</p>
+            }
+            else
+            {
+                <div class="aa-latest-properties-content">
+                    <div class="row">
+                        @foreach (var post in _posts)
+                        {
+                            <div class="col-md-4">
+                                <article class="aa-properties-item">
+                                    <a href=@($"posts/{post.Id}") class="aa-properties-item-img image__wrapper">
+                                        <CoverImage PostId="post.Id"  />
+                                    </a>
+                                    <div hidden="@(post.City==null)" class="aa-tag for-rent">
+                                        @post.City
+                                    </div>
+                                    <div class="aa-properties-item-content">
+                                        <div class="aa-properties-info">
+                                            <span hidden="@(post.RoomsNo==null||post.RoomsNo==0)">@post.RoomsNo Rooms</span>
+                                            <span hidden="@(post.BedsNo==null||post.BedsNo==0)">@post.BedsNo Beds</span>
+                                            <span hidden="@(post.BathroomsNo==null||post.BathroomsNo==0)">@post.BathroomsNo Bathrooms</span>
+                                            <span hidden="@(post.MaxGuestsNo==null||post.MaxGuestsNo==0)">@post.MaxGuestsNo</span>
+                                        </div>
+                                        <div class="aa-properties-about">
+                                            <h3 class="post__item_text-overflow" hidden="@(post.Title==null)">@post.Title</h3>
+                                            <p hidden="@(post.Category==null)" class="aa-price">
+                                                @post.Category
+                                            </p>
+                                            <p class="post__item_text-overflow" hidden="@(post.Description==null)">@post.Description</p>
+                                            <p hidden="@(post.Owner==null)" class="aa-price">
+                                                Posted by: <a href=@($"users/{post.Owner?.Id}")>@post.Owner?.FirstName @post.Owner?.LastName</a> on
+                                                <span class="font-italic">
+                                                    @post.DatePublished.ToShortDateString()
+                                                </span>
+                                            </p>
+                                        </div>
+                                        <div class="aa-properties-detial">
+                                            <span class="aa-price">
+                                                @post.Price $ per night
+                                            </span>
+                                            <a href=@($"posts/{post.Id}") class="aa-secondary-btn">View Details</a>
+                                        </div>
+                                        <div hidden="@(HideActionButtons)" class="aa-properties-detial">
+                                            <a href=@($"posts/edit/{post.Id}") class="submit__btn submit__btn-primary">Edit</a>
+                                            <a href=@($"/posts/{post.Id}/photos/edit") class="submit__btn submit__btn-primary">Edit photos</a>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        }
 
                     </div>
-                    <a class="button" href=@($"posts/{post.Id}")>See details</a>
                 </div>
             }
-
         </div>
     </div>
-}
-
+</section>
 
 @code {
-    private List<PostInfo> _posts;
+    [Parameter]
+    public Filter Filter { get; set; }
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public bool HideActionButtons { get; set; } = true;
+    private ICollection<PostResponse> _posts = new List<PostResponse>();
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await client.GetAsync("api/posts");
-        if (response.IsSuccessStatusCode)
-        {
-            var responseStr = await response.Content.ReadAsStringAsync();
-
-            _posts = JsonConvert.DeserializeObject<List<PostInfo>>(responseStr);
-        }
+        _posts = await GetPosts(Filter);
+    }
+    private async Task<ICollection<PostResponse>> GetPosts(Filter filter = null)
+    {
+        return await _service.GetPostsAsync(filter);
+    }
+    public async Task RefreshComponent()
+    {
+        _posts = await GetPosts(Filter);
+        StateHasChanged();
+    }
+    public void SetFilter(Filter filter)
+    {
+        Filter = filter;
     }
 }

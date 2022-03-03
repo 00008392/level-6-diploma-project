@@ -14,12 +14,15 @@ namespace PostFeedback.Domain.Entities
         public long PostId { get; private set; }
         public Post Post { get; private set; }
         public byte[] PhotoBytes { get; private set; }
+        public bool? IsCover { get; private set; }
         public Photo(
             long postId,
-            byte[] photoBytes) 
+            byte[] photoBytes,
+            bool? isCover) 
         {
             PostId = postId;
             PhotoBytes = photoBytes;
+            IsCover = isCover;
         }
 
     }

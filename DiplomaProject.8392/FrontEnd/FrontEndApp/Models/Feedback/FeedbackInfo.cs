@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Models
 {
-    public class FeedbackInfo: FeedbackBase
-    {
-        public long Id { get; set; }
-        public UserInfo FeedbackOwner { get; set; }
-    }
+    //public class FeedbackInfo: FeedbackBase
+    //{
+    //    public long Id { get; set; }
+    //    public UserInfo FeedbackOwner { get; set; }
+    //}
 }

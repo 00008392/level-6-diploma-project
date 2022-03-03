@@ -15,6 +15,7 @@ service FeedbackForUser {
   rpc DeleteFeedback (common.Request) returns (common.Response);
   rpc GetFeedbackDetails (common.Request) returns (FeedbackResponse); 
   rpc GetFeedbacksForItem (common.Request) returns (FeedbackListResponse); 
+  rpc GetAverageRating (common.Request) returns (AverageRatingResponse);
 }
 //service for leaving feedback on accommodation indicated in post
 service FeedbackForPost {
@@ -22,6 +23,7 @@ service FeedbackForPost {
   rpc DeleteFeedback (common.Request) returns (common.Response);
   rpc GetFeedbackDetails (common.Request) returns (FeedbackResponse); 
   rpc GetFeedbacksForItem (common.Request) returns (FeedbackListResponse); 
+  rpc GetAverageRating (common.Request) returns (AverageRatingResponse);
 }
 
 message CreateFeedbackRequest {
@@ -41,4 +43,8 @@ message FeedbackResponse {
 }
 message FeedbackListResponse {
 	repeated FeedbackResponse items = 1;
+}
+message AverageRatingResponse {
+	google.protobuf.DoubleValue rating = 1;
+	google.protobuf.BoolValue noRating = 2;
 }

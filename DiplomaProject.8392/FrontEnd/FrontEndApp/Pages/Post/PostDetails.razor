@@ -1,0 +1,120 @@
+﻿@page "/posts/{Id:long}"
+@using FrontEndApp.States
+@using FrontEndApp.Pages.Post.Shared 
+@inject AppState _appState
+@inject IPhotoService _photoService
+@inherits Components.PostBaseComponent
+
+<section id="aa-blog">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="aa-blog-area">
+                    @if (_post == null)
+                    {
+                        <p>Loading post information...</p>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="aa-blog-content">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <article class="aa-blog-single aa-blog-details">
+                                                <figure class="aa-blog-img image__wrapper">
+                                                    <CoverImage PostId="@_post.Id" />
+                                                    <span class="aa-date-tag">@_post.DatePublished.ToShortDateString()</span>
+                                                </figure>
+                                                <div class="aa-blog-single-content">
+                                                    <h2 hidden="@(_post.Title==null)">@_post.Title</h2>
+                                                    <div hidden="@(_post.Owner==null)" class="aa-blog-single-bottom">
+                                                        <a class="aa-blog-author" href=@($"users/{_post.Owner?.Id}")><i class="fa fa-user"></i> @_post.Owner?.FirstName @_post.Owner?.LastName</a>
+                                                    </div>
+                                                    <p hidden="@(string.IsNullOrWhiteSpace(_post.Description))">@_post.Description</p>
+                                                    <p hidden="@(string.IsNullOrWhiteSpace(_post.Address))"><span class="font-weight-bold">Address: </span>@_post.Address</p>
+                                                    <p hidden="@(string.IsNullOrWhiteSpace(_post.ContactNumber))"><span class="font-weight-bold">Contact number: </span>@_post.ContactNumber</p>
+                                                    <p hidden="@(string.IsNullOrWhiteSpace(_post.MovingInTime))"><span class="font-weight-bold">Moving in time: </span>@_post.MovingInTime</p>
+                                                    <p hidden="@(string.IsNullOrWhiteSpace(_post.MovingOutTime))"><span class="font-weight-bold">Moving out time: </span>@_post.MovingOutTime</p>
+                                                    <p>
+                                                        <span class="font-weight-bold">Is entire accommodation available for rent? </span>
+                                                        @(_post.IsWholeApartment==true?"Yes":"No")
+                                                    </p>
+                                                    @if (_post.Rules != null && _post.Rules.Length != 0)
+                                                    {
+                                                        <h3>Rules</h3>
+                                                        <ul class="post__items">
+                                                            @foreach (var rule in _post.Rules)
+                                                            {
+                                                                <li>@rule.Name</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                    @if (_post.Facilities != null && _post.Facilities.Length != 0)
+                                                    {
+                                                        <h3>Facilities</h3>
+                                                        <ul class="post__items">
+                                                            @foreach (var facility in _post.Facilities)
+                                                            {
+                                                                <li>@facility.Name</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </div>
+                                            </article>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Start blog sidebar -->
+                            <div class="col-md-4">
+                                <aside class="aa-blog-sidebar">
+                                    <!-- Start single sidebar -->
+                                    <div class="aa-blog-sidebar-single">
+                                        <h3>Accommodation properties</h3>
+                                        <ul class="aa-blog-catg">
+                                            <li hidden="@(string.IsNullOrWhiteSpace(_post.City))">City <span>@_post.City</span></li>
+                                            <li hidden="@(string.IsNullOrWhiteSpace(_post.Category))">Category <span>@_post.Category</span></li>
+                                            <li hidden="@(_post.MaxGuestsNo==null||_post.MaxGuestsNo==0)">Guests (max number)  <span>@_post.MaxGuestsNo</span></li>
+                                            <li hidden="@(_post.RoomsNo==null||_post.RoomsNo==0)">Rooms <span>@_post.RoomsNo</span></li>
+                                            <li hidden="@(_post.BedsNo==null||_post.BedsNo==0)">Beds <span>@_post.BedsNo</span></li>
+                                            <li hidden="@(_post.BathroomsNo==null||_post.BathroomsNo==0)">Bathrooms <span>@_post.BathroomsNo</span></li>
+                                            <li hidden="@(_post.SquareMeters==null||_post.SquareMeters==0)">Size (sqr meters) <span>@_post.SquareMeters</span></li>
+                                            <li hidden="@(_post.Price==null||_post.Price==0)">Price <span>@_post.Price</span></li>
+                                        </ul>
+                                    </div>
+                                </aside>
+                                <aside hidden="@(!_showPostActions)" class="aa-blog-sidebar">
+                                    <!-- Start single sidebar -->
+                                    <div class="aa-blog-sidebar-single">
+                                        <h3>Available actions</h3>
+                                        <a class="submit__btn submit__btn-primary" href=@($"/posts/edit/{Id}")>Edit post</a>
+                                        <a class="submit__btn submit__btn-primary" href=@($"/posts/{Id}/photos/edit")>Edit post photos</a>
+                                    </div>
+                                </aside>
+                            </div>
+                        </div>
+                    }
+                    <ImageGallery PostId="Id" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    private PostResponse _post;
+    [Parameter]
+    public long Id { get; set; }
+    private bool _showPostActions = false;
+    protected override async Task OnInitializedAsync()
+    {
+        _appState.SetPageTitle("Post details");
+        _post = await _service.GetPostAsync(Id, ()=> { _navManager.NavigateTo("/404"); });
+        var userId = await _authService.GetLoggedUserId();
+        if (userId == _post.Owner?.Id)
+        {
+            _showPostActions = true;
+        }
+    }
+}

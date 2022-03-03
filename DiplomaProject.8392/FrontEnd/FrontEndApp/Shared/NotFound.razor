@@ -1,0 +1,22 @@
+﻿@page "/404"
+@using FrontEndApp.States
+@inject AppState _appState
+    <section id="aa-error">
+        <div class="container">
+            <row>
+                <div class="col-md-12">
+                    <div class="aa-error-area">
+                        <h2>404</h2>
+                        <p><span class="fa fa-warning"></span>Oops! The resource you requested was not found!</p>
+                        <a href="">Back Home</a>
+                    </div>
+                </div>
+            </row>
+        </div>
+    </section>
+@code {      
+    protected override void OnInitialized()
+    {
+        _appState.SetPageTitle("404 error");
+    }
+}

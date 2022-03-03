@@ -1,0 +1,48 @@
+﻿@inherits Components.UserBaseComponent
+<div class="aa-properties-info">
+    @if (_user == null)
+    {
+        <p>Loading user information...</p>
+    }
+    else
+    {
+        <h2 hidden="@(string.IsNullOrWhiteSpace(_user.FirstName)
+                                  &&string.IsNullOrWhiteSpace(_user.LastName))" class="account__details_title">
+            @_user.FirstName @_user.LastName
+        </h2>
+        <p hidden="@(string.IsNullOrWhiteSpace(_user.Email))" class="font-italic">@_user.Email</p>
+        <p hidden="@(string.IsNullOrWhiteSpace(_user.PhoneNumber))" class="font-italic">@_user.PhoneNumber</p>
+        <p hidden="@(string.IsNullOrWhiteSpace(_user.UserInfo))">@_user.UserInfo</p>
+        <p hidden="@(_user.Gender==null)"><span class="font-weight-bold">Gender: </span>@_user.Gender</p>
+        <p hidden="@(_user.DateOfBirth==null)"><span class="font-weight-bold">Birthday: </span>@(((DateTime)_user.DateOfBirth).ToShortDateString())</p>
+        <p><span class="font-weight-bold">Registered on: </span>@(((DateTime)_user.RegistrationDate).ToShortDateString())</p>
+        <p hidden="@(string.IsNullOrWhiteSpace(_user.CountryName))"><span class="font-weight-bold">Lives in: </span>@_user.CountryName</p>
+        @if (!HideActionButtons)
+        {
+            <a hidden="@(string.IsNullOrWhiteSpace(_user.PhoneNumber))" 
+               class="submit__btn submit__btn-primary" href="account/edit">Call</a>
+            <a hidden="@(string.IsNullOrWhiteSpace(_user.Email))"
+               class="submit__btn submit__btn-primary" href="account/password">Email</a>
+        }
+    }
+</div>
+@code {
+    private UserResponse _user;
+    [Parameter]
+    public long Id { get; set; }
+    [Parameter]
+    public bool HideActionButtons { get; set; } = false;
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUser();
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        await GetUser();
+    }
+    private async Task GetUser()
+    {
+        _user = await _service.GetUserAsync(Id, () => { _navManager.NavigateTo("/404"); });
+
+    }
+}

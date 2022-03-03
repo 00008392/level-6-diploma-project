@@ -18,7 +18,6 @@ namespace Account.Domain.Entities
         public string PhoneNumber { get; private set; }
         public DateTime DateOfBirth { get; private set; }
         public Gender Gender { get; private set; }
-        public string Address { get; private set; }
         public long CountryId { get; private set; }
         public Country Country { get; private set; }
         public string UserInfo { get; private set; }
@@ -26,8 +25,6 @@ namespace Account.Domain.Entities
         public ICollection<Booking> BookingsAsOwner { get; private set; }
         //bookings that user has on accommodations as guest
         public ICollection<Booking> BookingsAsGuest { get; private set; }
-        public byte[] ProfilePhoto { get; private set; }
-        public string MimeType { get; private set; }
         //password hash and salt are used for password encryption
         public string PasswordHash { get; private set; }
         public string PasswordSalt { get; private set; }
@@ -67,7 +64,6 @@ namespace Account.Domain.Entities
             string phoneNumber,
             DateTime dateOfBirth,
             Gender gender,
-            string address,
             long countryId,
             string userInfo)
         {
@@ -77,7 +73,6 @@ namespace Account.Domain.Entities
             PhoneNumber = phoneNumber;
             DateOfBirth = dateOfBirth;
             Gender = gender;
-            Address = address;
             CountryId = countryId;
             UserInfo = userInfo;
         }

@@ -1,43 +1,53 @@
 ﻿@page "/login"
+@layout UserFormLayout
+@inject AppState _appState
+@inherits Components.UserBaseComponent
+<EditForm OnValidSubmit="@LogIn" Model="_login" class="contactform">
+    <DataAnnotationsValidator />
+    <p class="font-weight-bold text-danger">@_error</p>
+    <div class="aa-single-field">
+        <label>Email <span class="required">*</span></label>
+        <InputText class="form__input" @bind-Value="_login.Email" type="email"
+                   aria-required="true" name="email" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _login.Email" />
+        </div>
 
-@inherits Components.CustomBaseComponent
-@if (AuthState.isAuthenticated)
-{
-    <h2 class="title">You are already signed in</h2>
-}
-else
-{
-    <div class="container">
-        <div class="row justify-content-center">
-            <EditForm Model="@_login" OnValidSubmit="LogIn" class="col-lg-5 col-md-8 form">
-                <h2 class="title">Sign in</h2>
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <p class="item__text font-weight-bold error">@_error</p>
-                <InputText @bind-Value="@_login.Email" placeholder="Email" class="input"  />
-                <InputText @bind-Value="@_login.Password" type="password" placeholder="Password" class="input" />
-                <input type="submit" value="Sign in" class="button" />
-            </EditForm>
+    </div>
+    <div class="aa-single-field">
+        <label>Password <span class="required">*</span></label>
+        <InputText class="form__input" type="password" @bind-Value="_login.Password" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _login.Password" />
         </div>
     </div>
-}
-
+    <div class="aa-single-submit">
+        <input type="submit" value="Sign in" class="aa-browse-btn">
+        <p>Don't Have An Account Yet? <a href="registration">CREATE NOW!</a></p>
+    </div>
+</EditForm>
 
 @code {
-    private Models.Login _login = new Models.Login();
+    private LoginRequest _login = new LoginRequest();
     private string _error;
+    protected override void OnInitialized()
+    {
+        @if (_authState.isAuthenticated)
+        {
+            _navManager.NavigateTo("/account");
+        }
+        _appState.SetPageTitle("Sign in to your account");
+    }
     private async Task LogIn()
     {
-        var loggedUser = await authService.LogIn(_login);
+        var loggedUser = await _authService.LogIn(_login);
         if (loggedUser != null)
         {
-            navManager.NavigateTo("/account");
+            _navManager.NavigateTo("/account");
         }
         else
         {
             _error = "Login failed";
         }
-
-
     }
 }

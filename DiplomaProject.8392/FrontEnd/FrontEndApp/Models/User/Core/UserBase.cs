@@ -6,23 +6,23 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FrontEndApp.Models
+namespace FrontEndApp.Models.User.Core
 {
-    public class UserBase: ErrorViewModel
+    public class UserBase
     {
-        [Required]
+        [Required(ErrorMessage = "First name is required")]
         public string FirstName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Last name is required")]
         public string LastName { get; set; }
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
         public string Email { get; set; }
         [Required]
-        [DateOfBirthValidation(18, ErrorMessage = "You should be at least 18 years.")]
-        public DateTime DateOfBirth { get; set; }
-        [Required]
-        public Gender Gender { get; set; }
-        [Required]
-        public Role Role { get; set; }
+        [DateOfBirthValidation(18, ErrorMessage = "User should be at least 18 years old")]
+        public DateTime? DateOfBirth { get; set; }
+        [Required(ErrorMessage = "Gender is required")]
+        public Gender? Gender { get; set; }
+        [Required(ErrorMessage = "Country is required")]
+        public long? CountryId { get; set; }
     }
 }

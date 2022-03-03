@@ -127,7 +127,7 @@ namespace Account.Domain.Logic.Services
             //if all correct, update user entity and save in the database
             user.UpdateInfo(userDTO.FirstName, userDTO.LastName,
                 userDTO.Email, userDTO.PhoneNumber, (DateTime)userDTO.DateOfBirth,
-                (Gender)userDTO.Gender, userDTO.Address,
+                (Gender)userDTO.Gender, 
                 userDTO.CountryId, userDTO.UserInfo);
             await _repository.UpdateAsync(user);
             //if user is updated successfully and no exception is thrown, publish event that user is updated

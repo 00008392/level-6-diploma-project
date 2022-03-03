@@ -27,18 +27,11 @@ namespace Account.API.Mappings
                 .ConvertUsing(x => new ChangePasswordDTO(x.Id, x.Password));
             CreateMap<UpdateRequest, UserUpdateDTO>()
                 .ConvertUsing((x, context) => new UserUpdateDTO(x.Id, x.FirstName,
-                x.LastName, x.Email, x.PhoneNumber, x.DateOfBirthTimeStamp?.ToDateTime(), (Gender?)x.Gender,
-                x.Address, x.UserInfo, x.CountryId??0));
+                x.LastName, x.Email, x.PhoneNumber, x.DateOfBirthTimeStamp?.ToDateTime(), (Gender?)x.Gender, x.UserInfo, x.CountryId??0));
             CreateMap<UserInfoDTO, UserInfoResponse>()
                  .ForMember(x => x.DateOfBirthTimeStamp, opt => opt.MapFrom(src => GrpcServiceHelper.ConvertDateTimeToTimeStamp(src.DateOfBirth)))
                  .ForMember(x => x.RegistrationDateTimeStamp, opt => opt.MapFrom(src =>
-                     GrpcServiceHelper.ConvertDateTimeToTimeStamp(src.RegistrationDate)))
-                 .ForMember(x => x.ProfilePhoto, opt =>
-                 {
-                     opt.PreCondition(src => src.ProfilePhoto != null);
-                     opt.MapFrom(src =>
-                     Google.Protobuf.ByteString.CopyFrom(src.ProfilePhoto));
-                 });
+                     GrpcServiceHelper.ConvertDateTimeToTimeStamp(src.RegistrationDate)));
             //country
             CreateMap<CountryDTO, Country>();
         }

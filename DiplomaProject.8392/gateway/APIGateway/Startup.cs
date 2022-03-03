@@ -34,6 +34,7 @@ using System.Text;
 using System.Threading.Tasks;
 using APIGateway.Services.Contracts;
 using APIGateway.Services;
+using AutoMapper;
 
 namespace APIGateway
 {
@@ -121,6 +122,8 @@ namespace APIGateway
                     policy.Requirements.Add(new UserUpdateRequirement()));
                 options.AddPolicy("PostUpdatePolicy", policy =>
                     policy.Requirements.Add(new PostUpdateRequirement()));
+                options.AddPolicy("PhotoDeletePolicy", policy =>
+                   policy.Requirements.Add(new PhotoDeleteRequirement()));
                 options.AddPolicy("UserFeedbackDeletePolicy", policy =>
                     policy.Requirements.Add(new FeedbackDeleteRequirement<FeedbackForUser.FeedbackForUserClient>()));
                 options.AddPolicy("PostFeedbackDeletePolicy", policy =>
@@ -139,6 +142,7 @@ namespace APIGateway
             //requirement handlers for resource based authorization
             services.AddSingleton<IAuthorizationHandler, UserUpdateAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, PostUpdateAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, PhotoDeleteAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, FeedbackDeleteAuthorizationHandler<FeedbackForUser.FeedbackForUserClient>>();
             services.AddSingleton<IAuthorizationHandler, FeedbackDeleteAuthorizationHandler<FeedbackForPost.FeedbackForPostClient>>();
             services.AddSingleton<IAuthorizationHandler, GetBookingsByGuestAuthorizationHandler>();

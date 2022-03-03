@@ -27,32 +27,32 @@ service PostRelatedInfoService {
 //service for manipulation of photos attached to post
 service PostPhotoService {
 	rpc AddPhotosToPost(AddPhotosRequest) returns (common.Response);
-	rpc RemovePhotosFromPost(RemovePhotosRequest) returns (common.Response);
+	rpc RemovePhotoFromPost(common.Request) returns (common.Response);
+	rpc AddCoverPhotoToPost(Photo) returns (common.Response);
 	rpc GetPhotosForPost(common.Request) returns (PhotoListResponse);
+	rpc GetCoverPhotoForPost(common.Request) returns (Photo);
+	rpc GetPhoto(common.Request) returns (Photo);
 }
-
 message CreatePostRequest {
-  google.protobuf.StringValue title = 1;
-  google.protobuf.StringValue description = 2;
-  google.protobuf.Int64Value ownerId = 3;
-  google.protobuf.Int64Value categoryId = 4;
-  google.protobuf.Int64Value cityId = 5;
-  google.protobuf.StringValue address = 6;
-  google.protobuf.StringValue contactNumber = 7;
-  google.protobuf.Int32Value roomsNo = 8;
-  google.protobuf.Int32Value bathroomsNo = 9;
-  google.protobuf.Int32Value bedsNo = 10;
-  google.protobuf.Int32Value maxGuestsNo = 11;
-  google.protobuf.Int32Value squareMeters = 12;
-  google.protobuf.DoubleValue price = 13;
-  google.protobuf.BoolValue isWholeApartment = 14;
-  google.protobuf.Timestamp movingInTimeStamp = 15;
-  google.protobuf.Timestamp movingOutTimeStamp = 16;
-  repeated int64 rules = 17;
-  repeated int64 facilities = 18;
+  google.protobuf.StringValue title = 2;
+  google.protobuf.StringValue description = 3;
+  google.protobuf.Int64Value ownerId = 4;
+  google.protobuf.Int64Value categoryId = 5;
+  google.protobuf.Int64Value cityId = 6;
+  google.protobuf.StringValue address = 7;
+  google.protobuf.StringValue contactNumber = 8;
+  google.protobuf.Int32Value roomsNo = 9;
+  google.protobuf.Int32Value bathroomsNo = 10;
+  google.protobuf.Int32Value bedsNo = 11;
+  google.protobuf.Int32Value maxGuestsNo = 12;
+  google.protobuf.Int32Value squareMeters = 13;
+  google.protobuf.DoubleValue price = 14;
+  google.protobuf.BoolValue isWholeApartment = 15;
+  google.protobuf.Timestamp movingInTimeStamp = 16;
+  google.protobuf.Timestamp movingOutTimeStamp = 17;
+  repeated int64 rules = 19;
+  repeated int64 facilities = 20;
 }
-
-
 message UpdatePostRequest {
 int64 id = 1;
   google.protobuf.StringValue title = 2;
@@ -71,10 +71,9 @@ int64 id = 1;
   google.protobuf.BoolValue isWholeApartment = 15;
   google.protobuf.Timestamp movingInTimeStamp = 16;
   google.protobuf.Timestamp movingOutTimeStamp = 17;
-  repeated int64 rules = 18;
-  repeated int64 facilities = 19;
+  repeated int64 rules = 19;
+  repeated int64 facilities = 20;
 }
-
 message User {
 int64 id = 1;
 google.protobuf.StringValue firstName = 2;
@@ -103,10 +102,10 @@ message PostResponse {
    google.protobuf.Timestamp datePublishedTimeStamp = 18;
    string movingInTime = 19;
    string movingOutTime = 20;
-   repeated Item rules = 21;
-   repeated Item facilities = 22;
-   repeated DatesBooked datesBooked = 23;
-   bool NoItem = 24;
+   repeated Item rules = 22;
+   repeated Item facilities = 23;
+   repeated DatesBooked datesBooked = 24;
+   bool NoItem = 25;
 }
 message PostListResponse {
 	repeated PostResponse items = 1;
@@ -126,18 +125,18 @@ message DatesBooked {
 message Photo {
 int64 id = 1;
 google.protobuf.BytesValue photoByteStr = 2;
+google.protobuf.Int64Value postId = 3;
+bool noItem = 4;
 }
 message PhotoListResponse {
 	repeated Photo items =1;
 }
+
 message AddPhotosRequest {
-repeated Photo photos = 1;
+repeated google.protobuf.BytesValue photoByteStr = 1;
 int64 postId = 2;
 }
-message RemovePhotosRequest {
-repeated int64 photos = 1;
-int64 postId = 2;
-}
+
 message FilterRequest {
 google.protobuf.StringValue searchText = 1;
 google.protobuf.Int64Value owner = 2;

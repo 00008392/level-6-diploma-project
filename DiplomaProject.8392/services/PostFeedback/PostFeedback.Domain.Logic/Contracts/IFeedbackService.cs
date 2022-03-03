@@ -21,5 +21,7 @@ namespace PostFeedback.Domain.Logic.Contracts
         Task<ICollection<FeedbackInfoDTO<TDTO>>> GetFeedbacksForItemAsync(long itemId);
         //retrieve specific feedback by id
         Task<FeedbackInfoDTO<TDTO>> GetFeedbackDetailsAsync(long id);
+        //get average rating for user/accommodation
+        Task<double?> GetAverageRating(long itemId);
     }
 }

@@ -17,5 +17,6 @@ namespace PostFeedback.API.Services.Strategies
         Task<Response> DeleteFeedbackAsync(Request request);
         Task<FeedbackResponse> GetFeedbackDetailsAsync(Request request);
         Task<FeedbackListResponse> GetFeedbacksForItemAsync(Request request);
+        Task<AverageRatingResponse> GetAverageRatingAsync(Request request);
     }
 }

@@ -1,0 +1,164 @@
+﻿@page "/posts/{PostId:long}/photos/edit"
+@inherits CustomBaseComponent
+@inject IPhotoService _service
+@inject IPostService _postService
+@inject AppState _appState
+<section class="photo__editing">
+   
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="aa-title">
+                <h2>Edit photos of your accommodation</h2>
+                <span></span>
+            </div>
+            <p class="text-center photo__editing_info">To show guests how your accommodation looks like, add several photos and cover photo.</p>
+            <p class="text-center photo__editing_info">
+                Please note that allowed file formats are JPG, JPEG and PNG, maximum file size is
+                1MB and maximum number of photos (excluding cover photo) attached to post is 15.
+            </p>
+        </div>
+        <div class="row flex-column">
+            <div>
+                @if (_response != null)
+                {
+                    <p class="font-weight-bold text-danger">@_response.Message</p>
+                    @if (_response.Errors != null && _response.Errors.Length != 0)
+                    {
+                        @foreach (var error in _response.Errors)
+                        {
+                            <p class="font-weight-bold text-danger">@error.Message</p>
+                        }
+                    }
+
+                }
+            </div>
+            <EditForm class="multiple_photo__editing_form" Model="_newPhotos" OnValidSubmit="UploadPhotos">
+                <DataAnnotationsValidator />
+                <div class="d-flex">
+                    <InputFile id="photosInput" class="input__file" multiple="true" accept=".jpg,.jpeg,.png" OnChange="args=>SelectFile(args, true)" />
+                    <label for="photosInput" class="submit__btn submit__btn-secondary">
+                        Add new photos
+                    </label>
+                    <input hidden="@(_newPhotos.Files==null||_newPhotos.Files.Count==0)" multiple class="submit__btn submit__btn-primary" type="submit" value="Upload" />
+                </div>
+                <div class="font-weight-bold text-danger error__message">
+                    <ValidationMessage For="()=>_newPhotos.Files" />
+                </div>
+            </EditForm>
+        </div>
+        <div class="row photo__editing_content">
+            <div class="photo__editing_item photo__editing_cover">
+                <div class="image__wrapper">
+                    <img class="image" src=@(_existingCoverPhoto==null?"img/no_img.jpg"
+                                         :string.IsNullOrWhiteSpace(_existingCoverPhoto.FileContentStr)?
+                               "img/loading_img.gif": $"{_existingCoverPhoto.FileContentStr}") alt="img">
+                    <EditForm @ref="_coverPhotoForm" class="photo__editing_form" Model="_newCoverPhoto" OnValidSubmit="UploadCoverPhoto">
+                        <DataAnnotationsValidator />
+                        <div class="photo__editing_controls d-flex">
+                            <InputFile id="coverPhotoInput" class="input__file"
+                                       accept=".jpg,.jpeg,.png" OnChange="args=>SelectFile(args)" />
+                            <label for="coverPhotoInput" class="submit__btn submit__btn-secondary">
+                                Change cover photo
+                            </label>
+                            <input hidden="@(_newCoverPhoto.File==null)" class="submit__btn submit__btn-primary" type="submit" value="Upload" />
+                        </div>
+                        <button type="button" hidden="@(_existingCoverPhoto==null)" @onclick="async()=>await DeletePhoto(_existingCoverPhoto?.Id??0)"
+                                class="submit__btn submit__btn-danger">
+                            Delete cover photo
+                        </button>
+                        <div hidden="@(!_coverPhotoForm.EditContext?.GetValidationMessages()?.Any())" class="font-weight-bold text-danger error__message">
+                            <ValidationMessage For="() => _newCoverPhoto.File" />
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+            @if (_existingPhotos != null)
+            {
+                @foreach (var photo in _existingPhotos)
+                {
+                    <div class="photo__editing_item">
+                        <div class="image__wrapper">
+                            <img class="image" src=@($"{photo.FileContentStr}") alt="img">
+                            <button @onclick="async ()=>await DeletePhoto(photo.Id)" class="submit__btn submit__btn-danger photo__editing_btn">
+                                Delete this photo
+                            </button>
+                        </div>
+                    </div>
+
+                }
+            }
+        </div>
+
+    </div>
+</section>
+@code {     
+    [Parameter]
+    public long PostId { get; set; }
+    private Response _response;
+    private ICollection<Photo> _existingPhotos = new List<Photo>();
+    private Photo _existingCoverPhoto = new Photo();
+    private UploadSinglePhoto _newCoverPhoto = new UploadSinglePhoto();
+    private UploadMultiplePhotos _newPhotos = new UploadMultiplePhotos();
+    private EditForm _coverPhotoForm = new EditForm();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!_authState.isAuthenticated)
+        {
+            _navManager.NavigateTo("/login");
+        }
+        else
+        {
+            var userId = await _authService.GetLoggedUserId();
+            var post = await _postService.GetPostAsync(PostId, () => _navManager.NavigateTo("/404"));
+            if (post?.Owner?.Id != userId)
+            {
+                _navManager.NavigateTo("/login");
+            }
+        }
+        _appState.SetPageTitle("Edit photos");
+        _existingPhotos = await _service.GetPhotosAsync(PostId);
+        _existingCoverPhoto = await _service.GetCoverPhotoAsync(PostId);
+    }
+    private void SelectFile(InputFileChangeEventArgs args, bool? multiple=false)
+    {
+        if(multiple==true)
+        {
+            _newPhotos.Files = args.GetMultipleFiles()?.ToList();
+        } else
+        {
+            _newCoverPhoto.File = args.File;
+        }
+    }
+    private async Task UploadCoverPhoto()
+    {
+        _response = await _service.AddCoverPhotoAsync(_newCoverPhoto.File, PostId,
+             async ()=> {
+                 _newCoverPhoto = new UploadSinglePhoto();
+                 _existingCoverPhoto = await _service.GetCoverPhotoAsync(PostId);
+                 StateHasChanged();
+             });
+    }
+    private async Task UploadPhotos()
+    {
+        _response = await _service.AddPhotosAsync(_newPhotos.Files, PostId,
+            async ()=> { _existingPhotos = await _service.GetPhotosAsync(PostId);
+                _newPhotos = new UploadMultiplePhotos();
+                StateHasChanged(); });
+
+    }
+    private async Task DeletePhoto(long id)
+    {
+        _response = await _service.RemovePhotoAsync(id, ()=> {
+            var photoList = _existingPhotos.ToList();
+            photoList.RemoveAll(x => x.Id == id);
+            _existingPhotos = photoList;
+            if(id==_existingCoverPhoto?.Id)
+            {
+                _existingCoverPhoto = null;
+            }
+            StateHasChanged();
+        });
+
+    }
+}

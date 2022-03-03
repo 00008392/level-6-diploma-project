@@ -77,7 +77,7 @@ namespace DAL.Base.Repositories
                   (current, include) => current.Include(include));
             }
 
-            return query;
+            return query.AsSplitQuery();
         }
 
     }

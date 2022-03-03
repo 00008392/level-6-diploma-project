@@ -34,6 +34,22 @@ namespace PostFeedback.API.Services.Strategies
             return await GrpcServiceHelper.HandleDeleteActionAsync<Response>
                  (request.Id, _service.DeleteFeedbackAsync);
         }
+        //get average rating for item
+        public async Task<AverageRatingResponse> GetAverageRatingAsync(Request request)
+        {
+            var response = new AverageRatingResponse();
+            var rating = await _service.GetAverageRating(request.Id);
+            if(rating==null)
+            {
+                response.NoRating = true;
+            }
+            else
+            {
+                response.Rating = rating;
+            }
+            return response;
+        }
+
         //retrieve feedback information by id
         public async Task<FeedbackResponse> GetFeedbackDetailsAsync(Request request)
         {

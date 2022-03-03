@@ -1,48 +1,21 @@
-﻿@using FrontEndApp.States;
-@inject LoggedInState loggedState
-@inherits LayoutComponentBase
-<div>
-    <header>
-
-        <nav class="navigation navbar navbar-dark navbar-expand-md navbar-toggleable-md">
-            <div class="container">
-                <a class="navigation__logo" href=""><span class="music_logo text-uppercase">Uzbekistan</span>Travels</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-md-inline-flex justify-content-between">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="users">
-                                Users
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav">
-                        <li  class="nav-item">
-                            <a class="nav-link" href="registration">
-                                Sign up
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="login">
-                                Sign in
-                            </a>
-                        </li>
-                        <li  class="nav-item">
-                            <a class="nav-link" href="account">
-                                Account
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+﻿@inherits LayoutComponentBase
+@using FrontEndApp.States
+@inject AppState _appState
+<NavMenu />
+<header class="main__header">
+    <div class="container d-flex flex-grow-1 flex-column justify-content-center">
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-center">
+                <h2 class="main__header_title">@_appState.PageTitle</h2>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @Body
-        </main>
+        </div>
     </div>
-</div>
+</header>
+
+@Body
+@code {
+    protected override void OnInitialized()
+    {
+        _appState.OnChange = StateHasChanged;
+    }
+}

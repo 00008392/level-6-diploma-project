@@ -29,7 +29,7 @@ namespace PostFeedback.API.Mappings
                 x.BedsNo, x.MaxGuestsNo, x.SquareMeters, x.Price,
                 x.IsWholeApartment, x.Owner == null ? null : context.Mapper.Map<UserDTO>(x.Owner),
                 x.DatePublished, x.Category?.Name, x.City?.Name,
-                x.MovingInTime, x.MovingOutTime,
+                x.MovingInTime, x.MovingOutTime, 
                 MapCollection<Rule, ItemDTO>(x.Rules, context),
                 MapCollection<Facility, ItemDTO>(x.Facilities, context),
                 MapCollection<Booking, DatesBookedDTO>(x.Bookings, context)
@@ -49,7 +49,7 @@ namespace PostFeedback.API.Mappings
             CreateMap<Booking, DatesBookedDTO>()
                 .ConvertUsing(x => new DatesBookedDTO(x.StartDate, x.EndDate));
             CreateMap<Domain.Entities.Photo, PhotoDTO>()
-                .ConvertUsing(x => new PhotoDTO(x.Id, x.PhotoBytes));
+                .ConvertUsing(x => new PhotoDTO(x.Id, x.PostId, x.PhotoBytes));
             //feedback
             FeedbackMapToDTO<Domain.Entities.User, UserDTO>();
             FeedbackMapToDTO<Post, PostDetailsDTO>();

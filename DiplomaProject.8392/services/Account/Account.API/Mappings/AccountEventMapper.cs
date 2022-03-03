@@ -18,7 +18,7 @@ namespace Account.API.Mappings
             //user
             CreateMap<User, UserCreatedOrUpdatedIntegrationEvent>()
                 .ConvertUsing(x => new UserCreatedOrUpdatedIntegrationEvent(x.Id, x.FirstName, x.LastName, x.Email, x.PhoneNumber,
-                x.DateOfBirth, (int)x.Gender, x.Address, x.UserInfo, x.CountryId));
+                x.DateOfBirth, (int)x.Gender, x.UserInfo, x.CountryId));
             //booking
             CreateMap<BookingAcceptedIntegrationEvent, Booking>()
                 .ConvertUsing(x => new Booking(x.BookingId, x.GuestId, x.OwnerId, x.StartDate, x.EndDate));
