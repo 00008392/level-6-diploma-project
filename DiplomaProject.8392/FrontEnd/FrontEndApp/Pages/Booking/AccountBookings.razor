@@ -1,43 +1,122 @@
-﻿@*@page "/account/bookings"
-@inherits Components.CustomBaseComponent
-<h3>My bookings</h3>
-@if (!AuthState.isAuthenticated)
-{
-    <p>Sign in to see bookings</p>
-}
-else
-{
-        @foreach (var booking in _bookings)
-        {
-<div>
-    <p><b>Start date:</b>@booking.StartDate</p>
-    <p><b>End date:</b>@booking.EndDate</p>
-    <p><b>Status:</b>@booking.Status</p>
-    <a href=@($"bookings/{booking.Id}") class="btn btn-primary d-block">Edit</a>
-</div>
+﻿@page "/account/bookings"
+@inherits Components.BookingBaseComponent
+@inject IPostService _postService
+@inject AppState _appState
+    <section class="booking__details">
+        <div class="container ">
+            @if (_response != null)
+            {
+                <p class="font-weight-bold text-danger">@_response.Message</p>
+                @if (_response.Errors != null && _response.Errors.Length != 0)
+                {
+                    @foreach (var error in _response.Errors)
+                    {
+                        <p class="font-weight-bold text-danger">@error.Message</p>
+                    }
+                }
 
-        }
+            }
+            @if (_bookings == null)
+            {
+                <p>No bookings to show.</p>
+            }
+            else if (_bookings.Count == 0)
+            {
+                <p>Loading bookings...</p>
+            }
+            else
+            {
+                <div class="booking__details_content">
+                    @foreach (var booking in _bookings)
+                    {
+                    <div class="booking__item ">
+                            <h4 hidden="@(booking.Post==null)" class="font-weight-bold">
+                                Booking on <a href=@($"posts/{booking.Post.Id}") class="font-italic">
+                                    @booking.Post.Title
+                                </a>
+                            </h4>
+                        <p hidden="@(booking.StartDate==null||booking.EndDate==null)">
+                            From  <span class="font-weight-bold">
+                                 @booking.StartDate
+                            </span>till  <span class="font-weight-bold">
+                                 @booking.EndDate
+                            </span>
+                        </p>
+                        <p hidden="@(booking.GuestNo==null)"><span class="font-weight-bold">Number of guests: </span> @booking.GuestNo</p>
+                        <p>
+                            <span class="font-weight-bold">Status: </span> @booking.Status
+                            <i class=@("fa "+ (booking.Status == Status.Accepted ? "fa-check-circle item-accepted"
+                                       : booking.Status == Status.Rejected || booking.Status == Status.Cancelled ?
+                                       "fa-ban item-rejected":"fa-clock-o"))></i>
+                        </p>
+                        @if (booking.Status == Status.Accepted)
+                        {
+                            <button @onclick="async ()=> await CancelBooking(booking.Id)" class="submit__btn submit__btn-danger">Cancel</button>
+                        }
+                        else
+                        {
+                            <button @onclick="async ()=> await DeleteBooking(booking.Id)" class="submit__btn submit__btn-danger">Delete</button>
+                        }
 
+                    </div>
+                    }
+                </div>
+            }
 
-}
+        </div>
+    </section>
 @code {
-    private List<BookingInfo> _bookings = new List<BookingInfo>();
+    private ICollection<BookingResponse> _bookings = new List<BookingResponse>();
+    private Response _response;
+    private long _userId;
     protected override async Task OnInitializedAsync()
     {
-        if (AuthState.isAuthenticated)
+        _appState.SetPageTitle("My bookings");
+        if (!_authState.isAuthenticated)
         {
-            var userId = await storage.GetItemAsync<string>("userId");
-            var url = "https://localhost:44377/api/booking";
-            var param = new Dictionary<string, string>() { { "User", $"{userId}" } };
-
-            var newUrl = new Uri(QueryHelpers.AddQueryString(url, param));
-            var response = await client.GetAsync(newUrl);
-            if (response.IsSuccessStatusCode)
+            _navManager.NavigateTo("/login");
+        }
+        else
+        {
+            _userId = await _authService.GetLoggedUserId() ?? 0;
+            var bookings = (await _service.GetBookingsForGuestAsync(_userId))?
+                .OrderBy(x => x.Status).ToList();
+            if(bookings!=null)
             {
-                var responseStr = await response.Content.ReadAsStringAsync();
-
-                _bookings = JsonConvert.DeserializeObject<List<BookingInfo>>(responseStr);
+                foreach (var booking in bookings)
+                {
+                    if (booking.Post != null)
+                    {
+                        var post = await _postService.GetPostAsync(booking.Post.Id);
+                        booking.Post.Title = post?.Title;
+                    }
+                }
             }
+            _bookings = bookings;
         }
     }
-}*@
+    private async Task CancelBooking(long id)
+    {
+        _response = await _service.CancelBookingAsync(id, ()=> {
+            GetBookingByIdFromList(id).Status = Status.Cancelled;
+            StateHasChanged();
+        });
+    }
+    private async Task DeleteBooking(long id)
+    {
+        _response = await _service.DeleteBookingAsync(id, () =>
+        {
+            var bookingToDelete = GetBookingByIdFromList(id);
+            _bookings.Remove(bookingToDelete);
+            if(_bookings.Count==0)
+            {
+                _bookings = null;
+            }
+            StateHasChanged();
+        });
+    }
+    private BookingResponse GetBookingByIdFromList(long id)
+    {
+        return _bookings.Where(x => x.Id == id).FirstOrDefault();
+    }
+}

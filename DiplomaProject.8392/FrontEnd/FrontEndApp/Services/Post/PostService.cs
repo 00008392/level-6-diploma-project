@@ -127,7 +127,7 @@ namespace FrontEndApp.Services.Post
                 {
                     var responseStr = await response.Content.ReadAsStringAsync();
                     var posts = JsonConvert.DeserializeObject<List<PostResponse>>(responseStr);
-                    return posts.Count == 0 ? null : posts;
+                    return posts?.Count == 0 ? null : posts;
                 }
             }
             catch

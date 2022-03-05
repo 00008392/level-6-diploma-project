@@ -95,7 +95,7 @@ namespace FrontEndApp.Services.Post
                     onErrorAction?.Invoke();
                 }
             }
-            catch(Exception ex)
+            catch
             {
                 response.IsSuccess = false;
             }
@@ -136,7 +136,7 @@ namespace FrontEndApp.Services.Post
                         x.FileContentStr = string.Format("data:image/gif;base64,{0}",
                             Convert.ToBase64String(x.FileContent));
                     });
-                    return photos.Count == 0 ?null:photos;
+                    return photos?.Count == 0 ?null:photos;
                 }
             }
             catch

@@ -26,7 +26,8 @@ namespace FrontEndApp.Services.User
                 if (response.IsSuccessStatusCode)
                 {
                     var responseStr = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Country>>(responseStr);
+                    var countries = JsonConvert.DeserializeObject<List<Country>>(responseStr);
+                    return countries?.Count == 0 ? null : countries;
                 }
             } catch
             {

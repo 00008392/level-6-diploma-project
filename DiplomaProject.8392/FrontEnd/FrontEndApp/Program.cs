@@ -20,6 +20,8 @@ using FrontEndApp.Services.Post;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using FrontEndApp.Services.Booking.Contracts;
+using FrontEndApp.Services.Booking;
 
 namespace FrontEndApp
 {
@@ -46,6 +48,7 @@ namespace FrontEndApp
             builder.Services.AddScoped<IPostService, PostService>();
             builder.Services.AddScoped<IPostRelatedInfoService, PostRelatedInfoService>();
             builder.Services.AddScoped<IPhotoService, PhotoService>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
             await builder.Build().RunAsync();
         }

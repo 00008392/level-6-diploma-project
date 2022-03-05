@@ -1,0 +1,82 @@
+﻿@inherits BookingBaseComponent
+
+<EditForm Model="_booking" OnValidSubmit="CreateBooking">
+    <DataAnnotationsValidator />
+    @if (_response != null)
+    {
+        <p class="font-weight-bold text-danger">@_response.Message</p>
+        @if (_response.Errors != null && _response.Errors.Length != 0)
+        {
+            @foreach (var error in _response.Errors)
+            {
+                <p class="font-weight-bold text-danger">@error.Message</p>
+            }
+        }
+
+    }
+    <div class="aa-single-field">
+        <label>Start date <span class="required">*</span> </label>
+        <RadzenDatePicker DateRender=@DateRender Class="w-100" TValue="DateTime?" DateFormat="d"
+                          @bind-Value="@_booking.StartDate" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _booking.StartDate" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>End date <span class="required">*</span> </label>
+        <RadzenDatePicker DateRender=@DateRender Class="w-100" TValue="DateTime?" DateFormat="d"
+                          @bind-Value="@_booking.EndDate" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _booking.EndDate" />
+        </div>
+    </div>
+    <div class="aa-single-field">
+        <label>Number of guests <span class="required">*</span></label>
+        <InputNumber @bind-Value="_booking.GuestNo" class="form__input" max="20"
+                     aria-required="true" />
+        <div class="font-weight-bold text-danger">
+            <ValidationMessage For="() => _booking.GuestNo" />
+        </div>
+    </div>
+    <div class="aa-single-submit">
+        <input disabled="@(!_authState.isAuthenticated)" type="submit" value="Book this accommodation" class="submit__btn submit__btn-primary">
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public List<DatesBooked> DatesBooked { get; set; }
+    [Parameter]
+    public long PostId { get; set; }
+    private List<DateTime> _datesToDisable = new List<DateTime>();
+    private CreateBooking _booking = new CreateBooking();
+    private Response _response;
+    protected override void OnInitialized()
+    {
+        DatesBooked?.ForEach(x => _datesToDisable.AddRange(GetDatesBetween(x)));
+    }
+    private async Task CreateBooking()
+    {
+        if(_authState.isAuthenticated)
+        {
+            _booking.PostId = PostId;
+            _response = await _service.
+            CreateBookingAsync(_booking, () =>
+            {
+                _navManager.NavigateTo("/account/bookings");
+            });
+        }
+    }
+    void DateRender(DateRenderEventArgs args)
+    {
+        args.Disabled = _datesToDisable.Contains(args.Date);
+    }
+
+    private List<DateTime> GetDatesBetween(DatesBooked range)
+    {
+        List<DateTime> allDates = new List<DateTime>();
+        for (DateTime date = range.StartDate; date <= range.EndDate; date = date.AddDays(1))
+            allDates.Add(date);
+        return allDates.ToList();
+    }
+}

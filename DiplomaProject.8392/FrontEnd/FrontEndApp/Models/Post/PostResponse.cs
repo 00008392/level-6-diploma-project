@@ -17,7 +17,8 @@ namespace FrontEndApp.Models.Post
         public DateTime DatePublished { get; set; }
         public Item[] Rules { get; set; }
         public Item[] Facilities { get; set; }
-        public Item[] DatesBooked { get; set; }
+        public DatesBooked[] DatesBooked { get; set; }
         public bool NoItem { get; set; } = false;
+
     }
 }

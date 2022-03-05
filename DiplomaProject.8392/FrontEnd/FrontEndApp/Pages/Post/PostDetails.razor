@@ -1,6 +1,7 @@
 ﻿@page "/posts/{Id:long}"
 @using FrontEndApp.States
 @using FrontEndApp.Pages.Post.Shared 
+@using FrontEndApp.Pages.Booking
 @inject AppState _appState
 @inject IPhotoService _photoService
 @inherits Components.PostBaseComponent
@@ -84,12 +85,24 @@
                                         </ul>
                                     </div>
                                 </aside>
-                                <aside hidden="@(!_showPostActions)" class="aa-blog-sidebar">
+                                <aside class="aa-blog-sidebar">
                                     <!-- Start single sidebar -->
                                     <div class="aa-blog-sidebar-single">
-                                        <h3>Available actions</h3>
-                                        <a class="submit__btn submit__btn-primary" href=@($"/posts/edit/{Id}")>Edit post</a>
-                                        <a class="submit__btn submit__btn-primary" href=@($"/posts/{Id}/photos/edit")>Edit post photos</a>
+                                        @if (_authState.isAuthenticated)
+                                        {
+                                            <h3>Available actions</h3>
+                                            @if (_showAccountActions)
+                                            {
+                                                <a class="submit__btn submit__btn-primary" href=@($"/posts/edit/{Id}")>Edit post</a>
+                                                <a class="submit__btn submit__btn-primary" href=@($"/posts/{Id}/photos/edit")>Edit post photos</a>
+                                                <a href=@($"/posts/{Id}/bookings") class="submit__btn submit__btn-primary">View bookings</a>
+                                            }
+                                            else
+                                            {
+                                                <BookingCreation DatesBooked="_post.DatesBooked.ToList()" PostId="_post.Id" />
+                                            }
+                                        }
+
                                     </div>
                                 </aside>
                             </div>
@@ -106,7 +119,7 @@
     private PostResponse _post;
     [Parameter]
     public long Id { get; set; }
-    private bool _showPostActions = false;
+    private bool _showAccountActions = false;
     protected override async Task OnInitializedAsync()
     {
         _appState.SetPageTitle("Post details");
@@ -114,7 +127,7 @@
         var userId = await _authService.GetLoggedUserId();
         if (userId == _post.Owner?.Id)
         {
-            _showPostActions = true;
+            _showAccountActions = true;
         }
     }
 }

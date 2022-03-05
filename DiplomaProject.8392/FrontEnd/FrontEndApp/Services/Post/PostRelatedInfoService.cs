@@ -25,7 +25,8 @@ namespace FrontEndApp.Services.Post
                 if (reply.IsSuccessStatusCode)
                 {
                     var responseStr = await reply.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Item>>(responseStr);
+                    var categories = JsonConvert.DeserializeObject<List<Item>>(responseStr);
+                    return categories?.Count == 0 ? null : categories;
                 }
             }
             catch
@@ -42,7 +43,8 @@ namespace FrontEndApp.Services.Post
                 if (reply.IsSuccessStatusCode)
                 {
                     var responseStr = await reply.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Item>>(responseStr);
+                    var cities = JsonConvert.DeserializeObject<List<Item>>(responseStr);
+                    return cities?.Count == 0 ? null : cities;
                 }
             }
             catch
@@ -59,7 +61,8 @@ namespace FrontEndApp.Services.Post
                 if (reply.IsSuccessStatusCode)
                 {
                     var responseStr = await reply.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Item>>(responseStr);
+                    var facilities = JsonConvert.DeserializeObject<List<Item>>(responseStr);
+                    return facilities?.Count == 0 ? null : facilities;
                 }
             }
             catch
@@ -76,7 +79,8 @@ namespace FrontEndApp.Services.Post
                 if (reply.IsSuccessStatusCode)
                 {
                     var responseStr = await reply.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Item>>(responseStr);
+                    var rules = JsonConvert.DeserializeObject<List<Item>>(responseStr);
+                    return rules?.Count == 0 ? null : rules;
                 }
             }
             catch
