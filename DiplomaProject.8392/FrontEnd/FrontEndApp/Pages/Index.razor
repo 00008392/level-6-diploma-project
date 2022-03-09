@@ -1,6 +1,9 @@
 ﻿@page "/"
 @using System.Linq.Expressions
-@using System.Reflection 
+@using System.Reflection
+@using Models.Post
+@using Services.Post.Contracts  
+@inherits CustomBaseComponent
 @layout IndexLayout
 @inject IPostRelatedInfoService _service
 @using FrontEndApp.Pages.Post
@@ -138,23 +141,27 @@
     </div>
 </section>
 <Posts @ref="_postsComponent" Filter="_filter" Title="Available accommodation options" />
+
+
 @code {
     private Filter _filter = new Filter();
     private ICollection<Item> _cities = new List<Item>();
     private ICollection<Item> _categories = new List<Item>();
     private IEnumerable<int> _roomsRange = GetInitialRangeValues();
     private IEnumerable<int> _bedsRange = GetInitialRangeValues();
-    private Posts _postsComponent;
+    private Posts _postsComponent = new Posts();
     protected override async Task OnInitializedAsync()
     {
+        //load all post related info used in filtering
         var cityTask = _service.GetCitiesAsync();
         var categoryTask = _service.GetCategoriesAsync();
         await Task.WhenAll(cityTask, categoryTask);
         _cities = await cityTask;
         _categories = await categoryTask;
     }
+    //method called when range input is changed, sets values to range
     public void OnRangeChange(IEnumerable<int> range, Filter target,
-        Expression<Func<Filter, int?>> minValueExpr, Expression<Func<Filter, int?>> maxValueExpr)
+    Expression<Func<Filter, int?>> minValueExpr, Expression<Func<Filter, int?>> maxValueExpr)
     {
         var minExpr = (MemberExpression)minValueExpr.Body;
         var minProp = (PropertyInfo)minExpr.Member;
@@ -163,22 +170,27 @@
         var maxProp = (PropertyInfo)maxExpr.Member;
         maxProp.SetValue(target, range.ElementAt(1), null);
     }
+    //disable all past dates
     private void DateRender(DateRenderEventArgs args)
     {
         args.Disabled = args.Date.Date < DateTime.Now.Date;
     }
+    //refresh posts component with new filter calues
     private async Task SearchBtnClicked()
     {
         await _postsComponent.RefreshComponent();
     }
+    //clear filter values and refresh posts component
     private async Task ClearBtnClicked()
     {
         _filter = new Filter();
+        //clear ranges
         _roomsRange = GetInitialRangeValues();
         _bedsRange = GetInitialRangeValues();
         _postsComponent.SetFilter(_filter);
         await _postsComponent.RefreshComponent();
     }
+    //set initial range values
     private static IEnumerable<int> GetInitialRangeValues()
     {
         return new int[] { 1, 6 };

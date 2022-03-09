@@ -31,5 +31,6 @@ namespace PostFeedback.Domain.Logic.Filter
         //then only accommodations that are not booked for this period of time will be retrieved
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+
     }
 }

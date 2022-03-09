@@ -1,4 +1,5 @@
 ﻿using FrontEndApp.Models.User;
+using FrontEndApp.Services.Core;
 using FrontEndApp.Services.User.Contracts;
 using Newtonsoft.Json;
 using System;
@@ -9,31 +10,18 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Services.User
 {
-    public class UserRelatedInfoService : IUserRelatedInfoService
+    //service that consumes user related information api
+    public class UserRelatedInfoService : BaseService, IUserRelatedInfoService
     {
-        private readonly HttpClient _client;
-
-        public UserRelatedInfoService(HttpClient client)
+        public UserRelatedInfoService(HttpClient client):base(client)
         {
-            _client = client;
         }
-
+        //get all countries
         public async Task<ICollection<Country>> GetCountriesAsync()
         {
-            try
-            {
-                var response = await _client.GetAsync("api/users/info/countries");
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseStr = await response.Content.ReadAsStringAsync();
-                    var countries = JsonConvert.DeserializeObject<List<Country>>(responseStr);
-                    return countries?.Count == 0 ? null : countries;
-                }
-            } catch
-            {
-
-            }
-            return null;
+            //call base service method for multiple items retrieval
+            return await HandleMultipleItemsRetrievalAsync<Country>
+                ("api/users/info/countries");
         }
     }
 }

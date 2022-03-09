@@ -1,6 +1,7 @@
 ﻿using FrontEndApp.Models;
 using FrontEndApp.Models.Booking;
 using FrontEndApp.Services.Booking.Contracts;
+using FrontEndApp.Services.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,239 +12,84 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Services.Booking
 {
-    public class BookingService : IBookingService
+    //service that consumes booking api
+    public class BookingService :BaseService, IBookingService
     {
-        private HttpClient _client;
-
         public BookingService(HttpClient client)
+            :base(client)
         {
-            _client = client;
         }
-
+        //accept booking request
         public async Task<Response> AcceptBookingAsync(long id, 
             Action onSuccessAction = null, Action onErrorAction = null)
         {
-            var response = new Response();
-            try
+            //call base method
+            return await HandleActionAsync(() =>
             {
-                //call api
-                HttpRequestMessage request = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Patch,
-                    RequestUri = new Uri($"{_client.BaseAddress}api/bookings/accept/{id}")
-                };
-                var httpReply = await _client.SendAsync(request);
-                //in case of success, login and set response to success
-                if (httpReply.IsSuccessStatusCode)
-                {
-                    response.IsSuccess = true;
-                    onSuccessAction?.Invoke();
-                }
-                //in case of error, parse error 
-                else
-                {
-                    response.IsSuccess = false;
-                    var errorMessage = httpReply.Content.ReadAsStringAsync().Result;
-                    response = JsonConvert.DeserializeObject<Response>(errorMessage);
-                    onErrorAction?.Invoke();
-                }
-            }
-            catch
-            {
-                response.IsSuccess = false;
-            }
-            return response;
+                return HandlePatchRequest($"api/bookings/accept/{id}");
+            }, onSuccessAction, onErrorAction);
         }
-
+        //cancel booking
         public async Task<Response> CancelBookingAsync(long id, 
             Action onSuccessAction = null, Action onErrorAction = null)
         {
-            var response = new Response();
-            try
+            //call base method
+            return await HandleActionAsync(() =>
             {
-                //call api
-                HttpRequestMessage request = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Patch,
-                    RequestUri = new Uri($"{_client.BaseAddress}api/bookings/cancel/{id}")
-                };
-                var httpReply = await _client.SendAsync(request);
-                //in case of success, login and set response to success
-                if (httpReply.IsSuccessStatusCode)
-                {
-                    response.IsSuccess = true;
-                    onSuccessAction?.Invoke();
-                }
-                //in case of error, parse error 
-                else
-                {
-                    response.IsSuccess = false;
-                    var errorMessage = httpReply.Content.ReadAsStringAsync().Result;
-                    response = JsonConvert.DeserializeObject<Response>(errorMessage);
-                    onErrorAction?.Invoke();
-                }
-            }
-            catch
-            {
-                response.IsSuccess = false;
-            }
-            return response;
+                return HandlePatchRequest($"api/bookings/cancel/{id}");
+            }, onSuccessAction, onErrorAction);
         }
-
+        //reject booking request
+        public async Task<Response> RejectBookingAsync(long id, Action onSuccessAction = null, Action onErrorAction = null)
+        {
+            //call base method
+            return await HandleActionAsync(() =>
+            {
+                return HandlePatchRequest($"api/bookings/reject/{id}");
+            }, onSuccessAction, onErrorAction);
+        }
+        //create booking request
         public async Task<Response> CreateBookingAsync(CreateBooking booking,
             Action onSuccessAction = null, Action onErrorAction = null)
         {
-            var response = new Response();
-            try
-            {
-                //call api
-                var httpReply = await _client.PostAsJsonAsync("api/bookings", booking);
-                //in case of success, login and set response to success
-                if (httpReply.IsSuccessStatusCode)
-                {
-                    response.IsSuccess = true;
-                    onSuccessAction?.Invoke();
-                }
-                //in case of error, parse error 
-                else
-                {
-                    response.IsSuccess = false;
-                    var errorMessage = httpReply.Content.ReadAsStringAsync().Result;
-                    response = JsonConvert.DeserializeObject<Response>(errorMessage);
-                    onErrorAction?.Invoke();
-                }
-            }
-            catch
-            {
-                response.IsSuccess = false;
-            }
-            return response;
+            //call base service method for create
+            return await HandleCreateActionAsync(booking, "api/bookings", onSuccessAction, onErrorAction);
         }
-
+        //delete booking
         public async Task<Response> DeleteBookingAsync(long id,
             Action onSuccessAction = null, Action onErrorAction = null)
         {
-            var response = new Response();
-            try
-            {
-                //call api
-                var httpReply = await _client.DeleteAsync($"api/bookings/{id}");
-                if (httpReply.IsSuccessStatusCode)
-                {
-                    response.IsSuccess = true;
-                    onSuccessAction?.Invoke();
-                }
-                else
-                {
-                    //in case of error, parse error 
-                    response.IsSuccess = false;
-                    var errorMessage = httpReply.Content.ReadAsStringAsync().Result;
-                    response = JsonConvert.DeserializeObject<Response>(errorMessage);
-                    onErrorAction?.Invoke();
-                }
-            }
-            catch
-            {
-                response.IsSuccess = false;
-            }
-            return response;
+            //call base service method for delete
+            return await HandleDeleteActionAsync($"api/bookings/{id}", onSuccessAction, onErrorAction);
         }
-
+        //get booking by id
         public async Task<BookingResponse> GetBookingAsync(long id,
             Action onNotFoundAction = null)
         {
-            try
-            {
-                var reply = await _client.GetAsync($"api/bookings/{id}");
-                var user = new BookingResponse();
-                if (reply.IsSuccessStatusCode)
-                {
-                    var responseStr = await reply.Content.ReadAsStringAsync();
-                    user = JsonConvert.DeserializeObject<BookingResponse>(responseStr);
-                }
-                else
-                {
-                    user.NoItem = true;
-                    onNotFoundAction?.Invoke();
-                }
-                return user;
-            }
-            catch
-            {
-                return null;
-            }
+            //call base service method for single item retrieval
+            return await HandleSingleItemRetrievalAsync<BookingResponse>($"api/bookings/{id}", onNotFoundAction);
         }
-
+        //get multiple bookings for guest
         public async Task<ICollection<BookingResponse>> GetBookingsForGuestAsync(long guestId)
         {
-            //call api
-            try
-            {
-                var response = await _client.GetAsync($"api/bookings/guest/{guestId}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseStr = await response.Content.ReadAsStringAsync();
-                    var bookings = JsonConvert.DeserializeObject<List<BookingResponse>>(responseStr);
-                    return bookings?.Count == 0 ? null : bookings;
-                }
-            }
-            catch
-            {
-            }
-            return null;
+            //call base service method for multiple items retrieval
+            return await HandleMultipleItemsRetrievalAsync<BookingResponse>($"api/bookings/guest/{guestId}");
         }
-
+        //get multiple bookings for post
         public async Task<ICollection<BookingResponse>> GetBookingsForPostAsync(long postId)
         {
-            //call api
-            try
-            {
-                var response = await _client.GetAsync($"api/bookings/post/{postId}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseStr = await response.Content.ReadAsStringAsync();
-                    var bookings = JsonConvert.DeserializeObject<List<BookingResponse>>(responseStr);
-                    return bookings?.Count == 0 ? null : bookings;
-                }
-            }
-            catch
-            {
-            }
-            return null;
+            //call base service method for multiple items retrieval
+            return await HandleMultipleItemsRetrievalAsync<BookingResponse>($"api/bookings/post/{postId}");
         }
-
-        public async Task<Response> RejectBookingAsync(long id, Action onSuccessAction = null, Action onErrorAction = null)
+        //prepare patch request
+        private Task<HttpResponseMessage> HandlePatchRequest(string url)
         {
-            var response = new Response();
-            try
+            HttpRequestMessage request = new HttpRequestMessage
             {
-                //call api
-                HttpRequestMessage request = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Patch,
-                    RequestUri = new Uri($"{_client.BaseAddress}api/bookings/reject/{id}")
-                };
-                var httpReply = await _client.SendAsync(request);
-                //in case of success, login and set response to success
-                if (httpReply.IsSuccessStatusCode)
-                {
-                    response.IsSuccess = true;
-                    onSuccessAction?.Invoke();
-                }
-                //in case of error, parse error 
-                else
-                {
-                    response.IsSuccess = false;
-                    var errorMessage = httpReply.Content.ReadAsStringAsync().Result;
-                    response = JsonConvert.DeserializeObject<Response>(errorMessage);
-                    onErrorAction?.Invoke();
-                }
-            }
-            catch
-            {
-                response.IsSuccess = false;
-            }
-            return response;
+                Method = HttpMethod.Patch,
+                RequestUri = new Uri($"{_client.BaseAddress}{url}")
+            };
+            return _client.SendAsync(request);
         }
     }
 }

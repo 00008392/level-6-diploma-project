@@ -1,5 +1,6 @@
 ﻿using FrontEndApp.Models;
 using FrontEndApp.Models.Post;
+using FrontEndApp.Services.Core;
 using FrontEndApp.Services.Post.Contracts;
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
@@ -12,101 +13,55 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Services.Post
 {
-    public class PostService : IPostService
+    //service that consumes post api
+    public class PostService : BaseService, IPostService
     {
-        private readonly HttpClient _client;
-
         public PostService(HttpClient client)
+            :base(client)
         {
-            _client = client;
         }
-
+        //create new post
         public async Task<Response> CreatePostAsync(EditPost post, Action onSuccessAction = null,
             Action onErrorAction = null)
         {
-            var response = new Response();
-            try
-            {
-                //call api
-                var httpReply = await _client.PostAsJsonAsync("api/posts", post);
-                if (httpReply.IsSuccessStatusCode)
-                {
-                    response.IsSuccess = true;
-                    onSuccessAction?.Invoke();
-                }
-                //in case of error, parse error 
-                else
-                {
-                    response.IsSuccess = false;
-                    var errorMessage = httpReply.Content.ReadAsStringAsync().Result;
-                    response = JsonConvert.DeserializeObject<Response>(errorMessage);
-                    onErrorAction?.Invoke();
-                }
-            }
-            catch
-            {
-                response.IsSuccess = false;
-            }
-            return response;
+            //call base service method for create
+            return await HandleCreateActionAsync(post, "api/posts", onSuccessAction, onErrorAction);
         }
-
+        //delete post
         public async Task<Response> DeletePostAsync(long id, Action onSuccessAction = null,
             Action onErrorAction = null)
         {
-            var response = new Response();
-            try
-            {
-                //call api
-                var httpReply = await _client.DeleteAsync($"api/posts/{id}");
-                if (httpReply.IsSuccessStatusCode)
-                {
-                    response.IsSuccess = true;
-                    onSuccessAction?.Invoke();
-                }
-                else
-                {
-                    //in case of error, parse error 
-                    response.IsSuccess = false;
-                    var errorMessage = httpReply.Content.ReadAsStringAsync().Result;
-                    response = JsonConvert.DeserializeObject<Response>(errorMessage);
-                    onErrorAction?.Invoke();
-                }
-            }
-            catch
-            {
-                response.IsSuccess = false;
-            }
-            return response;
+            //call base service method for delete
+            return await HandleDeleteActionAsync($"api/posts/{id}", onSuccessAction, onErrorAction);
         }
-
+        //get post by id
         public async Task<PostResponse> GetPostAsync(long id, Action onNotFoundAction = null)
         {
-            try
-            {
-                var reply = await _client.GetAsync($"api/posts/{id}");
-                var post = new PostResponse();
-                if (reply.IsSuccessStatusCode)
-                {
-                    var responseStr = await reply.Content.ReadAsStringAsync();
-                    post = JsonConvert.DeserializeObject<PostResponse>(responseStr);
-                } else
-                {
-                    post.NoItem = true;
-                    onNotFoundAction?.Invoke();
-                }
-                return post;
-            }
-            catch
-            {
-                return null;
-            }
+            //call base service method for single item retrieval
+            return await HandleSingleItemRetrievalAsync<PostResponse>($"api/posts/{id}", onNotFoundAction);
         }
-
+        //get posts based on filter criteria
         public async Task<ICollection<PostResponse>> GetPostsAsync(Filter filter=null)
+        {
+            //create url with built query string
+            var url = new Uri(QueryHelpers.AddQueryString
+                ($"{_client.BaseAddress}api/posts", ConstructQueryString(filter)));
+            //call base service method for multiple items retrieval
+            return await HandleMultipleItemsRetrievalAsync<PostResponse>(url.ToString());
+        }
+        //update post
+        public async Task<Response> UpdatePostAsync(EditPost post, Action onSuccessAction = null,
+            Action onErrorAction = null)
+        {
+            //call base service method for update
+            return await HandleUpdateActionAsync(post, "api/posts", onSuccessAction, onErrorAction);
+        }
+        //method that builds query string based on filter criteria
+        private Dictionary<string, string> ConstructQueryString(Filter filter=null)
         {
             //construct query string by placing each property with non null value to dictionary
             var queryParams = new Dictionary<string, string>();
-            if(filter!=null)
+            if (filter != null)
             {
                 foreach (var property in filter.GetType().GetProperties())
                 {
@@ -117,51 +72,7 @@ namespace FrontEndApp.Services.Post
                     }
                 }
             }
-            var url = new Uri(QueryHelpers.AddQueryString
-                ($"{_client.BaseAddress}api/posts", queryParams));
-            //call api
-            try
-            {
-                var response = await _client.GetAsync(url);
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseStr = await response.Content.ReadAsStringAsync();
-                    var posts = JsonConvert.DeserializeObject<List<PostResponse>>(responseStr);
-                    return posts?.Count == 0 ? null : posts;
-                }
-            }
-            catch
-            {
-            }
-            return null;
-        }
-        public async Task<Response> UpdatePostAsync(EditPost post, Action onSuccessAction = null,
-            Action onErrorAction = null)
-        {
-            var response = new Response();
-            try
-            {
-                //call api
-                var httpReply = await _client.PutAsJsonAsync($"api/posts", post);
-                if (httpReply.IsSuccessStatusCode)
-                {
-                    response.IsSuccess = true;
-                    onSuccessAction?.Invoke()
-;                }
-                //in case of error, parse error 
-                else
-                {
-                    response.IsSuccess = false;
-                    var errorMessage = httpReply.Content.ReadAsStringAsync().Result;
-                    response = JsonConvert.DeserializeObject<Response>(errorMessage);
-                    onErrorAction?.Invoke();
-                }
-            }
-            catch
-            {
-                response.IsSuccess = false;
-            }
-            return response;
+            return queryParams;
         }
     }
 }

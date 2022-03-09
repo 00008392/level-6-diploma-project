@@ -1,19 +1,10 @@
-﻿@inherits BookingBaseComponent
+﻿@using Models.Booking
+@using Models.Post 
+@inherits BookingBaseComponent
 
 <EditForm Model="_booking" OnValidSubmit="CreateBooking">
     <DataAnnotationsValidator />
-    @if (_response != null)
-    {
-        <p class="font-weight-bold text-danger">@_response.Message</p>
-        @if (_response.Errors != null && _response.Errors.Length != 0)
-        {
-            @foreach (var error in _response.Errors)
-            {
-                <p class="font-weight-bold text-danger">@error.Message</p>
-            }
-        }
-
-    }
+    <Error Response="_response"/>
     <div class="aa-single-field">
         <label>Start date <span class="required">*</span> </label>
         <RadzenDatePicker DateRender=@DateRender Class="w-100" TValue="DateTime?" DateFormat="d"
@@ -44,19 +35,23 @@
 </EditForm>
 
 @code {
+    //dates for which accommodation is booked
     [Parameter]
     public List<DatesBooked> DatesBooked { get; set; }
     [Parameter]
     public long PostId { get; set; }
+    //disabled dates are dates for which accommodation is booked
     private List<DateTime> _datesToDisable = new List<DateTime>();
     private CreateBooking _booking = new CreateBooking();
     private Response _response;
     protected override void OnInitialized()
     {
+        //convert date ranges into separate dates
         DatesBooked?.ForEach(x => _datesToDisable.AddRange(GetDatesBetween(x)));
     }
     private async Task CreateBooking()
     {
+        //if user is authenticated, try to create booking and redirect to bookings page if success
         if(_authState.isAuthenticated)
         {
             _booking.PostId = PostId;
@@ -69,11 +64,13 @@
     }
     void DateRender(DateRenderEventArgs args)
     {
+        //disable all dates for which accommodation is already booked
         args.Disabled = _datesToDisable.Contains(args.Date);
     }
 
     private List<DateTime> GetDatesBetween(DatesBooked range)
     {
+        //get all dates between specified date range
         List<DateTime> allDates = new List<DateTime>();
         for (DateTime date = range.StartDate; date <= range.EndDate; date = date.AddDays(1))
             allDates.Add(date);

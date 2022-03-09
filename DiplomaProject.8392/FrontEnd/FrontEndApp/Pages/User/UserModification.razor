@@ -1,24 +1,13 @@
 ﻿@page "/account/edit"
-@layout UserFormLayout
-@inject IUserRelatedInfoService _infoService
-@inject IMapper _mapper 
-@inject AppState _appState
+@using Services.User.Contracts
+@using Models.User
+@layout FormLayout
 @inherits Components.UserBaseComponent
-
+@inject IUserRelatedInfoService _infoService
+@inject IMapper _mapper
 <EditForm Model="_updateUser" OnValidSubmit="@UpdateUser" class="contactform">
     <DataAnnotationsValidator />
-    @if (_response != null)
-    {
-        <p class="font-weight-bold text-danger">@_response.Message</p>
-        @if (_response.Errors != null && _response.Errors.Length != 0)
-        {
-            @foreach (var error in _response.Errors)
-            {
-                <p class="font-weight-bold text-danger">@error.Message</p>
-            }
-        }
-
-    }
+    <Error Response="_response" />
     <div class="aa-single-field">
         <label>First name <span class="required">*</span></label>
         <InputText @bind-Value="_updateUser.FirstName" class="form__input" type="text"
@@ -54,6 +43,7 @@
     <div class="aa-single-field">
         <label>Gender <span class="required">*</span></label>
         <InputSelect class="form__input" @bind-Value="@_updateUser.Gender">
+            <option value="">Gender</option>
             @foreach (var gender in Enum.GetValues(typeof(Gender)))
             {
                 <option value="@gender">@gender</option>
@@ -89,7 +79,7 @@
     </div>
     <div class="aa-single-field">
         <label>Phone number </label>
-        <InputText @bind-Value="_updateUser.PhoneNumber" type="text" class="form__input"/>
+        <InputText @bind-Value="_updateUser.PhoneNumber" type="text" class="form__input" />
         <div class="font-weight-bold text-danger">
             <ValidationMessage For="() => _updateUser.PhoneNumber" />
         </div>
@@ -115,21 +105,28 @@
     protected override async Task OnInitializedAsync()
     {
         _appState.SetPageTitle("Update account information");
-        if(!_authState.isAuthenticated)
+        //if user is not authenticated, redirect to login page
+        if (!_authState.isAuthenticated)
         {
             _navManager.NavigateTo("/login");
-        } else
+        }
+        else
         {
-            var userId = (long)(await _authService.GetLoggedUserId());
-            var userInfo = await _service.GetUserAsync(userId, ()=>_navManager.NavigateTo("/404"));
+            //if authenticated, get user id
+            var userId = (long)(await _authService.GetLoggedUserIdAsync());
+            //load information about user that is being updated
+            var userInfo = await _service.GetUserAsync(userId, () => _navManager.NavigateTo("/404"));
+            //map it to update request
             _updateUser = _mapper.Map<UpdateUser>(userInfo);
+            //load all countries
             _countries = await _infoService.GetCountriesAsync();
         }
     }
     private async Task UpdateUser()
     {
+        //try to update and redirect to account page in case of success
         _response = await _service.
-            UpdateAccountAsync(_updateUser, ()=> _navManager.NavigateTo("/account"));
+            UpdateAccountAsync(_updateUser, () => _navManager.NavigateTo("/account"));
     }
 
 }

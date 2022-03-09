@@ -1,66 +1,58 @@
 ﻿@page "/posts/{PostId:long}/bookings"
+@using Services.User.Contracts
+@using Models.Booking
 @inherits Components.BookingBaseComponent
 @inject IUserService _userService
-@inject AppState _appState
 <section class="booking__details">
     <div class="container ">
-        @if (_response != null)
-        {
-            <p class="font-weight-bold text-danger">@_response.Message</p>
-            @if (_response.Errors != null && _response.Errors.Length != 0)
-            {
-                @foreach (var error in _response.Errors)
-                {
-                    <p class="font-weight-bold text-danger">@error.Message</p>
-                }
-            }
-
-        }
+       <Error Response="_response"/>
         @if (_bookings == null)
         {
             <p>No bookings to show.</p>
         }
         else if (_bookings.Count == 0)
         {
-            <p>Loading bookings...</p>
+            <div>
+                <Circle Center="true" />
+            </div>
         }
         else
         {
             <div class="booking__details_content">
                 @foreach (var booking in _bookings)
                 {
-                <div class="booking__item ">
+                    <div class="booking__item ">
                         <h4 hidden="@(booking.Guest==null)" class="font-weight-bold">
                             Booking by <a href=@($"users/{booking.GuestId}") class="font-italic">
                                 @booking.Guest.FirstName @booking.Guest.LastName
                             </a>
                         </h4>
-                    <p hidden="@(booking.StartDate==null||booking.EndDate==null)">
-                        From <span class="font-weight-bold">
-                            @booking.StartDate
-                        </span>till <span class="font-weight-bold">
-                            @booking.EndDate
-                        </span>
-                    </p>
-                    <p hidden="@(booking.GuestNo==null)"><span class="font-weight-bold">Number of guests: </span> @booking.GuestNo</p>
-                    <p>
-                        <span class="font-weight-bold">Status: </span> @booking.Status
-                        <i class=@("fa "+ (booking.Status == Status.Accepted ? "fa-check-circle item-accepted"
+                        <p hidden="@(booking.StartDate==null||booking.EndDate==null)">
+                            From <span class="font-weight-bold">
+                                @booking.StartDate
+                            </span>till <span class="font-weight-bold">
+                                @booking.EndDate
+                            </span>
+                        </p>
+                        <p hidden="@(booking.GuestNo==null)"><span class="font-weight-bold">Number of guests: </span> @booking.GuestNo</p>
+                        <p>
+                            <span class="font-weight-bold">Status: </span> @booking.Status
+                            <i class=@("fa "+ (booking.Status == Status.Accepted ? "fa-check-circle item-accepted"
                                        : booking.Status == Status.Rejected || booking.Status == Status.Cancelled ?
                                        "fa-ban item-rejected":"fa-clock-o"))></i>
-                    </p>
-                    @if (booking.Status == Status.Accepted)
-                    {
-                        <button @onclick="async ()=> await CancelBooking(booking.Id)" class="submit__btn submit__btn-danger">Cancel</button>
-                    }
-                    else if (booking.Status == Status.Pending)
-                    {
-                        <button @onclick="async ()=> await AcceptBooking(booking.Id)" class="submit__btn submit__btn-primary">Accept</button>
-                        <button @onclick="async ()=> await RejectBooking(booking.Id)" class="submit__btn submit__btn-danger">Reject</button>
-                    }
+                        </p>
+                        @if (booking.Status == Status.Accepted)
+                        {
+                            <button @onclick="async ()=> await CancelBooking(booking.Id)" class="submit__btn submit__btn-danger">Cancel</button>
+                        }
+                        else if (booking.Status == Status.Pending)
+                        {
+                            <button @onclick="async ()=> await AcceptBooking(booking.Id)" class="submit__btn submit__btn-primary">Accept</button>
+                            <button @onclick="async ()=> await RejectBooking(booking.Id)" class="submit__btn submit__btn-danger">Reject</button>
+                        }
 
-                </div>
-                }   
+                    </div>
+                }
             </div>
         }
 
@@ -71,31 +63,26 @@
     public long PostId { get; set; }
     private ICollection<BookingResponse> _bookings = new List<BookingResponse>();
     private Response _response;
-    private long _userId;
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         _appState.SetPageTitle("Bookings for accommodation");
+        //if user is not authenticated, redirect to login page
         if (!_authState.isAuthenticated)
         {
             _navManager.NavigateTo("/login");
         }
         else
         {
+            //load bookings for this user and order them by status (Pending bookings first)
             var bookings = (await _service.GetBookingsForPostAsync(PostId))?
-                .OrderBy(x => x.Status).ToList();
+            .OrderBy(x => x.Status).ToList();
             if(bookings!=null)
             {
                 foreach (var booking in bookings)
                 {
+                    //load user information for each booking
                     var user = await _userService.GetUserAsync(booking.GuestId);
-                    if (user != null)
-                    {
-                        booking.Guest = new Guest
-                        {
-                            FirstName = user?.FirstName,
-                            LastName = user?.LastName
-                        };
-                    }
+                    booking.Guest = user;
                 }
             }
             _bookings = bookings;
@@ -103,6 +90,7 @@
     }
     private async Task CancelBooking(long id)
     {
+        //try to cancel booking, if success, find booking in the list, change its status and re-render component
         _response = await _service.CancelBookingAsync(id, () =>
         {
             GetBookingByIdFromList(id).Status = Status.Cancelled;
@@ -111,6 +99,7 @@
     }
     private async Task AcceptBooking(long id)
     {
+        //try to accept booking, if success, find booking in the list, change its status and re-render component
         _response = await _service.AcceptBookingAsync(id, () =>
         {
             GetBookingByIdFromList(id).Status = Status.Accepted;
@@ -119,6 +108,7 @@
     }
     private async Task RejectBooking(long id)
     {
+        //try to reject booking, if success, find booking in the list, change its status and re-render component
         _response = await _service.RejectBookingAsync(id, () =>
         {
             GetBookingByIdFromList(id).Status = Status.Rejected;

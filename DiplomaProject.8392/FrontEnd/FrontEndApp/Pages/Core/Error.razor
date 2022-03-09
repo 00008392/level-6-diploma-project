@@ -1,0 +1,16 @@
+﻿@if (Response != null)
+{
+    <p class="font-weight-bold text-danger">@Response.Message</p>
+    @if (Response.Errors != null && Response.Errors.Length != 0)
+    {
+        @foreach (var error in Response.Errors)
+        {
+            <p class="font-weight-bold text-danger">@error.Message</p>
+        }
+    }
+}
+
+@code {
+    [Parameter]
+    public Response Response { get; set; }
+}

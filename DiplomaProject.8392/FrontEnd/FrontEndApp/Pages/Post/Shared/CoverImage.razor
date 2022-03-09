@@ -1,18 +1,37 @@
-﻿@inject IPhotoService _photoService
-@inherits Components.PostBaseComponent
-    <img class="image" src=@(_photoStr==null?"img/loading_img.gif":_photoStr==""?
-                               "img/no_img.jpg": $"{_photoStr}") alt="img">
+﻿
+@inherits Components.PhotoBaseComponent
+@*if photo string is null, photo is loading*@
+@if (_photoStr == null)
+{
+    <div class="preloader_image_wrapper">
+        <Circle Center="true" />
+    </div>
+}
+@*if photo string is just empty string, it is absent*@
+else if (_photoStr == "")
+{
+    <img class="image" src="img/no_img.jpg" alt="img">
+}
+else
+{
+    <img class="image" src=@(_photoStr) alt="img">
+}
+
 @code {
     [Parameter]
     public long PostId { get; set; }
     private string _photoStr;
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        var photo = await _photoService.GetCoverPhotoAsync(PostId);
-        if(photo!=null)
+        _photoStr = null;
+        //get cover photo
+        var photo = await _service.GetCoverPhotoAsync(PostId);
+        if (photo != null)
         {
-            _photoStr = (await _photoService.GetCoverPhotoAsync(PostId)).FileContentStr;
-        } else
+            //assign its content string if photo is ot null
+            _photoStr = photo.FileContentStr;
+        }
+        else
         {
             _photoStr = "";
         }

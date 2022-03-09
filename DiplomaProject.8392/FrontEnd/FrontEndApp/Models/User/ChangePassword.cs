@@ -1,4 +1,5 @@
-﻿using FrontEndApp.Validation;
+﻿using FrontEndApp.Models.Core;
+using FrontEndApp.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

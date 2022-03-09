@@ -14,8 +14,7 @@ namespace PostFeedback.Domain.Logic.Validation
         public PostValidator()
         {
             RuleFor(p => p.Title)
-                .NotEmpty().WithMessage("Title is required")
-                .MaximumLength(50).WithMessage("Maximum title length is 50 symbols");
+                .NotEmpty().WithMessage("Title is required");
             RuleFor(p => p.OwnerId)
                 .NotEmpty().WithMessage("Owner is required");
             RuleFor(p => p.CityId)

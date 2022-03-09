@@ -3,6 +3,8 @@ using DAL.Base.Contracts;
 using Microsoft.EntityFrameworkCore;
 using PostFeedback.DAL.EF.Data;
 using PostFeedback.Domain.Entities;
+using PostFeedback.Domain.Logic.Contracts;
+using PostFeedback.Domain.Logic.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +52,8 @@ namespace PostFeedback.DAL.EF.Repositories
             return _dbSet.Any(t => t.Id == id);
         }
         //get all posts
-        public async Task<ICollection<Post>> GetAllAsync(params Expression<Func<Post, object>>[] includes)
+        public async Task<ICollection<Post>> GetAllAsync(
+            params Expression<Func<Post, object>>[] includes)
         {
             return await GetDbSetWithRelatedTables(includes).AsNoTracking().ToListAsync();
         }
@@ -60,9 +63,11 @@ namespace PostFeedback.DAL.EF.Repositories
             return await GetDbSetWithRelatedTables(includes).AsNoTracking().SingleOrDefaultAsync(t => t.Id == id);
         }
         //get filtered posts
-        public async Task<ICollection<Post>> GetFilteredAsync(Expression<Func<Post, bool>> filter, params Expression<Func<Post, object>>[] includes)
+        public async Task<ICollection<Post>> GetFilteredAsync(Expression<Func<Post, bool>> filter,
+              params Expression<Func<Post, object>>[] includes)
         {
             return await GetDbSetWithRelatedTables(includes).Where(filter).AsNoTracking().ToListAsync();
+            
         }
         //bulk delete of posts
         public async Task RemoveRangeAsync(ICollection<Post> items)

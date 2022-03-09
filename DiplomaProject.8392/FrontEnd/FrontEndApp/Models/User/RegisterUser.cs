@@ -1,4 +1,5 @@
 ﻿using FrontEndApp.Enums;
+using FrontEndApp.Models.Core;
 using FrontEndApp.Models.User.Core;
 using FrontEndApp.Validation;
 using System;

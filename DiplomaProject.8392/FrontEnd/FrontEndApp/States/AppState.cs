@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.States
 {
+    //app state stores title that should be displayed in page header
     public class AppState
     {
         public string PageTitle { get; set; }

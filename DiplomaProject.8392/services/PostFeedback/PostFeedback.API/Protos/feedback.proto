@@ -16,6 +16,7 @@ service FeedbackForUser {
   rpc GetFeedbackDetails (common.Request) returns (FeedbackResponse); 
   rpc GetFeedbacksForItem (common.Request) returns (FeedbackListResponse); 
   rpc GetAverageRating (common.Request) returns (AverageRatingResponse);
+  rpc CanLeaveFeedback(CanLeaveFeedbackRequest) returns (CanLeaveFeedbackResponse);
 }
 //service for leaving feedback on accommodation indicated in post
 service FeedbackForPost {
@@ -24,8 +25,16 @@ service FeedbackForPost {
   rpc GetFeedbackDetails (common.Request) returns (FeedbackResponse); 
   rpc GetFeedbacksForItem (common.Request) returns (FeedbackListResponse); 
   rpc GetAverageRating (common.Request) returns (AverageRatingResponse);
+  rpc CanLeaveFeedback(CanLeaveFeedbackRequest) returns (CanLeaveFeedbackResponse);
 }
 
+message CanLeaveFeedbackRequest {
+  google.protobuf.Int64Value creatorId = 1;
+  google.protobuf.Int64Value itemId = 2;
+}
+message CanLeaveFeedbackResponse {
+	bool CanLeaveFeedback = 1;
+}
 message CreateFeedbackRequest {
   google.protobuf.Int64Value creatorId = 1;
   google.protobuf.Int64Value itemId = 2;
@@ -39,7 +48,8 @@ message FeedbackResponse {
 	post.PostResponse accommodation = 4;
 	int32 rating = 5;
 	google.protobuf.StringValue message = 6;
-	bool noItem = 7;
+	google.protobuf.Timestamp datePublishedTimeStamp = 7;
+	bool noItem = 8;
 }
 message FeedbackListResponse {
 	repeated FeedbackResponse items = 1;

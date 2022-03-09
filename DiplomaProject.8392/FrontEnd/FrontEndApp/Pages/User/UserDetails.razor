@@ -1,19 +1,31 @@
-﻿@inject AppState _appState
-@page "/users/{Id:long}"
+﻿@page "/users/{Id:long}"
+@using FrontEndApp.Pages.User.Shared
+@using FrontEndApp.Pages.Post
+@using FrontEndApp.Pages.Feedback
+@using Models.Post
+@using Models.User
+@inherits CustomBaseComponent
 <section class="account__details">
     <div class="container ">
         <div class="row d-flex justify-content-center">
-            <div class="account__details_left col-md-5">
-            <User Id="Id" />
+            <div class="account__details_left position-relative col-md-5">
+                <User Id="Id" />
             </div>
         </div>
     </div>
-    <Posts Filter="new Filter { Owner = Id}" Title="My posts" />
+    <div class="container">
+        <FeedbackCreation TItem="UserResponse" ItemId="Id"
+                          OnFeedbackSubmitted="async()=>await _feedbacksComponent.RefreshComponent()" ItemName="user" />
+        <Feedbacks @ref="_feedbacksComponent" TItem="UserResponse" ItemId="Id" />
+    </div>
+    <Posts Filter="new Filter { Owner = Id}" Title="Posts by this user" PostCardSize="6" />
+
 </section>
 @code {
     [Parameter]
     public long Id { get; set; }
-    protected override void OnInitialized()
+    private Feedbacks<UserResponse> _feedbacksComponent = new Feedbacks<UserResponse>();
+    protected override void OnParametersSet()
     {
         _appState.SetPageTitle("User details");
     }

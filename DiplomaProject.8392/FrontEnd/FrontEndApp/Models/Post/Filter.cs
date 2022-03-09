@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Models.Post
 {
+    //class for holding post filtering criteria
     public class Filter
     {
         public string SearchText { get; set; }

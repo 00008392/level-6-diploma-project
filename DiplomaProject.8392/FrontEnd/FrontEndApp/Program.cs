@@ -22,6 +22,11 @@ using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
 using FrontEndApp.Services.Booking.Contracts;
 using FrontEndApp.Services.Booking;
+using FrontEndApp.Services.Feedback.Contracts;
+using FrontEndApp.Models.User;
+using FrontEndApp.Services.Feedback;
+using FrontEndApp.Models.Post;
+using FrontEndApp.Services.Authentication.Contracts;
 
 namespace FrontEndApp
 {
@@ -31,6 +36,7 @@ namespace FrontEndApp
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
+            //register blazorise
             builder.Services
             .AddBlazorise(options =>
             {
@@ -38,17 +44,24 @@ namespace FrontEndApp
             })
             .AddBootstrapProviders()
             .AddFontAwesomeIcons();
+            //register http client
             builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("https://localhost:44377/") });
-            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+            //register session storage
             builder.Services.AddBlazoredSessionStorage();
+            //register states
             builder.Services.AddScoped<LoggedInState>();
             builder.Services.AddScoped<AppState>();
+            //register services
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserRelatedInfoService, UserRelatedInfoService>();
             builder.Services.AddScoped<IPostService, PostService>();
             builder.Services.AddScoped<IPostRelatedInfoService, PostRelatedInfoService>();
             builder.Services.AddScoped<IPhotoService, PhotoService>();
             builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddScoped<IFeedbackService<UserResponse>, FeedbackServiceForUser>();
+            builder.Services.AddScoped<IFeedbackService<PostResponse>, FeedbackServiceForPost>();
+            //register automapper
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
             await builder.Build().RunAsync();
         }

@@ -172,14 +172,14 @@ namespace PostFeedback.Domain.Logic.Services
             if (compositeSpecification != null)
             {
                 posts = await _repository
-                    .GetFilteredAsync(compositeSpecification.ToExpression(), 
+                    .GetFilteredAsync(compositeSpecification.ToExpression(),
                     includes);
             }
             else
             {
                 //if specifications are not present, get all posts
                 posts = await _repository
-                    .GetAllAsync(includes);
+                    .GetAllAsync( includes);
             }
             //map entities to dtos
             return _mapper.Map<ICollection<PostDetailsDTO>>(posts);

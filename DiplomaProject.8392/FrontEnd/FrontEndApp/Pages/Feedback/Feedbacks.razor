@@ -1,0 +1,96 @@
+﻿@typeparam TItem
+@using Models.Feedback
+@inherits FeedbackBaseComponent<TItem>
+@if (_feedbacks != null && _feedbacks.Count != 0)
+{
+    <div class="col-md-12 feedbacks">
+        <div class="aa-comments-area">
+            <h3>@_feedbacks.Count() @(_feedbacks.Count()==1?"Feedback":"feedbacks")</h3>
+            <div class="comments">
+                <ul  class="commentlist">
+                    @foreach (var feedback in _pagedFeedbacks)
+                    {
+                        <li>
+                            <div class="media">
+                                <div class="media-body">
+                                    <h4 hidden="@(feedback.FeedbackCreator==null)" class="author-name">
+                                        <a href=@($"users/{feedback.FeedbackCreator?.Id}")>
+                                            @feedback.FeedbackCreator?.FirstName
+                                            @feedback.FeedbackCreator?.LastName
+                                        </a>
+                                    </h4>
+                                    <RadzenRating ReadOnly="true" Stars="5" Value="feedback.Rating" />
+                                    <span class="comments-date"> @feedback.DatePublished.ToShortDateString()</span>
+                                    <Error Response="_response" />
+                                    <p hidden="@(string.IsNullOrWhiteSpace(feedback.Message))">@feedback.Message</p>
+                                    @if (feedback.FeedbackCreator?.Id == _userId)
+                                    {
+                                        @*display delete button only if user is the owner of feedback*@
+                                        <button @onclick="async ()=>await DeleteFeedback(feedback.Id)" class="reply-btn">Delete</button>
+                                    }
+                                </div>
+                            </div>
+                        </li>
+                    }
+
+                </ul>
+                <nav>
+                    <RadzenPager ShowPagingSummary="true"  HorizontalAlign="HorizontalAlign.Right"
+                                 PagingSummaryFormat="@pagingSummaryFormat" Count="_feedbacks.Count()" PageSize="_pageSize" PageNumbersCount="5" 
+                                 PageChanged="PageChanged" />
+                </nav>
+            </div>
+        </div>
+    </div>
+}
+@code {
+    [Parameter]
+    public long ItemId { get; set; }
+    private Response _response;
+    private long? _userId;
+    private ICollection<FeedbackResponse> _feedbacks = new List<FeedbackResponse>();
+    //pagination properties
+    private string pagingSummaryFormat = "Displaying page {0} of {1} (total {2} feedbacks)";
+    private ICollection<FeedbackResponse> _pagedFeedbacks = new List<FeedbackResponse>(); //feebacks displayed on one page
+    private int _pageSize = 3;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        //get id of logged user and load all feedbacks
+        _userId = await _authService.GetLoggedUserIdAsync();
+        await LoadFeedbacks();
+    }
+    public async Task RefreshComponent()
+    {
+        //force component to re-render (re-rendered every time when new feedback is added)
+        await LoadFeedbacks();
+        StateHasChanged();
+    }
+    //this method is called when page is changed
+    private void PageChanged(PagerEventArgs args)
+    {
+        _pagedFeedbacks = GetPagedFeedbacks(args.Skip, args.Top);
+    }
+    private List<FeedbackResponse> GetPagedFeedbacks(int skip, int take)
+    {
+        //get feedbacks for selected page
+        return _feedbacks?.AsQueryable().Skip(skip).Take(take).ToList();
+    }
+    private async Task LoadFeedbacks()
+    {
+        //get all feedbacks and sort them by date published in descenging order to display new feedbacks first
+        _feedbacks = (await _service.GetFeedbacksForItemAsync(ItemId))?.OrderByDescending(x => x.DatePublished).ToList();
+        //place first 3 feedbacks in paged feedbacks
+        _pagedFeedbacks = GetPagedFeedbacks(0, _pageSize);
+    }
+    private async Task DeleteFeedback(long id)
+    {
+        //try to delete feedback, if success, remove it from the list and re-render the component
+        _response = await _service.DeleteFeedbackAsync(id,
+             ()=> {
+                var feedback = _feedbacks.Where(x => x.Id == id).FirstOrDefault();
+                _feedbacks.Remove(feedback);
+                StateHasChanged();
+            });
+    }
+}

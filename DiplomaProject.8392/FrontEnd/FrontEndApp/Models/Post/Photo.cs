@@ -10,5 +10,6 @@ namespace FrontEndApp.Models.Post
         public long Id { get; set; }
         public byte[] FileContent { get; set; }
         public string FileContentStr { get; set; }
+        public long PostId { get; set; }
     }
 }

@@ -55,5 +55,11 @@ namespace PostFeedback.API.Services
         {
             return await _strategy.GetAverageRatingAsync(request);
         }
+        //check whether user can leave feedback on user
+        public override async Task<CanLeaveFeedbackResponse> CanLeaveFeedback(CanLeaveFeedbackRequest request,
+         ServerCallContext context)
+        {
+            return await _strategy.CanLeaveFeedbackAsync(request);
+        }
     }
 }

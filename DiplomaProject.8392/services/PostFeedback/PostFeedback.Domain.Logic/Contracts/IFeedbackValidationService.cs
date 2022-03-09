@@ -14,6 +14,6 @@ namespace PostFeedback.Domain.Logic.Contracts
     //this service checks whether user can leave feedback on specific user/accommodation
     public interface IFeedbackValidationService<T> where T: FeedbackEntity
     {
-        Task<bool> CanLeaveFeedback(FeedbackDTO feedback);
+        Task<bool> CanLeaveFeedback(long creatorId, long itemId);
     } 
 }

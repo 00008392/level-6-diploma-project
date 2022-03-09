@@ -65,12 +65,20 @@ namespace PostFeedback.API.Mappings
                     {
                         return context.Mapper.Map<User>(src.Item);
                     }))
+                 .ForMember(x => x.DatePublishedTimeStamp, opt => opt.MapFrom((src, dest, prop, context) =>
+                 {
+                     return GrpcServiceHelper.ConvertDateTimeToTimeStamp(src.DatePublished);
+                 }))
 
                 .ForMember(x => x.Accommodation, opt => opt.Ignore());
             CreateMap<FeedbackInfoDTO<PostDetailsDTO>, FeedbackResponse>()
               .ForMember(x => x.Accommodation, opt => opt.MapFrom((src, dest, prop, context) =>
               {
                   return context.Mapper.Map<PostResponse>(src.Item);
+              }))
+              .ForMember(x => x.DatePublishedTimeStamp, opt => opt.MapFrom((src, dest, prop, context) =>
+              {
+                  return GrpcServiceHelper.ConvertDateTimeToTimeStamp(src.DatePublished);
               }))
               .ForMember(x => x.User, opt => opt.Ignore());
             CreateMap<CreateFeedbackRequest, FeedbackDTO>()

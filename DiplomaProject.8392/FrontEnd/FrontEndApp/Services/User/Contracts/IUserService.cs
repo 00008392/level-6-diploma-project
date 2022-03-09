@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Services.User.Contracts
 {
+    //service that consumes user api
     public interface IUserService
     {
         Task<Response> RegisterAccountAsync(RegisterUser request, Action onSuccessAction = null,

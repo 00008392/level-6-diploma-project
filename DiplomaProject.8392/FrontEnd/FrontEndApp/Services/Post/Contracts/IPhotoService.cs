@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Services.Post.Contracts
 {
+    //service that consumes post photo api
     public interface IPhotoService
     {
         Task<Response> AddPhotosAsync(ICollection<IBrowserFile> inputFiles, long postId,

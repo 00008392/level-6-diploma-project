@@ -118,6 +118,9 @@ namespace PostFeedback.DAL.EF.Migrations
                     b.Property<long?>("CreatorId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("DatePublished")
+                        .HasColumnType("datetime2");
+
                     b.Property<long>("ItemId")
                         .HasColumnType("bigint");
 
@@ -145,6 +148,9 @@ namespace PostFeedback.DAL.EF.Migrations
 
                     b.Property<long?>("CreatorId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("DatePublished")
+                        .HasColumnType("datetime2");
 
                     b.Property<long>("ItemId")
                         .HasColumnType("bigint");

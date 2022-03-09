@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Services.Post.Contracts
 {
+    //service that consumes post api
     public interface IPostService
     {
         Task<Response> CreatePostAsync(EditPost post, Action onSuccessAction = null,

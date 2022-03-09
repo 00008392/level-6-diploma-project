@@ -94,13 +94,14 @@ namespace PostFeedback.Domain.Logic.Services
         //this method creates new feedback
         public async Task LeaveFeedbackAsync(FeedbackDTO feedbackDTO)
         {
+            //validate feedback
+            ServiceHelper.ValidateItem(_validator, feedbackDTO);
             //validate if user can leave feedback or not
-            if (!await _feedbackvalidator.CanLeaveFeedback(feedbackDTO))
+            if (!await _feedbackvalidator.CanLeaveFeedback((long)feedbackDTO.CreatorId, feedbackDTO.ItemId))
             {
                 throw new LeaveFeedbackException((long)feedbackDTO.CreatorId, feedbackDTO.ItemId);
             }
-            //validate feedback
-            ServiceHelper.ValidateItem(_validator, feedbackDTO);
+
             //check if item on which feedback is left exists
             ServiceHelper.CheckIfRelatedEntityExists(feedbackDTO.ItemId, _itemRepository);
             //check if feedback creator exists

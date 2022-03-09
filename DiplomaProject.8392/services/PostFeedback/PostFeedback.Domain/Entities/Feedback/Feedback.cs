@@ -20,31 +20,20 @@ namespace PostFeedback.Domain.Entities
         public User Creator { get; private set; }
         public int Rating { get; private set; }
         public string Message { get; private set; }
+        public DateTime DatePublished { get; private set; }
         //this constructor is called when new feedback is created
         public Feedback(
             long itemId,
             long? creatorId,
             int rating,
-            string message)
+            string message,
+            DateTime datePublished)
         {
             ItemId = itemId;
             CreatorId = creatorId;
             Rating = rating;
             Message = message;
-        }
-        //this constructor is called when feedback is updated
-        public Feedback(
-           long id,
-           long itemId,
-           long? creatorId,
-           int rating,
-           string message)
-            :base(id)
-        {
-            ItemId = itemId;
-            CreatorId = creatorId;
-            Rating = rating;
-            Message = message;
+            DatePublished = datePublished;
         }
     }
 }

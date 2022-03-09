@@ -14,6 +14,7 @@ namespace PostFeedback.Domain.Logic.DTOs
         //accommodation or user on which feedback is left
         public T Item { get; private set; }
         public UserDTO FeedbackCreator { get; private set; }
+        public DateTime DatePublished { get; private set; }
         public FeedbackInfoDTO(
              long? userId,
              long itemId,
@@ -21,6 +22,7 @@ namespace PostFeedback.Domain.Logic.DTOs
              string message,
              long id,
              T item,
+             DateTime datePublished,
              UserDTO feedbackCreator) :
              base(
                  userId,
@@ -31,6 +33,7 @@ namespace PostFeedback.Domain.Logic.DTOs
             Id = id;
             Item = item;
             FeedbackCreator = feedbackCreator;
+            DatePublished = datePublished;
         }
     }
 }

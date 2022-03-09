@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Components
 {
+    //component that all user components inherit from
     public class UserBaseComponent: CustomBaseComponent
     {
         [Inject]

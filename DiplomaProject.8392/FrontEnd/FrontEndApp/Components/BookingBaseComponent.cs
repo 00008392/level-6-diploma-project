@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Components
 {
+    //component that all booking components inherit from
     public class BookingBaseComponent: CustomBaseComponent
     {
         [Inject]

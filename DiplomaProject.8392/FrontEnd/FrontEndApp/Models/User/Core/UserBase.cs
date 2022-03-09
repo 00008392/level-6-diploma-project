@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Models.User.Core
 {
+    //base user class
     public class UserBase
     {
         [Required(ErrorMessage = "First name is required")]

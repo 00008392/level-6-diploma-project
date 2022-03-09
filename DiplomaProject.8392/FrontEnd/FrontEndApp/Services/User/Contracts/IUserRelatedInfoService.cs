@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Services.User.Contracts
 {
+    //service that consumes user related information api
     public interface IUserRelatedInfoService
     {
         Task<ICollection<Country>> GetCountriesAsync();

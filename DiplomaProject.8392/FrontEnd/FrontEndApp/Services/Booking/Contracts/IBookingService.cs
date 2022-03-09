@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Services.Booking.Contracts
 {
+    //service that consumes booking api
     public interface IBookingService
     {
         Task<Response> CreateBookingAsync(CreateBooking booking,

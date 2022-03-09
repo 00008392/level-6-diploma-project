@@ -1,6 +1,8 @@
 ﻿@page "/posts"
 @using FrontEndApp.Pages.Post.Shared
-@inject IPhotoService _photoService
+@using Models.Post
+@using Services.Feedback.Contracts
+@inject IFeedbackService<PostResponse> _feedbackService
 @inherits Components.PostBaseComponent
 <section id="aa-latest-property">
     <div class="container">
@@ -15,60 +17,71 @@
             }
             else if (_posts.Count == 0)
             {
-                <p>Loading posts...</p>
+        <div>
+            <Circle Center="true" />
+        </div>
+
             }
             else
             {
-                <div class="aa-latest-properties-content">
-                    <div class="row">
-                        @foreach (var post in _posts)
-                        {
-                            <div class="col-md-4">
-                                <article class="aa-properties-item">
-                                    <a href=@($"posts/{post.Id}") class="aa-properties-item-img image__wrapper">
-                                        <CoverImage PostId="post.Id"  />
-                                    </a>
-                                    <div hidden="@(post.City==null)" class="aa-tag for-rent">
-                                        @post.City
-                                    </div>
-                                    <div class="aa-properties-item-content">
-                                        <div class="aa-properties-info">
-                                            <span hidden="@(post.RoomsNo==null||post.RoomsNo==0)">@post.RoomsNo Rooms</span>
-                                            <span hidden="@(post.BedsNo==null||post.BedsNo==0)">@post.BedsNo Beds</span>
-                                            <span hidden="@(post.BathroomsNo==null||post.BathroomsNo==0)">@post.BathroomsNo Bathrooms</span>
-                                            <span hidden="@(post.MaxGuestsNo==null||post.MaxGuestsNo==0)">@post.MaxGuestsNo</span>
-                                        </div>
-                                        <div class="aa-properties-about">
-                                            <h3 class="post__item_text-overflow" hidden="@(post.Title==null)">@post.Title</h3>
-                                            <p hidden="@(post.Category==null)" class="aa-price">
-                                                @post.Category
-                                            </p>
-                                            <p class="post__item_text-overflow" hidden="@(post.Description==null)">@post.Description</p>
-                                            <p hidden="@(post.Owner==null)" class="aa-price">
-                                                Posted by: <a href=@($"users/{post.Owner?.Id}")>@post.Owner?.FirstName @post.Owner?.LastName</a> on
-                                                <span class="font-italic">
-                                                    @post.DatePublished.ToShortDateString()
-                                                </span>
-                                            </p>
-                                        </div>
-                                        <div class="aa-properties-detial">
-                                            <span class="aa-price">
-                                                @post.Price $ per night
-                                            </span>
-                                            <a href=@($"posts/{post.Id}") class="aa-secondary-btn">View Details</a>
-                                        </div>
-                                        <div hidden="@(HideActionButtons)" class="aa-properties-detial">
-                                            <a href=@($"posts/edit/{post.Id}") class="submit__btn submit__btn-primary">Edit</a>
-                                            <a href=@($"/posts/{post.Id}/photos/edit") class="submit__btn submit__btn-primary">Edit photos</a>
-                                            <a href=@($"/posts/{post.Id}/bookings") class="submit__btn submit__btn-primary">View bookings</a>
-                                        </div>
-                                    </div>
-                                </article>
+        <div class="aa-latest-properties-content">
+            <div class="row">
+                @foreach (var post in _pagedPosts)
+                {
+                    <div class=@($"col-md-{PostCardSize}")>
+                        <article class="aa-properties-item">
+                            <a href=@($"posts/{post.Id}") class="aa-properties-item-img image__wrapper">
+                                <CoverImage PostId="post.Id" />
+                            </a>
+                            <div hidden="@(post.City==null)" class="aa-tag for-rent">
+                                @post.City
                             </div>
-                        }
-
+                            <div hidden="@(post.AverageRating==null)" class="aa-tag sold-out rating__tag">
+                                @post.AverageRating <i class="fa fa-star"></i>
+                            </div>
+                            <div class="aa-properties-item-content">
+                                <div class="aa-properties-info">
+                                    <span hidden="@(post.RoomsNo==null||post.RoomsNo==0)">@post.RoomsNo Rooms</span>
+                                    <span hidden="@(post.BedsNo==null||post.BedsNo==0)">@post.BedsNo Beds</span>
+                                    <span hidden="@(post.BathroomsNo==null||post.BathroomsNo==0)">@post.BathroomsNo Bathrooms</span>
+                                    <span hidden="@(post.MaxGuestsNo==null||post.MaxGuestsNo==0)">@post.MaxGuestsNo</span>
+                                </div>
+                                <div class="aa-properties-about">
+                                    <h3 class="post__item_text-overflow" hidden="@(post.Title==null)">@post.Title</h3>
+                                    <p hidden="@(post.Category==null)" class="aa-price">
+                                        @post.Category
+                                    </p>
+                                    <p class="post__item_text-overflow" hidden="@(post.Description==null)">@post.Description</p>
+                                    <p hidden="@(post.Owner==null)" class="aa-price">
+                                        Posted by: <a href=@($"users/{post.Owner?.Id}")>@post.Owner?.FirstName @post.Owner?.LastName</a> on
+                                        <span class="font-italic">
+                                            @post.DatePublished.ToShortDateString()
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="aa-properties-detial">
+                                    <span class="aa-price">
+                                        @post.Price $ per night
+                                    </span>
+                                    <a href=@($"posts/{post.Id}") class="aa-secondary-btn">View Details</a>
+                                </div>
+                                <div hidden="@(HideActionButtons)" class="aa-properties-detial">
+                                    <a href=@($"posts/edit/{post.Id}") class="submit__btn submit__btn-primary">Edit</a>
+                                    <a href=@($"/posts/{post.Id}/photos/edit") class="submit__btn submit__btn-primary">Edit photos</a>
+                                    <a href=@($"/posts/{post.Id}/bookings") class="submit__btn submit__btn-primary">View bookings</a>
+                                </div>
+                            </div>
+                        </article>
                     </div>
-                </div>
+                }
+
+            </div>
+            <nav>
+                <RadzenPager ShowPagingSummary="true" HorizontalAlign="HorizontalAlign.Right"
+                             PagingSummaryFormat="@pagingSummaryFormat" Count="_posts.Count()" PageSize="_pageSize" PageNumbersCount="5"
+                             PageChanged="PageChanged" />
+            </nav>
+        </div>
             }
         </div>
     </div>
@@ -79,25 +92,59 @@
     public Filter Filter { get; set; }
     [Parameter]
     public string Title { get; set; }
+    //action buttons are only displayed when user is viewing his/her own posts
     [Parameter]
     public bool HideActionButtons { get; set; } = true;
+    //size of single post card (in bootstrap columns)
+    [Parameter]
+    public int PostCardSize { get; set; } = 4;
     private ICollection<PostResponse> _posts = new List<PostResponse>();
+    //pagination properties
+    private int _pageSize = 3;
+    private string pagingSummaryFormat = "Displaying page {0} of {1} (total {2} posts)";
+    private ICollection<PostResponse> _pagedPosts = new List<PostResponse>();
 
     protected override async Task OnInitializedAsync()
     {
-        _posts = await GetPosts(Filter);
+        await LoadPosts(Filter);
     }
-    private async Task<ICollection<PostResponse>> GetPosts(Filter filter = null)
+    //method called when page is changed
+    private void PageChanged(PagerEventArgs args)
     {
-        return await _service.GetPostsAsync(filter);
+        _pagedPosts = GetPagedPosts(args.Skip, args.Top);
+    }
+    private List<PostResponse> GetPagedPosts(int skip, int take)
+    {
+        //get posts for selected page
+        return _posts?.AsQueryable().Skip(skip).Take(take).ToList();
+    }
+    private async Task LoadPosts(Filter filter = null)
+    {
+        //load all posts 
+        var posts = await _service.GetPostsAsync(filter);
+        if(posts!=null)
+        {
+            //load average rating for every post
+            foreach(var post in posts)
+            {
+                var rating = await _feedbackService.GetAverageRatingAsync(post.Id);
+                post.AverageRating = rating;
+            }
+        }
+        _posts = posts;
+        //place first 3 in paged posts
+        _pagedPosts = GetPagedPosts(0, _pageSize);
+
     }
     public async Task RefreshComponent()
     {
-        _posts = await GetPosts(Filter);
+        //force component to re-render
+        await LoadPosts(Filter);
         StateHasChanged();
     }
     public void SetFilter(Filter filter)
     {
+        //set new filter values
         Filter = filter;
     }
 }

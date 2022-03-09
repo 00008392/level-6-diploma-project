@@ -19,14 +19,28 @@ namespace PostFeedback.API.Services.Strategies
         private readonly IMapper _mapper;
         //inject service from domain logic layer
         private readonly IFeedbackService<TEntity, TDTO> _service;
+        private readonly IFeedbackValidationService<TEntity> _validationService;
 
         public FeedbackStrategy(
             IMapper mapper,
-            IFeedbackService<TEntity, TDTO> service)
+            IFeedbackService<TEntity, TDTO> service,
+            IFeedbackValidationService<TEntity> validationService)
         {
             _mapper = mapper;
             _service = service;
+            _validationService = validationService;
         }
+
+        public async Task<CanLeaveFeedbackResponse> CanLeaveFeedbackAsync(CanLeaveFeedbackRequest request)
+        {
+            var response = await _validationService.CanLeaveFeedback(request.CreatorId ?? 0,
+                request.ItemId ?? 0);
+            return new CanLeaveFeedbackResponse
+            {
+                CanLeaveFeedback = response
+            };
+        }
+
         //delete feedback
         public async Task<Response> DeleteFeedbackAsync(Request request)
         {

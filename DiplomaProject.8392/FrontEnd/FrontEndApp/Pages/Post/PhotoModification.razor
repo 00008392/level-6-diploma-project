@@ -1,8 +1,9 @@
 ﻿@page "/posts/{PostId:long}/photos/edit"
+@using Services.Post.Contracts
+@using Models.Post
 @inherits CustomBaseComponent
 @inject IPhotoService _service
 @inject IPostService _postService
-@inject AppState _appState
 <section class="photo__editing">
    
     <div class="container">
@@ -19,18 +20,7 @@
         </div>
         <div class="row flex-column">
             <div>
-                @if (_response != null)
-                {
-                    <p class="font-weight-bold text-danger">@_response.Message</p>
-                    @if (_response.Errors != null && _response.Errors.Length != 0)
-                    {
-                        @foreach (var error in _response.Errors)
-                        {
-                            <p class="font-weight-bold text-danger">@error.Message</p>
-                        }
-                    }
-
-                }
+                 <Error Response="_response"/>
             </div>
             <EditForm class="multiple_photo__editing_form" Model="_newPhotos" OnValidSubmit="UploadPhotos">
                 <DataAnnotationsValidator />
@@ -49,9 +39,22 @@
         <div class="row photo__editing_content">
             <div class="photo__editing_item photo__editing_cover">
                 <div class="image__wrapper">
-                    <img class="image" src=@(_existingCoverPhoto==null?"img/no_img.jpg"
-                                         :string.IsNullOrWhiteSpace(_existingCoverPhoto.FileContentStr)?
-                               "img/loading_img.gif": $"{_existingCoverPhoto.FileContentStr}") alt="img">
+                    @if (_existingCoverPhoto == null)
+                    {
+                        <img class="image" src="img/no_img.jpg"
+                             alt="img">
+                    }
+                    else if (string.IsNullOrWhiteSpace(_existingCoverPhoto.FileContentStr))
+                    {
+                        <div class="preloader_image_wrapper">
+                            <Circle Center="true" />
+                        </div>
+                    }
+                    else
+                    {
+                        <img class="image" src=@(_existingCoverPhoto==null?"img/no_img.jpg"
+                                         : $"{_existingCoverPhoto.FileContentStr}") alt="img">
+                    }
                     <EditForm @ref="_coverPhotoForm" class="photo__editing_form" Model="_newCoverPhoto" OnValidSubmit="UploadCoverPhoto">
                         <DataAnnotationsValidator />
                         <div class="photo__editing_controls d-flex">
@@ -103,13 +106,17 @@
 
     protected override async Task OnInitializedAsync()
     {
+        //if user is not authenticated, redirect to login page
         if (!_authState.isAuthenticated)
         {
             _navManager.NavigateTo("/login");
         }
         else
         {
-            var userId = await _authService.GetLoggedUserId();
+            //if authenticated, get id of user
+            var userId = await _authService.GetLoggedUserIdAsync();
+            //check that logged user owns a post, photo for which are modified
+            //if not, redirect to login
             var post = await _postService.GetPostAsync(PostId, () => _navManager.NavigateTo("/404"));
             if (post?.Owner?.Id != userId)
             {
@@ -117,11 +124,14 @@
             }
         }
         _appState.SetPageTitle("Edit photos");
+        //load all photos of post
         _existingPhotos = await _service.GetPhotosAsync(PostId);
         _existingCoverPhoto = await _service.GetCoverPhotoAsync(PostId);
     }
+    //method called when user selects file
     private void SelectFile(InputFileChangeEventArgs args, bool? multiple=false)
     {
+        //assign files to model
         if(multiple==true)
         {
             _newPhotos.Files = args.GetMultipleFiles()?.ToList();
@@ -132,6 +142,7 @@
     }
     private async Task UploadCoverPhoto()
     {
+        //try to upload cover photo, if success, load newly added cover photo and re-render component
         _response = await _service.AddCoverPhotoAsync(_newCoverPhoto.File, PostId,
              async ()=> {
                  _newCoverPhoto = new UploadSinglePhoto();
@@ -141,14 +152,18 @@
     }
     private async Task UploadPhotos()
     {
+        //try to upload cover photos, if success, load newly added photos and re-render component
         _response = await _service.AddPhotosAsync(_newPhotos.Files, PostId,
-            async ()=> { _existingPhotos = await _service.GetPhotosAsync(PostId);
-                _newPhotos = new UploadMultiplePhotos();
-                StateHasChanged(); });
+        async ()=> { _existingPhotos = await _service.GetPhotosAsync(PostId);
+            _newPhotos = new UploadMultiplePhotos();
+            StateHasChanged(); });
 
     }
     private async Task DeletePhoto(long id)
     {
+        //try to delete photo, if success, remove this photo from list of photos,
+        //remove cover photo if deleted photo is cover
+        //and refresh component
         _response = await _service.RemovePhotoAsync(id, ()=> {
             var photoList = _existingPhotos.ToList();
             photoList.RemoveAll(x => x.Id == id);

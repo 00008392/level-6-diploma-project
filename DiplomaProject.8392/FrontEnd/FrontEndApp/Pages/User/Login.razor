@@ -1,6 +1,6 @@
 ﻿@page "/login"
-@layout UserFormLayout
-@inject AppState _appState
+@using Models.User
+@layout FormLayout
 @inherits Components.UserBaseComponent
 <EditForm OnValidSubmit="@LogIn" Model="_login" class="contactform">
     <DataAnnotationsValidator />
@@ -32,6 +32,7 @@
     private string _error;
     protected override void OnInitialized()
     {
+        //if user is already authenticated, navigate to his/her account page
         @if (_authState.isAuthenticated)
         {
             _navManager.NavigateTo("/account");
@@ -40,14 +41,9 @@
     }
     private async Task LogIn()
     {
-        var loggedUser = await _authService.LogIn(_login);
-        if (loggedUser != null)
-        {
-            _navManager.NavigateTo("/account");
-        }
-        else
-        {
-            _error = "Login failed";
-        }
+        //try to log in, in case of success redirect to account page
+        //in case of error, show error message
+         await _authService.LogInAsync(_login, ()=> { _navManager.NavigateTo("/account"); },
+            ()=> { _error = "Login failed"; });
     }
 }

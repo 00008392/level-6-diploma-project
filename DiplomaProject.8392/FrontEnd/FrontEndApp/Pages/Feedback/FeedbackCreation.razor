@@ -1,0 +1,63 @@
+﻿@typeparam TItem
+@using Models.Feedback
+@inherits FeedbackBaseComponent<TItem>
+@if (_canLeaveFeedback)
+{
+    <div class="col-md-12">
+        <div id="respond">
+            <h3 class="reply-title">Leave a feedback</h3>
+            <EditForm OnValidSubmit="LeaveFeedback" Model="_feedback" id="commentform">
+                <DataAnnotationsValidator />
+                <Error Response="_response"/>
+            <p class="comment-form-author">
+                <label>Rate this @ItemName <span class="required">*</span></label>
+                <RadzenRating @bind-Value="_feedback.Rating" />
+                <div class="font-weight-bold text-danger">
+                    <ValidationMessage For="() => _feedback.Rating" />
+                </div>
+            </p>
+                <p class="comment-form-comment">
+                    <label for="message">Leave message</label>
+                    <InputTextArea @bind-Value="_feedback.Message" rows="8" cols="45" name="message"></InputTextArea>
+                    <div class="font-weight-bold text-danger">
+                        <ValidationMessage For="() => _feedback.Message" />
+                    </div>
+                </p>
+                <p class="form-submit">
+                    <input type="submit" value="Post feedback" class="aa-browse-btn">
+                </p>
+            </EditForm>
+        </div>
+    </div>
+
+}
+
+@code {
+    [Parameter]
+    public long ItemId { get; set; }
+    //name of item on which feedback is left (can be: user or post)
+    [Parameter]
+    public string ItemName { get; set; }
+    [Parameter]
+    public Action OnFeedbackSubmitted { get; set; }
+    private CreateFeedback _feedback = new CreateFeedback();
+    //feedback leaving form is not displayed if user cannot leave feedback on given item
+    private bool _canLeaveFeedback = false;
+    private Response _response;
+    protected override async Task OnInitializedAsync()
+    {
+        if (_authState.isAuthenticated)
+        {
+            //check if user can leave feedback
+            _canLeaveFeedback = await _service.CanLeaveFeedbackAsync(ItemId);
+        }
+    }
+    private async Task LeaveFeedback()
+    {
+        _feedback.ItemId = ItemId;
+        //try to leave feedback, clear values for form and invoke action assigned to component 
+        //that is fired when feedback is created
+        _response = await _service.LeaveFeedbackAsync(_feedback, ()=>_feedback=new CreateFeedback());
+        OnFeedbackSubmitted?.Invoke();
+    }
+}

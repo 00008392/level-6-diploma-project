@@ -1,4 +1,5 @@
 ﻿using APIGateway.Authorization.Helpers;
+using APIGateway.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PostFeedback.API;
@@ -53,7 +54,7 @@ namespace APIGateway.Controllers.PostFeedback.Core
             {
                 return NotFound("Feedback not found");
             }
-            return Ok(reply);
+            return Ok(ConvertFeedbackResponse(reply));
         }
 
         //get feedbacks by id of item on which feedback is left
@@ -65,7 +66,9 @@ namespace APIGateway.Controllers.PostFeedback.Core
                 Id = itemId
             };
             //get feedbacks
-            var reply = await _client.GetFeedbacksForItemAsync(request);
+            var reply = await _client.GetFeedbacksForItemAsync( request);
+            //convert time stamp property to date time and return
+            reply.Items.ToList().ForEach(x => ConvertFeedbackResponse(x));
             return Ok(reply.Items);
         }
         //get average rating for item (user/accommodation)
@@ -132,6 +135,28 @@ namespace APIGateway.Controllers.PostFeedback.Core
                 return BadRequest(reply);
             }
             return NoContent();
+        }
+        //Check whether logged user can leave feedback on item
+        //Only authorized access
+        [Authorize]
+        [HttpGet("can-leave-feedback-on/{id}")]
+        public async Task<IActionResult> CanLeaveFeedback(long id)
+        {
+            //prepare request
+            var request = new CanLeaveFeedbackRequest
+            {
+                CreatorId = AuthorizationHelper.GetLoggedUserId(User),
+                ItemId = id
+            };
+            //call grpc service 
+            var response = await _client.CanLeaveFeedbackAsync(request);
+            return Ok(response.CanLeaveFeedback);
+        }
+        private FeedbackResponse ConvertFeedbackResponse(FeedbackResponse feedback)
+        {
+            //convert from TimeStamp to DateTime
+            feedback.DatePublished = (DateTime)GrpcConversion.FromTimeStampToDateTime(feedback.DatePublishedTimeStamp);
+            return feedback;
         }
     }
 }

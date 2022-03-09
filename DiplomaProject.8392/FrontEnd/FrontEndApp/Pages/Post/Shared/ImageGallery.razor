@@ -1,41 +1,62 @@
-﻿@inject IPhotoService _service
-@inherits CustomBaseComponent
+﻿@using Services.Post.Contracts
+@using Models.Post
+@inherits PhotoBaseComponent
 
-<section>
-    <div class="container">
-        <div class="row flex-column">
-                    @if (_photos == null)
+            @if (_photos == null)
+            {
+                <p>No photos to show</p>
+            }
+            else if (_photos.Count == 0)
+            {
+                <div>
+                    <Circle Center="true" />
+                </div>
+            }
+            else
+            {
+                <div class="aa-title">
+                    <h2>Photos of accommodation</h2>
+                    <span></span>
+                </div>
+                <nav>
+                    <RadzenPager ShowPagingSummary="true" HorizontalAlign="HorizontalAlign.Right"
+                                 PagingSummaryFormat="@pagingSummaryFormat" Count="_photos.Count()" PageSize="_pageSize" PageNumbersCount="5"
+                                 PageChanged="PageChanged" />
+                </nav>
+                <div class="gallery__content">
+                    @foreach (var photo in _pagedPhotos)
                     {
-                        <p>No photos to show</p>
-                    }
-                    else if (_photos.Count == 0)
-                    {
-                        <p>Loading photos</p>
-                    }
-                    else
-                    {
-                        <div class="aa-title">
-                            <h2>Photos of accommodation</h2>
-                            <span></span>
+                        <div class="gallery__content_item image__wrapper">
+                            <img src=@($"{photo.FileContentStr}") class="image" />
                         </div>
-                        <div class="gallery__content">
-                            @foreach (var photo in _photos)
-                            {
-                                <div class="gallery__content_item image__wrapper">
-                                    <img src=@($"{photo.FileContentStr}") class="image"/>
-                                </div>
-                            }
-                        </div>
                     }
-        </div>
-    </div>
-</section>
+                </div>
+
+            }
+
 @code {
     [Parameter]
     public long PostId { get; set; }
     private ICollection<Photo> _photos = new List<Photo>();
-    protected override async Task OnInitializedAsync()
+    //photos that are displayed on one page
+    private ICollection<Photo> _pagedPhotos = new List<Photo>();
+    //pagination properties
+    private int _pageSize = 2;
+    private string pagingSummaryFormat = "Displaying page {0} of {1} (total {2} photos)";
+    protected override async Task OnParametersSetAsync()
     {
+        //load all photos and place first 2 in paged photos
         _photos = await _service.GetPhotosAsync(PostId);
+        _pagedPhotos = GetPagedPhotos(0, _pageSize);
+    }
+    //method called when page is changed
+    private void PageChanged(PagerEventArgs args)
+    {
+        _pagedPhotos = GetPagedPhotos(args.Skip, args.Top);
+    }
+    private List<Photo> GetPagedPhotos(int skip, int take)
+    {
+        //get photos for selected page
+        return _photos?.AsQueryable().Skip(skip).Take(take).ToList();
     }
 }

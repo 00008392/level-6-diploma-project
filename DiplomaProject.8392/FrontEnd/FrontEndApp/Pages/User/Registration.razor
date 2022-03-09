@@ -1,22 +1,12 @@
 ﻿@page "/registration"
-@layout UserFormLayout
-@inject AppState _appState
+@using Services.User.Contracts
+@using Models.User
+@layout FormLayout
 @inject IUserRelatedInfoService _infoService
 @inherits Components.UserBaseComponent
 <EditForm Model="_newUser" OnValidSubmit="@Register" class="contactform">
     <DataAnnotationsValidator />
-    @if (_response != null)
-    {
-        <p class="font-weight-bold text-danger">@_response.Message</p>
-        @if (_response.Errors != null && _response.Errors.Length != 0)
-        {
-            @foreach (var error in _response.Errors)
-            {
-                <p class="font-weight-bold text-danger">@error.Message</p>
-            }
-        }
-
-    }
+    <Error Response="_response" />
 <div class="aa-single-field">
     <label>First name <span class="required">*</span></label>
     <InputText @bind-Value="_newUser.FirstName" class="form__input" type="text"
@@ -52,6 +42,7 @@
 <div class="aa-single-field">
     <label>Gender <span class="required">*</span></label>
     <InputSelect class="form__input" @bind-Value="@_newUser.Gender">
+        <option value="">Gender</option>
         @foreach (var gender in Enum.GetValues(typeof(Gender)))
         {
             <option value="@gender">@gender</option>
@@ -112,14 +103,17 @@
     protected override async Task OnInitializedAsync()
     {
         _appState.SetPageTitle("Create your account and Stay with us");
+        //if user is already authenticated, navigate to account page
         @if (_authState.isAuthenticated)
         {
             _navManager.NavigateTo("/account");
         }
+         //load all countries
         _countries = await _infoService.GetCountriesAsync();
     }
     private async Task Register()
     {
+        //try ti register, if success, login and navigate to account page
         _response = await _service.
             RegisterAccountAsync(_newUser, async () =>
             {
@@ -128,7 +122,7 @@
                     Email = _newUser.Email,
                     Password = _newUser.Password
                 };
-                await _authService.LogIn(login);
+                await _authService.LogInAsync(login);
                 _navManager.NavigateTo("/account");
             });
     }

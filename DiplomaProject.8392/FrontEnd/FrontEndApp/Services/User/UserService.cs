@@ -10,176 +10,58 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FrontEndApp.Services.User.Contracts;
 using FrontEndApp.Services.Authentication;
+using FrontEndApp.Services.Core;
 
 namespace FrontEndApp.Services.User
 {
-    public class UserService : IUserService
+    //service that consumes user api
+    public class UserService : BaseService, IUserService
     {
-        private readonly HttpClient _client;
         public UserService(
             HttpClient client)
+            :base(client)
         {
-            _client = client;
         }
-
+        //update password
         public async Task<Response> ChangePasswordAsync(ChangePassword request, Action onSuccessAction = null,
             Action onErrorAction = null)
         {
-            var response = new Response();
-            try
-            {
-                //call api
-                var httpReply = await _client.PutAsJsonAsync
-            ($"api/users/account/password", request);
-                if (httpReply.IsSuccessStatusCode)
-                {
-                    response.IsSuccess = true;
-                    onSuccessAction?.Invoke();
-                }
-                else
-                {
-                    //in case of error, parse error 
-                    response.IsSuccess = false;
-                    var errorMessage = httpReply.Content.ReadAsStringAsync().Result;
-                    response = JsonConvert.DeserializeObject<Response>(errorMessage);
-                    onErrorAction?.Invoke();
-                }
-            } 
-            catch
-            {
-                response.IsSuccess = false;
-            }
-            return response;
+            //call base service method for update
+            return await HandleUpdateActionAsync(request, "api/users/account/password", onSuccessAction,
+                onErrorAction);
         }
-
+        //delete account
         public async Task<Response> DeleteAccountAsync(Action onSuccessAction = null,
             Action onErrorAction = null)
         {
-            var response = new Response();
-            try
-            {
-                //call api
-                var httpReply = await _client.DeleteAsync($"api/users/account");
-                //in case of success, log out
-                if (httpReply.IsSuccessStatusCode)
-                {
-                    response.IsSuccess = true;
-                    onSuccessAction?.Invoke();
-                }
-                else
-                {
-                    //in case of error, parse error 
-                    response.IsSuccess = false;
-                    var errorMessage = httpReply.Content.ReadAsStringAsync().Result;
-                    response = JsonConvert.DeserializeObject<Response>(errorMessage);
-                    onErrorAction?.Invoke();
-                }
-            }
-            catch
-            {
-                response.IsSuccess = false;
-            }
-            return response;
+            //call base service method for delete
+            return await HandleDeleteActionAsync("api/users/account", onSuccessAction, onErrorAction);
         }
-
+        //get user by id
         public async Task<UserResponse> GetUserAsync(long id, Action onNotFoundAction = null)
         {
-            try
-            {
-                var reply = await _client.GetAsync($"api/users/{id}");
-                var user = new UserResponse();
-                if (reply.IsSuccessStatusCode)
-                {
-                    var responseStr = await reply.Content.ReadAsStringAsync();
-                    user = JsonConvert.DeserializeObject<UserResponse>(responseStr);
-                } else
-                {
-                    user.NoItem = true;
-                    onNotFoundAction?.Invoke();
-                }
-                return user;
-            } catch
-            {
-                return null;
-            }
+            //call base service method for single item retrieval
+            return await HandleSingleItemRetrievalAsync<UserResponse>($"api/users/{id}", onNotFoundAction);
         }
-
+        //get all users
         public async Task<ICollection<UserResponse>> GetUsersAsync()
         {
-            //call api
-            try
-            {
-                var response = await _client.GetAsync("api/users");
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseStr = await response.Content.ReadAsStringAsync();
-                    var users = JsonConvert.DeserializeObject<List<UserResponse>>(responseStr);
-                    return users?.Count == 0 ? null : users;
-                }
-            }
-            catch
-            {
-            }
-            return null;
+            //call base service method for multiple items retrieval
+            return await HandleMultipleItemsRetrievalAsync<UserResponse>("api/users");
         }
-
+        //register new user
         public async Task<Response> RegisterAccountAsync(RegisterUser request, Action onSuccessAction = null,
             Action onErrorAction = null)
         {
-            var response = new Response();
-            try
-            {
-                //call api
-                var httpReply = await _client.PostAsJsonAsync("api/users", request);
-                //in case of success, login and set response to success
-                if (httpReply.IsSuccessStatusCode)
-                {
-                    response.IsSuccess = true;
-                    onSuccessAction?.Invoke();
-                }
-                //in case of error, parse error 
-                else
-                {
-                    response.IsSuccess = false;
-                    var errorMessage = httpReply.Content.ReadAsStringAsync().Result;
-                    response = JsonConvert.DeserializeObject<Response>(errorMessage);
-                    onErrorAction?.Invoke();
-                }
-            } 
-            catch
-            {
-                response.IsSuccess = false;
-            }
-            return response;
+            //call base service method for create
+            return await HandleCreateActionAsync(request, "api/users", onSuccessAction, onErrorAction);
         }
-
+        //update existing user
         public async Task<Response> UpdateAccountAsync(UpdateUser request, Action onSuccessAction = null,
             Action onErrorAction = null)
         {
-            var response = new Response();
-            try
-            {
-                //call api
-                var httpReply = await _client.PutAsJsonAsync($"api/users/account", request);
-                if (httpReply.IsSuccessStatusCode)
-                {
-                    response.IsSuccess = true;
-                    onSuccessAction?.Invoke();
-                }
-                //in case of error, parse error 
-                else
-                {
-                    response.IsSuccess = false;
-                    var errorMessage = httpReply.Content.ReadAsStringAsync().Result;
-                    response = JsonConvert.DeserializeObject<Response>(errorMessage);
-                    onErrorAction?.Invoke();
-                }
-            } 
-            catch
-            {
-                response.IsSuccess = false;
-            }
-            return response;
+            //call base service method for update
+            return await HandleUpdateActionAsync(request, "api/users/account", onSuccessAction, onErrorAction);
         }
     }
 }

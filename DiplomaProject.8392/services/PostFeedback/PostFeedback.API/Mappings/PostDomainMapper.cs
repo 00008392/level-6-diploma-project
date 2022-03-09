@@ -71,7 +71,7 @@ namespace PostFeedback.API.Mappings
         private void FeedbackMapFromDTO<T>() where T : FeedbackEntity
         {
             CreateMap<FeedbackDTO, Feedback<T>>()
-                .ConvertUsing(x => new Feedback<T>(x.ItemId, x.CreatorId, x.Rating, x.Message));
+                .ConvertUsing(x => new Feedback<T>(x.ItemId, x.CreatorId, x.Rating, x.Message, DateTime.Now));
         }
         //maps feedback domain entity to feedback dto
         private void FeedbackMapToDTO<T, E>() where T : FeedbackEntity
@@ -81,7 +81,7 @@ namespace PostFeedback.API.Mappings
                .ConvertUsing((x, dest, context) =>
                {
                    return new FeedbackInfoDTO<E>(x.CreatorId, x.ItemId, x.Rating, x.Message, x.Id,
-                      x.Item == null ? default : context.Mapper.Map<E>(x.Item),
+                      x.Item == null ? default : context.Mapper.Map<E>(x.Item), x.DatePublished,
                       x.Creator == null ? null : context.Mapper.Map<UserDTO>(x.Creator));
                });
         }

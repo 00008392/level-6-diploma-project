@@ -1,9 +1,12 @@
 ﻿@page "/posts/{Id:long}"
-@using FrontEndApp.States
 @using FrontEndApp.Pages.Post.Shared 
 @using FrontEndApp.Pages.Booking
-@inject AppState _appState
+@using FrontEndApp.Pages.Feedback
+@using Services.Post.Contracts
+@using Services.Feedback.Contracts
+@using Models.Post
 @inject IPhotoService _photoService
+@inject IFeedbackService<PostResponse> _feedbackService
 @inherits Components.PostBaseComponent
 
 <section id="aa-blog">
@@ -13,7 +16,9 @@
                 <div class="aa-blog-area">
                     @if (_post == null)
                     {
-                        <p>Loading post information...</p>
+                        <div>
+                            <Circle Center="true" />
+                        </div>
                     }
                     else
                     {
@@ -26,6 +31,10 @@
                                                 <figure class="aa-blog-img image__wrapper">
                                                     <CoverImage PostId="@_post.Id" />
                                                     <span class="aa-date-tag">@_post.DatePublished.ToShortDateString()</span>
+                                                    <span hidden="@(_post.AverageRating==null)" class="aa-date-tag sold-out rating__tag_details">
+                                                        @_post.AverageRating
+                                                        <i class="fa fa-star"></i>
+                                                    </span>
                                                 </figure>
                                                 <div class="aa-blog-single-content">
                                                     <h2 hidden="@(_post.Title==null)">@_post.Title</h2>
@@ -34,7 +43,10 @@
                                                     </div>
                                                     <p hidden="@(string.IsNullOrWhiteSpace(_post.Description))">@_post.Description</p>
                                                     <p hidden="@(string.IsNullOrWhiteSpace(_post.Address))"><span class="font-weight-bold">Address: </span>@_post.Address</p>
-                                                    <p hidden="@(string.IsNullOrWhiteSpace(_post.ContactNumber))"><span class="font-weight-bold">Contact number: </span>@_post.ContactNumber</p>
+                                                    <p hidden="@(string.IsNullOrWhiteSpace(_post.ContactNumber))">
+                                                        <span class="font-weight-bold">Contact number: </span>
+                                                        <a class="font-italic" href="@($"tel:{_post.ContactNumber}")">@_post.ContactNumber</a>
+                                                    </p>
                                                     <p hidden="@(string.IsNullOrWhiteSpace(_post.MovingInTime))"><span class="font-weight-bold">Moving in time: </span>@_post.MovingInTime</p>
                                                     <p hidden="@(string.IsNullOrWhiteSpace(_post.MovingOutTime))"><span class="font-weight-bold">Moving out time: </span>@_post.MovingOutTime</p>
                                                     <p>
@@ -62,6 +74,9 @@
                                                         </ul>
                                                     }
                                                 </div>
+                                                <FeedbackCreation TItem="PostResponse" ItemId="_post.Id"
+                                                                  OnFeedbackSubmitted="async()=>await _feedbacksComponent.RefreshComponent()" ItemName="accommodation" />
+                                                <Feedbacks @ref="_feedbacksComponent" TItem="PostResponse" ItemId="_post.Id" />
                                             </article>
                                         </div>
                                     </div>
@@ -90,6 +105,7 @@
                                     <div class="aa-blog-sidebar-single">
                                         @if (_authState.isAuthenticated)
                                         {
+                                            @*if user is viewing his/her own post, then edit and booking actions are displayed*@
                                             <h3>Available actions</h3>
                                             @if (_showAccountActions)
                                             {
@@ -99,6 +115,7 @@
                                             }
                                             else
                                             {
+                                                @*if user is viewing not his/her own post, then this user can book this accommodation*@
                                                 <BookingCreation DatesBooked="_post.DatesBooked.ToList()" PostId="_post.Id" />
                                             }
                                         }
@@ -107,8 +124,9 @@
                                 </aside>
                             </div>
                         </div>
+                        <ImageGallery PostId="Id" />
                     }
-                    <ImageGallery PostId="Id" />
+
                 </div>
             </div>
         </div>
@@ -120,11 +138,20 @@
     [Parameter]
     public long Id { get; set; }
     private bool _showAccountActions = false;
-    protected override async Task OnInitializedAsync()
+    private Feedbacks<PostResponse> _feedbacksComponent = new Feedbacks<PostResponse>();
+    protected override async Task OnParametersSetAsync()
     {
         _appState.SetPageTitle("Post details");
+        //load post and redirect to error page if not found
         _post = await _service.GetPostAsync(Id, ()=> { _navManager.NavigateTo("/404"); });
-        var userId = await _authService.GetLoggedUserId();
+        //load average rating
+        var rating = await _feedbackService.GetAverageRatingAsync(Id);
+        if(_post!=null)
+        {
+            _post.AverageRating = rating;
+        }
+        //check if user is viewing his/her own posts and if so, allow to view available post actions
+        var userId = await _authService.GetLoggedUserIdAsync();
         if (userId == _post.Owner?.Id)
         {
             _showAccountActions = true;

@@ -1,33 +1,41 @@
 ﻿@page "/account"
-@using FrontEndApp.States
-@inject AppState _appState
-@inject IPostService _postService
+@using FrontEndApp.Pages.Feedback 
+@using FrontEndApp.Pages.Post 
+@using FrontEndApp.Pages.User.Shared 
+@using Models.User
+@using Models.Post
 @inherits Components.UserBaseComponent
 @if (_userId == 0)
 {
-    <p>Loading...</p>
+    <div>
+        <Circle Center="true" />
+    </div>
 }
 else
 {
-    <section class="account__details">
-        <div class="container ">
-            <div class="row d-flex justify-content-center">
-                <div class="account__details_left col-md-4">
-                   <User Id="_userId" HideActionButtons="true"/>
-                </div>
-                <div class="account__details_right col-md-4">
-                    <h2 class="account__details_title">Account actions</h2>
-                    <a class="submit__btn submit__btn-primary" href="account/edit">Edit account</a>
-                    <a class="submit__btn submit__btn-primary" href="account/password">Reset password</a>
-                    <a class="submit__btn submit__btn-primary" href="posts/edit">Create post</a>
-                    <a class="submit__btn submit__btn-primary" href="account/bookings">View bookings</a>
-                    <button @onclick="LogOut" class="submit__btn submit__btn-secondary">Log out</button>
-                    <button @onclick="DeleteUser" class="submit__btn submit__btn-danger">Delete account</button>
-                </div>
+<section class="account__details">
+    <div class="container ">
+        <div class="row d-flex justify-content-center">
+            <div class="account__details_left position-relative col-md-4">
+                <User Id="_userId" HideActionButtons="true" />
+            </div>
+            <div class="account__details_right col-md-4">
+                <h2 class="account__details_title">Account actions</h2>
+                <Error Response="_response" />
+                <a class="submit__btn submit__btn-primary" href="account/edit">Edit account</a>
+                <a class="submit__btn submit__btn-primary" href="account/password">Reset password</a>
+                <a class="submit__btn submit__btn-primary" href="posts/edit">Create post</a>
+                <a class="submit__btn submit__btn-primary" href="account/bookings">View bookings</a>
+                <button @onclick="LogOut" class="submit__btn submit__btn-secondary">Log out</button>
+                <button @onclick="DeleteUser" class="submit__btn submit__btn-danger">Delete account</button>
             </div>
         </div>
-       <Posts Filter="new Filter { Owner = _userId}" Title="My posts" HideActionButtons="false" />
-    </section>
+    </div>
+    <div class="container">
+        <Feedbacks TItem="UserResponse" ItemId="_userId" />
+    </div>
+    <Posts Filter="new Filter { Owner = _userId }" Title="My posts" HideActionButtons="false" PostCardSize="6" />
+</section>
 
 }
 
@@ -38,18 +46,21 @@ else
     protected override async Task OnInitializedAsync()
     {
         _appState.SetPageTitle("Account details");
+        //if user is not authenticated, redirect to sign in page
         if (!_authState.isAuthenticated)
         {
             _navManager.NavigateTo("/login");
         }
         else
         {
-            _userId = (long)(await _authService.GetLoggedUserId());
+            //if authenticated, get user id
+            _userId = (long)(await _authService.GetLoggedUserIdAsync());
         }
 
     }
     private async Task DeleteUser()
     {
+        //delete user and logout if deleted successfully
         _response = await _service.DeleteAccountAsync(async () =>
         {
             await LogOut();
@@ -57,7 +68,8 @@ else
     }
     private async Task LogOut()
     {
-        await _authService.LogOut(() => _navManager.NavigateTo("/"));
+        //logout and navigate to main page if success
+        await _authService.LogOutAsync(() => _navManager.NavigateTo("/"));
     }
 
 }

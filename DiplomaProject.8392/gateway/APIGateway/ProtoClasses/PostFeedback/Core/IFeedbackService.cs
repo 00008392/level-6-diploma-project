@@ -22,5 +22,8 @@ namespace PostFeedback.API
             DateTime? deadline = null, CancellationToken cancellationToken = default);
         AsyncUnaryCall<AverageRatingResponse> GetAverageRatingAsync(Request request, Metadata headers = null,
            DateTime? deadline = null, CancellationToken cancellationToken = default);
+        AsyncUnaryCall<CanLeaveFeedbackResponse> CanLeaveFeedbackAsync(CanLeaveFeedbackRequest request,
+            Metadata headers = null,
+            DateTime? deadline = null, CancellationToken cancellationToken = default);
     }
 }

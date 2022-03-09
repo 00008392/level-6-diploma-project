@@ -1,11 +1,19 @@
-﻿@inherits Components.UserBaseComponent
+﻿@using Models.User
+@using Services.Feedback.Contracts 
+@inherits Components.UserBaseComponent
+@inject IFeedbackService<UserResponse> _feedbackService
 <div class="aa-properties-info">
     @if (_user == null)
     {
-        <p>Loading user information...</p>
+        <div>
+            <Circle Center="true" />
+        </div>
     }
     else
     {
+        <div hidden="@(_user.AverageRating==null)" class="aa-tag sold-out rating__tag">
+            @_user.AverageRating <i class="fa fa-star"></i>
+        </div>
         <h2 hidden="@(string.IsNullOrWhiteSpace(_user.FirstName)
                                   &&string.IsNullOrWhiteSpace(_user.LastName))" class="account__details_title">
             @_user.FirstName @_user.LastName
@@ -19,10 +27,10 @@
         <p hidden="@(string.IsNullOrWhiteSpace(_user.CountryName))"><span class="font-weight-bold">Lives in: </span>@_user.CountryName</p>
         @if (!HideActionButtons)
         {
-            <a hidden="@(string.IsNullOrWhiteSpace(_user.PhoneNumber))" 
-               class="submit__btn submit__btn-primary" href="account/edit">Call</a>
+            <a hidden="@(string.IsNullOrWhiteSpace(_user.PhoneNumber))"
+               class="submit__btn submit__btn-primary" href=@($"tel:{_user.PhoneNumber}")>Call</a>
             <a hidden="@(string.IsNullOrWhiteSpace(_user.Email))"
-               class="submit__btn submit__btn-primary" href="account/password">Email</a>
+               class="submit__btn submit__btn-primary" href=@($"mailto:{_user.Email}")>Email</a>
         }
     }
 </div>
@@ -30,19 +38,22 @@
     private UserResponse _user;
     [Parameter]
     public long Id { get; set; }
+    //action buttons are displayed if user does not view his/her account
     [Parameter]
     public bool HideActionButtons { get; set; } = false;
-    protected override async Task OnInitializedAsync()
-    {
-        await GetUser();
-    }
     protected override async Task OnParametersSetAsync()
     {
         await GetUser();
     }
     private async Task GetUser()
     {
+        //get user and get average rating for this user
         _user = await _service.GetUserAsync(Id, () => { _navManager.NavigateTo("/404"); });
+        if(_user!=null)
+            {
+            var rating = await _feedbackService.GetAverageRatingAsync(Id);
+            _user.AverageRating = rating;
+            }
 
     }
 }

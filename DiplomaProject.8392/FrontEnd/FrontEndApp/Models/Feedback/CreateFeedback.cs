@@ -5,11 +5,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FrontEndApp.Models
+namespace FrontEndApp.Models.Feedback
 {
     public class CreateFeedback: FeedbackBase
     {
-        public long UserId { get; set; }
         public long ItemId { get; set; }
     }
 }

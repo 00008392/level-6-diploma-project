@@ -1,64 +1,58 @@
 ﻿@page "/account/bookings"
+@using Models.Booking
+@using Services.Post.Contracts
 @inherits Components.BookingBaseComponent
 @inject IPostService _postService
-@inject AppState _appState
     <section class="booking__details">
         <div class="container ">
-            @if (_response != null)
-            {
-                <p class="font-weight-bold text-danger">@_response.Message</p>
-                @if (_response.Errors != null && _response.Errors.Length != 0)
-                {
-                    @foreach (var error in _response.Errors)
-                    {
-                        <p class="font-weight-bold text-danger">@error.Message</p>
-                    }
-                }
-
-            }
+            <Error Response="_response"/>
             @if (_bookings == null)
             {
                 <p>No bookings to show.</p>
             }
             else if (_bookings.Count == 0)
             {
-                <p>Loading bookings...</p>
+                <div>
+                    <Circle Center="true" />
+                </div>
             }
             else
             {
                 <div class="booking__details_content">
                     @foreach (var booking in _bookings)
                     {
-                    <div class="booking__item ">
+                        <div class="booking__item ">
                             <h4 hidden="@(booking.Post==null)" class="font-weight-bold">
-                                Booking on <a href=@($"posts/{booking.Post.Id}") class="font-italic">
-                                    @booking.Post.Title
+                                Booking on <a href=@($"posts/{booking.Post?.Id}") class="font-italic">
+                                    @booking.Post?.Title
+                                </a> by <a href=@($"users/{booking.Post?.Owner?.Id}") class="font-italic">
+                                    @booking.Post?.Owner?.FirstName
+                                    @booking.Post?.Owner?.LastName
                                 </a>
                             </h4>
-                        <p hidden="@(booking.StartDate==null||booking.EndDate==null)">
-                            From  <span class="font-weight-bold">
-                                 @booking.StartDate
-                            </span>till  <span class="font-weight-bold">
-                                 @booking.EndDate
-                            </span>
-                        </p>
-                        <p hidden="@(booking.GuestNo==null)"><span class="font-weight-bold">Number of guests: </span> @booking.GuestNo</p>
-                        <p>
-                            <span class="font-weight-bold">Status: </span> @booking.Status
-                            <i class=@("fa "+ (booking.Status == Status.Accepted ? "fa-check-circle item-accepted"
+                            <p hidden="@(booking.StartDate==null||booking.EndDate==null)">
+                                From  <span class="font-weight-bold">
+                                    @booking.StartDate
+                                </span> till  <span class="font-weight-bold">
+                                    @booking.EndDate
+                                </span>
+                            </p>
+                            <p hidden="@(booking.GuestNo==null)"><span class="font-weight-bold">Number of guests: </span> @booking.GuestNo</p>
+                            <p>
+                                <span class="font-weight-bold">Status: </span> @booking.Status
+                                <i class=@("fa "+ (booking.Status == Status.Accepted ? "fa-check-circle item-accepted"
                                        : booking.Status == Status.Rejected || booking.Status == Status.Cancelled ?
                                        "fa-ban item-rejected":"fa-clock-o"))></i>
-                        </p>
-                        @if (booking.Status == Status.Accepted)
-                        {
-                            <button @onclick="async ()=> await CancelBooking(booking.Id)" class="submit__btn submit__btn-danger">Cancel</button>
-                        }
-                        else
-                        {
-                            <button @onclick="async ()=> await DeleteBooking(booking.Id)" class="submit__btn submit__btn-danger">Delete</button>
-                        }
-
-                    </div>
+                            </p>
+                            @if (booking.Status == Status.Accepted)
+                            {
+                                <button @onclick="async ()=> await CancelBooking(booking.Id)" class="submit__btn submit__btn-danger">Cancel</button>
+                            }
+                            else
+                            {
+                                <button @onclick="async ()=> await DeleteBooking(booking.Id)" class="submit__btn submit__btn-danger">Delete</button>
+                            }
+                        </div>
                     }
                 </div>
             }
@@ -72,23 +66,27 @@
     protected override async Task OnInitializedAsync()
     {
         _appState.SetPageTitle("My bookings");
+        //if user is not authenticated, redirect to login page
         if (!_authState.isAuthenticated)
         {
             _navManager.NavigateTo("/login");
         }
         else
         {
-            _userId = await _authService.GetLoggedUserId() ?? 0;
+            //if authenticated, get user id
+            _userId = await _authService.GetLoggedUserIdAsync() ?? 0;
+            //load bookings for this user and order them by status (Pending bookings first)
             var bookings = (await _service.GetBookingsForGuestAsync(_userId))?
                 .OrderBy(x => x.Status).ToList();
             if(bookings!=null)
             {
                 foreach (var booking in bookings)
                 {
+                    //load post information for each booking
                     if (booking.Post != null)
                     {
                         var post = await _postService.GetPostAsync(booking.Post.Id);
-                        booking.Post.Title = post?.Title;
+                        booking.Post = post;
                     }
                 }
             }
@@ -97,6 +95,7 @@
     }
     private async Task CancelBooking(long id)
     {
+        //try to cancel booking, if success, find booking in the list, change its status and re-render component
         _response = await _service.CancelBookingAsync(id, ()=> {
             GetBookingByIdFromList(id).Status = Status.Cancelled;
             StateHasChanged();
@@ -104,6 +103,7 @@
     }
     private async Task DeleteBooking(long id)
     {
+        //try to delete booking, if success, find booking in the list, remove it and re-render component
         _response = await _service.DeleteBookingAsync(id, () =>
         {
             var bookingToDelete = GetBookingByIdFromList(id);

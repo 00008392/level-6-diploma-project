@@ -651,7 +651,7 @@ cursor: pointer;
 	ABOUT US SECTION
 ====================*/
 
-#aa-about-us {
+/*#aa-about-us {
   display: inline;
   float: left;
   width: 100%;
@@ -683,13 +683,6 @@ cursor: pointer;
   list-style: circle;
   margin-bottom: 5px;
 }
-.aa-title {
-  display: inline;
-  float: left;
-  width: 100%;
-  text-align: center;
-  margin-bottom: 20px;
-}
 .aa-title p {
   font-size: 18px;
   padding: 0 50px;
@@ -715,14 +708,13 @@ cursor: pointer;
   position: absolute;
   width: 100px;
   height: 2px;
-}
+}*/
 
 /*==================
  LATEST PROPERTY SECTION
 ====================*/
 
 #aa-latest-property {
-    background-color: #f8f8f8;
     display: inline;
     float: left;
     width: 100%;
@@ -760,17 +752,17 @@ cursor: pointer;
 .aa-properties-item .aa-properties-item-img img {
   width: 100%;
 }
-.aa-properties-item .aa-tag {
+ .aa-tag {
   color: #fff;
   padding: 6px 10px;
   position: absolute;
   left: 15px;
   top: -15px;
 }
-.aa-properties-item .for-rent {
+ .for-rent {
   background-color: #20ceb3;
 }
-.aa-properties-item .sold-out {
+ .sold-out {
   background-color: #ff0000;
 }
 .aa-properties-item .aa-properties-item-content {
@@ -825,7 +817,7 @@ cursor: pointer;
  SERVICE SECTION
 ====================*/
 
-#aa-service {
+/*#aa-service {
   display: inline;
   float: left;
   width: 100%;
@@ -897,13 +889,13 @@ cursor: pointer;
 }
 #aa-service .aa-service-area .aa-service-content .aa-single-service .aa-single-service-content p {
   font-size: 13px;
-}
+}*/
 
 /*==================
  PROMO BANNER SECTION
 ====================*/
 
-#aa-promo-banner {
+/*#aa-promo-banner {
   background-image: url("../img/promo-banner.jpg");
   background-attachment: fixed;
   background-position: center center;
@@ -947,13 +939,13 @@ cursor: pointer;
   font-weight: bold;
   margin-top: 50px;
   text-transform: uppercase;
-}
+}*/
 
 /*==================
  AGENTS SECTION
 ====================*/
 
-#aa-agents {
+/*#aa-agents {
   display: inline;
   float: left;
   width: 100%;
@@ -1033,13 +1025,13 @@ cursor: pointer;
 }
 #aa-agents .aa-agents-area .aa-agents-content .aa-agents-slider li .aa-single-agents .aa-agetns-info .aa-agent-social a:hover, #aa-agents .aa-agents-area .aa-agents-content .aa-agents-slider li .aa-single-agents .aa-agetns-info .aa-agent-social a:focus {
   background-color: #FFF;
-}
+}*/
 
 /*==================
   TESTIMONIAL SECTION
 ====================*/
 
-#aa-client-testimonial {
+/*#aa-client-testimonial {
   background-attachment: fixed;
   background-image: url("../img/testimonial-bg.jpg");
   background-position: center center;
@@ -1178,13 +1170,13 @@ cursor: pointer;
 }
 #aa-client-testimonial .aa-client-testimonial-area .aa-testimonial-content .aa-testimonial-slider li .aa-testimonial-single .aa-testimonial-bio span {
   display: block;
-}
+}*/
 
 /*==================
   CLIENT BRAND SECTION
 ====================*/
 
-#aa-client-brand {
+/*#aa-client-brand {
   background-color: #f8f8f8;
   display: inline;
   float: left;
@@ -1216,7 +1208,7 @@ cursor: pointer;
 #aa-client-brand .aa-client-brand-area .aa-client-brand-slider li .aa-client-single-brand:hover {
   opacity: 1;
 }
-
+*/
 /*==================
   LATEST BLOG SECTION
 ====================*/
@@ -1254,7 +1246,7 @@ cursor: pointer;
 .aa-blog-single .aa-blog-img img {
   max-width: 100%;
 }
-.aa-blog-single .aa-blog-img .aa-date-tag {
+ .aa-date-tag {
   color: #fff;
   padding: 5px 8px;
   font-weight: bold;
@@ -1984,7 +1976,6 @@ cursor: pointer;
   display: inline;
   float: left;
   width: 100%;
-  margin-top: 20px;
 }
 .aa-comments-area h3 {
   margin-bottom: 20px;
@@ -1998,8 +1989,6 @@ cursor: pointer;
   border-bottom: 1px solid #f8f8f8;
   display: inline;
   float: left;
-  margin-bottom: 15px;
-  padding: 10px;
   position: relative;
   width: 100%;
 }
@@ -2158,7 +2147,7 @@ cursor: pointer;
  CONTACT PAGE
 ====================*/
 
-#aa-contact {
+/*#aa-contact {
   display: inline;
   float: left;
   padding: 50px 0 100px;
@@ -2283,13 +2272,13 @@ cursor: pointer;
   -ms-transition: all 0.5s;
   -o-transition: all 0.5s;
   transition: all 0.5s;
-}
+}*/
 
 /*==================
  GALLERY PAGE
 ====================*/
 
-#aa-gallery {
+/*#aa-gallery {
   display: inline;
   float: left;
   width: 100%;
@@ -2420,7 +2409,7 @@ cursor: pointer;
 }
 #aa-gallery .aa-gallery-area #mixit-container .mix {
   display: none;
-}
+}*/
 
 /*==================
  ERROR  PAGE
@@ -2615,7 +2604,6 @@ cursor: pointer;
   font-weight: bold;
   height: 50px;
   margin-bottom: 20px;
-  margin-top: 10px;
   padding: 6px 12px;
   width: 150px;
   -webkit-transition: all 0.5s;

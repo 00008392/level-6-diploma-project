@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace FrontEndApp.Models.Post.Core
 {
+    //base post class
     public class PostBase
     {
         public long Id { get; set; }
-        [MaxLength(50)]
+        [MaxLength(50, ErrorMessage ="Maximum length of title is 50 symbols")]
         [Required(ErrorMessage ="Title is required")]
         public string Title { get; set; }
+        [MaxLength(1000, ErrorMessage = "Maximum length of description is 1000 symbols")]
         public string Description { get; set; }
         public long? CategoryId { get; set; }
         [Required(ErrorMessage = "City is required")]
