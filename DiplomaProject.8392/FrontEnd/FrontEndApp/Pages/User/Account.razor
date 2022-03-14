@@ -16,10 +16,10 @@ else
 <section class="account__details">
     <div class="container ">
         <div class="row d-flex justify-content-center">
-            <div class="account__details_left position-relative col-md-4">
+            <div class="account__details_left position-relative col-lg-5 col-md-6">
                 <User Id="_userId" HideActionButtons="true" />
             </div>
-            <div class="account__details_right col-md-4">
+            <div class="account__details_right col-lg-5 col-md-6">
                 <h2 class="account__details_title">Account actions</h2>
                 <Error Response="_response" />
                 <a class="submit__btn submit__btn-primary" href="account/edit">Edit account</a>
@@ -34,7 +34,8 @@ else
     <div class="container">
         <Feedbacks TItem="UserResponse" ItemId="_userId" />
     </div>
-    <Posts Filter="new Filter { Owner = _userId }" Title="My posts" HideActionButtons="false" PostCardSize="6" />
+    <Posts Filter="new Filter { Owner = _userId }" Title="My posts" HideActionButtons="false" PostCardSize="6" 
+           PageSize="2"/>
 </section>
 
 }

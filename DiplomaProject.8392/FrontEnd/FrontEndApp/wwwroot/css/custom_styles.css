@@ -1,4 +1,8 @@
-﻿#app {
+﻿button[disabled] {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+#app {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -215,7 +219,6 @@ h2 {
 }
 .post__item_text-overflow {
     white-space: nowrap;
-    width: 320px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -305,6 +308,9 @@ display: none;
     padding: 30px;
     margin: 15px;
     color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
     .booking__item h5 {
@@ -378,6 +384,131 @@ display: none;
 .feedbacks {
     margin-bottom: 25px;
 }
+.aa-blog-details {
+    margin-bottom: 10px;
+}
+.aa-signin-form {
+    margin: 40px 0;
+}
 footer {
     margin-top: auto;
+}
+
+@media(max-width:992px) {
+    .filter-bottom {
+        margin-top: 10px;
+    }
+    #aa-latest-property {
+        padding: 50px 0;
+    }
+    footer p, footer a {
+        font-size: 12px;
+    }
+    #aa-blog .aa-blog-area .row {
+        margin-bottom: 20px;
+    }
+    .account__details_left, .account__details_right {
+        margin: 0px;
+    }
+    .booking__item {
+        padding: 25px;
+        margin: 0;
+    }
+    .photo__editing_content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media(max-width:768px) {
+    .index__header_content {
+        top: 30%;
+    }
+    .gallery__content {
+        grid-template-columns: 1fr;
+    }
+    .booking__details_content {
+        grid-template-columns: 1fr;
+    }
+    .photo__editing_cover {
+        grid-row: unset;
+        grid-column: unset;
+    }
+    .photo__editing_content {
+        grid-template-columns: 1fr;
+    }
+}
+@media(max-width:576px) {
+     .aa-properties-item {
+        margin-top: 30px;
+    }
+    #aa-latest-property .aa-latest-property-area .aa-latest-properties-content {
+        margin-top:0px;
+    }
+    .aa-title h2 {
+        font-size: 26px;
+    }
+    .index__header_title {
+        font-size: 35px;
+    }
+    .index__header_content {
+        left: 10%;
+    }
+    .account__details_left, .account__details_right {
+        margin: 15px;
+    }
+    .account__details {
+        padding: 50px 0px 30px;
+    }
+    .photo__editing {
+        padding: 40px 15px;
+    }
+}
+@media(max-width:460px) {
+    .aa-title h2 {
+        font-size: 22px;
+    }
+    .rz-paginator-summary {
+        font-size: 10px;
+    }
+    #aa-blog {
+        padding-top: 20px;
+    }
+    #aa-blog .aa-blog-area .aa-blog-sidebar .aa-blog-sidebar-single {
+        margin-top: 0px;
+    }
+    #aa-signin .aa-signin-area .aa-signin-form .aa-signin-form-title h4 {
+        font-size: 15px;
+    }
+    .multiple_photo__editing_form {
+        width: 100%;
+    }
+}
+@media(max-width:395px) {
+    .index__header_content {
+        left: 0;
+        padding-right: 0px;
+    }
+
+    .index__header_title {
+        font-size: 30px;
+    }
+
+    .index__header_subtitle {
+        font-size: 20px;
+    }
+
+    .aa-blog-sidebar-single h3 {
+        font-size: 20px;
+    }
+    .aa-blog-details {
+        padding: 0px;
+    }
+    #aa-signin .aa-signin-area .aa-signin-form .aa-signin-form-title h4 {
+        font-size: 14px;
+    }
+    .account__details_left, .account__details_right {
+        padding: 30px 25px;
+    }
+    .photo__editing_form {
+        width: 60%;
+    }
 }

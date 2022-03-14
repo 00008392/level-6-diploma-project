@@ -8,7 +8,7 @@
 <section class="account__details">
     <div class="container ">
         <div class="row d-flex justify-content-center">
-            <div class="account__details_left position-relative col-md-5">
+            <div class="account__details_left position-relative col-lg-5 col-md-8">
                 <User Id="Id" />
             </div>
         </div>
@@ -18,7 +18,7 @@
                           OnFeedbackSubmitted="async()=>await _feedbacksComponent.RefreshComponent()" ItemName="user" />
         <Feedbacks @ref="_feedbacksComponent" TItem="UserResponse" ItemId="Id" />
     </div>
-    <Posts Filter="new Filter { Owner = Id}" Title="Posts by this user" PostCardSize="6" />
+    <Posts Filter="new Filter { Owner = Id}" Title="Posts by this user" PostCardSize="6" PageSize="2" />
 
 </section>
 @code {

@@ -17,6 +17,7 @@ namespace FrontEndApp.Models.Booking
         public UserResponse Guest { get; set; }
         public PostResponse Post { get; set; }
         public Status Status { get; set; }
+        public bool DisableActionButtons { get; set; } = false;
         public bool NoItem { get; set; } = false;
     }
 }

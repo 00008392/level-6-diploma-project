@@ -16,15 +16,17 @@ namespace Booking.Domain.Logic.Specifications
         private readonly DateTime _startDate;
         private readonly DateTime _endDate;
         private readonly long _postId;
-
+        private Status _status;
         public BookingsByPostAndDatesSpecification(
             DateTime startDate,
             DateTime endDate,
-            long postId)
+            long postId,
+            Status status)
         {
             _startDate = startDate;
             _endDate = endDate;
             _postId = postId;
+            _status = status;
         }
 
         public override Expression<Func<Entities.Booking, bool>> ToExpression()
@@ -32,7 +34,7 @@ namespace Booking.Domain.Logic.Specifications
             //get bookings with given post id and date range that overlaps with specified range
             return request => request.PostId == _postId &&
               (request.StartDate.Date <= _endDate.Date && _startDate.Date <= request.EndDate.Date)
-              && request.Status == Status.Accepted;
+              && request.Status == _status;
         }
     }
 }

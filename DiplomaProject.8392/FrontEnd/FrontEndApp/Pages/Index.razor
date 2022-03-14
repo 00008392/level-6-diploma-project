@@ -13,12 +13,12 @@
             <EditForm Model="_filter" class="form">
                 <div class="aa-advance-search-top">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-lg-4 col-md-5">
                             <div class="aa-single-advance-search">
                                 <InputText class="search__input" @bind-Value="_filter.SearchText" placeholder="Search for accommodations..." />
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-lg-2 col-md-3">
                             <div class="aa-single-advance-search">
                                 <InputSelect @bind-Value="_filter.Category">
                                     @if (_categories == null)
@@ -40,7 +40,7 @@
                                 </InputSelect>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-lg-2 col-md-3">
                             <div class="aa-single-advance-search">
                                 <InputSelect @bind-Value="_filter.City">
                                     @if (_cities == null)
@@ -62,12 +62,12 @@
                                 </InputSelect>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-lg-2 col-md-5 filter-bottom">
                             <div class="aa-single-advance-search">
                                 <input type="number" @bind-value="_filter.Guests" placeholder="Number of guests" max="20" class="search__input" />
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-lg-2 col-md-6 filter-bottom">
                             <div class="aa-single-advance-search">
                                 <input class="aa-search-btn" type="submit" @onclick="async ()=>await SearchBtnClicked()" value="Search">
                             </div>
@@ -76,7 +76,7 @@
                 </div>
                 <div class="aa-advance-search-bottom">
                     <div class="row align-items-end">
-                        <div class="col-md-4">
+                        <div class="col-lg-4 col-md-5">
                             <div class="aa-single-filter-search">
                                 <span>Number of rooms from @_filter.MinRooms to @_filter.MaxRooms</span>
                                 <RadzenSlider Range="true" Min="0" Max="20"
@@ -84,7 +84,7 @@
                                               Change=@(args => OnRangeChange(args, _filter, x=>x.MinRooms, x=>x.MaxRooms)) Class="w-100" />
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-4 col-md-5">
                             <div class="aa-single-filter-search">
                                 <span>Number of beds from @_filter.MinBeds to @_filter.MaxBeds</span>
                                 <RadzenSlider Range="true" Min="0" Max="20"
@@ -92,7 +92,7 @@
                                               Change=@(args => OnRangeChange(args,_filter, x=>x.MinBeds, x=>x.MaxBeds)) Class="w-100" />
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-4 col-md-6 filter-bottom">
                             <div class="aa-single-filter-search">
                                 <span>
                                     Price (in $) from  <input type="number" @bind-value="_filter.MinPrice" max="5000" class="w-25" />
@@ -104,7 +104,7 @@
                 </div>
                 <div class="aa-advance-search-bottom">
                     <div class="row align-items-end">
-                        <div class="col-md-4">
+                        <div class="col-lg-4 col-md-6">
                             <div class="aa-single-filter-search">
                                 <span>
                                     Should entire accommodation be available?
@@ -117,7 +117,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-lg-6 col-md-5">
                             <div class="aa-single-filter-search">
                                 <span>
                                     Start date:
@@ -129,7 +129,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-lg-2 col-md-11 filter-bottom">
                             <div class="aa-single-advance-search">
                                 <input class="aa-search-btn" type="button" @onclick="async ()=>await ClearBtnClicked()" value="Clear filters">
                             </div>

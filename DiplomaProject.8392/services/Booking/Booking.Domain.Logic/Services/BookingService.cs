@@ -73,7 +73,7 @@ namespace Booking.Domain.Logic.Services
             //find booking for the same accommodation and the same period of time
             //if such booking exists, accommodation cannot be booked
             var booking = (await _bookingRepository.GetFilteredAsync(new BookingsByPostAndDatesSpecification(
-                (DateTime)requestDTO.StartDate, (DateTime)requestDTO.EndDate, requestDTO.PostId)
+                (DateTime)requestDTO.StartDate, (DateTime)requestDTO.EndDate, requestDTO.PostId, Status.Accepted)
                 .ToExpression())).FirstOrDefault();
             if (booking !=null)
             {
@@ -115,6 +115,23 @@ namespace Booking.Domain.Logic.Services
             booking.SetStatus(bookingStatusDTO.Status);
             //update booking
             await _bookingRepository.UpdateAsync(booking);
+            //if booking status is changed to Accepted, then all other pending bookings
+            //for the same post with overlapping dates should be rejected automaticaly
+            if(bookingStatusDTO.Status==Status.Accepted)
+            {
+                var bookingsWithOverlappingDates = await _bookingRepository.GetFilteredAsync(
+                new BookingsByPostAndDatesSpecification(booking.StartDate, booking.EndDate,
+                booking.PostId, Status.Pending).ToExpression());
+                if(bookingsWithOverlappingDates!=null)
+                {
+                    foreach(var item in bookingsWithOverlappingDates)
+                    {
+                        item.SetStatus(Status.Rejected);
+                        await _bookingRepository.UpdateAsync(item);
+                    }
+                }
+            }
+
             //booking microservice publishes integration event in case if 
             //booking is accepted by accommodation owner or if accepted booking is cancelled
             //by either guest or owner

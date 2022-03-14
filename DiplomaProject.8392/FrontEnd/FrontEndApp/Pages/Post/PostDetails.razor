@@ -23,7 +23,7 @@
                     else
                     {
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-lg-8">
                                 <div class="aa-blog-content">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                             <!-- Start blog sidebar -->
-                            <div class="col-md-4">
+                            <div class="col-lg-4">
                                 <aside class="aa-blog-sidebar">
                                     <!-- Start single sidebar -->
                                     <div class="aa-blog-sidebar-single">
@@ -100,11 +100,12 @@
                                         </ul>
                                     </div>
                                 </aside>
-                                <aside class="aa-blog-sidebar">
-                                    <!-- Start single sidebar -->
-                                    <div class="aa-blog-sidebar-single">
-                                        @if (_authState.isAuthenticated)
-                                        {
+                                @if (_authState.isAuthenticated)
+                                {
+                                    <aside class="aa-blog-sidebar">
+                                        <!-- Start single sidebar -->
+                                        <div class="aa-blog-sidebar-single">
+
                                             @*if user is viewing his/her own post, then edit and booking actions are displayed*@
                                             <h3>Available actions</h3>
                                             @if (_showAccountActions)
@@ -118,11 +119,11 @@
                                                 @*if user is viewing not his/her own post, then this user can book this accommodation*@
                                                 <BookingCreation DatesBooked="_post.DatesBooked.ToList()" PostId="_post.Id" />
                                             }
-                                        }
 
-                                    </div>
-                                </aside>
-                            </div>
+                                        </div>
+                                    </aside>
+                                }
+                                </div>
                         </div>
                         <ImageGallery PostId="Id" />
                     }

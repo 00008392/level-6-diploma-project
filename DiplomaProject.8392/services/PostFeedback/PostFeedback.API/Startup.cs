@@ -75,9 +75,11 @@ namespace PostFeedback.API
                 var queueName = "post_queue";
                 var subsManager = sp.GetRequiredService<ISubscriptionManager>();
                 var serviceFactory = sp.GetRequiredService<IServiceScopeFactory>();
-                var factory = new ConnectionFactory() { 
-                    HostName = "localhost",
-                    DispatchConsumersAsync = true
+                var factory = new ConnectionFactory() {
+                    Uri = new Uri("amqps://b-f37f83c2-042a-4305-ac2d-ad9fd16aa872.mq.us-east-1.amazonaws.com:5671"),
+                    DispatchConsumersAsync = true,
+                    UserName = "lnmrtz",
+                    Password = "8392diploma_project"
                 };
                 var connection = factory.CreateConnection();
                 return new RabbitMQEventBus.EventBus.RabbitMQEventBus(queueName, subsManager,

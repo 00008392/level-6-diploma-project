@@ -5,7 +5,7 @@
 @inject IUserService _userService
 <section class="booking__details">
     <div class="container ">
-       <Error Response="_response"/>
+        <Error Response="_response" />
         @if (_bookings == null)
         {
             <p>No bookings to show.</p>
@@ -18,6 +18,8 @@
         }
         else
         {
+            <p>If you accept booking, all other pending bookings with overlapping dates will
+        be automatically rejected</p>
             <div class="booking__details_content">
                 @foreach (var booking in _bookings)
                 {
@@ -30,7 +32,7 @@
                         <p hidden="@(booking.StartDate==null||booking.EndDate==null)">
                             From <span class="font-weight-bold">
                                 @booking.StartDate
-                            </span>till <span class="font-weight-bold">
+                            </span> till <span class="font-weight-bold">
                                 @booking.EndDate
                             </span>
                         </p>
@@ -43,12 +45,21 @@
                         </p>
                         @if (booking.Status == Status.Accepted)
                         {
-                            <button @onclick="async ()=> await CancelBooking(booking.Id)" class="submit__btn submit__btn-danger">Cancel</button>
+                            <button disabled="@booking.DisableActionButtons"
+                                    @onclick="async ()=> await CancelBooking(booking.Id)" class="submit__btn submit__btn-danger">
+                                Cancel
+                            </button>
                         }
                         else if (booking.Status == Status.Pending)
                         {
-                            <button @onclick="async ()=> await AcceptBooking(booking.Id)" class="submit__btn submit__btn-primary">Accept</button>
-                            <button @onclick="async ()=> await RejectBooking(booking.Id)" class="submit__btn submit__btn-danger">Reject</button>
+                            <button disabled="@booking.DisableActionButtons"
+                                    @onclick="async ()=> await AcceptBooking(booking.Id)" class="submit__btn submit__btn-primary">
+                                Accept
+                            </button>
+                            <button disabled="@booking.DisableActionButtons"
+                                    @onclick="async ()=> await RejectBooking(booking.Id)" class="submit__btn submit__btn-danger">
+                                Reject
+                            </button>
                         }
 
                     </div>
@@ -73,19 +84,7 @@
         }
         else
         {
-            //load bookings for this user and order them by status (Pending bookings first)
-            var bookings = (await _service.GetBookingsForPostAsync(PostId))?
-            .OrderBy(x => x.Status).ToList();
-            if(bookings!=null)
-            {
-                foreach (var booking in bookings)
-                {
-                    //load user information for each booking
-                    var user = await _userService.GetUserAsync(booking.GuestId);
-                    booking.Guest = user;
-                }
-            }
-            _bookings = bookings;
+            await LoadBookings();
         }
     }
     private async Task CancelBooking(long id)
@@ -100,9 +99,9 @@
     private async Task AcceptBooking(long id)
     {
         //try to accept booking, if success, find booking in the list, change its status and re-render component
-        _response = await _service.AcceptBookingAsync(id, () =>
+        _response = await _service.AcceptBookingAsync(id,async () =>
         {
-            GetBookingByIdFromList(id).Status = Status.Accepted;
+            await LoadBookings();
             StateHasChanged();
         });
     }
@@ -118,5 +117,22 @@
     private BookingResponse GetBookingByIdFromList(long id)
     {
         return _bookings.Where(x => x.Id == id).FirstOrDefault();
+    }
+    private async Task LoadBookings()
+    {
+        //load bookings for this user and order them by status (Pending bookings first)
+        var bookings = (await _service.GetBookingsForPostAsync(PostId))?
+        .OrderBy(x => x.Status).ToList();
+        if (bookings != null)
+        {
+            foreach (var booking in bookings)
+            {
+                //load user information for each booking
+                var user = await _userService.GetUserAsync(booking.GuestId);
+                booking.Guest = user;
+                booking.DisableActionButtons = !(((DateTime)booking.StartDate - DateTime.Now).Days >= 3);
+            }
+        }
+        _bookings = bookings;
     }
 }

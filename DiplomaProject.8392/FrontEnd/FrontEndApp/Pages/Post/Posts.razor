@@ -28,7 +28,7 @@
             <div class="row">
                 @foreach (var post in _pagedPosts)
                 {
-                    <div class=@($"col-md-{PostCardSize}")>
+                    <div class=@($"col-lg-{PostCardSize} col-md-6")>
                         <article class="aa-properties-item">
                             <a href=@($"posts/{post.Id}") class="aa-properties-item-img image__wrapper">
                                 <CoverImage PostId="post.Id" />
@@ -48,11 +48,12 @@
                                 </div>
                                 <div class="aa-properties-about">
                                     <h3 class="post__item_text-overflow" hidden="@(post.Title==null)">@post.Title</h3>
-                                    <p hidden="@(post.Category==null)" class="aa-price">
-                                        @post.Category
+                                    <p class="aa-price">
+                                       @(string.IsNullOrWhiteSpace(post.Category)?"No category": post.Category) 
                                     </p>
-                                    <p class="post__item_text-overflow" hidden="@(post.Description==null)">@post.Description</p>
-                                    <p hidden="@(post.Owner==null)" class="aa-price">
+                                    <p class="post__item_text-overflow">
+                                    @(string.IsNullOrWhiteSpace(post.Description)?"No description": post.Description)</p>
+                                    <p hidden="@(post.Owner==null)" class="aa-price post__item_text-overflow">
                                         Posted by: <a href=@($"users/{post.Owner?.Id}")>@post.Owner?.FirstName @post.Owner?.LastName</a> on
                                         <span class="font-italic">
                                             @post.DatePublished.ToShortDateString()
@@ -78,7 +79,7 @@
             </div>
             <nav>
                 <RadzenPager ShowPagingSummary="true" HorizontalAlign="HorizontalAlign.Right"
-                             PagingSummaryFormat="@pagingSummaryFormat" Count="_posts.Count()" PageSize="_pageSize" PageNumbersCount="5"
+                             PagingSummaryFormat="@pagingSummaryFormat" Count="_posts.Count()" PageSize="PageSize" PageNumbersCount="5"
                              PageChanged="PageChanged" />
             </nav>
         </div>
@@ -100,7 +101,8 @@
     public int PostCardSize { get; set; } = 4;
     private ICollection<PostResponse> _posts = new List<PostResponse>();
     //pagination properties
-    private int _pageSize = 3;
+    [Parameter]
+    public int PageSize { get; set; } = 3;
     private string pagingSummaryFormat = "Displaying page {0} of {1} (total {2} posts)";
     private ICollection<PostResponse> _pagedPosts = new List<PostResponse>();
 
@@ -133,7 +135,7 @@
         }
         _posts = posts;
         //place first 3 in paged posts
-        _pagedPosts = GetPagedPosts(0, _pageSize);
+        _pagedPosts = GetPagedPosts(0, PageSize);
 
     }
     public async Task RefreshComponent()
