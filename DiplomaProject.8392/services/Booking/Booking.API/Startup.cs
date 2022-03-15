@@ -65,10 +65,10 @@ namespace Booking.API
                 var serviceFactory = sp.GetRequiredService<IServiceScopeFactory>();
                 var factory = new ConnectionFactory()
                 {
-                    Uri = new Uri("amqps://b-f37f83c2-042a-4305-ac2d-ad9fd16aa872.mq.us-east-1.amazonaws.com:5671"),
+                    Uri = new Uri(Configuration["RabbitMQ:uri"]),
                     DispatchConsumersAsync = true,
-                    UserName="lnmrtz",
-                    Password="8392diploma_project"
+                    UserName = Configuration["RabbitMQ:username"],
+                    Password = Configuration["RabbitMQ:password"]
                 };
                 var connection = factory.CreateConnection();
                 return new RabbitMQEventBus.EventBus.RabbitMQEventBus(queueName, subsManager,

@@ -45,7 +45,7 @@ namespace FrontEndApp
             .AddBootstrapProviders()
             .AddFontAwesomeIcons();
             //register http client
-            builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("https://localhost:44377/") });
+            builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5002/") });
             //register session storage
             builder.Services.AddBlazoredSessionStorage();
             //register states

@@ -205,7 +205,7 @@ namespace APIGateway
                 options.AddDefaultPolicy(
                     builder =>
                     {
-                        builder.WithOrigins("https://localhost:44305")
+                        builder.WithOrigins("http://localhost:5001")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                     });
@@ -222,7 +222,7 @@ namespace APIGateway
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIGateway v1"));
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();

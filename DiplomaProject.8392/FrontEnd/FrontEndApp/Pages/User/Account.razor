@@ -70,7 +70,7 @@ else
     private async Task LogOut()
     {
         //logout and navigate to main page if success
-        await _authService.LogOutAsync(() => _navManager.NavigateTo("/"));
+        await _authService.LogOutAsync(() => _navManager.NavigateTo("/", true));
     }
 
 }

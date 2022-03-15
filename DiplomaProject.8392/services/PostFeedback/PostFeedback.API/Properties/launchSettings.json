@@ -1,13 +1,12 @@
-﻿{
+{
   "profiles": {
     "Post.API": {
       "commandName": "Project",
-      "dotnetRunMessages": "true",
-      "launchBrowser": false,
-      "applicationUrl": "http://localhost:5303;https://localhost:5304",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": "true",
+      "applicationUrl": "http://localhost:5303;https://localhost:5304"
     }
   }
 }

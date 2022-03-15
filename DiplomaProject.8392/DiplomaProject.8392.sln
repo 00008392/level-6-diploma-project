@@ -67,6 +67,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Logic.Base", "BaseLi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grpc.Base", "BaseLibraries\Grpc.Base\Grpc.Base.csproj", "{A76828A0-71BF-4858-A8CB-C803135E7963}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{BDAB62F5-2AF4-4EAE-B234-6CAA0FDEF654}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C2FF3739-21A6-4225-9195-5B676062FA0A}"
+	ProjectSection(SolutionItems) = preProject
+		nginx.conf = nginx.conf
+		wait-for-it.sh = wait-for-it.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +161,10 @@ Global
 		{A76828A0-71BF-4858-A8CB-C803135E7963}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A76828A0-71BF-4858-A8CB-C803135E7963}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A76828A0-71BF-4858-A8CB-C803135E7963}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDAB62F5-2AF4-4EAE-B234-6CAA0FDEF654}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDAB62F5-2AF4-4EAE-B234-6CAA0FDEF654}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDAB62F5-2AF4-4EAE-B234-6CAA0FDEF654}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDAB62F5-2AF4-4EAE-B234-6CAA0FDEF654}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,60 @@
+version: '3.4'
+
+services:
+  postfeedback.api:
+    image: ${DOCKER_REGISTRY-}postfeedbackapi
+    build:
+      context: .
+      dockerfile: services/PostFeedback/PostFeedback.API/Dockerfile
+    ports:
+      - 5005:80
+
+  booking.api:
+    image: ${DOCKER_REGISTRY-}bookingapi
+    build:
+      context: .
+      dockerfile: services/Booking/Booking.API/Dockerfile
+    ports:
+      - 5004:80
+
+  account.api:
+    image: ${DOCKER_REGISTRY-}accountapi
+    build:
+      context: .
+      dockerfile: services/Account/Account.API/Dockerfile
+    ports:
+      - 5003:80
+
+  apigateway:
+    image: ${DOCKER_REGISTRY-}apigateway
+    build:
+      context: .
+      dockerfile: gateway/APIGateway/Dockerfile
+    ports:
+      - 5002:80
+    depends_on:
+      - account.api
+      - booking.api
+      - postfeedback.api
+
+  frontendapp:
+    image: ${DOCKER_REGISTRY-}frontendapp
+    build:
+      context: .
+      dockerfile: FrontEnd/FrontEndApp/Dockerfile
+    ports:
+      - 5001:80
+    depends_on:
+      - apigateway
+
+    
+  
+
+
+
+
+
+
+
+
+

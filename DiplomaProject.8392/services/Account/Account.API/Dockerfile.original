@@ -1,0 +1,31 @@
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+#COPY ["DiplomaProject.8392.sln", ""]
+COPY ["Services/Account/Account.API/Account.API.csproj", "services/Account/Account.API/"]
+COPY ["Integration/RabbitMQEventBus/RabbitMQEventBus.csproj", "integration/RabbitMQEventBus/"]
+COPY ["Integration/EventBus/EventBus.csproj", "integration/EventBus/"]
+COPY ["BaseLibraries/Grpc.Base/Grpc.Base.csproj", "BaseLibraries/Grpc.Base/"]
+COPY ["Services/Account/Account.Domain.Logic/Account.Domain.Logic.csproj", "services/Account/Account.Domain.Logic/"]
+COPY ["BaseLibraries/Domain.Logic.Base/Domain.Logic.Base.csproj", "BaseLibraries/Domain.Logic.Base/"]
+COPY ["BaseLibraries/DAL.Base/DAL.Base.csproj", "BaseLibraries/DAL.Base/"]
+COPY ["Services/Account/Account.Utilities/Account.PasswordHandling/Account.PasswordHandling.csproj", "services/Account/Account.Utilities/Account.PasswordHandling/"]
+COPY ["Services/Account/Account.Domain/Account.Domain.csproj", "services/Account/Account.Domain/"]
+COPY ["Services/Account/Account.DAL/Account.DAL.EF/Account.DAL.EF.csproj", "services/Account/Account.DAL/Account.DAL.EF/"]
+RUN dotnet restore "services/Account/Account.API/Account.API.csproj"
+COPY ["Services/Account/Account.API/.", "services/Account/Account.API/"]
+WORKDIR "/src/services/Account/Account.API"
+RUN dotnet build "Account.API.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Account.API.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Account.API.dll"]
