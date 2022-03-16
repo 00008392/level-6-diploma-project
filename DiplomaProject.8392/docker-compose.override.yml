@@ -4,7 +4,7 @@ services:
   frontendapp:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=http://+:80
     ports:
       - "80"
       - "443"
@@ -14,7 +14,7 @@ services:
   apigateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=http://+:80
     ports:
       - "80"
       - "443"
@@ -25,7 +25,7 @@ services:
   account.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=http://+:80
     ports:
       - "80"
       - "443"
@@ -36,7 +36,7 @@ services:
   booking.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=http://+:80
     ports:
       - "80"
       - "443"
@@ -47,7 +47,7 @@ services:
   postfeedback.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=http://+:80
     ports:
       - "80"
       - "443"
