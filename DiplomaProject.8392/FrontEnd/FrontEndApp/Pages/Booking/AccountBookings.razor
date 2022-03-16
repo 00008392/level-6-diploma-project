@@ -32,9 +32,9 @@
                             </h4>
                             <p hidden="@(booking.StartDate==null||booking.EndDate==null)">
                                 From  <span class="font-weight-bold">
-                                    @booking.StartDate
+                                    @(((DateTime)booking.StartDate).ToShortDateString())
                                 </span> till  <span class="font-weight-bold">
-                                    @booking.EndDate
+                                    @(((DateTime)booking.EndDate).ToShortDateString())
                                 </span>
                             </p>
                             <p hidden="@(booking.GuestNo==null)"><span class="font-weight-bold">Number of guests: </span> @booking.GuestNo</p>
