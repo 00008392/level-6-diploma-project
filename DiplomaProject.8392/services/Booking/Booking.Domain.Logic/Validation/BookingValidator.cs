@@ -29,7 +29,7 @@ namespace Booking.Domain.Logic.Validation
                       .Must(IsEndDateGreaterThanStartDate)
                               .WithMessage("Start date should be earlier than end date")
                       .Must(CheckStartEndDatesDifference)
-                              .WithMessage("Minimum length of stay should be 3 days and " +
+                              .WithMessage("Minimum length of stay should be 1 day and " +
                               "maximum 30 days")
                       .Must(CheckStartDate)
                               .WithMessage("Booking should be made minimum 5 days and " +
@@ -48,7 +48,7 @@ namespace Booking.Domain.Logic.Validation
         {
             var start = (DateTime)booking.StartDate;
             var end = (DateTime)booking.EndDate;
-            return (end - start).Days >= 3 && (end - start).Days <= 30;
+            return (end - start).Days >= 1 && (end - start).Days <= 30;
         }
         private bool CheckStartDate(CreateBookingDTO booking)
         {

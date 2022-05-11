@@ -15,12 +15,12 @@ namespace APIGateway.Controllers.PostFeedback
     //controller for getting info related to post
     [Route("api/posts/info")]
     [ApiController]
-    public class InfoController : ControllerBase
+    public class PostRelatedInfoController : ControllerBase
     {
         //injecting grpc client to access services of post/feedback microservice
         private readonly PostRelatedInfoService.PostRelatedInfoServiceClient _infoClient;
 
-        public InfoController(PostRelatedInfoService.PostRelatedInfoServiceClient infoClient)
+        public PostRelatedInfoController(PostRelatedInfoService.PostRelatedInfoServiceClient infoClient)
         {
             _infoClient = infoClient;
         }

@@ -13,11 +13,19 @@
                         <li>
                             <div class="media">
                                 <div class="media-body">
-                                    <h4 hidden="@(feedback.FeedbackCreator==null)" class="author-name">
-                                        <a href=@($"users/{feedback.FeedbackCreator?.Id}")>
-                                            @feedback.FeedbackCreator?.FirstName
-                                            @feedback.FeedbackCreator?.LastName
-                                        </a>
+                                    <h4 class="author-name">
+                                        @if (feedback.FeedbackCreator == null)
+                                        {
+                                            <span>Deleted user</span>
+                                        }
+                                        else
+                                        {
+                                            <a href=@($"users/{feedback.FeedbackCreator.Id}")>
+                                                @feedback.FeedbackCreator.FirstName
+                                                @feedback.FeedbackCreator.LastName
+                                            </a>
+                                        }
+
                                     </h4>
                                     <RadzenRating ReadOnly="true" Stars="5" Value="feedback.Rating" />
                                     <span class="comments-date"> @feedback.DatePublished.ToShortDateString()</span>
